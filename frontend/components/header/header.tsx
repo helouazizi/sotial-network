@@ -4,7 +4,6 @@ import { TiHome } from "react-icons/ti";
 import { MdGroups2 } from "react-icons/md";
 import { LuMessageCircleMore } from "react-icons/lu";
 import { IoIosNotifications } from "react-icons/io";
-import { FaUser } from "react-icons/fa";
 import { usePathname } from "next/navigation";
 import { IoIosLogOut } from "react-icons/io";
 import { useRouter } from 'next/navigation';
@@ -13,9 +12,11 @@ import { SocketContext, SocketContextType } from "@/context/socketContext";
 import { GenerateAvatar } from "../profile/ProfileHeader";
 import ToogleInitiale from "../request/ToogleInitiale";
 export default function Header() {
+
+
   const router = useRouter();
-  const pathname = usePathname()
-  const { ws, user } = useContext(SocketContext) as SocketContextType
+  const pathname = usePathname();
+  const { ws, user, numsNotif } = useContext(SocketContext) as SocketContextType
   const [isLogged, setIsLogged] = useState<boolean>(false)
   const [showToggle, setShowToggle] = useState(false)
 
@@ -50,13 +51,21 @@ export default function Header() {
 
   }
   const HandleToggle = () => {
-    console.log("dss");
-
     setShowToggle(!showToggle)
-    console.log(showToggle);
-
   }
+  useEffect(() => {
+    const handleClick = () => {
+      if (showToggle) {
+        setShowToggle(false);
+      }
+    };
+    const main = document.querySelector('main');
+    main?.addEventListener('click', handleClick);
 
+    return () => {
+      main?.removeEventListener('click', handleClick);
+    };
+  }, [showToggle]);
   return (
     <>
       {isLogged && (
@@ -77,7 +86,7 @@ export default function Header() {
               </li>
             </ul>
             <div className="header-icons">
-              <button className={`notification ${showToggle ? "active-not" : ""}`} onClick={HandleToggle}><IoIosNotifications /></button>
+              <button className={`notification ${showToggle ? "active-not" : ""}`} onClick={HandleToggle}><IoIosNotifications /> <span>{numsNotif ? +(numsNotif?.total) : 0}</span></button>
               <Link href={`/profile/${user?.id}`}>
                 {user?.avatar ? (
                   <img

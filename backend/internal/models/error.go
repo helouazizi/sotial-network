@@ -1,7 +1,12 @@
 package models
 
-type  Error struct {
+type Error struct {
 	Message    string
 	Code       int
 	UserErrors UserError
+}
+
+type GroupError struct {
+	Message string
+	Code    int
 }

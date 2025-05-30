@@ -51,22 +51,6 @@ func (r *ChatRepository) GetMessages(senderID, receiverID int, lastID int) ([]*m
 	return messages, nil
 }
 
-func (r *ChatRepository) GetUser(userID int) (*models.User, error) {
-	query := `
-		SELECT id, nickname ,first_name, last_name, avatar
-		FROM users
-		WHERE id = ?
-	`
-
-	var user models.User
-	err := r.db.QueryRow(query, userID).Scan(&user.ID, &user.Nickname, &user.FirstName, &user.Lastname, &user.Avatar)
-	if err != nil {
-		return nil, err
-	}
-
-	return &user, nil
-}
-
 func (r *ChatRepository) GetFriends(userID int) ([]*models.User, error) {
 	query := `
 		SELECT id, nickname ,first_name, last_name
@@ -103,4 +87,56 @@ func (r *ChatRepository) GetLastMessageID() (int, error) {
 	var id int
 	err := r.db.QueryRow(query).Scan(&id)
 	return id + 1, err
+}
+
+func (reqRepo *ChatRepository) CountNotiif(sessionID int) (int, int, error) {
+	var groupeReqCount int
+	var followersCount int
+	query := `SELECT COUNT(id)
+			FROM group_requests 
+			WHERE requested_id=?;
+	`
+	err := reqRepo.db.QueryRow(query, sessionID).Scan(&groupeReqCount)
+	if err != nil {
+		return 0, 0, err
+	}
+	query = `SELECT COUNT(id)
+			FROM followers 
+			WHERE followed_id=? and status='pending';
+	`
+	err = reqRepo.db.QueryRow(query, sessionID).Scan(&followersCount)
+	if err != nil {
+		return 0, 0, err
+	}
+	return groupeReqCount, followersCount, nil
+}
+
+func (reqRepo *ChatRepository) RequestFollowers(sessionID int) ([]models.CommunInfoProfile, error) {
+	query := `SELECT u.id,u.avatar,u.nickname,u.last_name,u.first_name,f.id
+		FROM users u
+		INNER JOIN followers f ON u.id=f.follower_id
+		WHERE f.followed_id=? and f.status='pending';
+	`
+	rows, err := reqRepo.db.Query(query, sessionID)
+	if err != nil && err != sql.ErrNoRows {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var followers []models.CommunInfoProfile
+	for rows.Next() {
+		var follower models.CommunInfoProfile
+		rows.Scan(&follower.Id, &follower.Avatar, &follower.Nickname, &follower.LastName, &follower.FirstName, &follower.IdRequest)
+		followers = append(followers, follower)
+	}
+	return followers, nil
+}
+
+func (reqRepo *ChatRepository) HandleReqFollowRepo(reqID, followedID, followerID int, newStatus string) error {
+	query := `UPDATE followers SET status=? WHERE id=? AND follower_id=? AND followed_id=?`
+	_, err := reqRepo.db.Exec(query, newStatus, reqID, followerID, followedID)
+	if err != nil {
+		return err
+	}
+	return nil
 }

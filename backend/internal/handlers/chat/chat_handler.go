@@ -39,7 +39,7 @@ func (h *ChatHandler) ChatMessagesHandler(w http.ResponseWriter, r *http.Request
 
 	defer func() {
 		conn.Close()
-		h.service.RemoveClient(userID)
+		h.service.RemoveClient(userID, conn)
 	}()
 
 	h.service.SaveClient(userID, conn)
@@ -78,19 +78,25 @@ func (h *ChatHandler) ChatMessagesHandler(w http.ResponseWriter, r *http.Request
 				"receiver_id": chat.ReceiverID,
 				"sender_id":   chat.SenderID,
 				"message":     chat.Message,
-				"sent_at_str":     time.Now().Format(time.DateTime),
+				"sent_at_str": time.Now().Format(time.DateTime),
 			}
 
-			conn.WriteJSON(map[string]any{
-				"message": messageData,
-				"type":    "saveMessage",
-			})
+			if senderConns, ok := h.service.GetClient(chat.SenderID); ok {
+				for _, c := range senderConns {
+					c.WriteJSON(map[string]any{
+						"message": messageData,
+						"type":    "saveMessage",
+					})
+				}
+			}
 
-			if receiverConn, ok := h.service.GetClient(chat.ReceiverID); ok {
-				receiverConn.WriteJSON(map[string]any{
-					"message": messageData,
-					"type":    "saveMessage",
-				})
+			if receiverConns, ok := h.service.GetClient(chat.ReceiverID); ok {
+				for _, c := range receiverConns {
+					c.WriteJSON(map[string]any{
+						"message": messageData,
+						"type":    "saveMessage",
+					})
+				}
 			}
 
 		case "getMessages":
@@ -116,19 +122,6 @@ func (h *ChatHandler) ChatMessagesHandler(w http.ResponseWriter, r *http.Request
 				"data": messages,
 				"type": "getMessages",
 			})
-		case "getUser":
-			user, err := h.service.GetUser(userID)
-			if err != nil {
-				conn.WriteJSON(map[string]any{
-					"error": err.Error(),
-				})
-				continue
-			}
-
-			conn.WriteJSON(map[string]any{
-				"data": user,
-				"type": "getUser",
-			})
 		case "getFriends":
 			users, err := h.service.GetFriends(userID)
 			if err != nil {
@@ -142,6 +135,51 @@ func (h *ChatHandler) ChatMessagesHandler(w http.ResponseWriter, r *http.Request
 				"data": users,
 				"type": "getFriends",
 			})
+		case "GetNumNotif":
+			groupeCount, followersCount, err := h.service.NumberNotifs(chat.SenderID)
+			if err != nil {
+				conn.WriteJSON(map[string]any{
+					"error": err.Error(),
+				})
+				continue
+			}
+			CountNotis := map[string]any{
+				"groupeCount":    groupeCount,
+				"followersCount": followersCount,
+				"total":          followersCount + groupeCount,
+			}
+			conn.WriteJSON(map[string]any{
+				"data": CountNotis,
+				"type": "CountNotifs",
+			})
+		case "GetFollowersRequest":
+			followers, err := h.service.GetRequestFollowers(chat.SenderID)
+			if err != nil {
+				conn.WriteJSON(map[string]any{
+					"error": err.Error(),
+				})
+				continue
+			}
+			conn.WriteJSON(map[string]any{
+				"data": followers,
+				"type": "requestsFollowers",
+			})
+		case "HandleRequest":
+			err = h.service.HandleFollowReq(chat.ID, chat.SenderID, chat.ReceiverID, chat.Action)
+			if err != nil {
+				conn.WriteJSON(map[string]any{
+					"error": err.Error(),
+				})
+				continue
+			}
+			if senderConns, ok := h.service.GetClient(chat.SenderID); ok {
+				for _, c := range senderConns {
+					c.WriteJSON(map[string]any{
+						"ReqID": chat.ID,
+						"type":  "ResponseRequestsFollowers",
+					})
+				}
+			}
 		}
 	}
 }

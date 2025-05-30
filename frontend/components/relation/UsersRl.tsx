@@ -34,7 +34,6 @@ const UsersRl = (props: { type: string }) => {
             if (result) {
                 setData((prev) => [...prev, ...result])
             }
-
         }, 1500)
         , [dataProfile?.id, type])
     return (

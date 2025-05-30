@@ -65,6 +65,7 @@ func NewApp(db *sql.DB) *Application {
 	RelationsRepo := relationsR.NewRelationsRepository(db)
 	RelationsSer := relationsS.NewRelationsServices(RelationsRepo)
 	Relationshand := relationsH.NewRelationsHandler(RelationsSer)
+
 	//================ static =========================//
 	staticHAndler := staticHandlers.NewImageHandler("pkg/db/images")
 

@@ -3,6 +3,7 @@ package services
 import (
 	"errors"
 	"html"
+	"slices"
 	"strings"
 	"sync"
 
@@ -13,14 +14,14 @@ import (
 
 type ChatService struct {
 	repo    *repositories.ChatRepository
-	clients map[int]*websocket.Conn
+	clients map[int][]*websocket.Conn
 	mu      sync.Mutex
 }
 
 func NewChatService(ChatRepo *repositories.ChatRepository) *ChatService {
 	return &ChatService{
 		repo:    ChatRepo,
-		clients: map[int]*websocket.Conn{},
+		clients: map[int][]*websocket.Conn{},
 	}
 }
 
@@ -49,30 +50,55 @@ func (s *ChatService) GetMessages(senderID, receiverID int, lastID int) ([]*mode
 func (s *ChatService) SaveClient(userID int, conn *websocket.Conn) {
 	defer s.mu.Unlock()
 	s.mu.Lock()
-	s.clients[userID] = conn
+	s.clients[userID] = append(s.clients[userID], conn)
 }
 
-func (s *ChatService) RemoveClient(userID int) {
+func (s *ChatService) RemoveClient(userID int, closedConn *websocket.Conn) {
 	defer s.mu.Unlock()
 	s.mu.Lock()
-	delete(s.clients, userID)
-}
 
-func (s *ChatService) GetUser(userID int) (*models.User, error) {
-	return s.repo.GetUser(userID)
+	for i, conn := range s.clients[userID] {
+		if conn == closedConn {
+			s.clients[userID] = slices.Delete(s.clients[userID], i, i+1)
+			break
+		}
+	}
+
+	if len(s.clients[userID]) == 0 {
+		delete(s.clients, userID)
+	}
 }
 
 func (s *ChatService) GetFriends(userID int) ([]*models.User, error) {
 	return s.repo.GetFriends(userID)
 }
 
-func (s *ChatService) GetClient(receiverID int) (*websocket.Conn, bool) {
+func (s *ChatService) GetClient(id int) ([]*websocket.Conn, bool) {
 	defer s.mu.Unlock()
 	s.mu.Lock()
-	conn, ok := s.clients[receiverID]
+	conn, ok := s.clients[id]
 	return conn, ok
 }
 
 func (s *ChatService) GetLastMessageID() (int, error) {
 	return s.repo.GetLastMessageID()
+}
+
+func (reqSer *ChatService) NumberNotifs(sessionID int) (int, int, error) {
+	return reqSer.repo.CountNotiif(sessionID)
+}
+
+func (reqSer *ChatService) GetRequestFollowers(sessionID int) ([]models.CommunInfoProfile, error) {
+	return reqSer.repo.RequestFollowers(sessionID)
+}
+
+func (reqSer *ChatService) HandleFollowReq(reqID, followedID, followerID int, action string) error {
+	var newStatus string
+	switch action {
+	case "accept":
+		newStatus = "accepted"
+	case "reject":
+		newStatus = "follow"
+	}
+	return reqSer.repo.HandleReqFollowRepo(reqID, followedID, followerID, newStatus)
 }

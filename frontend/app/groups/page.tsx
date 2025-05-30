@@ -1,6 +1,6 @@
 "use client"
 
-import CreateGroup from "@/components/groups/CreateGroup"
+import FormCreateGroup from "@/components/groups/FormCreateGroup"
 
 export default function Groups() {
     return (
@@ -9,7 +9,7 @@ export default function Groups() {
 
             </section>
             <section className="right-side">
-               <CreateGroup />
+               <FormCreateGroup />
             </section>
         </main>
     )

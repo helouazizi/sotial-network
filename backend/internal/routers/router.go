@@ -15,6 +15,7 @@ func SetupRoutes(app *app.Application) *http.ServeMux {
 	mux.HandleFunc("/api/v1/user/register", app.AuthHundler.Register)
 	mux.HandleFunc("/api/v1/user/login", app.AuthHundler.Login)
 	mux.HandleFunc("/app/v1/user/Auth", middleware.AuthMiddleware(http.HandlerFunc(app.AuthHundler.CheckAuth), app.DB))
+	mux.HandleFunc("/api/v1/user/infos", middleware.AuthMiddleware(http.HandlerFunc(app.AuthHundler.GetUserHandler), app.DB))
 
 	//================== Profile routes =======================///
 	mux.HandleFunc("/api/v1/profile", middleware.AuthMiddleware(http.HandlerFunc(app.ProfileHandler.ProfileHandler), app.DB))
@@ -32,12 +33,12 @@ func SetupRoutes(app *app.Application) *http.ServeMux {
 	mux.HandleFunc("/api/v1/relations/getRealtions", middleware.AuthMiddleware(http.HandlerFunc(app.Relationshandler.GetRelations), app.DB))
 	//================== chat routes =========================///
 	mux.HandleFunc("/ws", middleware.AuthMiddleware(http.HandlerFunc(app.ChatHandler.ChatMessagesHandler), app.DB))
-
 	//================ static ==============================//
 	mux.Handle("/images/", app.StaticHandler)
 
 	//================ Group ==============================//
-	mux.HandleFunc("/api/v1/createGroup", app.GroupHandler.CreateGroupHandler)
+	mux.HandleFunc("/api/v1/createGroup", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.CreateGroupHandler), app.DB))
+	mux.HandleFunc("/api/v1/getJoinedGroups", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.GetJoinedGroupsHandler), app.DB))
 
 	return mux
 }

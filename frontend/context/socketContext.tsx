@@ -2,6 +2,10 @@
 import { usePathname } from "next/navigation"
 import React, { createContext, useEffect, useRef, useState, ReactNode, RefObject } from "react"
 import { Message, User } from "../types/chat";
+import { getUserInfos } from "@/services/user";
+import { NumOfREquests } from "@/types/Request";
+import { type } from "os";
+import { ProfileInt } from "@/types/profiles";
 export interface SocketContextType {
   ws: RefObject<WebSocket | null>
   messages: Message[]
@@ -14,6 +18,10 @@ export interface SocketContextType {
   setSendMessage: React.Dispatch<React.SetStateAction<Message | undefined>>
   scrollHeight: boolean
   setScrollHeight: React.Dispatch<React.SetStateAction<boolean>>
+  numsNotif: NumOfREquests | undefined
+  setNumNotif: React.Dispatch<React.SetStateAction<NumOfREquests | undefined>>
+  reqFollowers: ProfileInt[] | []
+  setReqFollowers: React.Dispatch<React.SetStateAction<ProfileInt[] | []>>
 }
 
 export const SocketContext = createContext<SocketContextType | null>(null);
@@ -26,6 +34,8 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
   const [friends, setFriends] = useState<User[] | null>(null)
   const [sendMessage, setSendMessage] = useState<Message | undefined>(undefined)
   const [scrollHeight, setScrollHeight] = useState<boolean>(false)
+  const [numsNotif, setNumNotif] = useState<NumOfREquests | undefined>(undefined)
+  const [reqFollowers, setReqFollowers] = useState<ProfileInt[] | []>([])
 
   const excludedPaths = ["/login", "/register"];
   const shouldConnect = !excludedPaths.includes(pathname);
@@ -37,13 +47,21 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
 
     ws.current = new WebSocket("ws://localhost:8080/ws");
 
-    ws.current.onopen = () => {
+    ws.current.onopen = async () => {
       console.log("web socket open");
-      ws.current?.send(
-        JSON.stringify({
-          type: "getUser",
-        })
-      );
+      const userRes = await getUserInfos()
+      const userInfos: User = {
+        id: userRes.ID,
+        nickname: userRes.nickname,
+        firstName: userRes.firstname,
+        lastName: userRes.lastname,
+        avatar: userRes.avatar,
+      }
+      setUser(userInfos)
+      ws.current?.send(JSON.stringify({
+        type: "GetNumNotif"
+      }))
+      ws.current?.send(JSON.stringify({ type: "GetFollowersRequest" }))
     };
 
     ws.current.onmessage = (event: MessageEvent) => {
@@ -58,6 +76,21 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
           avatar: res.data.avatar,
         }
         setUser(userInfos)
+      }
+
+      if (res.type === "CountNotifs") {
+        const countotifs: NumOfREquests = {
+          followersCount: res.data.followersCount,
+          groupeReqCount: res.data.groupeCount,
+          total: res.data.total
+        }
+        setNumNotif(countotifs)
+      }
+      if (res.type === 'requestsFollowers') {
+        setReqFollowers((prev) => {
+          if (!prev || !res.data) return []
+          return [...res.data]
+        });
       }
 
       if (res.type === "getFriends") {
@@ -86,7 +119,20 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
       if (res.type === "saveMessage") {
         setSendMessage(res.message)
       }
-
+      if (res.type === "ResponseRequestsFollowers") {
+        setNumNotif((prev) => {
+          if (!prev || typeof prev.followersCount !== 'number') return prev
+          return {
+            ...prev,
+            followersCount: prev.followersCount > 0 ? +prev.followersCount - 1 : 0,
+            total: +prev.total > 0 ? +prev.total - 1 : 0,
+          }
+        })
+        setReqFollowers(prev => {
+          console.log("before filter:", prev);
+          return prev.filter(ele => ele.request_id !== res.ReqID);
+        });
+      }
     };
 
     ws.current.onclose = () => {
@@ -108,7 +154,11 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
       sendMessage,
       setSendMessage,
       scrollHeight,
-      setScrollHeight
+      setScrollHeight,
+      numsNotif,
+      setNumNotif,
+      reqFollowers,
+      setReqFollowers
     }}>
       {children}
     </SocketContext.Provider>

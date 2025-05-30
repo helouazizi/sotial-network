@@ -95,9 +95,11 @@
     width: 83%;
     margin: 0 auto;
     margin-top: 10px;
-    height: 100%;
+    height: 75%;
     overflow-y: auto;
-    padding: 10px;
+    padding: 10px 0;
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-bg);
 }
 
 .followers {
@@ -108,13 +110,14 @@
 
 .follower-request {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
     transition: 0.5s ease-in-out;
     border: 1px solid var(--border-color);
     padding: 10px;
     border-radius: 8px;
-    margin-top: 10px;
+    margin-top: 5px;
+
     .header-card {
         display: flex;
         gap: 5px;
@@ -133,6 +136,7 @@
             margin-left: 10px;
             cursor: pointer;
             transition: 0.5s ease-in-out;
+            fill: var(--text-primary);
         }
 
         .accept-request:hover {
@@ -147,4 +151,8 @@
 
 .follower-request:hover {
     background-color: var(--card-bg);
+}
+.noReq{
+    color: var(--text-muted);
+    text-align: center;
 }

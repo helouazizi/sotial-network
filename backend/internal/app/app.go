@@ -9,18 +9,20 @@ import (
 )
 
 type Application struct {
-	DB *sql.DB
+	DB          *sql.DB
 	AuthHundler *handlers.UserHandler
 }
 
-func NewApp(db *sql.DB)*Application{
-// initialize repositories
+func NewApp(db *sql.DB) *Application {
+	// initialize repositories
 	UserRepo := repositories.NewRepo(db)
-//initialize services
-userServices := services.NewService(UserRepo)
-// initialize handlers
-	
-	
+	// initialize services
+	userService := services.NewService(UserRepo)
+	// initialize handlers
+	userHandler := handlers.NewHandler(userService)
 
-	
+	return &Application{
+		DB: db,
+		AuthHundler: userHandler,
+	}
 }

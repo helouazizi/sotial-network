@@ -14,15 +14,12 @@ type Application struct {
 }
 
 func NewApp(db *sql.DB) *Application {
-	// initialize repositories
-	UserRepo := repositories.NewRepo(db)
-	// initialize services
-	userService := services.NewService(UserRepo)
-	// initialize handlers
-	userHandler := handlers.NewHandler(userService)
+	AuthRepo := repositories.NewAuthRepo(db)
+	AuthService := services.NewAuthService(AuthRepo)
+	AuthHandler := handlers.NewAuthHandler(AuthService)
 
 	return &Application{
-		DB: db,
-		AuthHundler: userHandler,
+		DB:          db,
+		AuthHundler: AuthHandler,
 	}
 }

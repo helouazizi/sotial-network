@@ -1,22 +1,24 @@
 import { ReactNode } from 'react';
+import { PostProvider } from '@/context/PostContext';
 import './globals.css'
 
 interface RootLayoutProps {
   children: ReactNode;
 }
 
+
 export const metadata = {
-  title: 'My Blog',
-  description: 'Learning Next.js with the App Router!',
+  title: 'Social Network',
+  description: 'Social Network is a web app to share and comunnicate with the world',
 };
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
       <body>
-  
-        {children}
-      
+        <PostProvider>
+          {children}
+        </PostProvider>
       </body>
     </html>
   );

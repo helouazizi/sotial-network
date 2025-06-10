@@ -3,12 +3,13 @@
 import { createContext, useContext, useState, ReactNode } from "react";
 import { Post } from "@/types/post";
 
-
-
 // lets define an interface to declare all values that our context can provide to compnnents
 interface PostContextType {
     posts: Post[],
     addPost: (post: Post) => void,
+    // commentpost function  ....
+    // delet post 
+    // update post
 }
 
 

@@ -1,9 +1,15 @@
 export default function PostActions({ postId }: { postId: number }) {
   return (
     <div className="post-actions">
-      <button>👍 Like</button>
-      <button>👎 Dislike</button>
-      <button>💬 Comment</button>
+      <div>
+        <button>👍 <span className="extra"> Like</span></button>
+        <button>👎 <span className="extra"> Dislike</span></button>
+        <button>💬 <span className="extra"> Comment</span></button>
+      </div>
+      <div>
+        <button>📤 <span className="extra"> Send</span></button> {/* Paper plane for send */}
+      </div>
     </div>
   );
 }
+

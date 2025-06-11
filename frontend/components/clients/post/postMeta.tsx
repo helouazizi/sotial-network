@@ -1,7 +1,13 @@
-export default function PostMeta({ author, createdAt }: { author: string; createdAt: string }) {
+
+export default function PostMeta({ author, createdAt, avatarUrl }: { author: string; createdAt: string, avatarUrl: string }) {
+  console.log(avatarUrl, "here")
+
   return (
     <div className="post-meta">
-      By {author} • {new Date(createdAt).toLocaleString()}
+      <img src={avatarUrl} alt={`${author}'s avatar`} className="avatar" />
+      <span>
+        By {author} • {new Date(createdAt).toLocaleTimeString()}
+      </span>
     </div>
   );
 }

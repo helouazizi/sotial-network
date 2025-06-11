@@ -6,13 +6,7 @@
   background-color: #f9f9f9;
 }
 
-.posts-page h1 {
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 2rem;
-  text-align: center;
-  color: #333;
-}
+
 
 .posts-list {
   list-style: none;
@@ -38,25 +32,39 @@
 }
 
 .post-meta {
-  font-size: 0.875rem;
-  color: #888;
-  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: red;
 }
 
 .post-body h2 {
   font-size: 1.4rem;
-  margin: 0;
+  margin: 2rem 0;
   color: #222;
+  
 }
 
 .post-body p {
-  margin-top: 0.5rem;
+  margin: 2rem 0;
   line-height: 1.6;
   color: #444;
 }
 
 .post-actions {
   margin-top: 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .post-actions button {
@@ -71,6 +79,39 @@
   transition: background-color 0.2s ease;
 }
 
+.post-comment input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: none;
+  border-radius: 0.4rem;
+  background-color: #8a8a8a;
+  color: #fff;
+  font-size: 1rem;
+  outline: none;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.post-comment input::placeholder {
+  color: #cccccc;
+}
+
+.post-comment input:focus {
+  background-color: #616161;
+  box-shadow: 0 0 0 2px #888888;
+}
+
+
 .post-actions button:hover {
   background-color: #c7d2fe;
+}
+
+
+@media (max-width : 768px) {
+  .extra {
+    display: none;
+  }
+
+  .post-actions div button {
+    padding: 0.2rem 0.5rem ;
+  }
 }

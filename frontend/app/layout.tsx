@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
-import { PostProvider } from '@/context/PostContext';
 import './globals.css'
+import Footer from '@/components/clients/footer/footer';
+import Header from '@/components/clients/header/header';
 
 interface RootLayoutProps {
   children: ReactNode;
@@ -16,9 +17,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
       <body>
-        <PostProvider>
+        <Header/>
           {children}
-        </PostProvider>
+        <Footer/>
       </body>
     </html>
   );

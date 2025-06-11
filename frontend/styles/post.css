@@ -80,8 +80,23 @@
   transition: background-color 0.2s ease;
 }
 
+.post-comment {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.post-comment button {
+  padding: 0.5rem;
+ 
+  background-color: #e0e7ff;
+  color: #1e40af;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
 .post-comment input {
-  width: 100%;
+  width: 90%;
   padding: 0.5rem 0.75rem;
   border: none;
   border-radius: 0.4rem;
@@ -104,6 +119,16 @@
 
 .post-actions button:hover {
   background-color: #c7d2fe;
+}
+
+
+.comments-list {
+  margin-top: 0.5rem;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  overflow: hidden;
+  max-height: 0;
+  display: none;
+  
 }
 
 

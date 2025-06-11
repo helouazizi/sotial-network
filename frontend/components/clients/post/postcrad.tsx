@@ -4,13 +4,19 @@ import PostActions from './postActions';
 import PostComment from './postComment';
 import { Post } from '@/types/post';
 
-export default function PostCard({ post }: { post: Post }) {
+export default function PostCard({
+  post,
+  onPostUpdate
+}: {
+  post: Post;
+  onPostUpdate: (id: number, updatedPost: Partial<Post>) => void;
+}){
   return (
     <li className="post-card">
       <PostMeta author={`user-${post.userId}`} createdAt="2025-06-11T13:45:00Z" avatarUrl="/avatar.png" />
       <PostBody title={post.title} content={post.body} />
-      <PostComment />
-      <PostActions postId={post.id} />
+      <PostComment   post={post} onPostUpdate={onPostUpdate}/>
+      <PostActions post={post} onPostUpdate={onPostUpdate} />
     </li>
   );
 }

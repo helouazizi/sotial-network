@@ -6,4 +6,8 @@ export interface Post {
     author:string,
     createdAt:string
     avatarUrl: string
+    likes:number,
+    dislikes:number,
+    totalComments:number,
+    comments: []
 }

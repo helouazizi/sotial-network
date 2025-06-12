@@ -5,9 +5,7 @@ export default function Header() {
         <h1 className="logo">Social-Network</h1>
         <nav className="nav-links">
           <a href="/">Home</a>
-          <a href="/about">About</a>
-          <a href="/posts">Posts</a>
-          <a href="/contact">Contact</a>
+          <a href="/addPost">Add Post</a>
         </nav>
       </div>
     </header>

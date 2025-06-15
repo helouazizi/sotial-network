@@ -5,12 +5,10 @@ import (
 	"io"
 	"log"
 	"os"
-
-	_ "modernc.org/sqlite"
 )
 
 func OpenDB() *sql.DB {
-	db, err := sql.Open("sqlite", "pkg/db/sqlite/social.db")
+	db, err := sql.Open("sqlite3", "pkg/db/sqlite/social.db")
 	if err != nil {
 		log.Fatal(err)
 	}

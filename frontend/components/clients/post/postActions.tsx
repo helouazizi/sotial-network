@@ -51,13 +51,13 @@ export default function PostActions({
     <div className="post-actions">
       <div>
         <button onClick={handleLike}>
-          👍 <span className="extra">{post.likes} Like</span>
+          👍 {post.likes} <span className="extra"> Like</span>
         </button>
         <button onClick={handleDislike}>
-          👎 <span className="extra">{post.dislikes} Dislike</span>
+          👎 {post.dislikes} <span className="extra"> Dislike</span>
         </button>
         <button onClick={toggleComments}>
-          💬 <span className="extra">{post.totalComments} Comment</span>
+          💬 {post.totalComments}  <span className="extra">Comment</span>
         </button>
       </div>
 

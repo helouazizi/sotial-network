@@ -24,7 +24,7 @@ export default function PostComment({
         value={comment}
         onChange={(e) => setComment(e.target.value)}
       />
-      <button onClick={handleAddComment}>💬 Send</button>
+      <button onClick={handleAddComment}>💬 <span className="extra"> Send</span></button>
     </div>
 
   );

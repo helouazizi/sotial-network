@@ -35,7 +35,7 @@ export default function Posts() {
     };
 
     if (isLoading) return <p>Loading...</p>;
-
+    
     return (
         <div className="posts-page">
             <ul className="posts-list">

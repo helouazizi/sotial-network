@@ -21,7 +21,7 @@ func OpenDB() *sql.DB {
 func RunMigration() {
 	m, err := migrate.New("file://pkg/db/migrations", "sqlite3://pkg/db/sqlite/social.db")
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("failed to create DB driver:", err)
 	}
 	if err = m.Up(); err != nil && err != migrate.ErrNoChange {
 		log.Fatal(err)

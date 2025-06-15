@@ -6,8 +6,6 @@
   /* background-color: #f9f9f9; */
 }
 
-
-
 .posts-list {
   list-style: none;
   padding: 0;
@@ -183,6 +181,58 @@
   color: black;
   /* display: none; */
   
+}
+
+
+/* ========================== post form ================================= */
+.post-form {
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-family: sans-serif;
+  background: #ffffff;
+  color: black;
+}
+
+.post-form h2 {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.post-form label {
+  display: block;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.post-form input[type="text"],
+.post-form textarea,
+.post-form select,
+.post-form input[type="file"] {
+  width: 100%;
+  margin-top: 0.4rem;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.post-form button {
+  width: 100%;
+  padding: 0.6rem;
+  margin-top: 1rem;
+  background-color: #0070f3;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.post-form button:hover {
+  background-color: #0059c1;
 }
 
 

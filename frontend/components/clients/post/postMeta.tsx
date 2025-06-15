@@ -1,6 +1,5 @@
 
 export default function PostMeta({ author, createdAt, avatarUrl }: { author: string; createdAt: string, avatarUrl: string }) {
-  console.log(avatarUrl, "here")
 
   return (
     <div className="post-meta">

@@ -18,8 +18,11 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <html lang="en">
       <body>
         <Header/>
+        <main>
           {children}
-        <Footer/>
+        </main>
+
+        {/* <Footer/> */}
       </body>
     </html>
   );

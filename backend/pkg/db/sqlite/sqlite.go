@@ -2,36 +2,28 @@ package sqlite
 
 import (
 	"database/sql"
-	"io"
 	"log"
-	"os"
+
+	"github.com/golang-migrate/migrate/v4"
+	_ "github.com/golang-migrate/migrate/v4/database/sqlite3"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 )
 
 func OpenDB() *sql.DB {
+	RunMigration()
 	db, err := sql.Open("sqlite3", "pkg/db/sqlite/social.db")
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	err = db.Ping()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	migrate, err := os.Open("pkg/db/migrations/migrate.sql")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	data, err := io.ReadAll(migrate)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	_, err = db.Exec(string(data))
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	return db
+}
+
+func RunMigration() {
+	m, err := migrate.New("file://pkg/db/migrations", "sqlite3://pkg/db/sqlite/social.db")
+	if err != nil {
+		log.Fatal(err)
+	}
+	if err = m.Up(); err != nil && err != migrate.ErrNoChange {
+		log.Fatal(err)
+	}
 }

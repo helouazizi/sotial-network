@@ -15,4 +15,6 @@ func NewPostRepo(db *sql.DB) *PostRepository {
 }
 
 func (r *PostRepository) SavePost(user *models.User) {
+	
+	
 }

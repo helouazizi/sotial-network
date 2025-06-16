@@ -6,11 +6,11 @@ export interface Comment {
 export interface Post {
   id: number;
   userId: number;
-  body: string;
+  content: string;
   title: string;
   author: string;
   createdAt: string;
-  avatarUrl: string;
+  media: string;
   likes: number;
   dislikes: number;
   totalComments: number;

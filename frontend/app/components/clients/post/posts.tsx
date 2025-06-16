@@ -7,9 +7,9 @@ import PostCard from "./postcrad";
 export default function Posts() {
     const [posts, setPosts] = useState<Post[]>([]);
     const [isLoading, setLoading] = useState(true);
-
+    //https://jsonplaceholder.typicode.com/posts
     useEffect(() => {
-        fetch('https://jsonplaceholder.typicode.com/posts')
+        fetch('http://localhost:8080/api/v1/posts')
             .then(res => res.json())
             .then(data => {
                 // Add dummy likes/comments to each post
@@ -35,7 +35,7 @@ export default function Posts() {
     };
 
     if (isLoading) return <p>Loading...</p>;
-    
+
     return (
         <div className="posts-page">
             <ul className="posts-list">

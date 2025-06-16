@@ -7,6 +7,8 @@ import (
 	"time"
 	"unicode"
 	"unicode/utf8"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 // Check if the password is valid
@@ -125,7 +127,6 @@ func ValidateAboutMe(input string) error {
 	text := strings.TrimSpace(input)
 	length := utf8.RuneCountInString(text)
 
-
 	if length > 500 {
 		return errors.New("Your 'About Me' section must be under 500 characters.")
 	}
@@ -136,4 +137,9 @@ func ValidateAboutMe(input string) error {
 	}
 
 	return nil
+}
+
+func HashPassWord(pass string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(pass), bcrypt.DefaultCost)
+	return string(bytes), err
 }

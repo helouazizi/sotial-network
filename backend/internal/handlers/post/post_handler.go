@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"encoding/base64"
 	"io"
 	"net/http"
 	"strconv"
@@ -18,8 +19,34 @@ func NewAuthHandler(postService *services.PostService) *PostHandler {
 	return &PostHandler{service: postService}
 }
 
-// get all posts 
+// get all posts
+func (h *PostHandler) GetAllPosts(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
+			"message": "Method not allowed",
+			"status":  http.StatusMethodNotAllowed,
+		})
+		return
+	}
 
+	posts, err := h.service.GetAllPosts()
+	if err != nil {
+		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+			"message": "Internal Server Error",
+			"status":  http.StatusInternalServerError,
+		})
+		return
+	}
+
+	// Convert raw media bytes to base64 so it’s safe in JSON.
+	for i := range posts {
+		if len(posts[i].Media) > 0 {
+			posts[i].Media = []byte(base64.StdEncoding.EncodeToString(posts[i].Media))
+		}
+	}
+
+	utils.ResponseJSON(w, http.StatusOK, posts)
+}
 
 func (h *PostHandler) CreatePost(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {

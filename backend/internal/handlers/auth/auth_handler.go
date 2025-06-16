@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/ismailsayen/social-network/internal/models"
@@ -37,8 +38,9 @@ func (h *UserHandler) Register(w http.ResponseWriter, r *http.Request) {
 
 	err := h.service.SaveUser(user)
 	if err != nil {
+		fmt.Println(err)
 		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
-			"message": "Bad request",
+			"message": err,
 			"status":  http.StatusBadRequest,
 		})
 		return

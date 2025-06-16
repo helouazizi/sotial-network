@@ -1,7 +1,7 @@
 package services
 
 import (
-	"fmt"
+	"errors"
 
 	"github.com/ismailsayen/social-network/internal/models"
 	repositories "github.com/ismailsayen/social-network/internal/repositories/auth"
@@ -17,18 +17,12 @@ func NewAuthService(Authrepo *repositories.AuthRepository) *AuthService {
 }
 
 func (s *AuthService) SaveUser(user *models.User) error {
-	if len(user.Nickname) < 3 || len(user.Nickname) > 20 {
-		return fmt.Errorf("Nickname must be betwwen 3 and 20 charachter")
-
-	}
 	if !utils.ValidPass(user.PassWord) {
-		return fmt.Errorf("password is not valid")
+		return errors.New("password is not valid")
 	}
-
-
-
-
-
+	if !utils.ValidUsername(user.Nickname){
+		return errors.New("username is not valid")
+	}
 
 	return nil
 }

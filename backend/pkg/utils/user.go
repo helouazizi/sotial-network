@@ -87,3 +87,14 @@ func ValidEmail(Email string) bool {
 	validemailregex := regexp.MustCompile(`^[A-Za-z0-9]+([._-]?[A-Za-z0-9]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,63}$`)
 	return validemailregex.MatchString(Email)
 }
+
+func ValidName(name string) bool {
+    // Length check (1–100 chars)
+    if len(name) < 1 || len(name) > 100 {
+        return false
+    }
+
+    // Regex (ASCII only version)
+    re := regexp.MustCompile(`^[A-Za-z]+([ '\-][A-Za-z]+)*$`)
+    return re.MatchString(name)
+}

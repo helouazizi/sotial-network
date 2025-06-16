@@ -26,6 +26,14 @@ func (s *AuthService) SaveUser(user *models.User) error {
 	if !utils.ValidEmail(user.Email){
 		return errors.New("Email is not valid")
 	}
+	if !utils.ValidName(user.FirstName){
+		return errors.New("First Name is not valid")
+	}
+	if !utils.ValidName(user.Lastname){
+		return errors.New("Last Nameis not valid")
+	}
+
+
 
 	return nil
 }

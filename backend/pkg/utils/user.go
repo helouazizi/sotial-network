@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"regexp"
 	"strings"
 	"unicode"
 )
@@ -78,4 +79,11 @@ func ValidUsername(Username string) bool {
 	}
 
 	return true
+}
+
+func ValidEmail(Email string) bool {
+	Email = strings.TrimSpace(Email)
+
+	validemailregex := regexp.MustCompile(`^[A-Za-z0-9]+([._-]?[A-Za-z0-9]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,63}$`)
+	return validemailregex.MatchString(Email)
 }

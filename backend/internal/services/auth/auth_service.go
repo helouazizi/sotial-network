@@ -23,6 +23,9 @@ func (s *AuthService) SaveUser(user *models.User) error {
 	if !utils.ValidUsername(user.Nickname){
 		return errors.New("username is not valid")
 	}
+	if !utils.ValidEmail(user.Email){
+		return errors.New("Email is not valid")
+	}
 
 	return nil
 }

@@ -38,3 +38,6 @@ func (s *PostService) SavePost(post *models.Post) error {
 	// If validation passes, save using the repo
 	return s.repo.SavePost(post)
 }
+
+
+func (s *PostService) GetAllPosts() ([]models.Post, error) { return s.repo.All() }

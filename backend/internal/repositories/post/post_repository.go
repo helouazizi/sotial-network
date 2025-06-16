@@ -14,7 +14,7 @@ func NewPostRepo(db *sql.DB) *PostRepository {
 	return &PostRepository{db: db}
 }
 
-func (r *PostRepository) SavePost(user *models.User) {
+func (r *PostRepository) SavePost(post *models.Post) {
 	
 	
 }

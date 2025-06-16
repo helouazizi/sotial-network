@@ -1,4 +1,4 @@
-import { Post, Comment } from "@/types/post";
+import { Post, Comment } from "@/app/types/post";
 import { useState } from "react";
 
 export default function PostActions({

@@ -1,7 +1,7 @@
-@import url('../styles/post.css');
-@import url('../styles/footer.css');
+@import url('./styles/post.css');
+@import url('./styles/footer.css');
 
-@import url('../styles/header.css');
+@import url('./styles/header.css');
 
 :root {
   --background: #ffffff;

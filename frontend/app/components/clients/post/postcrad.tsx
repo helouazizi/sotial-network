@@ -2,7 +2,7 @@ import PostMeta from './postMeta';
 import PostBody from './postBody';
 import PostActions from './postActions';
 import PostComment from './postComment';
-import { Post } from '@/types/post';
+import { Post } from '@/app/types/post';
 
 export default function PostCard({
   post,

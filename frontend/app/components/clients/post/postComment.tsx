@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Post } from '@/types/post';
+import { Post } from '@/app/types/post';
 export default function PostComment({
   post,
   onPostUpdate

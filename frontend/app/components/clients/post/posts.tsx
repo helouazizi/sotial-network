@@ -1,7 +1,7 @@
 // components/Posts.tsx
 'use client';
 import { useState, useEffect } from "react";
-import { Post } from "@/types/post";
+import { Post } from "@/app/types/post";
 import PostCard from "./postcrad";
 
 export default function Posts() {

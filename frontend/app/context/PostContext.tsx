@@ -1,7 +1,7 @@
 
 'use client';
 import { createContext, useContext, useState, ReactNode } from "react";
-import { Post } from "@/types/post";
+import { Post } from "@/app/types/post";
 
 // lets define an interface to declare all values that our context can provide to compnnents
 interface PostContextType {

@@ -14,7 +14,6 @@ func NewPostRepo(db *sql.DB) *PostRepository {
 	return &PostRepository{db: db}
 }
 
-func (r *PostRepository) SavePost(post *models.Post) {
-	
-	
+func (r *PostRepository) SavePost(post *models.Post)error {
+	return nil
 }

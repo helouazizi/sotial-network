@@ -13,8 +13,8 @@ type PostHandler struct {
 	service *services.PostService
 }
 
-func NewAuthHandler(AuthService *services.PostService) *PostHandler {
-	return &PostHandler{service: AuthService}
+func NewAuthHandler(postService *services.PostService) *PostHandler {
+	return &PostHandler{service: postService}
 }
 
 func (h *PostHandler) Register(w http.ResponseWriter, r *http.Request) {

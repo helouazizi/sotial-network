@@ -6,6 +6,7 @@ import (
 	"strings"
 	"time"
 	"unicode"
+	"unicode/utf8"
 )
 
 // Check if the password is valid
@@ -112,12 +113,27 @@ func ValidDateOfBirth(dobstr string) error {
 	}
 	age := int(today.Sub(dob).Hours() / 24 / 365.25)
 	if age < 13 {
-		
 		return errors.New("you should be at least  13 years")
 	}
 	if age > 120 {
-	
-		return  errors.New("you arr to old for this ")
+		return errors.New("you arr to old for this ")
 	}
+	return nil
+}
+
+func ValidateAboutMe(input string) error {
+	text := strings.TrimSpace(input)
+	length := utf8.RuneCountInString(text)
+
+
+	if length > 500 {
+		return errors.New("Your 'About Me' section must be under 500 characters.")
+	}
+
+	// Optional: Reject links/emails
+	if strings.Contains(text, "http://") || strings.Contains(text, "https://") || strings.Contains(text, "@") {
+		return errors.New("Please avoid including links or email addresses.")
+	}
+
 	return nil
 }

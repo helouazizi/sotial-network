@@ -35,8 +35,9 @@ func (s *AuthService) SaveUser(user *models.User) error {
 	if err:= utils.ValidDateOfBirth(user.DateofBirth) ; err!= nil {
 		return err
 	}
-
-
+	if 	 err:= utils.ValidateAboutMe(user.AboutMe) ; err!= nil {
+		return err
+	}
 
 
 	return nil

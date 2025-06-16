@@ -39,12 +39,10 @@ func (h *UserHandler) Register(w http.ResponseWriter, r *http.Request) {
 	err := h.service.SaveUser(user)
 	if err.UserErrors.HasErro {
 		fmt.Println(err)
-		utils.ResponseJSON(w, http.StatusBadRequest,err )
+		utils.ResponseJSON(w, http.StatusBadRequest, err)
 		return
 	}
 
-	utils.ResponseJSON(w, http.StatusOK, map[string]any{
-		"message": "Successfully created user",
-		"status":  http.StatusOK,
-	})
+	utils.ResponseJSON(w, err.Code, err)
+	
 }

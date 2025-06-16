@@ -2,7 +2,6 @@ package repositories
 
 import (
 	"database/sql"
-	"net/http"
 	"time"
 
 	"github.com/ismailsayen/social-network/internal/models"
@@ -57,8 +56,33 @@ func (r *AuthRepository) SaveUser(user *models.User) models.Error {
 			Message: "Internal Server Error ",
 		}
 	}
-	return models.Error{
-		Message: "seccefully created your account",
-		Code:    http.StatusCreated,
+	dublicate, Error := r.CheckTheExiste(user)
+	if dublicate {
+		usererror := models.UserError{
+			HasErro:  true,
+			Nickname: "neckname or Email already existe ",
+			Email:    "neckname or Email already existe ",
+		}
+		return models.Error{
+			UserErrors: usererror,
+		}
+
+	}
+	return Error
+}
+
+func (r *AuthRepository) CheckTheExiste(user *models.User) (bool, models.Error) {
+	var isExiste bool
+	query := "SELECT EXISTS(SELECT 1 FROM users WHERE email = ? OR nickname = ?)"
+	err := r.db.QueryRow(query, user.Email, user.Nickname).Scan(&isExiste)
+	if err != nil && err != sql.ErrNoRows {
+		return false, models.Error{
+			Code:    500,
+			Message: "Internale Server Error",
+		}
+	}
+	return isExiste, models.Error{
+		Code:    200,
+		Message: "this operation want smouthly",
 	}
 }

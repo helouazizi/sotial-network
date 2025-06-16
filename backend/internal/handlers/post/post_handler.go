@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/base64"
+	"fmt"
 	"io"
 	"net/http"
 	"strconv"
@@ -35,6 +36,7 @@ func (h *PostHandler) GetAllPosts(w http.ResponseWriter, r *http.Request) {
 			"message": "Internal Server Error",
 			"status":  http.StatusInternalServerError,
 		})
+		fmt.Println(err)
 		return
 	}
 

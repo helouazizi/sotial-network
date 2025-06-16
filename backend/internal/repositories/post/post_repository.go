@@ -40,7 +40,7 @@ func (r *PostRepository) SavePost(post *models.Post) error {
 }
 
 func (r *PostRepository) All() ([]models.Post, error) {
-	const q = `SELECT id, user_id, title, content, media, privacy, created_at
+	const q = `SELECT id, user_id, title, content, media, type, created_at
 	           FROM posts ORDER BY created_at DESC`
 	rows, err := r.db.Query(q)
 	if err != nil {

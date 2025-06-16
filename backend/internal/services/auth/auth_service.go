@@ -32,6 +32,10 @@ func (s *AuthService) SaveUser(user *models.User) error {
 	if !utils.ValidName(user.Lastname){
 		return errors.New("Last Nameis not valid")
 	}
+	if err:= utils.ValidDateOfBirth(user.DateofBirth) ; err!= nil {
+		return err
+	}
+
 
 
 

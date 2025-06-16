@@ -1,8 +1,10 @@
 package utils
 
 import (
+	"errors"
 	"regexp"
 	"strings"
+	"time"
 	"unicode"
 )
 
@@ -89,12 +91,33 @@ func ValidEmail(Email string) bool {
 }
 
 func ValidName(name string) bool {
-    // Length check (1–100 chars)
-    if len(name) < 1 || len(name) > 100 {
-        return false
-    }
+	// Length check (1–100 chars)
+	if len(name) < 1 || len(name) > 100 {
+		return false
+	}
 
-    // Regex (ASCII only version)
-    re := regexp.MustCompile(`^[A-Za-z]+([ '\-][A-Za-z]+)*$`)
-    return re.MatchString(name)
+	// Regex (ASCII only version)
+	re := regexp.MustCompile(`^[A-Za-z]+([ '\-][A-Za-z]+)*$`)
+	return re.MatchString(name)
+}
+
+func ValidDateOfBirth(dobstr string) error {
+	dob, err := time.Parse("2006-01-02", dobstr)
+	if err != nil {
+		return errors.New("Invalid date format")
+	}
+	today := time.Now()
+	if dob.After(today) {
+		return errors.New("Subhan Allah you are not born yet back when you are born and have 13 years")
+	}
+	age := int(today.Sub(dob).Hours() / 24 / 365.25)
+	if age < 13 {
+		
+		return errors.New("you should be at least  13 years")
+	}
+	if age > 120 {
+	
+		return  errors.New("you arr to old for this ")
+	}
+	return nil
 }

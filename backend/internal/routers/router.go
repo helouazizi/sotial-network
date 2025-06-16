@@ -13,7 +13,7 @@ func SetupRoutes(app *app.Application) *http.ServeMux {
 
 
 	//================== posts routes =========================///
-	// mux.HandleFunc("/api/v1/posts", app.PostHandler.GetPosts)
+	mux.HandleFunc("/api/v1/posts", app.PostHandler.GetAllPosts)
 	mux.HandleFunc("/api/v1/posts/create", app.PostHandler.CreatePost)
 
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {

@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"fmt"
+	"io"
 	"net/http"
 	"strconv"
 
@@ -47,29 +48,29 @@ func (h *PostHandler) CreatePost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// === Get the media file ===
-	// file, _, err := r.FormFile("media")
-	// var mediaData []byte
-	// if err == nil {
-	// 	defer file.Close()
-	// 	mediaData, err = io.ReadAll(file)
-	// 	if err != nil {
-	// 		http.Error(w, "Error reading media file", http.StatusInternalServerError)
-	// 		return
-	// 	}
-	// } // If no media is provided, mediaData remains nil
+	file, _, err := r.FormFile("media")
+	var mediaData []byte
+	if err == nil {
+		defer file.Close()
+		mediaData, err = io.ReadAll(file)
+		if err != nil {
+			http.Error(w, "Error reading media file", http.StatusInternalServerError)
+			return
+		}
+	} // If no media is provided, mediaData remains nil
 
 	// Debugging (optional)
 	fmt.Println("Title:", title)
 	fmt.Println("Content:", content)
 	fmt.Println("Privacy:", privacy)
 	fmt.Println("User ID:", userID)
-	// fmt.Println("Media size (bytes):", len(mediaData))
+	// fmt.Println("Media size (bytes):", len(mediaData), (mediaData))
 	post := &models.Post{
 		UserID:  userID,
 		Title:   title,
 		Content: content,
-		// Media:    media,
-		Type: privacy,
+		Media:   mediaData,
+		Type:    privacy,
 	}
 	err = h.service.SavePost(post)
 	if err != nil {

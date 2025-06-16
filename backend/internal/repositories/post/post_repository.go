@@ -17,8 +17,8 @@ func NewPostRepo(db *sql.DB) *PostRepository {
 
 func (r *PostRepository) SavePost(post *models.Post) error {
 	query := `
-		INSERT INTO posts (user_id, title, content, type, created_at)
-		VALUES (?, ?, ?, ?, ?)
+		INSERT INTO posts (user_id, title, content, type, media, created_at)
+		VALUES (?, ?, ?, ?, ?, ?)
 	`
 
 	stmt, err := r.db.Prepare(query)
@@ -32,6 +32,7 @@ func (r *PostRepository) SavePost(post *models.Post) error {
 		post.Title,
 		post.Content,
 		post.Type,
+		post.Media,
 		time.Now(),
 	)
 

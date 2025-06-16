@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"io"
 	"net/http"
 	"strconv"
@@ -31,7 +30,10 @@ func (h *PostHandler) CreatePost(w http.ResponseWriter, r *http.Request) {
 	// Parse the multipart form (maxMemory for in-memory part before writing to temp file)
 	err := r.ParseMultipartForm(10 << 20) // 10 MB
 	if err != nil {
-		http.Error(w, "Failed to parse form data", http.StatusBadRequest)
+		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
+			"message": "Bad Request",
+			"status":  http.StatusBadRequest,
+		})
 		return
 	}
 
@@ -43,7 +45,10 @@ func (h *PostHandler) CreatePost(w http.ResponseWriter, r *http.Request) {
 
 	userID, err := strconv.Atoi(userIDStr)
 	if err != nil {
-		http.Error(w, "Invalid user ID", http.StatusBadRequest)
+		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
+			"message": "Bad Request",
+			"status":  http.StatusBadRequest,
+		})
 		return
 	}
 
@@ -54,17 +59,13 @@ func (h *PostHandler) CreatePost(w http.ResponseWriter, r *http.Request) {
 		defer file.Close()
 		mediaData, err = io.ReadAll(file)
 		if err != nil {
-			http.Error(w, "Error reading media file", http.StatusInternalServerError)
+			utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+				"message": "Internal Server Error",
+				"status":  http.StatusInternalServerError,
+			})
 			return
 		}
-	} // If no media is provided, mediaData remains nil
-
-	// Debugging (optional)
-	fmt.Println("Title:", title)
-	fmt.Println("Content:", content)
-	fmt.Println("Privacy:", privacy)
-	fmt.Println("User ID:", userID)
-	// fmt.Println("Media size (bytes):", len(mediaData), (mediaData))
+	}
 	post := &models.Post{
 		UserID:  userID,
 		Title:   title,
@@ -78,7 +79,6 @@ func (h *PostHandler) CreatePost(w http.ResponseWriter, r *http.Request) {
 			"message": "Bad request",
 			"status":  http.StatusBadRequest,
 		})
-		fmt.Println(err)
 		return
 	}
 

@@ -29,7 +29,7 @@ func (s *PostService) SavePost(post *models.Post) error {
 		"almost_private": true,
 		"private":        true,
 	}
-	if !validPrivacy[post.Privacy] {
+	if !validPrivacy[post.Type] {
 		return errors.New("invalid privacy value")
 	}
 

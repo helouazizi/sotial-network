@@ -41,7 +41,7 @@ export default function CreatePostForm() {
             return;
         }
 
-        const body = formData.get("body")?.toString().trim();
+        const body = formData.get("content")?.toString().trim();
         if (typeof body !== 'string' || body.length < 1 || body.length > 500) {
             alert("Body must be betwen {1-500} characters");
             return;
@@ -79,7 +79,7 @@ export default function CreatePostForm() {
 
             <label>
                 Body
-                <textarea name="body" rows={4} required maxLength={500} />
+                <textarea name="content" rows={4} required maxLength={500} />
             </label>
 
             <label>

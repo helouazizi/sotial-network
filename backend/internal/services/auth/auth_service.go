@@ -5,6 +5,7 @@ import (
 
 	"github.com/ismailsayen/social-network/internal/models"
 	repositories "github.com/ismailsayen/social-network/internal/repositories/auth"
+	"github.com/ismailsayen/social-network/pkg/utils"
 )
 
 type AuthService struct {
@@ -20,35 +21,14 @@ func (s *AuthService) SaveUser(user *models.User) error {
 		return fmt.Errorf("Nickname must be betwwen 3 and 20 charachter")
 
 	}
-	if err:= s.CheckEmpty(user);err!=nil {
-		return err
+	if !utils.ValidPass(user.PassWord) {
+		return fmt.Errorf("password is not valid")
 	}
+
+
 
 
 
 
 	return nil
-}
-func (s *AuthService) CheckEmpty(user *models.User)error{
-
-	if user.DateofBirth == "" {
-	return fmt.Errorf("Date Of Birth Is Empty")
-	}
-		if user.Email == "" {
-	return fmt.Errorf("Email Is Empty")
-	}
-		if user.FirstName == "" {
-	return fmt.Errorf("First Name Is Empty")
-	}
-		if user.Lastname == "" {
-	return fmt.Errorf("Last Name Is Empty")
-	}
-		if user.PassWord == "" {
-	return fmt.Errorf("PassWord Is Empty")
-	}
-
-
-	return nil 
-
-	
 }

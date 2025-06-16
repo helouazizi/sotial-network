@@ -18,7 +18,7 @@ func NewAuthHandler(AuthService *services.AuthService) *UserHandler {
 }
 
 func (h *UserHandler) Register(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
+	if r.Method != http.MethodPost {
 		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
 			"message": "Method not allowed",
 			"status":  http.StatusMethodNotAllowed,

@@ -11,6 +11,11 @@ func SetupRoutes(app *app.Application) *http.ServeMux {
 
 	mux.HandleFunc("/api/v1/user/register", app.AuthHundler.Register)
 
+
+	//================== posts routes =========================///
+	// mux.HandleFunc("/api/v1/posts", app.PostHandler.GetPosts)
+	mux.HandleFunc("/api/v1/posts/create", app.PostHandler.CreatePost)
+
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("hello from social network"))
 	})

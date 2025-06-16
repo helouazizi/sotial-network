@@ -10,6 +10,7 @@ export default function CreatePostForm() {
         const form = e.currentTarget as HTMLFormElement;
         const formData = new FormData(form);
         formData.append('privacy', privacy);
+        formData.append('user_id','1')
 
         // ============ validate data in front ================//
         // --- Validate Media File ---
@@ -53,19 +54,19 @@ export default function CreatePostForm() {
             return;
         }
 
-        alert('Post created!');
-        // const res = await fetch('/api/posts', {
-        //   method: 'POST',
-        //   body: formData,
-        // });
+        // alert('Post created!');
+        const res = await fetch('http://localhost:8080/api/v1/posts/create', {
+          method: 'POST',
+          body: formData,
+        });
 
-        // if (res.ok) {
-        //   alert('Post created!');
-        //   form.reset();
-        //   setPrivacy('public');
-        // } else {
-        //   alert('Failed to create post.');
-        // }
+        if (res.ok) {
+          alert('Post created!');
+          form.reset();
+          setPrivacy('public');
+        } else {
+          alert('Failed to create post.');
+        }
     };
 
     return (
@@ -94,7 +95,7 @@ export default function CreatePostForm() {
                     value={privacy}
                     onChange={e => setPrivacy(e.target.value)}
                 >
-                    <option value="public">Public (for all users)</option>
+                    <option value="public" >Public (for all users)</option>
                     <option value="almost_private">Almost Private (for followers onlly)</option>
                     <option value="private">Private (for creator)</option>
                 </select>

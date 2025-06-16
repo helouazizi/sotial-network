@@ -36,6 +36,27 @@ func (r *PostRepository) SavePost(post *models.Post) error {
 		time.Now(),
 	)
 
-
 	return err
+}
+
+func (r *PostRepository) All() ([]models.Post, error) {
+	const q = `SELECT id, user_id, title, content, media, privacy, created_at
+	           FROM posts ORDER BY created_at DESC`
+	rows, err := r.db.Query(q)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var posts []models.Post
+	for rows.Next() {
+		var p models.Post
+		err := rows.Scan(&p.ID, &p.UserID, &p.Title, &p.Content,
+			&p.Media, &p.Type, &p.CreatedAt)
+		if err != nil {
+			return nil, err
+		}
+		posts = append(posts, p)
+	}
+	return posts, rows.Err()
 }

@@ -18,6 +18,9 @@ func NewAuthHandler(postService *services.PostService) *PostHandler {
 	return &PostHandler{service: postService}
 }
 
+// get all posts 
+
+
 func (h *PostHandler) CreatePost(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{

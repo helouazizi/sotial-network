@@ -9,3 +9,7 @@ type ChatRepository struct {
 func NewChatRepo(db *sql.DB) *ChatRepository {
 	return &ChatRepository{db: db}
 }
+
+func (r *ChatRepository) Save() {
+	
+}

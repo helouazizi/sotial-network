@@ -25,7 +25,7 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
-func (c *ChatHandler) ChatMessagesHandler(w http.ResponseWriter, r *http.Request) {
+func (h *ChatHandler) ChatMessagesHandler(w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
@@ -37,14 +37,15 @@ func (c *ChatHandler) ChatMessagesHandler(w http.ResponseWriter, r *http.Request
 	defer conn.Close()
 
 	
-	var message models.Chat
+	var chat models.Chat
 
 	for {
-		err := conn.ReadJSON(&message)
+		err := conn.ReadJSON(&chat)
 		if err != nil {
 			fmt.Println("Error reading message:", err)
 			break
 		}
-		fmt.Println(message)
+
+
 	}
 }

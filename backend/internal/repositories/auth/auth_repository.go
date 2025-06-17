@@ -25,6 +25,7 @@ func (r *AuthRepository) SaveUser(user *models.User) models.Error {
 	if duplicate {
 		userError := models.UserError{
 			HasErro: true,
+			
 		}
 		msg := ""
 

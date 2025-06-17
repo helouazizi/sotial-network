@@ -71,8 +71,6 @@ export default function CreatePostForm() {
     });
 
     if (res.ok) {
-    //   form.reset();
-    //   setPrivacy("public");
       router.push("/");
     } else {
       alert("Failed to create post.");
@@ -114,6 +112,13 @@ export default function CreatePostForm() {
       </label>
 
       <button type="submit">Submit Post</button>
+      <button
+        onClick={() => {
+          router.push("/");
+        }}
+      >
+        Cancel
+      </button>
     </form>
   );
 }

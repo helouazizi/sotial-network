@@ -1,8 +1,9 @@
 // components/Posts.tsx
 "use client";
-import { useState, useEffect, Component } from "react";
+import { useState, useEffect } from "react";
 import { Post } from "@/app/types/post";
 import PostCard from "./postcrad";
+import { NoPostsMessage } from "./noPosts";
 
 export default function Posts() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -13,17 +14,17 @@ export default function Posts() {
       .then((res) => res.json())
       .then((data) => {
         // Add dummy likes/comments to each post
-        let enriched: Post[] = [];
+        let vertualPosts: Post[] = [];
         if (data)
-          enriched = data.map((post: Post) => ({
+          vertualPosts = data.map((post: Post) => ({
             ...post,
-            likes: 0,
-            dislikes: 0,
-            comments: post.comments,
-            totalComments: 0,
+            likes: post.likes || 0,
+            dislikes: post.dislikes || 0,
+            totalComments: post.totalComments || 0,
+            comments: post.comments || [],
           }));
 
-        setPosts(enriched);
+        setPosts(vertualPosts);
         setLoading(false);
       })
       .catch((err) => {
@@ -49,10 +50,7 @@ export default function Posts() {
           ))}
         </ul>
       ) : (
-        <div className="no-posts-message">
-          <h2>No posts yet</h2>
-          <p>Looks like there’s nothing here. Start by creating a new post!</p>
-        </div>
+        <NoPostsMessage />
       )}
     </div>
   );

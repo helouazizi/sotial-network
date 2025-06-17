@@ -1,5 +1,9 @@
 export interface Comment {
+  author: string;
   comment: string;
+  created_at: string;
+  likes: number;
+  dislikes: number;
   // Add more fields like id, userId, createdAt if needed
 }
 
@@ -14,5 +18,5 @@ export interface Post {
   likes: number;
   dislikes: number;
   totalComments: number;
-  comments: Comment[]; 
+  comments: Comment[];
 }

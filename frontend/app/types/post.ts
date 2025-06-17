@@ -14,5 +14,5 @@ export interface Post {
   likes: number;
   dislikes: number;
   totalComments: number;
-  comments: Comment[]; // ✅ Correct type for comment array
+  comments: Comment[]; 
 }

@@ -1,9 +1,11 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gorilla/websocket"
+	"github.com/ismailsayen/social-network/internal/models"
 	services "github.com/ismailsayen/social-network/internal/services/chat"
 	"github.com/ismailsayen/social-network/pkg/utils"
 )
@@ -35,4 +37,14 @@ func (c *ChatHandler) ChatMessagesHandler(w http.ResponseWriter, r *http.Request
 	defer conn.Close()
 
 	
+	var message models.Chat
+
+	for {
+		err := conn.ReadJSON(&message)
+		if err != nil {
+			fmt.Println("Error reading message:", err)
+			break
+		}
+		fmt.Println(message)
+	}
 }

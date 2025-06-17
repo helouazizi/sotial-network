@@ -51,15 +51,18 @@ func ValidPass(Password string) bool {
 func ValidUsername(Username string) bool {
 	// Define allowed characters (lowercase a-z, 0-9, -, _, ', .)
 	validChar := "abcdefghijklmnopqrstuvwxyz0123456789-_.'"
-
+	// Convert to lowercase and trim spaces
+	Username = strings.ToLower(Username)
+	Username = strings.TrimSpace(Username)
 	// Check length constraints
+	if len(Username) == 0 {
+		return true
+	}
 	if len(Username) <= 3 || len(Username) >= 64 {
 		return false
 	}
 
-	// Convert to lowercase and trim spaces
-	Username = strings.ToLower(Username)
-	Username = strings.TrimSpace(Username)
+
 
 	// Check if username starts or ends with a period (.)
 	if Username[0] == '.' || Username[len(Username)-1] == '.' {

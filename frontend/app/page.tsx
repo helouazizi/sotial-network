@@ -1,9 +1,14 @@
-import styles from "./page.module.css";
+
+'use client';
+import Posts from "@/app/components/clients/post/posts";
 
 export default function Home() {
+
+
+
   return (
-    <div className={styles.page}>
-      <h1>@hello from sotial-network</h1>
-    </div>
+    <main>
+      <Posts />
+    </main>
   );
 }

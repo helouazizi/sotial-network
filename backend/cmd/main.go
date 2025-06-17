@@ -8,6 +8,8 @@ import (
 	"github.com/ismailsayen/social-network/internal/app"
 	"github.com/ismailsayen/social-network/internal/routers"
 	"github.com/ismailsayen/social-network/pkg/db/sqlite"
+
+	_ "github.com/mattn/go-sqlite3"
 )
 
 func main() {

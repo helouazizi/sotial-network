@@ -1,0 +1,53 @@
+📦 app/
+│
+├── 📁 api/                  # Route handlers (for internal API)
+│   ├── posts/
+│   │   └── route.ts        # POST /api/posts
+│   ├── auth/
+│   │   └── route.ts        # POST /api/auth
+│   └── users/
+│       └── route.ts
+│
+├── 📁 auth/                 # Login/Register pages
+│   ├── login/
+│   │   └── page.tsx
+│   └── register/
+│       └── page.tsx
+│
+├── 📁 dashboard/           # Feed after login
+│   └── page.tsx
+│
+├── 📁 profile/             # Dynamic user profiles
+│   └── [username]/         
+│       └── page.tsx
+│
+├── 📁 settings/            # Account settings
+│   └── page.tsx
+│
+├── 📁 layout.tsx           # Root layout (global HTML, head, theme, etc.)
+├── 📁 page.tsx             # Landing page (unauthenticated)
+└── 📁 globals.css          # Global styles
+
+
+@@ helpere folders optional
+
+📦 components/
+│   ├── Navbar.tsx
+│   ├── PostCard.tsx
+│   └── PostForm.tsx
+
+📦 context/
+│   └── PostContext.tsx      # usePosts hook and provider
+
+📦 lib/
+│   ├── auth.ts              # Auth helpers
+│   └── api.ts               # API fetch wrapper
+
+📦 hooks/
+│   └── useUser.ts           # Fetch current user, etc.
+
+📦 types/
+│   └── post.ts              # Post, User, Comment types
+
+📦 utils/
+│   └── formatDate.ts        # Utility functions

@@ -1,0 +1,247 @@
+.posts-page {
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+  font-family: 'Segoe UI', sans-serif;
+  /* background-color: #f9f9f9; */
+}
+
+.posts-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.post-card {
+  background-color: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+
+
+.post-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+.post-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: red;
+}
+
+.post-body h2 {
+  font-size: 1.4rem;
+  margin: 2rem 0;
+  color: #222;
+  
+}
+
+.post-body p {
+  margin: 2rem 0;
+  line-height: 1.6;
+  color: #444;
+}
+
+/* Assuming you're using a global CSS or a CSS Module for post styles */
+
+.post-actions {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  border-top: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.post-actions > div {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+
+
+.post-actions .extra {
+  color: #555;
+  font-weight: 500;
+}
+.comments-list {
+  margin-top: 0.75rem;
+  padding: 0.75rem 1rem;
+  background-color: #f9f9f9;
+  border-left: 3px solid #1e40af;
+  border-radius: 0 0 8px 8px;
+  max-height: 200px; /* restrict height */
+  overflow-y: auto; /* make scrollable */
+  display: flex;
+  flex-direction: column;
+  font-size: 0.875rem;
+  color: #333;
+  transition: all 0.3s ease;
+}
+
+.comments-list::-webkit-scrollbar {
+  width: 6px;
+}
+.comments-list::-webkit-scrollbar-thumb {
+  background-color: #c7d2fe;
+  border-radius: 3px;
+}
+.comments-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Optional: style each comment */
+.comments-list li {
+  padding: 0.5rem 0.75rem;
+  background-color: #fff;
+  border-radius: 6px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  margin:0.5rem 0.75rem;
+  list-style: none;
+}
+
+.post-actions button {
+  margin-right: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #e0e7ff;
+  color: #1e40af;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.post-comment {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.post-comment button {
+  padding: 0.5rem;
+ 
+  background-color: #e0e7ff;
+  color: #1e40af;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.post-comment input {
+  width: 90%;
+  padding: 0.5rem 0.75rem;
+  border: none;
+  border-radius: 0.4rem;
+  background-color: #8a8a8a;
+  color: #fff;
+  font-size: 1rem;
+  outline: none;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.post-comment input::placeholder {
+  color: #cccccc;
+}
+
+.post-comment input:focus {
+  background-color: #616161;
+  box-shadow: 0 0 0 2px #888888;
+}
+
+
+.post-actions button:hover {
+  background-color: #c7d2fe;
+}
+
+
+.comments-list {
+  margin-top: 0.5rem;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  /* overflow: hidden; */
+  display: block;
+  color: black;
+  /* display: none; */
+  
+}
+
+
+/* ========================== post form ================================= */
+.post-form {
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-family: sans-serif;
+  background: #ffffff;
+  color: black;
+}
+
+.post-form h2 {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.post-form label {
+  display: block;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.post-form input[type="text"],
+.post-form textarea,
+.post-form select,
+.post-form input[type="file"] {
+  width: 100%;
+  margin-top: 0.4rem;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.post-form button {
+  width: 100%;
+  padding: 0.6rem;
+  margin-top: 1rem;
+  background-color: #0070f3;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.post-form button:hover {
+  background-color: #0059c1;
+}
+
+
+@media (max-width : 768px) {
+  .extra {
+    display: none;
+  }
+
+  .post-actions div button {
+    padding: 0.2rem 0.5rem ;
+  }
+}

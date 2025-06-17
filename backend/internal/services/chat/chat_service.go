@@ -7,3 +7,7 @@ import (
 type ChatService struct {
 	repo *repositories.ChatRepository
 }
+
+func NewChatService(ChatRepo *repositories.ChatRepository) *ChatService {
+	return &ChatService{repo: ChatRepo}
+}

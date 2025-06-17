@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"database/sql"
+	"net/http"
 	"time"
 
 	"github.com/ismailsayen/social-network/internal/models"
@@ -17,13 +18,42 @@ func NewAuthRepo(db *sql.DB) *AuthRepository {
 }
 
 func (r *AuthRepository) SaveUser(user *models.User) models.Error {
-	HashPassWord, err := utils.HashPassWord(user.PassWord)
-	if err != nil {
+	duplicate, field, err := r.CheckIfExiste(user)
+	if err.Code != http.StatusOK {
+		return err
+	}
+	if duplicate {
+		userError := models.UserError{
+			HasErro: true,
+		}
+		msg := ""
+
+		switch field {
+		case "email":
+			userError.Email = "Email already exists"
+			msg = "Email already exists"
+		case "nickname":
+			userError.Nickname = "Nickname already exists"
+			msg = "Nickname already exists"
+		default:
+			msg = "Email or nickname already exists"
+		}
+
 		return models.Error{
-			Code:    500,
-			Message: "Internal Server Error ",
+			Code:       http.StatusConflict, // 409 Conflict
+			UserErrors: userError,
+			Message:    msg,
 		}
 	}
+
+	hashedPassword, errHash := utils.HashPassWord(user.PassWord)
+	if errHash != nil {
+		return models.Error{
+			Code:    http.StatusInternalServerError,
+			Message: "Internal Server Error while hashing password",
+		}
+	}
+
 	query := `
 	INSERT INTO users (
 		last_name,
@@ -38,51 +68,67 @@ func (r *AuthRepository) SaveUser(user *models.User) models.Error {
 		updated_at
 	) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 	`
-	_, err = r.db.Exec(query,
+
+	_, errExec := r.db.Exec(query,
 		user.Lastname,
 		user.FirstName,
 		user.Nickname,
 		user.Email,
-		HashPassWord,
+		hashedPassword,
 		user.DateofBirth,
-		0,
+		0, // is_private default false
 		user.AboutMe,
 		time.Now(),
 		time.Now(),
 	)
-	if err != nil {
-		return models.Error{
-			Code:    500,
-			Message: "Internal Server Error ",
-		}
-	}
-	dublicate, Error := r.CheckTheExiste(user)
-	if dublicate {
-		usererror := models.UserError{
-			HasErro:  true,
-			Nickname: "neckname or Email already existe ",
-			Email:    "neckname or Email already existe ",
-		}
-		return models.Error{
-			UserErrors: usererror,
-		}
 
+	if errExec != nil {
+		return models.Error{
+			Code:    http.StatusInternalServerError,
+			Message: "Internal Server Error while saving user",
+		}
 	}
-	return Error
+
+	return models.Error{
+		Code:    http.StatusOK,
+		Message: "User registered successfully",
+	}
 }
 
-func (r *AuthRepository) CheckTheExiste(user *models.User) (bool, models.Error) {
-	var isExiste bool
-	query := "SELECT EXISTS(SELECT 1 FROM users WHERE email = ? OR nickname = ?)"
-	err := r.db.QueryRow(query, user.Email, user.Nickname).Scan(&isExiste)
+func (r *AuthRepository) CheckIfExiste(user *models.User) (bool, string, models.Error) {
+	var emailExists, nicknameExists bool
+
+	// Check if email exists
+	queryEmail := "SELECT EXISTS(SELECT 1 FROM users WHERE email = ?)"
+	err := r.db.QueryRow(queryEmail, user.Email).Scan(&emailExists)
 	if err != nil && err != sql.ErrNoRows {
-		return false, models.Error{
+		return false, "", models.Error{
 			Code:    500,
-			Message: "Internale Server Error",
+			Message: "Internal Server Error while checking email",
 		}
 	}
-	return isExiste, models.Error{
+
+	// Check if nickname exists
+	queryNickname := "SELECT EXISTS(SELECT 1 FROM users WHERE nickname = ?)"
+	err = r.db.QueryRow(queryNickname, user.Nickname).Scan(&nicknameExists)
+	if err != nil && err != sql.ErrNoRows {
+		return false, "", models.Error{
+			Code:    500,
+			Message: "Internal Server Error while checking nickname",
+		}
+	}
+
+	// Determine what exists
+	if emailExists {
+		return true, "email", models.Error{Code: 200, Message: "Email already in use"}
+	}
+	if nicknameExists {
+		return true, "nickname", models.Error{Code: 200, Message: "Nickname already in use"}
+	}
+
+	// If neither exists
+	return false, "none", models.Error{
 		Code:    200,
-		Message: "this operation want smouthly",
+		Message: "No duplicate found",
 	}
 }

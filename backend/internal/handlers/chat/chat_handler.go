@@ -46,6 +46,6 @@ func (h *ChatHandler) ChatMessagesHandler(w http.ResponseWriter, r *http.Request
 			break
 		}
 
-
+		
 	}
 }

@@ -18,9 +18,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <html lang="en">
       <body>
         <Header/>
-        <main>
+     
           {children}
-        </main>
+     
 
         {/* <Footer/> */}
       </body>

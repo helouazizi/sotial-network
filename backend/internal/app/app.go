@@ -10,12 +10,17 @@ import (
 	chatHandlers "github.com/ismailsayen/social-network/internal/handlers/chat"
 	chatRepo "github.com/ismailsayen/social-network/internal/repositories/chat"
 	chatServices "github.com/ismailsayen/social-network/internal/services/chat"
+
+	profileHandlers "github.com/ismailsayen/social-network/internal/handlers/profile"
+	profileRepo "github.com/ismailsayen/social-network/internal/repositories/profile"
+	profileServices "github.com/ismailsayen/social-network/internal/services/profile"
 )
 
 type Application struct {
-	DB          *sql.DB
-	AuthHundler *handlers.UserHandler
-	ChatHandler *chatHandlers.ChatHandler
+	DB             *sql.DB
+	AuthHundler    *handlers.UserHandler
+	ChatHandler    *chatHandlers.ChatHandler
+	ProfileHandler *profileHandlers.ProfileHandler
 }
 
 func NewApp(db *sql.DB) *Application {
@@ -27,9 +32,13 @@ func NewApp(db *sql.DB) *Application {
 	ChatService := chatServices.NewChatService(ChatRepo)
 	ChatHandler := chatHandlers.NewChatHandler(ChatService)
 
+	ProfileRepo := profileRepo.NewProfileRepository(db)
+	ProfileServices := profileServices.NewProfileService(ProfileRepo)
+	ProfileHandler := profileHandlers.NewProfileHandler(ProfileServices)
 	return &Application{
-		DB:          db,
-		AuthHundler: AuthHandler,
-		ChatHandler: ChatHandler,
+		DB:             db,
+		AuthHundler:    AuthHandler,
+		ChatHandler:    ChatHandler,
+		ProfileHandler: ProfileHandler,
 	}
 }

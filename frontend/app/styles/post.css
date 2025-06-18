@@ -256,3 +256,91 @@
 .create-post-button:hover {
   background-color: #0056b3;
 }
+
+
+
+
+
+/* ======================================== form */
+
+.post-form {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  color: #000000;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.post-form h2 {
+  font-size: 1.8rem;
+  color: #1f2937;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.post-form label {
+  display: flex;
+  flex-direction: column;
+  font-weight: 500;
+  color: #374151;
+  gap: 0.5rem;
+}
+
+.post-form input[type="text"],
+.post-form input[type="file"],
+.post-form textarea,
+.post-form select {
+  padding: 0.75rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: #f9fafb;
+  transition: border-color 0.2s, box-shadow 0.2s;
+   color: #000000;
+}
+
+.post-form input:focus,
+.post-form textarea:focus,
+.post-form select:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
+  outline: none;
+   color: #000000;
+}
+
+.post-form textarea {
+  resize: vertical;
+}
+
+.post-form button {
+  padding: 0.75rem 1.25rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.post-form button[type="submit"] {
+  background-color: #4f46e5;
+  color: white;
+}
+
+.post-form button[type="submit"]:hover {
+  background-color: #4338ca;
+}
+
+.post-form button:not([type="submit"]) {
+  background-color: #e5e7eb;
+  color: #1f2937;
+}
+
+.post-form button:not([type="submit"]):hover {
+  background-color: #d1d5db;
+}

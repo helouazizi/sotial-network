@@ -39,10 +39,13 @@ func (r *PostRepository) SavePost(post *models.Post) error {
 	return err
 }
 
-func (r *PostRepository) All() ([]models.Post, error) {
-	const q = `SELECT id, user_id, title, content, media, type, created_at
-	           FROM posts ORDER BY created_at DESC`
-	rows, err := r.db.Query(q)
+func (r *PostRepository) GetPosts(start, limit int) ([]models.Post, error) {
+	const q = `
+	SELECT id, user_id, title, content, media, type, created_at
+	FROM posts
+	ORDER BY created_at DESC
+	LIMIT ? OFFSET ?`
+	rows, err := r.db.Query(q,limit,start)
 	if err != nil {
 		return nil, err
 	}

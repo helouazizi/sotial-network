@@ -21,7 +21,7 @@ func NewAuthHandler(postService *services.PostService) *PostHandler {
 }
 
 // get all posts
-func (h *PostHandler) GetAllPosts(w http.ResponseWriter, r *http.Request) {
+func (h *PostHandler) GetPosts(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
 			"message": "Method not allowed",
@@ -30,7 +30,11 @@ func (h *PostHandler) GetAllPosts(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	posts, err := h.service.GetAllPosts()
+	// lextrac the params from the auery
+	start := r.URL.Query().Get("start")
+	limit := r.URL.Query().Get("limit")
+	fmt.Println(start, limit, "jjjjjjjjjjjj")
+	posts, err := h.service.GetPosts(start, limit)
 	if err != nil {
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
 			"message": "Internal Server Error",

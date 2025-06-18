@@ -62,8 +62,6 @@ func ValidUsername(Username string) bool {
 		return false
 	}
 
-
-
 	// Check if username starts or ends with a period (.)
 	if Username[0] == '.' || Username[len(Username)-1] == '.' {
 		return false
@@ -145,4 +143,7 @@ func ValidateAboutMe(input string) error {
 func HashPassWord(pass string) (string, error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(pass), bcrypt.DefaultCost)
 	return string(bytes), err
+}
+func ComparePass(hashed, pass []byte) error {
+	return bcrypt.CompareHashAndPassword(hashed, pass)
 }

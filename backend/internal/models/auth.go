@@ -21,3 +21,14 @@ type UserError struct {
 	AboutMe     string
 	HasErro     bool
 }
+ 
+type UserCredential struct {
+	ID int 
+	Email string 
+	Pass string
+	
+}
+type UserSession struct {
+	ID int 
+	Token string
+}

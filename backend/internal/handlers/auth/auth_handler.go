@@ -58,10 +58,21 @@ func (h *UserHandler)Login(w http.ResponseWriter, r *http.Request){
 	var user *models.User
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
-			"message": "Internal Server Error ",
+			"message": "Internal Server Error",
 			"status":  http.StatusInternalServerError,
 		})
 		return
 	}
+	usersession,errLog := h.service.LogUser(user)
+	if errLog.Code != http.StatusOK {
+		fmt.Println("I am heeer")
+		utils.ResponseJSON(w, errLog.Code,errLog )
+		return
+	}
+		cookie := &http.Cookie{Name: "Token", Value: usersession.Token, MaxAge: 3600, HttpOnly: true, SameSite: http.SameSiteStrictMode, Path: "/", Secure: false}
+	http.SetCookie(w, cookie)
+
+	utils.ResponseJSON(w, errLog.Code, errLog)
+	
 
 }

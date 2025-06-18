@@ -1,8 +1,11 @@
 package services
 
 import (
+	"net/http"
+
 	"github.com/ismailsayen/social-network/internal/models"
 	repositories "github.com/ismailsayen/social-network/internal/repositories/auth"
+	"github.com/ismailsayen/social-network/pkg/token"
 	"github.com/ismailsayen/social-network/pkg/utils"
 )
 
@@ -60,4 +63,48 @@ func (s *AuthService) SaveUser(user *models.User) models.Error {
 	Errors = s.repo.SaveUser(user)
 
 	return Errors
+}
+
+func (s *AuthService) LogUser(user *models.User) (models.UserSession, models.Error) {
+	if len(user.Email) == 0 {
+		return models.UserSession{}, models.Error{
+			Code:    http.StatusBadRequest,
+			Message: "Email cannot be empty",
+		}
+	}
+	if len(user.PassWord) == 0 {
+		return models.UserSession{}, models.Error{
+			Code:    http.StatusBadRequest,
+			Message: "Password cannot be empty",
+		}
+	}
+	Err, credentiale := s.repo.GetUserCredential(user)
+	if Err.Code != http.StatusOK {
+		return models.UserSession{}, Err
+	}
+	err := utils.ComparePass([]byte(credentiale.Pass), []byte(user.PassWord))
+	if err != nil {
+		return models.UserSession{}, models.Error{
+			Code:    http.StatusUnauthorized,
+			Message: "Invalid credentials rf'f",
+		}
+	}
+	token, tokenerr := token.GenerateToken()
+	if tokenerr != nil {
+		return models.UserSession{}, models.Error{
+			Code:    http.StatusInternalServerError,
+			Message: "Internal Server Error yjh",
+		}
+	}
+	var UserSession  models.UserSession
+	UserSession.ID = credentiale.ID
+	UserSession.Token = token
+	errSession := s.repo.SaveSession(&UserSession)
+	if errSession.Code != http.StatusOK {
+		return models.UserSession{},errSession
+	}
+	return UserSession , models.Error{
+		Code: http.StatusOK,
+		Message: "this operation went smouthly ",
+	}
 }

@@ -17,52 +17,77 @@ func NewAuthService(Authrepo *repositories.AuthRepository) *AuthService {
 	return &AuthService{repo: Authrepo}
 }
 
-func (s *AuthService) SaveUser(user *models.User) models.Error {
+func (s *AuthService) SaveUser(user *models.User) (models.UserSession, models.Error) {
 	var Errors models.Error
+
+	// Validation checks
 	if !utils.ValidPass(user.PassWord) {
 		Errors.UserErrors.HasErro = true
-		Errors.UserErrors.Email = "password is not valid"
-
-		return Errors
+		Errors.UserErrors.Email = "Password is not valid"
 	}
 	if !utils.ValidUsername(user.Nickname) {
 		Errors.UserErrors.HasErro = true
-		Errors.UserErrors.Nickname = "username is not valid"
-
-		return Errors
+		Errors.UserErrors.Nickname = "Username is not valid"
 	}
 	if !utils.ValidEmail(user.Email) {
 		Errors.UserErrors.HasErro = true
 		Errors.UserErrors.Email = "Email is not valid"
-		return Errors
-
 	}
 	if !utils.ValidName(user.FirstName) {
 		Errors.UserErrors.HasErro = true
 		Errors.UserErrors.FirstName = "First Name is not valid"
-		return Errors
-
 	}
 	if !utils.ValidName(user.Lastname) {
 		Errors.UserErrors.HasErro = true
 		Errors.UserErrors.Lastname = "Last Name is not valid"
-		return Errors
 	}
 	if err := utils.ValidDateOfBirth(user.DateofBirth); err != nil {
 		Errors.UserErrors.HasErro = true
-		Errors.UserErrors.DateofBirth = "Date Of Birth is not valid"
-		return Errors
+		Errors.UserErrors.DateofBirth = "Date of Birth is not valid"
 	}
 	if err := utils.ValidateAboutMe(user.AboutMe); err != nil {
 		Errors.UserErrors.HasErro = true
-		Errors.UserErrors.AboutMe = " About Me is not valid"
-		return Errors
-
+		Errors.UserErrors.AboutMe = "About Me is not valid"
 	}
 
-	Errors = s.repo.SaveUser(user)
+	// Return early if any validation errors
+	if Errors.UserErrors.HasErro {
+		return models.UserSession{}, Errors
+	}
 
-	return Errors
+	
+
+	// Generate session token
+	token, tokenerr := token.GenerateToken() // assuming utils.GenerateToken exists
+	if tokenerr != nil {
+		return models.UserSession{}, models.Error{
+			Code:    http.StatusInternalServerError,
+			Message: "Internal Server Error while generating token",
+		}
+	}
+
+	// Save user
+	saveErr := s.repo.SaveUser(user)
+	if saveErr.Code != http.StatusOK {
+		return models.UserSession{}, saveErr
+	}
+// Check for existing credentials
+	Err, credentiale := s.repo.GetUserCredential(user)
+	if Err.Code != http.StatusOK {
+		return models.UserSession{}, Err
+	}
+	// Save session
+	var UserSession models.UserSession
+	UserSession.ID = credentiale.ID
+	UserSession.Token = token
+
+	errSession := s.repo.SaveSession(&UserSession)
+	if errSession.Code != http.StatusOK {
+		return models.UserSession{}, errSession
+	}
+
+	// All good, return session
+	return UserSession, models.Error{Code: http.StatusOK}
 }
 
 func (s *AuthService) LogUser(user *models.User) (models.UserSession, models.Error) {

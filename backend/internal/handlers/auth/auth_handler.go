@@ -36,12 +36,14 @@ func (h *UserHandler) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err := h.service.SaveUser(user)
+	usersession,err := h.service.SaveUser(user)
 	if err.UserErrors.HasErro {
 		fmt.Println(err)
 		utils.ResponseJSON(w, http.StatusBadRequest, err)
 		return
 	}
+	cookie := &http.Cookie{Name: "Token", Value: usersession.Token, MaxAge: 3600, HttpOnly: true, SameSite: http.SameSiteStrictMode, Path: "/", Secure: false}
+	http.SetCookie(w, cookie)
 
 	utils.ResponseJSON(w, err.Code, err)
 	

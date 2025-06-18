@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/ismailsayen/social-network/internal/models"
@@ -18,7 +19,7 @@ func NewAuthHandler(AuthService *services.AuthService) *UserHandler {
 }
 
 func (h *UserHandler) Register(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
+	if r.Method != http.MethodPost {
 		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
 			"message": "Method not allowed",
 			"status":  http.StatusMethodNotAllowed,
@@ -35,17 +36,45 @@ func (h *UserHandler) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err := h.service.SaveUser(user)
-	if err != nil {
-		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
-			"message": "Bad request",
-			"status":  http.StatusBadRequest,
+	usersession,err := h.service.SaveUser(user)
+	if err.UserErrors.HasErro {
+		fmt.Println(err)
+		utils.ResponseJSON(w, http.StatusBadRequest, err)
+		return
+	}
+	cookie := &http.Cookie{Name: "Token", Value: usersession.Token, MaxAge: 3600, HttpOnly: true, SameSite: http.SameSiteStrictMode, Path: "/", Secure: false}
+	http.SetCookie(w, cookie)
+
+	utils.ResponseJSON(w, err.Code, err)
+	
+}
+func (h *UserHandler)Login(w http.ResponseWriter, r *http.Request){
+		if r.Method != http.MethodPost {
+		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
+			"message": "Method not allowed",
+			"status":  http.StatusMethodNotAllowed,
 		})
 		return
 	}
 
-	utils.ResponseJSON(w, http.StatusOK, map[string]any{
-		"message": "Successfully created user",
-		"status":  http.StatusOK,
-	})
+	var user *models.User
+	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
+		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+			"message": "Internal Server Error",
+			"status":  http.StatusInternalServerError,
+		})
+		return
+	}
+	usersession,errLog := h.service.LogUser(user)
+	if errLog.Code != http.StatusOK {
+		fmt.Println("I am heeer")
+		utils.ResponseJSON(w, errLog.Code,errLog )
+		return
+	}
+		cookie := &http.Cookie{Name: "Token", Value: usersession.Token, MaxAge: 3600, HttpOnly: true, SameSite: http.SameSiteStrictMode, Path: "/", Secure: false}
+	http.SetCookie(w, cookie)
+
+	utils.ResponseJSON(w, errLog.Code, errLog)
+	
+
 }

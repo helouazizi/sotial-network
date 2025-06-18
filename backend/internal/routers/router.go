@@ -16,6 +16,12 @@ func SetupRoutes(app *app.Application) *http.ServeMux {
 	mux.HandleFunc("/api/v1/posts", app.PostHandler.GetAllPosts)
 	mux.HandleFunc("/api/v1/posts/create", app.PostHandler.CreatePost)
 
+
+
+
+	//================== chat routes =========================///
+	mux.HandleFunc("/ws", app.ChatHandler.ChatMessagesHandler)
+
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("hello from social network"))
 	})

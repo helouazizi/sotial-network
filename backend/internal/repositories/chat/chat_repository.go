@@ -24,3 +24,7 @@ func (r *ChatRepositoryImpl) Save(chat *models.Chat) error {
 	_, err := r.db.Exec(query, chat.SenderID, chat.ReceiverID, chat.Message, time.Now())
 	return err
 }
+
+func (r *ChatRepositoryImpl) GetMessages() {
+	
+}

@@ -6,9 +6,11 @@ import PostBody from "./postBody";
 export default function PostActions({
   post,
   onPostUpdate,
+
 }: {
   post: Post;
   onPostUpdate: (id: number, updatedPost: Partial<Post>) => void;
+ 
 }) {
   const [userVote, setUserVote] = useState<"like" | "dislike" | null>(null);
   const [showComments, setShowComments] = useState(false); // fixed typo
@@ -74,14 +76,6 @@ export default function PostActions({
                   avatarUrl="/avatar.png"
                 />{" "}
                 <PostBody content={c.comment} title="" media="" />
-                <div>
-                  <button onClick={handleLike}>
-                    👍 {c.likes} <span className="extra"> Like</span>
-                  </button>
-                  <button onClick={handleDislike}>
-                    👎 {c.dislikes} <span className="extra"> Dislike</span>
-                  </button>
-                </div>
               </li>
             ))}
           </ul>

@@ -6,10 +6,12 @@ import { Post } from '@/app/types/post';
 
 export default function PostCard({
   post,
-  onPostUpdate
+  onPostUpdate,
+
 }: {
   post: Post;
   onPostUpdate: (id: number, updatedPost: Partial<Post>) => void;
+
 }){
   return (
     <li className="post-card">

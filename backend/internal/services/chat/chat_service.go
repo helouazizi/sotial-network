@@ -12,13 +12,16 @@ import (
 )
 
 type ChatService struct {
-	repo    *repositories.ChatRepository
+	repo    repositories.ChatRepository
 	clients map[int]*websocket.Conn
 	mu      sync.Mutex
 }
 
-func NewChatService(ChatRepo *repositories.ChatRepository) *ChatService {
-	return &ChatService{repo: ChatRepo}
+func NewChatService(ChatRepo repositories.ChatRepository) *ChatService {
+	return &ChatService{
+		repo:    ChatRepo,
+		clients: map[int]*websocket.Conn{},
+	}
 }
 
 func (s *ChatService) SaveMessage(chat *models.Chat) error {
@@ -28,13 +31,15 @@ func (s *ChatService) SaveMessage(chat *models.Chat) error {
 		return fmt.Errorf("Invalid msg")
 	}
 
+	s.repo.Save(chat)
+
 	return nil
 }
 
 func (s *ChatService) SaveClient(userID int, conn *websocket.Conn) {
 	defer s.mu.Unlock()
 	s.mu.Lock()
-	s.clients[userID] = conn
+	s.clients[len(s.clients)+1] = conn
 }
 
 func (s *ChatService) RemoveClient(userID int) {

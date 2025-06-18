@@ -1,13 +1,11 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gorilla/websocket"
 	"github.com/ismailsayen/social-network/internal/models"
 	services "github.com/ismailsayen/social-network/internal/services/chat"
-	"github.com/ismailsayen/social-network/pkg/utils"
 )
 
 type ChatHandler struct {
@@ -28,21 +26,34 @@ var upgrader = websocket.Upgrader{
 func (h *ChatHandler) ChatMessagesHandler(w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
-		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+		conn.WriteJSON(map[string]any{
 			"message": "Error upgrading: " + err.Error(),
 			"status":  http.StatusInternalServerError,
 		})
 		return
 	}
-	defer conn.Close()
+
+	userID := 1
+
+	defer func() {
+		conn.Close()
+		h.service.RemoveClient(userID)
+	}()
+
+	h.service.SaveClient(userID, conn)
 
 	for {
 		var chat models.Chat
 		err := conn.ReadJSON(&chat)
 		if err != nil {
-			fmt.Println("Error reading message:", err)
+			conn.WriteJSON(map[string]any{
+				"message": "Error reading message: " + err.Error(),
+				"status":  http.StatusBadRequest,
+			})
 			break
 		}
+
+		chat.SenderID = userID
 
 		h.service.SaveMessage(&chat)
 	}

@@ -36,16 +36,14 @@ func (h *ChatHandler) ChatMessagesHandler(w http.ResponseWriter, r *http.Request
 	}
 	defer conn.Close()
 
-	
-	var chat models.Chat
-
 	for {
+		var chat models.Chat
 		err := conn.ReadJSON(&chat)
 		if err != nil {
 			fmt.Println("Error reading message:", err)
 			break
 		}
 
-		
+		h.service.SaveMessage(&chat)
 	}
 }

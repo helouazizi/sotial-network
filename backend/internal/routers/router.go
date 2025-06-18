@@ -12,6 +12,8 @@ func SetupRoutes(app *app.Application) *http.ServeMux {
 	mux.HandleFunc("/api/v1/user/register", app.AuthHundler.Register)
 	mux.HandleFunc("/api/v1/user/login",app.AuthHundler.Login)
 
+	mux.HandleFunc("/ws", app.ChatHandler.ChatMessagesHandler)
+
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("hello from social network"))
 	})

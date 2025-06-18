@@ -2,7 +2,7 @@ package repositories
 
 import (
 	"database/sql"
-	"fmt"
+	"time"
 
 	"github.com/ismailsayen/social-network/internal/models"
 )
@@ -20,6 +20,7 @@ func NewChatRepo(db *sql.DB) ChatRepository {
 }
 
 func (r *ChatRepositoryImpl) Save(chat *models.Chat) error {
-	fmt.Println(chat)
-	return nil
+	query := `INSERT INTO chat_message (sender_id, receiver_id, content, sent_at) VALUES (?,?,?,?)`
+	_, err := r.db.Exec(query, chat.SenderID, chat.ReceiverID, chat.Message, time.Now())
+	return err
 }

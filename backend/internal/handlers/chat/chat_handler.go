@@ -27,8 +27,8 @@ func (h *ChatHandler) ChatMessagesHandler(w http.ResponseWriter, r *http.Request
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		conn.WriteJSON(map[string]any{
-			"message": "Error upgrading: " + err.Error(),
-			"status":  http.StatusInternalServerError,
+			"error":  "Error upgrading: " + err.Error(),
+			"status": http.StatusInternalServerError,
 		})
 		return
 	}
@@ -47,8 +47,7 @@ func (h *ChatHandler) ChatMessagesHandler(w http.ResponseWriter, r *http.Request
 		err := conn.ReadJSON(&chat)
 		if err != nil {
 			conn.WriteJSON(map[string]any{
-				"message": "Error reading message: " + err.Error(),
-				"status":  http.StatusBadRequest,
+				"error": "Error reading message: " + err.Error(),
 			})
 			return
 		}
@@ -58,10 +57,9 @@ func (h *ChatHandler) ChatMessagesHandler(w http.ResponseWriter, r *http.Request
 		err = h.service.SaveMessage(&chat)
 		if err != nil {
 			conn.WriteJSON(map[string]any{
-				"message": "Failed to save message: " + err.Error(),
-				"status":  http.StatusBadRequest,
+				"error": err.Error(),
 			})
-			return
+			continue
 		}
 	}
 }

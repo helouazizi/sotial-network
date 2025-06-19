@@ -1,70 +1,99 @@
-.posts-page {
-  padding: 2rem;
-  max-width: 800px;
-  margin: 0 auto;
-  font-family: 'Segoe UI', sans-serif;
-  /* background-color: #f9f9f9; */
+
+
+:root {
+  /* Color palette (override from your global variables file if present) */
+  --clr-bg-card: #ffffff;
+  --clr-border-card: #e5e7eb;
+  --clr-shadow-card: rgba(0, 0, 0, 0.04);
+  --clr-shadow-card-hover: rgba(0, 0, 0, 0.08);
+  --clr-text-heading: #222222;
+  --clr-text-body: #444444;
+  --clr-text-muted: #8a8a8a;
+  --clr-meta: #cccccc;
+  --clr-action-bg: #e0e7ff;
+  --clr-action-bg-hover: #c7d2fe;
+  --clr-action-text: #1e40af;
+  --clr-comment-bg: #f9fafb;
+  --clr-comment-border: #1e40af;
+  --clr-scroll-thumb: #c7d2fe;
+
+  /* Sizing & spacing */
+  --size-gap-stack: 1.5rem;
+  --size-radius-card: 0.75rem; /* 12px */
+  --size-radius-input: 0.4rem;
+  --size-transition: 0.2s;
 }
 
 .posts-list {
   list-style: none;
+  margin: 0 auto;
   padding: 0;
-  margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: var(--size-gap-stack);
+  width: min(60%, 800px);
+  max-height: 100dvh;
+  overflow-y: auto;
 }
 
+/* -----------------------------------------------
+   Post Card
+----------------------------------------------- */
 .post-card {
-  background-color: #fff;
+  background: var(--clr-bg-card);
   padding: 1.5rem;
-  border-radius: 12px;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.04);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid var(--clr-border-card);
+  border-radius: var(--size-radius-card);
+  box-shadow: 0 4px 8px var(--clr-shadow-card);
+  transition: transform var(--size-transition) ease,
+              box-shadow var(--size-transition) ease;
 }
-
-
 
 .post-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 6px 20px var(--clr-shadow-card-hover);
 }
 
+/* -----------------------------------------------
+   Meta & Avatar
+----------------------------------------------- */
 .post-meta {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   font-size: 0.9rem;
-  color: #ccc;
+  color: var(--clr-meta);
 }
 
 .avatar {
-  width: 32px;
-  height: 32px;
+  inline-size: 32px;
+  block-size: 32px;
   border-radius: 50%;
   object-fit: cover;
-  background-color: red;
+  background: red; /* consider using a placeholder color var */
 }
 
+/* -----------------------------------------------
+   Body
+----------------------------------------------- */
 .post-body h2 {
   font-size: 1.4rem;
-  margin: 2rem 0;
-  color: #222;
-  
+  margin-block: 2rem;
+  color: var(--clr-text-heading);
 }
 
 .post-body p {
-  margin: 2rem 0;
+  margin-block: 2rem;
   line-height: 1.6;
-  color: #444;
+  color: var(--clr-text-body);
 }
 
-/* Assuming you're using a global CSS or a CSS Module for post styles */
-
+/* -----------------------------------------------
+   Actions
+----------------------------------------------- */
 .post-actions {
   margin-top: 1rem;
-  padding: 0.75rem 1rem;
+  padding-block: 0.75rem;
   border-top: 1px solid #e0e0e0;
   display: flex;
   flex-direction: column;
@@ -73,89 +102,53 @@
 
 .post-actions > div {
   display: flex;
-  gap: 1rem;
   flex-wrap: wrap;
+  gap: 1rem;
 }
-
-
 
 .post-actions .extra {
   color: #555;
   font-weight: 500;
 }
-.comments-list {
-  margin-top: 0.75rem;
-  padding: 0.75rem 1rem;
-  background-color: #f9f9f9;
-  border-left: 3px solid #1e40af;
-  border-radius: 0 0 8px 8px;
-  max-height: 200px; /* restrict height */
-  overflow-y: auto; /* make scrollable */
-  display: flex;
-  flex-direction: column;
-  font-size: 0.875rem;
-  color: #333;
-  transition: all 0.3s ease;
-}
 
-.comments-list::-webkit-scrollbar {
-  width: 6px;
-}
-.comments-list::-webkit-scrollbar-thumb {
-  background-color: #c7d2fe;
-  border-radius: 3px;
-}
-.comments-list::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-/* Optional: style each comment */
-.comments-list li {
-  padding: 0.5rem 0.75rem;
-  background-color: #fff;
-  border-radius: 6px;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-  margin:0.5rem 0.75rem;
-  list-style: none;
-}
-
-.post-actions button {
-  margin-right: 0.5rem;
+.post-actions button,
+.post-comment button {
   padding: 0.5rem 1rem;
-  background-color: #e0e7ff;
-  color: #1e40af;
+  margin-right: 0.5rem;
   border: none;
-  border-radius: 6px;
+  border-radius: var(--size-radius-card);
   font-size: 0.875rem;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  background: var(--clr-action-bg);
+  color: var(--clr-action-text);
+  transition: background-color var(--size-transition) ease;
 }
 
+.post-actions button:hover,
+.post-comment button:hover {
+  background: var(--clr-action-bg-hover);
+}
+
+/* -----------------------------------------------
+   Comment Input
+----------------------------------------------- */
 .post-comment {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
 }
-.post-comment button {
-  padding: 0.5rem;
- 
-  background-color: #e0e7ff;
-  color: #1e40af;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
+
 .post-comment input {
-  width: 90%;
+  flex: 1 1 auto;
   padding: 0.5rem 0.75rem;
   border: none;
-  border-radius: 0.4rem;
-  background-color: #8a8a8a;
-  color: #fff;
+  border-radius: var(--size-radius-input);
+  background: var(--clr-text-muted);
+  color: #ffffff;
   font-size: 1rem;
   outline: none;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  transition: background-color 0.3s ease,
+              box-shadow 0.3s ease;
 }
 
 .post-comment input::placeholder {
@@ -163,85 +156,191 @@
 }
 
 .post-comment input:focus {
-  background-color: #616161;
+  background: #616161;
   box-shadow: 0 0 0 2px #888888;
 }
 
-
-.post-actions button:hover {
-  background-color: #c7d2fe;
-}
-
-
+/* -----------------------------------------------
+   Comments List
+----------------------------------------------- */
 .comments-list {
-  margin-top: 0.5rem;
+  margin-top: 0.75rem;
+  padding: 0.75rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-height: 200px;
+  overflow-y: auto;
+  background: var(--clr-comment-bg);
+  border-left: 3px solid var(--clr-comment-border);
+  border-radius: 0 0 var(--size-radius-card) var(--size-radius-card);
+  font-size: 0.875rem;
+  color: #333;
   transition: max-height 0.3s ease, opacity 0.3s ease;
-  /* overflow: hidden; */
-  display: block;
-  color: black;
-  /* display: none; */
-  
+}
+
+.comments-list::-webkit-scrollbar {
+  width: 6px;
+}
+.comments-list::-webkit-scrollbar-thumb {
+  background: var(--clr-scroll-thumb);
+  border-radius: 3px;
+}
+.comments-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.comments-list li {
+  list-style: none;
+  padding: 0.5rem 0.75rem;
+  background: var(--clr-bg-card);
+  border-radius: calc(var(--size-radius-card) - 6px);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* -----------------------------------------------
+   Responsiveness
+----------------------------------------------- */
+@media (max-width: 768px) {
+  .posts-list {
+    width: 95%;
+  }
+
+  .post-body h2 {
+    font-size: 1.2rem;
+    margin-block: 1.5rem;
+  }
+
+  .post-body p {
+    margin-block: 1.5rem;
+  }
 }
 
 
-/* ========================== post form ================================= */
-.post-form {
-  max-width: 500px;
-  margin: 2rem auto;
-  padding: 1.5rem;
-  border: 1px solid #ccc;
+/* =================================== no posts ============================== */
+
+.no-posts-message {
+  text-align: center;
+  padding: 40px 20px;
+  color: #555;
+  background-color: #292323;
+  border: 2px dashed #cfcfcf;
   border-radius: 8px;
-  font-family: sans-serif;
-  background: #ffffff;
-  color: black;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.no-posts-message h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+  color: #adadad;
+}
+
+.no-posts-message p {
+  font-size: 16px;
+  color: #818181;
+}
+.create-post-button {
+  margin-top: 12rem;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.create-post-button:hover {
+  background-color: #0056b3;
+}
+
+
+
+
+
+/* ======================================== form */
+
+.post-form {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  color: #000000;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .post-form h2 {
+  font-size: 1.8rem;
+  color: #1f2937;
   margin-bottom: 1rem;
-  font-size: 1.5rem;
   text-align: center;
 }
 
 .post-form label {
-  display: block;
-  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
   font-weight: 500;
+  color: #374151;
+  gap: 0.5rem;
 }
 
 .post-form input[type="text"],
+.post-form input[type="file"],
 .post-form textarea,
-.post-form select,
-.post-form input[type="file"] {
-  width: 100%;
-  margin-top: 0.4rem;
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+.post-form select {
+  padding: 0.75rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: #f9fafb;
+  transition: border-color 0.2s, box-shadow 0.2s;
+   color: #000000;
+}
+
+.post-form input:focus,
+.post-form textarea:focus,
+.post-form select:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
+  outline: none;
+   color: #000000;
+}
+
+.post-form textarea {
+  resize: vertical;
 }
 
 .post-form button {
-  width: 100%;
-  padding: 0.6rem;
-  margin-top: 1rem;
-  background-color: #0070f3;
-  color: white;
+  padding: 0.75rem 1.25rem;
+  font-size: 1rem;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
-  font-weight: bold;
+  transition: background-color 0.2s ease;
 }
 
-.post-form button:hover {
-  background-color: #0059c1;
+.post-form button[type="submit"] {
+  background-color: #4f46e5;
+  color: white;
 }
 
+.post-form button[type="submit"]:hover {
+  background-color: #4338ca;
+}
 
-@media (max-width : 768px) {
-  .extra {
-    display: none;
-  }
+.post-form button:not([type="submit"]) {
+  background-color: #e5e7eb;
+  color: #1f2937;
+}
 
-  .post-actions div button {
-    padding: 0.2rem 0.5rem ;
-  }
+.post-form button:not([type="submit"]):hover {
+  background-color: #d1d5db;
 }

@@ -1,20 +1,29 @@
-import { useState } from 'react';
-import { Post } from '@/app/types/post';
+import { useState } from "react";
+import { Post } from "@/app/types/post";
 export default function PostComment({
   post,
-  onPostUpdate
+  onPostUpdate,
 }: {
   post: Post;
   onPostUpdate: (id: number, updatedPost: Partial<Post>) => void;
 }) {
-
-  const [comment, setComment] = useState('');
+  const [comment, setComment] = useState("");
 
   const handleAddComment = () => {
     if (comment.trim()) {
-      const updatedComments = [ { comment: comment },...post.comments];
-      onPostUpdate(post.id, { comments: updatedComments,totalComments: post.totalComments + 1 });
-      setComment('');
+      const newComment = {
+        comment: comment,
+        author: "Anonymous", // Replace with actual author if available
+        created_at: new Date().toISOString(),
+        likes: 0,
+        dislikes: 0,
+      };
+      const updatedComments = [newComment, ...(post.comments || [])];
+      onPostUpdate(post.id, {
+        comments: updatedComments,
+        totalComments: post.totalComments + 1,
+      });
+      setComment("");
     }
   };
   return (
@@ -22,10 +31,11 @@ export default function PostComment({
       <input
         placeholder="Write a comment..."
         value={comment}
-        onChange={(e) => setComment(e.target.value)}
+        onChange={(e) => setComment(e.target.value.trim())}
       />
-      <button onClick={handleAddComment}>💬 <span className="extra"> Send</span></button>
+      <button onClick={handleAddComment}>
+        💬 <span className="extra"> Send</span>
+      </button>
     </div>
-
   );
 }

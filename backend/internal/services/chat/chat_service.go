@@ -34,7 +34,7 @@ func (s *ChatServiceImpl) SaveMessage(chat *models.Chat) error {
 	chat.Message = html.EscapeString(strings.TrimSpace(chat.Message))
 
 	if len(chat.Message) == 0 || len([]rune(chat.Message)) > 3000 {
-		return errors.New("message must be between 1 and 3000 characters")
+		return errors.New("Message must be between 1 and 3000 characters")
 	}
 
 	return s.repo.Save(chat)

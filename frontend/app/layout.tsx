@@ -20,7 +20,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         {/* <Header/> */}
         <main>
           {children}
-        </main>
+     
 
         {/* <Footer/> */}
       </body>

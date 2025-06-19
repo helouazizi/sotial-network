@@ -15,6 +15,15 @@ func SetupRoutes(app *app.Application) *http.ServeMux {
 
 	mux.HandleFunc("/api/v1/profile", app.ProfileHandler.ProfileHandler)
 
+
+	//================== posts routes =========================///
+	mux.HandleFunc("/api/v1/posts", app.PostHandler.GetPosts)
+	mux.HandleFunc("/api/v1/posts/create", app.PostHandler.CreatePost)
+
+
+
+
+	//================== chat routes =========================///
 	mux.HandleFunc("/ws", app.ChatHandler.ChatMessagesHandler)
 
 	mux.HandleFunc("/", middleware.AuthMiddleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

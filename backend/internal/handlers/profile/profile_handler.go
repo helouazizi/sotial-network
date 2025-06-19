@@ -24,6 +24,7 @@ func (h *ProfileHandler) ProfileHandler(w http.ResponseWriter, r *http.Request) 
 		})
 		return
 	}
-	ID := r.Context().Value("userID").(int)
-	fmt.Println(ID)
+	sessionID := r.Context().Value("userID").(int)
+	userID := r.URL.Query().Get("id")
+	
 }

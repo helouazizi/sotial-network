@@ -10,7 +10,7 @@ type CommunInfoProfile struct {
 	IsPrivate   int    `json:"is_private"`
 	AboutMe     string `json:"about_me"`
 	Followers   int    `json:"followers"`
-	Following   int    `json:"following"`
+	Followed   int    `json:"followed"`
 	NbPosts     int    `json:"nbPosts"`
 	MyAcount    bool
 }

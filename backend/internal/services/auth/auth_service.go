@@ -55,8 +55,6 @@ func (s *AuthService) SaveUser(user *models.User) (models.UserSession, models.Er
 		return models.UserSession{}, Errors
 	}
 
-	
-
 	// Generate session token
 	token, tokenerr := token.GenerateToken() // assuming utils.GenerateToken exists
 	if tokenerr != nil {
@@ -71,7 +69,7 @@ func (s *AuthService) SaveUser(user *models.User) (models.UserSession, models.Er
 	if saveErr.Code != http.StatusOK {
 		return models.UserSession{}, saveErr
 	}
-// Check for existing credentials
+	// Check for existing credentials
 	Err, credentiale := s.repo.GetUserCredential(user)
 	if Err.Code != http.StatusOK {
 		return models.UserSession{}, Err
@@ -121,15 +119,15 @@ func (s *AuthService) LogUser(user *models.User) (models.UserSession, models.Err
 			Message: "Internal Server Error yjh",
 		}
 	}
-	var UserSession  models.UserSession
+	var UserSession models.UserSession
 	UserSession.ID = credentiale.ID
 	UserSession.Token = token
 	errSession := s.repo.SaveSession(&UserSession)
 	if errSession.Code != http.StatusOK {
-		return models.UserSession{},errSession
+		return models.UserSession{}, errSession
 	}
-	return UserSession , models.Error{
-		Code: http.StatusOK,
+	return UserSession, models.Error{
+		Code:    http.StatusOK,
 		Message: "this operation went smouthly ",
 	}
 }

@@ -96,6 +96,7 @@ func (h *PostHandler) CreatePost(w http.ResponseWriter, r *http.Request) {
 
 	// 	return
 	// }
+	// 
 	post := &models.Post{
 		UserID:  userID,
 		Title:   title,

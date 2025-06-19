@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/gorilla/websocket"
 	"github.com/ismailsayen/social-network/internal/models"
@@ -45,18 +46,23 @@ func (h *ChatHandler) ChatMessagesHandler(w http.ResponseWriter, r *http.Request
 	for {
 		var chat models.Chat
 		err := conn.ReadJSON(&chat)
-		if err != nil {
+		if err != nil && !strings.Contains(err.Error(), "close 1005") {
 			conn.WriteJSON(map[string]any{
 				"error": "Error reading message: " + err.Error(),
+			})
+			continue
+		}
+
+		if err != nil {
+			conn.WriteJSON(map[string]any{
+				"error": err.Error(),
 			})
 			return
 		}
 
-		chat.SenderID = userID
-
 		switch chat.Type {
 		case "getMessages":
-			
+
 		default:
 			err = h.service.SaveMessage(&chat)
 			if err != nil {

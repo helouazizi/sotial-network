@@ -15,12 +15,12 @@ func NewPostRepo(db *sql.DB) *PostRepository {
 	return &PostRepository{db: db}
 }
 
-func (r *PostRepository) SavePost(post *models.Post, img models.Image) error {
+func (r *PostRepository) SavePost(post *models.Post, img *models.Image) error {
 	query := `
 		INSERT INTO posts (user_id, title, content, type, media, created_at)
 		VALUES (?, ?, ?, ?, ?, ?)
 	`
-// change the media in db to be just tesxt 
+	// change the media in db to be just tesxt
 	stmt, err := r.db.Prepare(query)
 	if err != nil {
 		return err
@@ -32,7 +32,7 @@ func (r *PostRepository) SavePost(post *models.Post, img models.Image) error {
 		post.Title,
 		post.Content,
 		post.Type,
-		post.Media,
+		"avatar.png",
 		time.Now(),
 	)
 

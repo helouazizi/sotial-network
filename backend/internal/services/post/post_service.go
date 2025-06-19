@@ -17,7 +17,7 @@ func NewAuthService(postRepo *repositories.PostRepository) *PostService {
 	return &PostService{repo: postRepo}
 }
 
-func (s *PostService) SavePost(post *models.Post, img models.Image) error {
+func (s *PostService) SavePost(post *models.Post, img *models.Image) error {
 	if len(strings.Fields(post.Title)) == 0 || len(strings.Fields(post.Title)) > 255 {
 		return errors.New("title is required and must be less than 256 characters")
 	}

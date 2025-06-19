@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/base64"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -86,13 +87,15 @@ func (h *PostHandler) CreatePost(w http.ResponseWriter, r *http.Request) {
 
 	// === Get the media file ===
 	file, header, err := r.FormFile("media")
-	if err != nil {
-		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
-			"message": "Internal Server Error",
-			"status":  http.StatusInternalServerError,
-		})
-		return
-	}
+	// if err != nil {
+	// 	utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+	// 		"message": "Internal Server Error",
+	// 		"status":  http.StatusInternalServerError,
+	// 	})
+	// 	fmt.Println(err,"errtttt")
+
+	// 	return
+	// }
 	post := &models.Post{
 		UserID:  userID,
 		Title:   title,
@@ -103,12 +106,13 @@ func (h *PostHandler) CreatePost(w http.ResponseWriter, r *http.Request) {
 		ImgHeader:  header,
 		ImgContent: &file,
 	}
-	err = h.service.SavePost(post, *Img)
+	err = h.service.SavePost(post, Img)
 	if err != nil {
 		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
 			"message": "Bad request",
 			"status":  http.StatusBadRequest,
 		})
+		fmt.Println(err, "errt")
 		return
 	}
 

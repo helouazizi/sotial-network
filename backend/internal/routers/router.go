@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/ismailsayen/social-network/internal/app"
+	"github.com/ismailsayen/social-network/pkg/middleware"
 )
 
 func SetupRoutes(app *app.Application) *http.ServeMux {
@@ -13,6 +14,11 @@ func SetupRoutes(app *app.Application) *http.ServeMux {
 	mux.HandleFunc("/api/v1/user/login", app.AuthHundler.Login)
 
 	mux.HandleFunc("/api/v1/profile", app.ProfileHandler.ProfileHandler)
+	mux.HandleFunc("/api/v1/user/login", app.AuthHundler.Login)
+	//================== Profile routes =======================///
+	mux.HandleFunc("/api/v1/profile", middleware.AuthMiddleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		app.ProfileHandler.ProfileHandler(w, r)
+	}), app.DB))
 
 	//================== posts routes =========================///
 	mux.HandleFunc("/api/v1/posts", app.PostHandler.GetPosts)

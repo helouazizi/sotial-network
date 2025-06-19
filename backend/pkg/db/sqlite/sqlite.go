@@ -21,10 +21,10 @@ func OpenDB() *sql.DB {
 		log.Fatal(err)
 	}
 
-	_, err = db.Exec("PRAGMA foreign_keys = ON")
-	if err != nil {
-		log.Fatal("Failed to enable foreign keys:", err)
-	}
+	// _, err = db.Exec("PRAGMA foreign_keys = ON")
+	// if err != nil {
+	// 	log.Fatal("Failed to enable foreign keys:", err)
+	// }
 
 	return db
 }

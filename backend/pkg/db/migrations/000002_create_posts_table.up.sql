@@ -3,7 +3,7 @@ CREATE TABLE posts (
     user_id INTEGER NOT NULL,
     title TEXT NOT NULL,
     content TEXT NOT NULL,
-    media BLOB,
+    media TEXT,
     likes INTEGER DEFAULT 0,
     dislikes INTEGER DEFAULT 0,
     comments INTEGER DEFAULT 0,

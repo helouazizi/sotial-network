@@ -8,7 +8,7 @@ import (
 )
 
 type ChatRepository interface {
-	Save(hat *models.Chat) error
+	SaveMessage(chat *models.Chat) error
 }
 
 type ChatRepositoryImpl struct {
@@ -19,12 +19,11 @@ func NewChatRepo(db *sql.DB) ChatRepository {
 	return &ChatRepositoryImpl{db: db}
 }
 
-func (r *ChatRepositoryImpl) Save(chat *models.Chat) error {
+func (r *ChatRepositoryImpl) SaveMessage(chat *models.Chat) error {
 	query := `INSERT INTO chat_message (sender_id, receiver_id, content, sent_at) VALUES (?,?,?,?)`
 	_, err := r.db.Exec(query, chat.SenderID, chat.ReceiverID, chat.Message, time.Now())
 	return err
 }
 
-func (r *ChatRepositoryImpl) GetMessages() {
-	
+func (r *ChatRepositoryImpl) GetMessages(senderID, receiverID int) {
 }

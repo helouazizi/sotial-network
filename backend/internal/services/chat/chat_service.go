@@ -33,11 +33,18 @@ func NewChatService(ChatRepo repositories.ChatRepository) ChatService {
 func (s *ChatServiceImpl) SaveMessage(chat *models.Chat) error {
 	chat.Message = html.EscapeString(strings.TrimSpace(chat.Message))
 
+	if (chat.SenderID == chat.ReceiverID) {
+		return errors.New("Cannot send message to same person")
+	}
+
 	if len(chat.Message) == 0 || len([]rune(chat.Message)) > 3000 {
 		return errors.New("Message must be between 1 and 3000 characters")
 	}
 
-	return s.repo.Save(chat)
+	return s.repo.SaveMessage(chat)
+}
+
+func (s *ChatServiceImpl) GetMessages(senderID, receiverID int) {
 }
 
 func (s *ChatServiceImpl) SaveClient(userID int, conn *websocket.Conn) {

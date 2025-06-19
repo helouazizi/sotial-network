@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -45,8 +46,9 @@ func (s *PostService) SavePost(post *models.Post, img *models.Image) error {
 
 	// add logic to handle media or other fields here
 	if img.ImgHeader != nil {
-		if img.ImgHeader.Filename == "" || len(img.ImgHeader.Filename) < 3 || len(img.ImgHeader.Filename) > 4 {
-			return errors.New("invalid img path")
+		fmt.Println(img.ImgHeader.Filename, "name")
+		if img.ImgHeader.Filename == "" || len(img.ImgHeader.Filename) < 3 {
+			return errors.New("invalid img name")
 		}
 	}
 
@@ -54,7 +56,7 @@ func (s *PostService) SavePost(post *models.Post, img *models.Image) error {
 	if img.ImgContent != nil {
 		_, err := (*img.ImgContent).Read(buff)
 		if err != nil {
-			return errors.New("could not read uploaded image")
+			return fmt.Errorf("could not red file: %w", err)
 		}
 	}
 
@@ -63,7 +65,6 @@ func (s *PostService) SavePost(post *models.Post, img *models.Image) error {
 	if !allowedTypes[contentType] {
 		return errors.New("unsupported image type")
 	}
-	
 
 	return s.repo.SavePost(post, img)
 }

@@ -2,6 +2,10 @@ package repositories
 
 import (
 	"database/sql"
+	"fmt"
+	"io"
+	"os"
+	"path/filepath"
 	"time"
 
 	"github.com/ismailsayen/social-network/internal/models"
@@ -24,7 +28,19 @@ func (r *PostRepository) SavePost(post *models.Post, img *models.Image) error {
 	// to reset the file in to 0 to read
 	(*img.ImgContent).Seek(0, 0)
 
-	// path := fmt.Sprintf("images/posts/%s", img.ImgHeader.Filename)
+	path := filepath.Join("pkg/db/images/posts/", img.ImgHeader.Filename)
+
+	file, err := os.Create(path)
+	if err != nil {
+		return fmt.Errorf("could not save image: %w", err)
+	}
+	defer file.Close()
+	_, err = io.Copy(file, *img.ImgContent)
+	if err != nil {
+		return fmt.Errorf("error writing image to disk: %w", err)
+	}
+
+	// do the other logic for db
 	stmt, err := r.db.Prepare(query)
 	if err != nil {
 		return err

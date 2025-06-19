@@ -8,6 +8,8 @@ export default function PostBody({
   media: string;
 }) {
 
+  console.log("=>>>>>>>>>>>", media)
+
   return (
     <div className="post-body">
       <h2>{title}</h2>
@@ -15,9 +17,9 @@ export default function PostBody({
 
       {media && (
         <img
-          src={media}
+          src={`http://localhost:8080/images/posts/${media}`}
           alt={title}
-          className="w-full h-auto rounded"
+          className="postImg"
         />
       )}
     </div>

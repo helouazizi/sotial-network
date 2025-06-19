@@ -87,16 +87,7 @@ func (h *PostHandler) CreatePost(w http.ResponseWriter, r *http.Request) {
 
 	// === Get the media file ===
 	file, header, _ := r.FormFile("media")
-	// if err == nil {
-	// 	utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
-	// 		"message": "Internal Server Error",
-	// 		"status":  http.StatusInternalServerError,
-	// 	})
-	// 	fmt.Println(err,"errtttt")
 
-	// 	return
-	// }
-	
 	post := &models.Post{
 		UserID:  userID,
 		Title:   title,

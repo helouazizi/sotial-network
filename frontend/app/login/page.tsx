@@ -7,7 +7,7 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
-
+  const router = useRouter();
   const handleLogin = async () => {
     setMessage(''); // clear previous messages
 
@@ -20,10 +20,11 @@ export default function Login() {
 
       const data = await res.json();
       console.log(data, "data");
-      
+
 
       if (res.ok) {
         setMessage('Login successful! Welcome back.');
+        router.push("/")
         // You can add redirect logic here, e.g., router.push('/dashboard')
       } else {
         setMessage(data.Message || 'Login failed, please try again.');

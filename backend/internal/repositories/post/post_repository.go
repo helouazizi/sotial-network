@@ -15,12 +15,12 @@ func NewPostRepo(db *sql.DB) *PostRepository {
 	return &PostRepository{db: db}
 }
 
-func (r *PostRepository) SavePost(post *models.Post) error {
+func (r *PostRepository) SavePost(post *models.Post, img models.Image) error {
 	query := `
 		INSERT INTO posts (user_id, title, content, type, media, created_at)
 		VALUES (?, ?, ?, ?, ?, ?)
 	`
-
+// change the media in db to be just tesxt 
 	stmt, err := r.db.Prepare(query)
 	if err != nil {
 		return err
@@ -45,7 +45,7 @@ func (r *PostRepository) GetPosts(start, limit int) ([]models.Post, error) {
 	FROM posts
 	ORDER BY created_at DESC
 	LIMIT ? OFFSET ?`
-	rows, err := r.db.Query(q,limit,start)
+	rows, err := r.db.Query(q, limit, start)
 	if err != nil {
 		return nil, err
 	}

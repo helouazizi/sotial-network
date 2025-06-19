@@ -1,12 +1,22 @@
-export default function PostBody({ title, content, media }: { title: string; content: string; media: string }) {
+export default function PostBody({
+  title,
+  content,
+  media,
+}: {
+  title: string;
+  content: string;
+  media: string;
+}) {
+  const dataUrl = media ? `data:image/jpeg;base64,${media}` : null;
+
   return (
     <div className="post-body">
       <h2>{title}</h2>
       <p>{content}</p>
 
-      {media && (
+      {dataUrl && (
         <img
-          src={`data:image/jpeg;base64,${media}`}
+          src={dataUrl}
           alt={title}
           className="w-full h-auto rounded"
         />
@@ -14,3 +24,4 @@ export default function PostBody({ title, content, media }: { title: string; con
     </div>
   );
 }
+

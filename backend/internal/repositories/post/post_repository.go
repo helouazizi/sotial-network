@@ -55,7 +55,7 @@ func (r *PostRepository) GetPosts(start, limit int) ([]models.Post, error) {
 	for rows.Next() {
 		var p models.Post
 		err := rows.Scan(&p.ID, &p.UserID, &p.Title, &p.Content,
-			&p.Media, &p.Type, &p.CreatedAt)
+			&p.MediaLink, &p.Type, &p.CreatedAt)
 		if err != nil {
 			return nil, err
 		}

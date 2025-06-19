@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"net/http"
 	"strconv"
 	"strings"
 
@@ -34,10 +35,37 @@ func (s *PostService) SavePost(post *models.Post, img *models.Image) error {
 		return errors.New("invalid privacy value")
 	}
 
-	// If you want, you can add logic to handle media or other fields here
+	// Allowed content types
+	allowedTypes := map[string]bool{
+		"image/jpeg": true,
+		"image/png":  true,
+		"image/gif":  true,
+		"image/webp": true,
+	}
+
+	// add logic to handle media or other fields here
+	if img.ImgHeader != nil {
+		if img.ImgHeader.Filename == "" || len(img.ImgHeader.Filename) < 3 || len(img.ImgHeader.Filename) > 4 {
+			return errors.New("invalid img path")
+		}
+	}
+
+	buff := make([]byte, 512)
+	if img.ImgContent != nil {
+		_, err := (*img.ImgContent).Read(buff)
+		if err != nil {
+			return errors.New("could not read uploaded image")
+		}
+	}
+
+	contentType := http.DetectContentType(buff)
+
+	if !allowedTypes[contentType] {
+		return errors.New("unsupported image type")
+	}
 	
-	// If validation passes, save using the repo
-	return s.repo.SavePost(post,img)
+
+	return s.repo.SavePost(post, img)
 }
 
 func (s *PostService) GetPosts(start, limit string) ([]models.Post, error) {

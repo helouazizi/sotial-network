@@ -20,7 +20,11 @@ func (r *PostRepository) SavePost(post *models.Post, img *models.Image) error {
 		INSERT INTO posts (user_id, title, content, type, media, created_at)
 		VALUES (?, ?, ?, ?, ?, ?)
 	`
-	// change the media in db to be just tesxt
+
+	// to reset the file in to 0 to read
+	(*img.ImgContent).Seek(0, 0)
+
+	// path := fmt.Sprintf("images/posts/%s", img.ImgHeader.Filename)
 	stmt, err := r.db.Prepare(query)
 	if err != nil {
 		return err
@@ -32,7 +36,7 @@ func (r *PostRepository) SavePost(post *models.Post, img *models.Image) error {
 		post.Title,
 		post.Content,
 		post.Type,
-		"avatar.png",
+		img.ImgHeader.Filename,
 		time.Now(),
 	)
 

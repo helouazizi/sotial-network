@@ -16,7 +16,7 @@ export default function PostCard({
   return (
     <div className="post-card">
       <PostMeta author={`user-${post.userId}`} createdAt="2025-06-11T13:45:00Z" avatarUrl="/avatar.png" />
-      <PostBody title={post.title} content={post.content} media={post.media} />
+      <PostBody title={post.title} content={post.content} media="test.png" />
       <PostComment   post={post} onPostUpdate={onPostUpdate}/>
       <PostActions post={post} onPostUpdate={onPostUpdate} />
     </div>

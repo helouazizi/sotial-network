@@ -7,16 +7,15 @@ export default function PostBody({
   content: string;
   media: string;
 }) {
-  const dataUrl = media ? `data:image/jpeg;base64,${media}` : null;
 
   return (
     <div className="post-body">
       <h2>{title}</h2>
       <p>{content}</p>
 
-      {dataUrl && (
+      {media && (
         <img
-          src={dataUrl}
+          src={media}
           alt={title}
           className="w-full h-auto rounded"
         />

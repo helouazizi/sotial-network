@@ -37,7 +37,10 @@ func (s *ChatServiceImpl) SaveMessage(chat *models.Chat) error {
 		return errors.New("Message must be between 1 and 3000 characters")
 	}
 
-	return s.repo.Save(chat)
+	return s.repo.SaveMessage(chat)
+}
+
+func (s *ChatServiceImpl) GetMessages(senderID, receiverID int) {
 }
 
 func (s *ChatServiceImpl) SaveClient(userID int, conn *websocket.Conn) {

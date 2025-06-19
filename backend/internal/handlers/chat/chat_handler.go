@@ -54,12 +54,17 @@ func (h *ChatHandler) ChatMessagesHandler(w http.ResponseWriter, r *http.Request
 
 		chat.SenderID = userID
 
-		err = h.service.SaveMessage(&chat)
-		if err != nil {
-			conn.WriteJSON(map[string]any{
-				"error": err.Error(),
-			})
-			continue
+		switch chat.Type {
+		case "getMessages":
+			
+		default:
+			err = h.service.SaveMessage(&chat)
+			if err != nil {
+				conn.WriteJSON(map[string]any{
+					"error": err.Error(),
+				})
+				continue
+			}
 		}
 	}
 }

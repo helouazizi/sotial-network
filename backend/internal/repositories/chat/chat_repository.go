@@ -22,8 +22,11 @@ func (r *ChatRepository) SaveMessage(chat *models.Chat) error {
 }
 
 func (r *ChatRepository) GetMessages(senderID, receiverID int) ([]*models.Chat, error) {
-	query := `SELECT * FROM chat_message`
-	rows, err := r.db.Query(query)
+	query := `
+		SELECT * FROM chat_message
+		WHERE (sender_id = ? AND receiver_id = ?) OR (receiver_id = ? AND sender_id = ?)
+	`
+	rows, err := r.db.Query(query, senderID, receiverID, senderID, receiverID)
 	if err != nil {
 		return nil, err
 	}

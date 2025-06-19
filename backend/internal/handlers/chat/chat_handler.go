@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -68,6 +69,10 @@ func (h *ChatHandler) ChatMessagesHandler(w http.ResponseWriter, r *http.Request
 					"error": err.Error(),
 				})
 				continue
+			}
+
+			for _, r := range messages {
+				fmt.Println(r)
 			}
 
 			conn.WriteJSON(map[string]any{

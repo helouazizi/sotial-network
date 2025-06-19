@@ -1,8 +1,8 @@
 package profile
 
 import (
-	"fmt"
 	"net/http"
+	"strconv"
 
 	services "github.com/ismailsayen/social-network/internal/services/profile"
 	"github.com/ismailsayen/social-network/pkg/utils"
@@ -25,6 +25,16 @@ func (h *ProfileHandler) ProfileHandler(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 	sessionID := r.Context().Value("userID").(int)
-	userID := r.URL.Query().Get("id")
-	
+	query := r.URL.Query().Get("id")
+	userID, err := strconv.Atoi(query)
+	if err != nil {
+		utils.ResponseJSON(w, http.StatusNotFound, map[string]any{
+			"message": "Profile Not Found",
+			"status":  http.StatusNotFound,
+		})
+		return
+	}
+	if sessionID == userID {
+		
+	}
 }

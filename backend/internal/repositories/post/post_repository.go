@@ -48,7 +48,7 @@ func (r *PostRepository) SavePost(post *models.Post, img *models.Image) error {
 	defer stmt.Close()
 
 	_, err = stmt.Exec(
-		post.UserID,
+		1,
 		post.Title,
 		post.Content,
 		post.Type,
@@ -61,7 +61,7 @@ func (r *PostRepository) SavePost(post *models.Post, img *models.Image) error {
 
 func (r *PostRepository) GetPosts(start, limit int) ([]models.Post, error) {
 	const q = `
-	SELECT id, user_id, title, content, media, type, created_at
+	SELECT id, title, content, media, type, created_at
 	FROM posts
 	ORDER BY created_at DESC
 	LIMIT ? OFFSET ?`
@@ -74,7 +74,7 @@ func (r *PostRepository) GetPosts(start, limit int) ([]models.Post, error) {
 	var posts []models.Post
 	for rows.Next() {
 		var p models.Post
-		err := rows.Scan(&p.ID, &p.UserID, &p.Title, &p.Content,
+		err := rows.Scan(&p.ID, &p.Title, &p.Content,
 			&p.MediaLink, &p.Type, &p.CreatedAt)
 		if err != nil {
 			return nil, err

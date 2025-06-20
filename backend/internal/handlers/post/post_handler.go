@@ -4,7 +4,6 @@ import (
 	"encoding/base64"
 	"fmt"
 	"net/http"
-	"strconv"
 
 	"github.com/ismailsayen/social-network/internal/models"
 	services "github.com/ismailsayen/social-network/internal/services/post"
@@ -74,22 +73,11 @@ func (h *PostHandler) CreatePost(w http.ResponseWriter, r *http.Request) {
 	title := r.FormValue("title")
 	content := r.FormValue("content")
 	privacy := r.FormValue("privacy")
-	userIDStr := r.FormValue("user_id")
-
-	userID, err := strconv.Atoi(userIDStr)
-	if err != nil {
-		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
-			"message": "Bad Request",
-			"status":  http.StatusBadRequest,
-		})
-		return
-	}
 
 	// === Get the media file ===
 	file, header, _ := r.FormFile("media")
 
 	post := &models.Post{
-		UserID:  userID,
 		Title:   title,
 		Content: content,
 		Type:    privacy,

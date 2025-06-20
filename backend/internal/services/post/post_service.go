@@ -46,7 +46,6 @@ func (s *PostService) SavePost(post *models.Post, img *models.Image) error {
 
 	// add logic to handle media or other fields here
 	if img.ImgHeader != nil {
-		fmt.Println(img.ImgHeader.Filename, "name")
 		if img.ImgHeader.Filename == "" || len(img.ImgHeader.Filename) < 3 {
 			return errors.New("invalid img name")
 		}

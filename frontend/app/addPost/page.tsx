@@ -1,21 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useRef } from "react";
 import { useRouter } from "next/navigation";
 
 export default function CreatePostForm() {
-  const [privacy, setPrivacy] = useState("public");
+  const privacy = useRef("public");
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const form = e.currentTarget as HTMLFormElement;
     const formData = new FormData(form);
-    formData.append("privacy", privacy);
+    formData.append("privacy", privacy.current);
     formData.append("user_id", "1");
 
     // ============ validate data in front ================//
-    // --- Validate Media File ---
     const fileInput = form.elements.namedItem("media") as HTMLInputElement;
     const file = fileInput?.files?.[0];
 
@@ -26,7 +25,7 @@ export default function CreatePostForm() {
         "image/gif",
         "image/webp",
       ];
-      const maxSize = 5 * 1024 * 1024; // 5MB
+      const maxSize = 10 * 1024 * 1024; // 10MB
 
       if (!allowedTypes.includes(file.type)) {
         alert("Invalid file type. Only JPG, PNG, WEBP, and GIF are allowed.");
@@ -54,17 +53,19 @@ export default function CreatePostForm() {
       return;
     }
 
+    const allowedPrivacy = [
+      "public",
+      "almost_private",
+      "private",
+    ];
     const privacyy = formData.get("privacy")?.toString().trim();
     if (
-      privacyy !== "public" &&
-      privacyy !== "almost_private" &&
-      privacyy !== "private"
+      !allowedPrivacy.includes(privacy.current)
     ) {
       alert("The privacy you provided it's not exist");
       return;
     }
 
-    // alert('Post created!');
     const res = await fetch("http://localhost:8080/api/v1/posts/create", {
       method: "POST",
       body: formData,
@@ -99,8 +100,8 @@ export default function CreatePostForm() {
         Privacy
         <select
           name="privacy"
-          value={privacy}
-          onChange={(e) => setPrivacy(e.target.value)}
+          value={privacy.current}
+          onChange={(e) => (privacy.current = e.target.value)}
         >
           <option value="public">Public (for all users)</option>
           <option value="almost_private">

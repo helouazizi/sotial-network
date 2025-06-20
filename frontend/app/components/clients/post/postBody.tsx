@@ -1,4 +1,15 @@
-export default function PostBody({ title, content, media }: { title: string; content: string; media: string }) {
+export default function PostBody({
+  title,
+  content,
+  media,
+}: {
+  title: string;
+  content: string;
+  media: string;
+}) {
+
+  console.log("=>>>>>>>>>>>", media)
+
   return (
     <div className="post-body">
       <h2>{title}</h2>
@@ -6,11 +17,12 @@ export default function PostBody({ title, content, media }: { title: string; con
 
       {media && (
         <img
-          src={`data:image/jpeg;base64,${media}`}
+          src={`http://localhost:8080/images/posts/${media}`}
           alt={title}
-          className="w-full h-auto rounded"
+          className="postImg"
         />
       )}
     </div>
   );
 }
+

@@ -1,7 +1,9 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/gorilla/websocket"
 	"github.com/ismailsayen/social-network/internal/models"
@@ -9,10 +11,10 @@ import (
 )
 
 type ChatHandler struct {
-	service services.ChatService
+	service *services.ChatService
 }
 
-func NewChatHandler(ChatService services.ChatService) *ChatHandler {
+func NewChatHandler(ChatService *services.ChatService) *ChatHandler {
 	return &ChatHandler{service: ChatService}
 }
 
@@ -45,21 +47,49 @@ func (h *ChatHandler) ChatMessagesHandler(w http.ResponseWriter, r *http.Request
 	for {
 		var chat models.Chat
 		err := conn.ReadJSON(&chat)
-		if err != nil {
+		if err != nil && !strings.Contains(err.Error(), "close 1005") {
 			conn.WriteJSON(map[string]any{
 				"error": "Error reading message: " + err.Error(),
 			})
-			return
+			continue
 		}
 
-		chat.SenderID = userID
-
-		err = h.service.SaveMessage(&chat)
 		if err != nil {
 			conn.WriteJSON(map[string]any{
 				"error": err.Error(),
 			})
-			continue
+			return
+		}
+
+		switch chat.Type {
+		case "getMessages":
+			messages, err := h.service.GetMessages(chat.SenderID, chat.ReceiverID)
+			if err != nil {
+				conn.WriteJSON(map[string]any{
+					"error": err.Error(),
+				})
+				continue
+			}
+
+			for _, r := range messages {
+				fmt.Println(r)
+			}
+
+			conn.WriteJSON(map[string]any{
+				"data": messages,
+			})
+		default:
+			err = h.service.SaveMessage(&chat)
+			if err != nil {
+				conn.WriteJSON(map[string]any{
+					"error": err.Error(),
+				})
+				continue
+			}
+
+			conn.WriteJSON(map[string]any{
+				"message": "Message added successfully",
+			})
 		}
 	}
 }

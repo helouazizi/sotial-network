@@ -15,6 +15,17 @@ func OpenDB() *sql.DB {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	err = db.Ping()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// _, err = db.Exec("PRAGMA foreign_keys = ON")
+	// if err != nil {
+	// 	log.Fatal("Failed to enable foreign keys:", err)
+	// }
+
 	return db
 }
 

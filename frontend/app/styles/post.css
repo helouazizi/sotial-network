@@ -344,3 +344,8 @@
 .post-form button:not([type="submit"]):hover {
   background-color: #d1d5db;
 }
+
+.postImg{
+  max-width: 100%;
+  max-height: 300px;
+}

@@ -36,7 +36,7 @@ func (h *UserHandler) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	usersession,err := h.service.SaveUser(user)
+	usersession, err := h.service.SaveUser(user)
 	if err.UserErrors.HasErro {
 		fmt.Println(err)
 		utils.ResponseJSON(w, http.StatusBadRequest, err)
@@ -46,10 +46,10 @@ func (h *UserHandler) Register(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, cookie)
 
 	utils.ResponseJSON(w, err.Code, err)
-	
 }
-func (h *UserHandler)Login(w http.ResponseWriter, r *http.Request){
-		if r.Method != http.MethodPost {
+
+func (h *UserHandler) Login(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
 		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
 			"message": "Method not allowed",
 			"status":  http.StatusMethodNotAllowed,
@@ -65,16 +65,13 @@ func (h *UserHandler)Login(w http.ResponseWriter, r *http.Request){
 		})
 		return
 	}
-	usersession,errLog := h.service.LogUser(user)
+	usersession, errLog := h.service.LogUser(user)
 	if errLog.Code != http.StatusOK {
-		fmt.Println("I am heeer")
-		utils.ResponseJSON(w, errLog.Code,errLog )
+		utils.ResponseJSON(w, errLog.Code, errLog)
 		return
 	}
-		cookie := &http.Cookie{Name: "Token", Value: usersession.Token, MaxAge: 3600, HttpOnly: true, SameSite: http.SameSiteStrictMode, Path: "/", Secure: false}
+	cookie := &http.Cookie{Name: "Token", Value: usersession.Token, MaxAge: 3600, HttpOnly: true, SameSite: http.SameSiteStrictMode, Path: "/", Secure: false}
 	http.SetCookie(w, cookie)
 
 	utils.ResponseJSON(w, errLog.Code, errLog)
-	
-
 }

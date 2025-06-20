@@ -2,6 +2,10 @@ package repositories
 
 import (
 	"database/sql"
+	"fmt"
+	"io"
+	"os"
+	"path/filepath"
 	"time"
 
 	"github.com/ismailsayen/social-network/internal/models"
@@ -15,12 +19,28 @@ func NewPostRepo(db *sql.DB) *PostRepository {
 	return &PostRepository{db: db}
 }
 
-func (r *PostRepository) SavePost(post *models.Post) error {
+func (r *PostRepository) SavePost(post *models.Post, img *models.Image) error {
 	query := `
 		INSERT INTO posts (user_id, title, content, type, media, created_at)
 		VALUES (?, ?, ?, ?, ?, ?)
 	`
 
+	// to reset the file in to 0 to read
+	(*img.ImgContent).Seek(0, 0)
+
+	path := filepath.Join("pkg/db/images/posts/", img.ImgHeader.Filename)
+
+	file, err := os.Create(path)
+	if err != nil {
+		return fmt.Errorf("could not save image: %w", err)
+	}
+	defer file.Close()
+	_, err = io.Copy(file, *img.ImgContent)
+	if err != nil {
+		return fmt.Errorf("error writing image to disk: %w", err)
+	}
+
+	// do the other logic for db
 	stmt, err := r.db.Prepare(query)
 	if err != nil {
 		return err
@@ -32,7 +52,7 @@ func (r *PostRepository) SavePost(post *models.Post) error {
 		post.Title,
 		post.Content,
 		post.Type,
-		post.Media,
+		img.ImgHeader.Filename,
 		time.Now(),
 	)
 
@@ -45,7 +65,7 @@ func (r *PostRepository) GetPosts(start, limit int) ([]models.Post, error) {
 	FROM posts
 	ORDER BY created_at DESC
 	LIMIT ? OFFSET ?`
-	rows, err := r.db.Query(q,limit,start)
+	rows, err := r.db.Query(q, limit, start)
 	if err != nil {
 		return nil, err
 	}
@@ -55,7 +75,7 @@ func (r *PostRepository) GetPosts(start, limit int) ([]models.Post, error) {
 	for rows.Next() {
 		var p models.Post
 		err := rows.Scan(&p.ID, &p.UserID, &p.Title, &p.Content,
-			&p.Media, &p.Type, &p.CreatedAt)
+			&p.MediaLink, &p.Type, &p.CreatedAt)
 		if err != nil {
 			return nil, err
 		}

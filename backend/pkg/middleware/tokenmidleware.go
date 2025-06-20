@@ -10,14 +10,13 @@ import (
 	"github.com/ismailsayen/social-network/pkg/utils"
 )
 
-type contextKey string
-const userIDKey contextKey = "userID"
+
+const userIDKey string = "userID"
 
 func AuthMiddleware(next http.Handler, db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		token, err := token.GetToken(r, "Token")
 		if err.Code != http.StatusOK {
-
 			utils.ResponseJSON(w, err.Code, err)
 			return
 		}
@@ -47,7 +46,6 @@ func AuthMiddleware(next http.Handler, db *sql.DB) http.HandlerFunc {
 		}
 		// Add user ID to context
 		ctx := context.WithValue(r.Context(), userIDKey, id)
-
 
 		// Proceed to next handler
 		next.ServeHTTP(w, r.WithContext(ctx))

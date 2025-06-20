@@ -33,6 +33,7 @@ export default function Posts() {
       // console.log(data.length,"post length")
       let virtualPosts: Post[]
       if (data) {
+        console.log(data,"data")
         virtualPosts = data.map((post: Post) => ({
           ...post,
           likes: post.likes ?? 0,

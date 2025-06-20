@@ -16,6 +16,7 @@ export interface Post {
   author: string;
   createdAt: string;
   media: string;
+  media_link: string;
   likes: number;
   dislikes: number;
   totalComments: number;

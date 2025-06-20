@@ -15,6 +15,7 @@ import (
 	chatServices "github.com/ismailsayen/social-network/internal/services/chat"
 	postservices "github.com/ismailsayen/social-network/internal/services/post"
 
+	// ===================== Profile ===============================//
 	profileHandlers "github.com/ismailsayen/social-network/internal/handlers/profile"
 	profileRepo "github.com/ismailsayen/social-network/internal/repositories/profile"
 	profileServices "github.com/ismailsayen/social-network/internal/services/profile"
@@ -37,7 +38,7 @@ func NewApp(db *sql.DB) *Application {
 	PostRepo := postrepositories.NewPostRepo(db)
 	PostService := postservices.NewAuthService(PostRepo)
 	PostHandler := posthandlers.NewAuthHandler(PostService)
-	
+
 	ChatRepo := chatRepo.NewChatRepo(db)
 	ChatService := chatServices.NewChatService(ChatRepo)
 	ChatHandler := chatHandlers.NewChatHandler(ChatService)

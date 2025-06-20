@@ -1,9 +1,7 @@
 "use client";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 export default function Header() {
-  const router = useRouter();
   return (
     <header>
       <nav>
@@ -12,17 +10,17 @@ export default function Header() {
         </Link>
         <ul>
           <li>
-            <i className="fa-solid fa-house"></i>
-          </li>
-          <li>
+            <Link href={"/"}><i className="fa-solid fa-house"></i></Link>
+          </li> 
+          <li>  
             <i className="fa-solid fa-user-group"></i>
           </li>
           <li>
-            <i className="fa-solid fa-message"></i>
+            <Link href={"/chat"}><i className="fa-solid fa-message"></i></Link>
           </li>
         </ul>
         <div>
-          <button className="notification"><i className="fa-solid fa-envelope"></i></button>          
+          <button className="notification"><i className="fa-solid fa-bell"></i></button>          
           <button className="profile"><i className="fa-solid fa-user"></i></button>
         </div>
       </nav>

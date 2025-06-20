@@ -92,7 +92,7 @@ export default function Posts() {
   /* ---------- UI ---------- */
   return (
     <section className="posts-list">
-      {posts.length ? (
+      {posts && (
         <>
           {posts.map(p => (
             <PostCard key={p.id} post={p} onPostUpdate={updatePost} />
@@ -100,10 +100,6 @@ export default function Posts() {
           {isLoading && <p>Loading…</p>}
           {!hasMore && <p style={{ textAlign: "center" }}>No more posts</p>}
         </>
-      ) : isLoading ? (
-        <p>Loading…</p>
-      ) : (
-        <NoPostsMessage />
       )}
     </section>
   );

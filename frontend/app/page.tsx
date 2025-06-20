@@ -5,12 +5,7 @@ export default function Home() {
 
   return (
     <main>
-      <section className="sideBar">
-
-      </section>
-
-      {/* <Posts /> */}
-
+      <Posts />
     </main>
 
   );

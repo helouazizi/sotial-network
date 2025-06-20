@@ -14,6 +14,6 @@ export interface Post {
   media_link: string;
   likes: number;
   dislikes: number;
-  totalComments: number;
+  total_comments: number;
   comments: Comment[];
 }

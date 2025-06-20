@@ -8,7 +8,6 @@ const LIMIT = 10;
 
 export default function Posts() {
   const [posts, setPosts] = useState<Post[]>([]);
-
   const fetchPosts = async () => {
     try {
       const res = await fetch(

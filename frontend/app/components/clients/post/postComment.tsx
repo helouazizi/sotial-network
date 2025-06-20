@@ -19,7 +19,7 @@ export default function PostComment({
       const updatedComments = [newComment, ...(post.comments || [])];
       onPostUpdate(post.id, {
         comments: updatedComments,
-        totalComments: post.totalComments + 1,
+        total_comments: post.total_comments + 1,
       });
       setComment("");
     }

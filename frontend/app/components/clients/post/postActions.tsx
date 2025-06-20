@@ -61,7 +61,7 @@ export default function PostActions({
           👎 {post.dislikes} <span className="extra"> Dislike</span>
         </button>
         <button onClick={toggleComments}>
-          💬 {post.totalComments} <span className="extra">Comment</span>
+          💬 {post.total_comments} <span className="extra">Comment</span>
         </button>
       </div>
 

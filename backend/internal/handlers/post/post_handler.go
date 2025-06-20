@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"encoding/base64"
 	"fmt"
 	"net/http"
 
@@ -37,15 +36,16 @@ func (h *PostHandler) GetPosts(w http.ResponseWriter, r *http.Request) {
 			"message": "Internal Server Error",
 			"status":  http.StatusInternalServerError,
 		})
+		fmt.Println(err,"here")
 		return
 	}
 
 	// Convert raw media bytes to base64 so it’s safe in JSON.
-	for i := range posts {
-		if len(posts[i].Media) > 0 {
-			posts[i].Media = []byte(base64.StdEncoding.EncodeToString(posts[i].Media))
-		}
-	}
+	// for i := range posts {
+	// 	if len(posts[i].Media) > 0 {
+	// 		posts[i].Media = []byte(base64.StdEncoding.EncodeToString(posts[i].Media))
+	// 	}
+	// }
 
 	utils.ResponseJSON(w, http.StatusOK, posts)
 }

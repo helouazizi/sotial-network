@@ -3,21 +3,28 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export default function Header() {
-  const router = useRouter()
+  const router = useRouter();
   return (
     <header>
       <nav>
-        <Link href={"/"} className="logo">Social Network</Link>
+        <Link href={"/"} className="logo">
+          Social <span>Net</span>work
+        </Link>
         <ul>
-          <li><svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="-5.0 -10.0 110.0 135.0" width="100%">
-            <path d="m54.379 18.238c-2.4219-2.4102-6.3359-2.4102-8.7578 0l-34.621 34.57c-0.92969 0.89844-1.2109 2.2734-0.71094 3.4609 0.48047 1.2109 1.6484 2.0039 2.9492 2h5.8984l0.003906 18.461c0.003906 3.7734 3.0664 6.8281 6.8398 6.8281h15.68c0.28906 0.003906 0.57031-0.10938 0.77734-0.3125 0.20703-0.20703 0.32422-0.48438 0.32422-0.77734v-12.59c0.003906-1.4297 1.1602-2.5898 2.5898-2.5977h9.3008-0.003906c1.4297 0.007812 2.5859 1.168 2.5898 2.5977v12.59c0 0.29297 0.11719 0.57031 0.32422 0.77734 0.20703 0.20312 0.48828 0.31641 0.77734 0.3125h15.73c3.7734 0 6.8359-3.0547 6.8398-6.8281v-18.492h5.8984c1.3203 0.027344 2.5156-0.76953 3-2 0.50391-1.1875 0.22266-2.5625-0.70703-3.457z" />
-          </svg></li>
-          <li><svg xmlns="http://www.w3.org/2000/svg" data-name="Layer 1" viewBox="0 0 100 125" x="0px" y="0px"><circle cx="24.28693" cy="35.37618" r="9.54206" /><circle cx="75.71297" cy="35.37618" r="9.54206" /><path d="M51.46176,48.00276h-2.92352c-12.83206,0-23.23449,10.40244-23.23449,23.23449v.00003c0,1.92641,1.10747,3.67351,2.83388,4.52824,6.59086,3.26308,14.00964,5.10469,21.86231,5.10469s15.27145-1.84161,21.86231-5.10469c1.72641-.85473,2.83388-2.60183,2.83388-4.52824v-.00015c0-12.83199-10.40238-23.23437-23.23437-23.23437Z" /><circle cx="49.99994" cy="31.47788" r="12.34809" /><path d="M33.22848,49.95337c-2.3645-1.1463-5.00787-1.8075-7.81195-1.8075h-2.25909c-9.91602,0-17.95459,8.03851-17.95459,17.95459,0,1.48865,.85583,2.83875,2.18988,3.49927,4.62524,2.28992,9.78131,3.66107,15.2337,3.89606-.21021-.72144-.32245-1.47961-.32245-2.25861,0-8.75458,4.31458-16.51569,10.9245-21.28381Z" /><path d="M76.84256,48.14587h-2.25916c-2.80402,0-5.44745,.66119-7.81189,1.8075,6.60992,4.76807,10.92456,12.52917,10.92456,21.28381,0,.77893-.11237,1.53711-.32257,2.25861,5.45245-.23499,10.60852-1.60614,15.23376-3.89606,1.33411-.66052,2.18988-2.01062,2.18988-3.49927,0-9.91608-8.03851-17.95459-17.95459-17.95459Z" /><text x="0" y="115" fill="#000000" font-size="5px" font-weight="bold" font-family="'Helvetica Neue', Helvetica, Arial-Unicode, Arial, Sans-serif">Created by Eliricon</text><text x="0" y="120" fill="#000000" font-size="5px" font-weight="bold" font-family="'Helvetica Neue', Helvetica, Arial-Unicode, Arial, Sans-serif">from the Noun Project</text></svg></li>
-          <li></li>
-          <li></li>
+          <li>
+            <i className="fa-solid fa-house"></i>
+          </li>
+          <li>
+            <i className="fa-solid fa-user-group"></i>
+          </li>
+          <li>
+            <i className="fa-solid fa-message"></i>
+          </li>
         </ul>
-        <button onClick={() => { router.push("/") }}>Home</button>
-        <button onClick={() => { router.push("/addPost") }}>Add Post</button>
+        <div>
+          <button className="notification"><i className="fa-solid fa-envelope"></i></button>          
+          <button className="profile"><i className="fa-solid fa-user"></i></button>
+        </div>
       </nav>
     </header>
   );

@@ -80,7 +80,6 @@ export default function CreatePostForm() {
   return (
     <form onSubmit={handleSubmit} className="post-form">
       <h2>Create a Post</h2>
-
       <label>
         Title
         <input type="text" name="title" required maxLength={255} />

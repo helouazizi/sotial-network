@@ -1,6 +1,5 @@
 import { ReactNode } from 'react';
 import './globals.css'
-import Footer from '@/app/components/clients/footer/footer';
 import Header from '@/app/components/clients/header/header';
 
 interface RootLayoutProps {
@@ -17,12 +16,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
       <body>
-        <Header/>
-     
-          {children}
-     
-
-        {/* <Footer/> */}
+        <Header />
+        {children}
       </body>
     </html>
   );

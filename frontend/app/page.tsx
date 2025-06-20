@@ -9,7 +9,7 @@ export default function Home() {
 
       </section>
 
-      <Posts />
+      {/* <Posts /> */}
 
     </main>
 

@@ -17,3 +17,11 @@ export interface Post {
   total_comments: number;
   comments: Comment[];
 }
+
+
+export interface PostErrors{
+  title_error? : string
+  body_error?: string
+  image_error? :  string
+  privacy_error? : string
+}

@@ -1,7 +1,6 @@
 import { ReactNode } from "react";
 import "./globals.css";
-import Header from "@/app/components/clients/header/header";
-import Head from "next/head";
+import Header from "@/app/components/header/header";
 
 interface RootLayoutProps {
   children: ReactNode;

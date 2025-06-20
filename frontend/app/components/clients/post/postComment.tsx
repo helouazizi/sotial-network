@@ -15,8 +15,6 @@ export default function PostComment({
         comment: comment,
         author: "Anonymous", // Replace with actual author if available
         created_at: new Date().toISOString(),
-        likes: 0,
-        dislikes: 0,
       };
       const updatedComments = [newComment, ...(post.comments || [])];
       onPostUpdate(post.id, {
@@ -26,6 +24,9 @@ export default function PostComment({
       setComment("");
     }
   };
+
+
+
   return (
     <div className="post-comment">
       <input

@@ -13,7 +13,7 @@ export default function PostActions({
  
 }) {
   const [userVote, setUserVote] = useState<"like" | "dislike" | null>(null);
-  const [showComments, setShowComments] = useState(false); // fixed typo
+  const [showComments, setShowComments] = useState(false);
 
   const handleLike = () => {
     if (userVote === "like") {

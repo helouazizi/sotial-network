@@ -35,7 +35,6 @@ export default function Posts() {
 
 
   useEffect(() => { fetchPosts() }, [])
-  // fetchPosts()
 
 
   /* ---------- local updates ---------- */

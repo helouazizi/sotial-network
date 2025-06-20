@@ -65,7 +65,7 @@ export default function PostActions({
         </button>
       </div>
 
-      {showComments && post.comments.length > 0 && (
+      {showComments && post.comments && (
         <div className="comments-list">
           <ul>
             {post.comments.map((c: Comment, i: number) => (

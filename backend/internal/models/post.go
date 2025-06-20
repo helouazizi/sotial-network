@@ -18,5 +18,5 @@ type Post struct {
 
 type Image struct {
 	ImgHeader  *multipart.FileHeader
-	ImgContent *multipart.File
+	ImgContent multipart.File
 }

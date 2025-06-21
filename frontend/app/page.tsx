@@ -6,9 +6,6 @@ export default function Home() {
 
   return (
     <main>
-      <section className="create-post">
-        <CreatePostForm />
-      </section>
       <Posts />
     </main>
 

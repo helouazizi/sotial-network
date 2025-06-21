@@ -2,9 +2,12 @@
 
 import React, { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { PostErrors } from "@/app/types/post";
+import { Post, PostErrors } from "@/app/types/post";
 
-export default function CreatePostForm() {
+type Props = {
+  onCreated: (newPost: Post) => void;
+};
+export default function CreatePostForm({ onCreated }: Props) {
   const [errors, setErrors] = useState<PostErrors>({})
   const privacy = useRef("public");
   const router = useRouter();
@@ -19,6 +22,7 @@ export default function CreatePostForm() {
     // ============ validate data in front ================//
     const fileInput = form.elements.namedItem("media") as HTMLInputElement;
     const file = fileInput?.files?.[0];
+    
 
     if (file) {
       const allowedTypes = [
@@ -52,18 +56,18 @@ export default function CreatePostForm() {
     const title = formData.get("title")?.toString().trim();
     if (typeof title !== "string" || title.length < 1 || title.length > 255) {
       setErrors((prev: PostErrors) => ({
-          ...prev,
-          title_error: "Title must be betwen {1-255} characters",
-        }));
+        ...prev,
+        title_error: "Title must be betwen {1-255} characters",
+      }));
       return;
     }
 
     const body = formData.get("content")?.toString().trim();
     if (typeof body !== "string" || body.length < 1 || body.length > 500) {
-        setErrors((prev: PostErrors) => ({
-          ...prev,
-          body_error: "TBody must be betwen {1-500} characters",
-        }));
+      setErrors((prev: PostErrors) => ({
+        ...prev,
+        body_error: "TBody must be betwen {1-500} characters",
+      }));
       return;
     }
 
@@ -76,10 +80,10 @@ export default function CreatePostForm() {
     if (
       !allowedPrivacy.includes(privacy.current)
     ) {
-       setErrors((prev: PostErrors) => ({
-          ...prev,
-          body_error: "The privacy you provided it's not suported",
-        }));
+      setErrors((prev: PostErrors) => ({
+        ...prev,
+        body_error: "The privacy you provided it's not suported",
+      }));
       return;
     }
 
@@ -89,6 +93,22 @@ export default function CreatePostForm() {
     });
 
     if (res.ok) {
+      // now lets update the posta state to hold the new postscreated 
+      let newPost: Post = {
+        id :0,
+        title: title,
+        content: body,
+        media_link :file?.name ? file.name: "",
+        author : "test1",
+        likes: 0,
+        dislikes : 0,
+        comments: [],
+        total_comments : 0 ,
+        createdAt :"2025-06-11T13:45:00Z",
+        media : ""
+
+      }
+      onCreated(newPost)
       console.log(res.status)
       router.push("/");
     } else {

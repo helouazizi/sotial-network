@@ -20,39 +20,56 @@ func NewPostRepo(db *sql.DB) *PostRepository {
 }
 
 func (r *PostRepository) SavePost(post *models.Post, img *models.Image) error {
-	query := `
+	const qry = `
 		INSERT INTO posts (user_id, title, content, type, media, created_at)
 		VALUES (?, ?, ?, ?, ?, ?)
 	`
 
-	// to reset the file in to 0 to read
-	(*img.ImgContent).Seek(0, 0)
+	var fileName sql.NullString // will be NULL if no image
 
-	path := filepath.Join("pkg/db/images/posts/", img.ImgHeader.Filename)
+	if img != nil && img.ImgContent != nil && img.ImgHeader != nil {
+		// Reset file read pointer
+		if seeker, ok := (img.ImgContent).(io.Seeker); ok {
+			_, _ = seeker.Seek(0, io.SeekStart)
+		}
 
-	file, err := os.Create(path)
-	if err != nil {
-		return fmt.Errorf("could not save image: %w", err)
+		// Ensure directory exists
+		const dir = "pkg/db/images/posts"
+		if err := os.MkdirAll(dir, 0o755); err != nil {
+			return fmt.Errorf("ensure image dir: %w", err)
+		}
+
+		// Sanitize and generate unique filename
+		origName := filepath.Base(img.ImgHeader.Filename) // basic sanitization
+
+		path := filepath.Join(dir, origName)
+
+		dst, err := os.Create(path)
+		if err != nil {
+			return fmt.Errorf("create image file: %w", err)
+		}
+
+		_, err = io.Copy(dst, img.ImgContent)
+		dst.Close() // close file after copy
+		if err != nil {
+			return fmt.Errorf("write image: %w", err)
+		}
+
+		fileName = sql.NullString{String: origName, Valid: true}
 	}
-	defer file.Close()
-	_, err = io.Copy(file, *img.ImgContent)
-	if err != nil {
-		return fmt.Errorf("error writing image to disk: %w", err)
-	}
 
-	// do the other logic for db
-	stmt, err := r.db.Prepare(query)
+	stmt, err := r.db.Prepare(qry)
 	if err != nil {
-		return err
+		return fmt.Errorf("prepare stmt: %w", err)
 	}
 	defer stmt.Close()
 
 	_, err = stmt.Exec(
-		post.UserID,
+		1, // TODO: real user_id
 		post.Title,
 		post.Content,
 		post.Type,
-		img.ImgHeader.Filename,
+		fileName,
 		time.Now(),
 	)
 
@@ -61,10 +78,11 @@ func (r *PostRepository) SavePost(post *models.Post, img *models.Image) error {
 
 func (r *PostRepository) GetPosts(start, limit int) ([]models.Post, error) {
 	const q = `
-	SELECT id, user_id, title, content, media, type, created_at
+	SELECT id, title, content, media, type, created_at, likes, dislikes, comments
 	FROM posts
 	ORDER BY created_at DESC
 	LIMIT ? OFFSET ?`
+
 	rows, err := r.db.Query(q, limit, start)
 	if err != nil {
 		return nil, err
@@ -74,12 +92,30 @@ func (r *PostRepository) GetPosts(start, limit int) ([]models.Post, error) {
 	var posts []models.Post
 	for rows.Next() {
 		var p models.Post
-		err := rows.Scan(&p.ID, &p.UserID, &p.Title, &p.Content,
-			&p.MediaLink, &p.Type, &p.CreatedAt)
+		var media sql.NullString
+		err := rows.Scan(
+			&p.ID,
+			&p.Title,
+			&p.Content,
+			&media,           // scan media into sql.NullString
+			&p.Type,
+			&p.CreatedAt,
+			&p.Likes,
+			&p.Dislikes,
+			&p.TotalComments,
+		)
 		if err != nil {
 			return nil, err
 		}
+
+		if media.Valid {
+			p.MediaLink = media.String
+		} else {
+			p.MediaLink = ""
+		}
+
 		posts = append(posts, p)
 	}
+
 	return posts, rows.Err()
 }

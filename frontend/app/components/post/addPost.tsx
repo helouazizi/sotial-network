@@ -2,7 +2,7 @@
 
 import React, { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { PostErrors } from "../types/post";
+import { PostErrors } from "@/app/types/post";
 
 export default function CreatePostForm() {
   const [errors, setErrors] = useState<PostErrors>({})
@@ -30,7 +30,6 @@ export default function CreatePostForm() {
       const maxSize = 10 * 1024 * 1024; // 10MB
 
       if (!allowedTypes.includes(file.type)) {
-        // alert("Invalid file type. Only JPG, PNG, WEBP, and GIF are allowed.");
         setErrors((prev: PostErrors) => ({
           ...prev,
           image_error: "Invalid file type. Only JPG, PNG, WEBP, and GIF are allowed.",
@@ -39,7 +38,6 @@ export default function CreatePostForm() {
       }
 
       if (file.size > maxSize) {
-        // alert("File too large. Max 5MB allowed.");
         setErrors((prev: PostErrors) => ({
           ...prev,
           image_error: "File too large. Max 5MB allowed.",
@@ -53,7 +51,6 @@ export default function CreatePostForm() {
 
     const title = formData.get("title")?.toString().trim();
     if (typeof title !== "string" || title.length < 1 || title.length > 255) {
-      // alert("Title must be betwen {1-255} characters");
       setErrors((prev: PostErrors) => ({
           ...prev,
           title_error: "Title must be betwen {1-255} characters",
@@ -63,7 +60,6 @@ export default function CreatePostForm() {
 
     const body = formData.get("content")?.toString().trim();
     if (typeof body !== "string" || body.length < 1 || body.length > 500) {
-      // alert("Body must be betwen {1-500} characters");
         setErrors((prev: PostErrors) => ({
           ...prev,
           body_error: "TBody must be betwen {1-500} characters",
@@ -80,7 +76,6 @@ export default function CreatePostForm() {
     if (
       !allowedPrivacy.includes(privacy.current)
     ) {
-      // alert("The privacy you provided it's not exist");
        setErrors((prev: PostErrors) => ({
           ...prev,
           body_error: "The privacy you provided it's not suported",
@@ -94,6 +89,7 @@ export default function CreatePostForm() {
     });
 
     if (res.ok) {
+      console.log(res.status)
       router.push("/");
     } else {
       alert("Failed to create post.");
@@ -138,13 +134,6 @@ export default function CreatePostForm() {
       </label>
 
       <button type="submit">Submit Post</button>
-      <button
-        onClick={() => {
-          router.push("/");
-        }}
-      >
-        Cancel
-      </button>
     </form>
   );
 }

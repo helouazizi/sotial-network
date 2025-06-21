@@ -17,13 +17,6 @@ export default function Posts() {
       // let virtualPosts: Post[]
       if (data) {
         console.log(data, "data")
-        // virtualPosts = data.map((post: Post) => ({
-        //   ...post,
-        //   likes: post.likes ?? 0,
-        //   dislikes: post.dislikes ?? 0,
-        //   totalComments: post.totalComments ?? 0,
-        //   comments: post.comments ?? [],
-        // }));
         setPosts(data)
       }
 
@@ -46,16 +39,14 @@ export default function Posts() {
 
   return (
     <section className="posts-list">
-      {posts.length > 0 ? (
+      {posts && (
         <>
           {posts.map(p => (
             <PostCard key={p.id} post={p} onPostUpdate={updatePost} />
           ))}
 
         </>
-      ) : (
-        <NoPostsMessage />
-      )}
+      ) }
     </section>
   );
 }

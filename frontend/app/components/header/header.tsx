@@ -1,7 +1,15 @@
 "use client";
 import Link from "next/link";
+import { TiHome } from "react-icons/ti";
+import { MdGroups2 } from "react-icons/md";
+import { LuMessageCircleMore } from "react-icons/lu";
+import { IoIosNotifications } from "react-icons/io";
+import { FaUser } from "react-icons/fa";
+import { usePathname } from "next/navigation";
 
 export default function Header() {
+  const pathname = usePathname()
+  
   return (
     <header>
       <nav>
@@ -10,18 +18,18 @@ export default function Header() {
         </Link>
         <ul>
           <li>
-            <Link href={"/"}><i className="fa-solid fa-house"></i></Link>
+            <Link href={"/"}><TiHome className={pathname === "/" ? "active" : " "}/></Link>
           </li> 
           <li>  
-            <i className="fa-solid fa-user-group"></i>
+            <MdGroups2 className="groupIconHeader" />
           </li>
           <li>
-            <Link href={"/chat"}><i className="fa-solid fa-message"></i></Link>
+            <Link href={"/chat"}><LuMessageCircleMore  className={pathname === "/chat" ? "active" : ""}/></Link>
           </li>
         </ul>
         <div>
-          <button className="notification"><i className="fa-solid fa-bell"></i></button>          
-          <button className="profile"><i className="fa-solid fa-user"></i></button>
+          <button className="notification"><IoIosNotifications /></button>          
+          <button className="profile"><FaUser /></button>
         </div>
       </nav>
     </header>

@@ -13,7 +13,7 @@ export default function PostActions({
  
 }) {
   const [userVote, setUserVote] = useState<"like" | "dislike" | null>(null);
-  const [showComments, setShowComments] = useState(false); // fixed typo
+  const [showComments, setShowComments] = useState(false);
 
   const handleLike = () => {
     if (userVote === "like") {
@@ -61,11 +61,11 @@ export default function PostActions({
           👎 {post.dislikes} <span className="extra"> Dislike</span>
         </button>
         <button onClick={toggleComments}>
-          💬 {post.totalComments} <span className="extra">Comment</span>
+          💬 {post.total_comments} <span className="extra">Comment</span>
         </button>
       </div>
 
-      {showComments && post.comments.length > 0 && (
+      {showComments && post.comments && (
         <div className="comments-list">
           <ul>
             {post.comments.map((c: Comment, i: number) => (

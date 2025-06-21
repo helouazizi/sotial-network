@@ -15,17 +15,18 @@ export default function PostComment({
         comment: comment,
         author: "Anonymous", // Replace with actual author if available
         created_at: new Date().toISOString(),
-        likes: 0,
-        dislikes: 0,
       };
       const updatedComments = [newComment, ...(post.comments || [])];
       onPostUpdate(post.id, {
         comments: updatedComments,
-        totalComments: post.totalComments + 1,
+        total_comments: post.total_comments + 1,
       });
       setComment("");
     }
   };
+
+
+
   return (
     <div className="post-comment">
       <input

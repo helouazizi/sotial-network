@@ -3,6 +3,7 @@ package services
 import (
 	"errors"
 	"fmt"
+	"io"
 	"net/http"
 	"strconv"
 	"strings"
@@ -20,53 +21,51 @@ func NewAuthService(postRepo *repositories.PostRepository) *PostService {
 }
 
 func (s *PostService) SavePost(post *models.Post, img *models.Image) error {
-	if len(strings.Fields(post.Title)) == 0 || len(strings.Fields(post.Title)) > 255 {
+	if n := len(strings.Fields(post.Title)); n == 0 || n > 255 {
 		return errors.New("title is required and must be less than 256 characters")
 	}
-	if len(strings.Fields(post.Content)) == 0 || len(strings.Fields(post.Content)) > 500 {
+	if n := len(strings.Fields(post.Content)); n == 0 || n > 500 {
 		return errors.New("body is required and must be less than 500 characters")
 	}
 
-	validPrivacy := map[string]bool{
+	allowedPrivacy := map[string]bool{
 		"public":         true,
 		"almost_private": true,
 		"private":        true,
 	}
-	if !validPrivacy[post.Type] {
-		return errors.New("invalid privacy value")
+
+	if !allowedPrivacy[post.Type] {
+		return errors.New("unsuported privacy")
 	}
 
-	// Allowed content types
-	allowedTypes := map[string]bool{
-		"image/jpeg": true,
-		"image/png":  true,
-		"image/gif":  true,
-		"image/webp": true,
-	}
+	if img != nil && (img.ImgHeader != nil || img.ImgContent != nil) {
+		if img.ImgHeader != nil && len(img.ImgHeader.Filename) < 3 {
+			return errors.New("invalid image name")
+		}
 
-	// add logic to handle media or other fields here
-	if img.ImgHeader != nil {
-		fmt.Println(img.ImgHeader.Filename, "name")
-		if img.ImgHeader.Filename == "" || len(img.ImgHeader.Filename) < 3 {
-			return errors.New("invalid img name")
+		if img.ImgContent != nil {
+			file := img.ImgContent
+			buf := make([]byte, 512)
+			if _, err := file.Read(buf); err != nil {
+				return fmt.Errorf("could not read file: %w", err)
+			}
+			if seeker, ok := file.(io.Seeker); ok {
+				_, _ = seeker.Seek(0, io.SeekStart)
+			}
+
+			allowed := map[string]bool{
+				"image/jpeg": true,
+				"image/png":  true,
+				"image/gif":  true,
+				"image/webp": true,
+			}
+			if ct := http.DetectContentType(buf); !allowed[ct] {
+				return errors.New("unsupported image type")
+			}
 		}
 	}
 
-	buff := make([]byte, 512)
-	if img.ImgContent != nil {
-		_, err := (*img.ImgContent).Read(buff)
-		if err != nil {
-			return fmt.Errorf("could not red file: %w", err)
-		}
-	}
-
-	contentType := http.DetectContentType(buff)
-
-	if !allowedTypes[contentType] {
-		return errors.New("unsupported image type")
-	}
-
-	return s.repo.SavePost(post, img)
+	return s.repo.SavePost(post, img) // img may be nil
 }
 
 func (s *PostService) GetPosts(start, limit string) ([]models.Post, error) {

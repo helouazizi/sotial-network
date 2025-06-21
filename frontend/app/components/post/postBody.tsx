@@ -7,9 +7,6 @@ export default function PostBody({
   content: string;
   media: string;
 }) {
-
-  console.log("=>>>>>>>>>>>", media)
-
   return (
     <div className="post-body">
       <h2>{title}</h2>

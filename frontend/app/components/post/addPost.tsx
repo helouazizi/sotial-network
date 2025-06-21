@@ -17,8 +17,7 @@ export default function CreatePostForm({ onCreated }: Props) {
     const form = e.currentTarget as HTMLFormElement;
     const formData = new FormData(form);
     formData.append("privacy", privacy.current);
-    formData.append("user_id", "1");
-
+    
     // ============ validate data in front ================//
     const fileInput = form.elements.namedItem("media") as HTMLInputElement;
     const file = fileInput?.files?.[0];
@@ -90,6 +89,7 @@ export default function CreatePostForm({ onCreated }: Props) {
     const res = await fetch("http://localhost:8080/api/v1/posts/create", {
       method: "POST",
       body: formData,
+      credentials : 'include'
     });
 
     if (res.ok) {

@@ -37,9 +37,10 @@ func (h *UserHandler) Register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	token, err := h.service.SaveUser(user)
-	if err.UserErrors.HasErro {
+	fmt.Println(token , "token")
+	if err.Code  != http.StatusOK{
 		fmt.Println(err)
-		utils.ResponseJSON(w, http.StatusBadRequest, err)
+		utils.ResponseJSON(w, err.Code, err)
 		return
 	}
 	cookie := &http.Cookie{Name: "Token", Value: token, HttpOnly: true,  Path: "/", Secure: false}

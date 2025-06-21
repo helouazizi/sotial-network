@@ -79,7 +79,7 @@ func (s *AuthService) SaveUser(user *models.User) (string, models.Error){
 	
 
 	// All good, return session
-	return "",  models.Error{Code: http.StatusOK}
+	return token,  models.Error{Code: http.StatusOK}
 }
 
 func (s *AuthService) LogUser(user *models.User) (string, models.Error) {

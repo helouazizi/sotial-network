@@ -19,6 +19,8 @@ function throttle<T extends (...args: any[]) => void>(fn: T, delay = 500): T {
   };
 }
 
+
+
 export default function Posts() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState(false);

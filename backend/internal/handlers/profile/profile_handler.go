@@ -1,8 +1,9 @@
 package profile
 
 import (
-	"fmt"
+	"database/sql"
 	"net/http"
+	"strconv"
 
 	services "github.com/ismailsayen/social-network/internal/services/profile"
 	"github.com/ismailsayen/social-network/pkg/utils"
@@ -24,6 +25,30 @@ func (h *ProfileHandler) ProfileHandler(w http.ResponseWriter, r *http.Request) 
 		})
 		return
 	}
-	ID := r.Context().Value("userID").(int)
-	fmt.Println(ID)
+	sessionID := r.Context().Value("userID").(int)
+	query := r.URL.Query().Get("id")
+	userID, err := strconv.Atoi(query)
+	if err != nil {
+		utils.ResponseJSON(w, http.StatusNotFound, map[string]any{
+			"message": "Profile Not Found",
+			"status":  http.StatusNotFound,
+		})
+		return
+	}
+	profile, err := h.service.GetProfile(sessionID, userID)
+	if err == sql.ErrNoRows {
+		utils.ResponseJSON(w, http.StatusNotFound, map[string]any{
+			"message": "Profile Not Found",
+			"status":  http.StatusNotFound,
+		})
+		return
+	}
+	if err != nil {
+		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+			"message": "Error, please try again.",
+			"status":  http.StatusInternalServerError,
+		})
+		return
+	}
+	utils.ResponseJSON(w, http.StatusOK, profile)
 }

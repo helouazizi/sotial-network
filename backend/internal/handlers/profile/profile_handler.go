@@ -1,6 +1,7 @@
 package profile
 
 import (
+	"database/sql"
 	"net/http"
 	"strconv"
 
@@ -34,7 +35,20 @@ func (h *ProfileHandler) ProfileHandler(w http.ResponseWriter, r *http.Request) 
 		})
 		return
 	}
-	if sessionID == userID {
-		
+	profile, err := h.service.GetProfile(sessionID, userID)
+	if err == sql.ErrNoRows {
+		utils.ResponseJSON(w, http.StatusNotFound, map[string]any{
+			"message": "Profile Not Found",
+			"status":  http.StatusNotFound,
+		})
+		return
 	}
+	if err != nil {
+		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+			"message": "Error, please try again.",
+			"status":  http.StatusInternalServerError,
+		})
+		return
+	}
+	utils.ResponseJSON(w, http.StatusOK, profile)
 }

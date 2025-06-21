@@ -15,9 +15,5 @@ func NewProfileService(repo *repositories.ProfileRepository) *ProfileService {
 
 func (s *ProfileService) GetProfile(sessionID, userId int) (*models.CommunInfoProfile, error) {
 	var profile models.CommunInfoProfile
-	if sessionID == userId {
-		return s.repo.GetMyProfile(sessionID, &profile)
-	} else {
-		return s.repo.GetMyProfile(sessionID, &profile)
-	}
+	return s.repo.GetMyProfile(sessionID, userId,&profile)
 }

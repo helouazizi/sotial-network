@@ -65,7 +65,7 @@ func (r *PostRepository) SavePost(post *models.Post, img *models.Image) error {
 	defer stmt.Close()
 
 	_, err = stmt.Exec(
-		1, // TODO: real user_id
+		post.UserId,
 		post.Title,
 		post.Content,
 		post.Type,
@@ -97,7 +97,7 @@ func (r *PostRepository) GetPosts(start, limit int) ([]models.Post, error) {
 			&p.ID,
 			&p.Title,
 			&p.Content,
-			&media,           // scan media into sql.NullString
+			&media, // scan media into sql.NullString
 			&p.Type,
 			&p.CreatedAt,
 			&p.Likes,

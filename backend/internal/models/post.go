@@ -3,6 +3,7 @@ package models
 import "mime/multipart"
 
 type Post struct {
+	UserId        int
 	ID            int      `json:"id"`
 	Title         string   `json:"title"`
 	Content       string   `json:"content"`
@@ -19,4 +20,9 @@ type Post struct {
 type Image struct {
 	ImgHeader  *multipart.FileHeader
 	ImgContent multipart.File
+}
+
+type PaginationRequest struct {
+	Offset int `json:"offset"` // 0‑based index
+	Limit  int `json:"limit"`  // page size
 }

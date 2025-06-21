@@ -49,6 +49,7 @@ export default function Posts() {
       const data = await res.json();
 
       if (Array.isArray(data)) {
+        console.log(data,"posts")
         setPosts(prev => [...prev, ...data]);
         page.current += 1;
         if (data.length < LIMIT) setHasMore(false);

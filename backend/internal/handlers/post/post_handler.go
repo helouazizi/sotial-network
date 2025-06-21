@@ -3,7 +3,6 @@ package handlers
 import (
 	"encoding/base64"
 	"fmt"
-	"io"
 	"net/http"
 	"strconv"
 
@@ -33,14 +32,12 @@ func (h *PostHandler) GetPosts(w http.ResponseWriter, r *http.Request) {
 	// lextrac the params from the auery
 	start := r.URL.Query().Get("start")
 	limit := r.URL.Query().Get("limit")
-	fmt.Println(start, limit, "jjjjjjjjjjjj")
 	posts, err := h.service.GetPosts(start, limit)
 	if err != nil {
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
 			"message": "Internal Server Error",
 			"status":  http.StatusInternalServerError,
 		})
-		fmt.Println(err)
 		return
 	}
 
@@ -89,32 +86,25 @@ func (h *PostHandler) CreatePost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// === Get the media file ===
-	file, _, err := r.FormFile("media")
-	var mediaData []byte
-	if err == nil {
-		defer file.Close()
-		mediaData, err = io.ReadAll(file)
-		if err != nil {
-			utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
-				"message": "Internal Server Error",
-				"status":  http.StatusInternalServerError,
-			})
-			return
-		}
-	}
+	file, header, _ := r.FormFile("media")
+
 	post := &models.Post{
 		UserID:  userID,
 		Title:   title,
 		Content: content,
-		Media:   mediaData,
 		Type:    privacy,
 	}
-	err = h.service.SavePost(post)
+	Img := &models.Image{
+		ImgHeader:  header,
+		ImgContent: &file,
+	}
+	err = h.service.SavePost(post, Img)
 	if err != nil {
 		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
 			"message": "Bad request",
 			"status":  http.StatusBadRequest,
 		})
+		fmt.Println(err, "errt")
 		return
 	}
 

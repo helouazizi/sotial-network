@@ -10,10 +10,10 @@ import (
 )
 
 type ChatHandler struct {
-	service services.ChatService
+	service *services.ChatService
 }
 
-func NewChatHandler(ChatService services.ChatService) *ChatHandler {
+func NewChatHandler(ChatService *services.ChatService) *ChatHandler {
 	return &ChatHandler{service: ChatService}
 }
 
@@ -62,7 +62,17 @@ func (h *ChatHandler) ChatMessagesHandler(w http.ResponseWriter, r *http.Request
 
 		switch chat.Type {
 		case "getMessages":
+			messages, err := h.service.GetMessages(chat.SenderID, chat.ReceiverID)
+			if err != nil {
+				conn.WriteJSON(map[string]any{
+					"error": err.Error(),
+				})
+				continue
+			}
 
+			conn.WriteJSON(map[string]any{
+				"data": messages,
+			})
 		default:
 			err = h.service.SaveMessage(&chat)
 			if err != nil {
@@ -71,6 +81,10 @@ func (h *ChatHandler) ChatMessagesHandler(w http.ResponseWriter, r *http.Request
 				})
 				continue
 			}
+
+			conn.WriteJSON(map[string]any{
+				"message": "Message added successfully",
+			})
 		}
 	}
 }

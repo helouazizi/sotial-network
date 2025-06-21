@@ -11,29 +11,23 @@ import (
 	repositories "github.com/ismailsayen/social-network/internal/repositories/chat"
 )
 
-type ChatService interface {
-	SaveMessage(chat *models.Chat) error
-	SaveClient(userID int, conn *websocket.Conn)
-	RemoveClient(userID int)
-}
-
-type ChatServiceImpl struct {
-	repo    repositories.ChatRepository
+type ChatService struct {
+	repo    *repositories.ChatRepository
 	clients map[int]*websocket.Conn
 	mu      sync.Mutex
 }
 
-func NewChatService(ChatRepo repositories.ChatRepository) ChatService {
-	return &ChatServiceImpl{
+func NewChatService(ChatRepo *repositories.ChatRepository) *ChatService {
+	return &ChatService{
 		repo:    ChatRepo,
 		clients: map[int]*websocket.Conn{},
 	}
 }
 
-func (s *ChatServiceImpl) SaveMessage(chat *models.Chat) error {
+func (s *ChatService) SaveMessage(chat *models.Chat) error {
 	chat.Message = html.EscapeString(strings.TrimSpace(chat.Message))
 
-	if (chat.SenderID == chat.ReceiverID) {
+	if chat.SenderID == chat.ReceiverID {
 		return errors.New("Cannot send message to same person")
 	}
 
@@ -44,16 +38,21 @@ func (s *ChatServiceImpl) SaveMessage(chat *models.Chat) error {
 	return s.repo.SaveMessage(chat)
 }
 
-func (s *ChatServiceImpl) GetMessages(senderID, receiverID int) {
+func (s *ChatService) GetMessages(senderID, receiverID int) ([]*models.Chat, error) {
+	if senderID == receiverID {
+		return nil, errors.New("cannot get messages with yourself")
+	}
+
+	return s.repo.GetMessages(senderID, receiverID)
 }
 
-func (s *ChatServiceImpl) SaveClient(userID int, conn *websocket.Conn) {
+func (s *ChatService) SaveClient(userID int, conn *websocket.Conn) {
 	defer s.mu.Unlock()
 	s.mu.Lock()
 	s.clients[len(s.clients)+1] = conn
 }
 
-func (s *ChatServiceImpl) RemoveClient(userID int) {
+func (s *ChatService) RemoveClient(userID int) {
 	defer s.mu.Unlock()
 	s.mu.Lock()
 	delete(s.clients, userID)

@@ -1,12 +1,18 @@
+
 export default function Chat() {
     return (
-        <div>
-            <h1>hello world</h1>
-            <h1>hello world</h1>
-            <h1>hello world</h1>
-            <h1>hello world</h1>
-            <h1>hello world</h1>
-            <h1>hello world</h1>
-        </div>
+        <main className="container">
+            <section>
+                <div className="myName">
+                    <p>Africano</p>
+                </div>
+                <div className="friends">
+
+                </div>
+            </section>
+            <section className="chat">
+
+            </section>
+        </main>
     )
 }

@@ -3,6 +3,7 @@
 @import url("./styles/footer.css");
 @import url("./styles/header.css");
 @import url("./styles/home.css");
+@import url("./styles/chat.css");
 
 :root {
   --bg-color: #12111a;
@@ -39,4 +40,54 @@ body {
   height: 100vh;
   background-color: var(--bg-color);
   color: var(--text-primary);
+}
+
+.container {
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+  transition: 0.6s;
+}
+
+main {
+  width: 100%;
+  height: 100%;
+  padding: 100px 20px;
+}
+
+svg {
+  vertical-align: middle;
+}
+
+/* Responsive container */
+@media (min-width: 576px) {
+  .container {
+    width: 100%;
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    width: 100%;
+  }
+}
+
+@media (min-width: 992px) {
+  .container {
+    width: 100%;
+  }
+}
+
+@media (min-width: 1200px) {
+  .container {
+    width: 100%;
+  }
+}
+
+@media (min-width: 1900px) {
+  .container {
+    max-width: 1900px;
+  }
 }

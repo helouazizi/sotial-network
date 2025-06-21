@@ -5,7 +5,7 @@ import CreatePostForm from "./components/post/addPost";
 export default function Home() {
 
   return (
-    <main>
+    <main className="container">
       <section className="create-post">
         <CreatePostForm />
       </section>

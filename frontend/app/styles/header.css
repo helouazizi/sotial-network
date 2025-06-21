@@ -31,6 +31,10 @@ header {
   z-index: 9999;
 }
 
+header nav .active{
+  color: var(--accent-color);
+}
+
 nav {
   padding: 20px 100px;
   width: 100%;
@@ -48,17 +52,21 @@ li {
   list-style: none;
 }
 
-nav ul li a{
-    text-decoration: none;
-    color: var(--text-primary);
+nav ul li a {
+  text-decoration: none;
+  color: var(--text-primary);
 }
 
-nav ul li i {
+nav ul li svg {
   cursor: pointer;
-  font-size: 1.1em;
+  font-size: 1.35em;
 }
 
-nav ul li i:hover {
+.groupIconHeader {
+  font-size: 1.5em;
+}
+
+nav ul li svg:hover {
   color: var(--accent-color);
 }
 
@@ -97,10 +105,14 @@ nav > div {
   cursor: pointer;
   color: var(--text-primary);
   background: none;
-  font-size: 1.2em;
+  font-size: 1.1em;
   background-color: var(--bg-color);
   width: 50px;
   height: 50px;
   border-radius: 50%;
 }
 
+.notification svg {
+  vertical-align: middle;
+  font-size: 1.35em;
+}

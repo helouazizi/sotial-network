@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/ismailsayen/social-network/internal/models"
@@ -65,8 +64,6 @@ func (h *UserHandler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	token, errLog := h.service.LogUser(user)
-	fmt.Println(errLog)
-
 	if errLog.Code != http.StatusOK {
 		utils.ResponseJSON(w, errLog.Code, errLog)
 		return

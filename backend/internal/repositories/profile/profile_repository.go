@@ -15,7 +15,7 @@ func NewProfileRepository(db *sql.DB) *ProfileRepository {
 	return &ProfileRepository{db: db}
 }
 
-func (repo *ProfileRepository) GetMyProfile(sessionID, userId int, profile *models.CommunInfoProfile) (*models.CommunInfoProfile, error) {
+func (repo *ProfileRepository) GetMyProfile(sessionID, userId int) (*models.CommunInfoProfile, error) {
 	query := `
 		SELECT 
 		u.id,
@@ -36,6 +36,7 @@ func (repo *ProfileRepository) GetMyProfile(sessionID, userId int, profile *mode
 	WHERE u.id = ?
 	GROUP BY u.id;
 	`
+	var profile models.CommunInfoProfile
 	err := repo.db.QueryRow(query, userId).Scan(&profile.Id, &profile.Nickname, &profile.LastName, &profile.FirstName, &profile.Email, &profile.DateOfBirth, &profile.IsPrivate, &profile.AboutMe, &profile.Followers, &profile.Followed, &profile.NbPosts)
 	if err != nil {
 		return nil, err
@@ -46,8 +47,18 @@ func (repo *ProfileRepository) GetMyProfile(sessionID, userId int, profile *mode
 		if err != nil {
 			return nil, err
 		}
+		return &profile, nil
 	}
-	return profile, nil
+	status, err := repo.imFollower(sessionID, userId)
+	if err != nil {
+		return nil, err
+	}
+	if status == "" && profile.IsPrivate == 1 {
+		return &profile, nil
+	}
+	if profile.IsPrivate == 1 {
+	}
+	return &profile, nil
 }
 
 func (repo *ProfileRepository) GetPosts(userId int) ([]models.Post, error) {
@@ -93,4 +104,24 @@ func (repo *ProfileRepository) GetPosts(userId int) ([]models.Post, error) {
 	}
 	fmt.Println(posts)
 	return posts, rows.Err()
+}
+
+func (repo *ProfileRepository) imFollower(sessionID, userId int) (string, error) {
+	var status string
+	query := `
+		SELECT status 
+		FROM followers 
+		WHERE follower_id=? AND followed_id=?
+		WHERE status="accepted" OR status="pending";
+	`
+	err := repo.db.QueryRow(query, sessionID, userId).Scan(&status)
+	if err == sql.ErrNoRows {
+		return "", nil
+	}
+
+	if err != nil {
+		return "", nil
+	}
+
+	return status, nil
 }

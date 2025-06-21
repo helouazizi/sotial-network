@@ -14,4 +14,5 @@ type CommunInfoProfile struct {
 	NbPosts     int    `json:"nbPosts"`
 	MyAcount    bool   `json:"myAccount"`
 	Posts       []Post `json:"posts"`
+	ImFollower  bool   `json:im_follower`
 }

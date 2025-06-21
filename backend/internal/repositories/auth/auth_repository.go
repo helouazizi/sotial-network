@@ -64,9 +64,10 @@ func (r *AuthRepository) SaveUser(user *models.User) models.Error {
 		date_of_birth,
 		is_private,
 		about_me,
+		token,
 		created_at,
 		updated_at
-	) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+	) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 	`
 
 	_, errExec := r.db.Exec(query,
@@ -76,8 +77,9 @@ func (r *AuthRepository) SaveUser(user *models.User) models.Error {
 		user.Email,
 		hashedPassword,
 		user.DateofBirth,
-		0, // is_private default false
+		0,
 		user.AboutMe,
+		user.Token,
 		time.Now(),
 		time.Now(),
 	)
@@ -143,70 +145,33 @@ func (r *AuthRepository) CheckIfExiste(user *models.User) (bool, string, models.
 
 func (r *AuthRepository) GetUserCredential(user *models.User) (models.Error, models.UserCredential) {
 	query := `
-	SELECT email, password, id
+	SELECT email, password, token
 	FROM users 	
 	WHERE email = ?
 	`
 
-	var email, password string
-	var id int
-	err := r.db.QueryRow(query, user.Email).Scan(&email, &password, &id)
+	var email, password, token string
+	err := r.db.QueryRow(query, user.Email).Scan(&email, &password, &token)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			// Handle the case where no rows were returned
 			return models.Error{
 					Code:    http.StatusUnauthorized,
 					Message: "Invalid credentials",
-				}, models.UserCredential{
-					ID:    id,
-					Email: email,
-					Pass:  password,
-				}
+				}, models.UserCredential{}
 		}
 		return models.Error{
 				Code:    http.StatusInternalServerError,
 				Message: "Internal Server Error while saving user",
-			}, models.UserCredential{
-				ID:    id,
-				Email: email,
-				Pass:  password,
-			}
+			}, models.UserCredential{}
 	}
 
 	return models.Error{
 			Code:    http.StatusOK,
 			Message: "User registered successfully",
 		}, models.UserCredential{
-			ID:    id,
+			Token: token,
 			Email: email,
 			Pass:  password,
 		}
-}
- 
-
-func (r *AuthRepository) SaveSession(userSession *models.UserSession) models.Error{
-	query := `
-	INSERT INTO sessions (
-		user_id,
-		token
-	
-	) VALUES (?, ?);
-
-	`
-	_, errExec := r.db.Exec(query,
-		userSession.ID,
-		userSession.Token,
-	
-	)
-		if errExec != nil {
-		return models.Error{
-			Code:    http.StatusInternalServerError,
-			Message: "Internal Server Error while saving user ",
-		}
-	}
-
-	return models.Error{
-		Code:    http.StatusOK,
-		Message: "User registered successfully",
-	}
 }

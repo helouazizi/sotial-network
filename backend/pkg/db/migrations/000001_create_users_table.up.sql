@@ -8,6 +8,7 @@ CREATE TABLE users (
     date_of_birth DATETIME NOT NULL,
     is_private INTEGER DEFAULT 0, 
     about_me TEXT,
+    token TEXT,
     created_at DATETIME NOT NULL,
     updated_at DATETIME NOT NULL
 );

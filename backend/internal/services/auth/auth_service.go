@@ -17,7 +17,7 @@ func NewAuthService(Authrepo *repositories.AuthRepository) *AuthService {
 	return &AuthService{repo: Authrepo}
 }
 
-func (s *AuthService) SaveUser(user *models.User) (models.UserSession, models.Error) {
+func (s *AuthService) SaveUser(user *models.User) (string, models.Error){
 	var Errors models.Error
 
 	// Validation checks
@@ -52,7 +52,7 @@ func (s *AuthService) SaveUser(user *models.User) (models.UserSession, models.Er
 
 	// Return early if any validation errors
 	if Errors.UserErrors.HasErro {
-		return models.UserSession{}, Errors
+		return "", Errors
 	}
 
 	
@@ -60,75 +60,56 @@ func (s *AuthService) SaveUser(user *models.User) (models.UserSession, models.Er
 	// Generate session token
 	token, tokenerr := token.GenerateToken() // assuming utils.GenerateToken exists
 	if tokenerr != nil {
-		return models.UserSession{}, models.Error{
+		return "", models.Error{
 			Code:    http.StatusInternalServerError,
 			Message: "Internal Server Error while generating token",
 		}
 	}
+	user.Token = token
 
 	// Save user
 	saveErr := s.repo.SaveUser(user)
 	if saveErr.Code != http.StatusOK {
-		return models.UserSession{}, saveErr
+		return "", saveErr
 	}
-// Check for existing credentials
-	Err, credentiale := s.repo.GetUserCredential(user)
-	if Err.Code != http.StatusOK {
-		return models.UserSession{}, Err
-	}
-	// Save session
-	var UserSession models.UserSession
-	UserSession.ID = credentiale.ID
-	UserSession.Token = token
 
-	errSession := s.repo.SaveSession(&UserSession)
-	if errSession.Code != http.StatusOK {
-		return models.UserSession{}, errSession
-	}
+	
+
+
+	
 
 	// All good, return session
-	return UserSession, models.Error{Code: http.StatusOK}
+	return "",  models.Error{Code: http.StatusOK}
 }
 
-func (s *AuthService) LogUser(user *models.User) (models.UserSession, models.Error) {
+func (s *AuthService) LogUser(user *models.User) (string, models.Error) {
 	if len(user.Email) == 0 {
-		return models.UserSession{}, models.Error{
+		return "",  models.Error{
 			Code:    http.StatusBadRequest,
 			Message: "Email cannot be empty",
 		}
 	}
 	if len(user.PassWord) == 0 {
-		return models.UserSession{}, models.Error{
+		return  "",models.Error{
 			Code:    http.StatusBadRequest,
 			Message: "Password cannot be empty",
 		}
 	}
 	Err, credentiale := s.repo.GetUserCredential(user)
 	if Err.Code != http.StatusOK {
-		return models.UserSession{}, Err
+		return "", Err
 	}
 	err := utils.ComparePass([]byte(credentiale.Pass), []byte(user.PassWord))
 	if err != nil {
-		return models.UserSession{}, models.Error{
+		return "", models.Error{
 			Code:    http.StatusUnauthorized,
-			Message: "Invalid credentials rf'f",
+			Message: "Invalid credentials ",
 		}
 	}
-	token, tokenerr := token.GenerateToken()
-	if tokenerr != nil {
-		return models.UserSession{}, models.Error{
-			Code:    http.StatusInternalServerError,
-			Message: "Internal Server Error yjh",
-		}
-	}
-	var UserSession  models.UserSession
-	UserSession.ID = credentiale.ID
-	UserSession.Token = token
-	errSession := s.repo.SaveSession(&UserSession)
-	if errSession.Code != http.StatusOK {
-		return models.UserSession{},errSession
-	}
-	return UserSession , models.Error{
+	
+       
+	
+	return credentiale.Token, models.Error{
 		Code: http.StatusOK,
 		Message: "this operation went smouthly ",
 	}

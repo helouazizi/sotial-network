@@ -1,10 +1,8 @@
 package handlers
 
 import (
-	"encoding/base64"
 	"fmt"
 	"net/http"
-	"strconv"
 
 	"github.com/ismailsayen/social-network/internal/models"
 	services "github.com/ismailsayen/social-network/internal/services/post"
@@ -19,7 +17,6 @@ func NewAuthHandler(postService *services.PostService) *PostHandler {
 	return &PostHandler{service: postService}
 }
 
-// get all posts
 func (h *PostHandler) GetPosts(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
@@ -38,15 +35,16 @@ func (h *PostHandler) GetPosts(w http.ResponseWriter, r *http.Request) {
 			"message": "Internal Server Error",
 			"status":  http.StatusInternalServerError,
 		})
+		fmt.Println(err, "here")
 		return
 	}
 
 	// Convert raw media bytes to base64 so it’s safe in JSON.
-	for i := range posts {
-		if len(posts[i].Media) > 0 {
-			posts[i].Media = []byte(base64.StdEncoding.EncodeToString(posts[i].Media))
-		}
-	}
+	// for i := range posts {
+	// 	if len(posts[i].Media) > 0 {
+	// 		posts[i].Media = []byte(base64.StdEncoding.EncodeToString(posts[i].Media))
+	// 	}
+	// }
 
 	utils.ResponseJSON(w, http.StatusOK, posts)
 }
@@ -60,7 +58,6 @@ func (h *PostHandler) CreatePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Parse the multipart form (maxMemory for in-memory part before writing to temp file)
 	err := r.ParseMultipartForm(10 << 20) // 10 MB
 	if err != nil {
 		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
@@ -70,35 +67,31 @@ func (h *PostHandler) CreatePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// === Get text fields ===
 	title := r.FormValue("title")
 	content := r.FormValue("content")
 	privacy := r.FormValue("privacy")
-	userIDStr := r.FormValue("user_id")
-
-	userID, err := strconv.Atoi(userIDStr)
-	if err != nil {
-		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
-			"message": "Bad Request",
-			"status":  http.StatusBadRequest,
-		})
-		return
-	}
-
-	// === Get the media file ===
-	file, header, _ := r.FormFile("media")
 
 	post := &models.Post{
-		UserID:  userID,
 		Title:   title,
 		Content: content,
 		Type:    privacy,
 	}
-	Img := &models.Image{
-		ImgHeader:  header,
-		ImgContent: &file,
+
+	// Try to read the file 
+	file, header, err := r.FormFile("media")
+	var img *models.Image // nil unless file is provided
+
+	if err == nil {
+		img = &models.Image{
+			ImgHeader:  header,
+			ImgContent: file,
+		}
+		
+		defer file.Close()
 	}
-	err = h.service.SavePost(post, Img)
+
+	// Pass image as nil if not uploaded
+	err = h.service.SavePost(post, img)
 	if err != nil {
 		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
 			"message": "Bad request",

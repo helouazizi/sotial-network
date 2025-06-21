@@ -20,3 +20,58 @@
   --link-color: #c084fc;
   --shadow-color: rgba(0, 0, 0, 0.6);
 }
+
+.chatPage{
+  display: flex;
+}
+
+.chatPage section:first-child{
+  flex: 1;
+}
+
+.chatPage .chat{
+  flex: 4;
+}
+
+.chatPage .myName{
+  background-color: var(--card-bg);
+  padding: 15px 30px;
+  border-radius: 8px;
+  margin-bottom: 20px;  
+}
+
+.chatPage .myName p{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.2em;
+  font-weight: 500;
+}
+
+.chatPage svg{
+  color: var(--accent-color);
+}
+
+.chatPage .type{
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.chatPage .type button{
+  width: 50%;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.chatPage .friends{
+  background-color: var(--card-bg);
+  padding: 15px 30px;
+  border-radius: 8px;
+}
+
+.chatPage .friends ul{
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}

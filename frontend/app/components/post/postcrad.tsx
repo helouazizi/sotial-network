@@ -13,12 +13,9 @@ export default function PostCard({
   onPostUpdate: (id: number, updatedPost: Partial<Post>) => void;
 
 }){
-
-  console.log(post)
-
   return (
     <div className="post-card">
-      <PostMeta author={`user-${post.userId}`} createdAt="2025-06-11T13:45:00Z" avatarUrl="/avatar.png" />
+      <PostMeta author={`test-user`} createdAt="2025-06-11T13:45:00Z" avatarUrl="/avatar.png" />
       <PostBody title={post.title} content={post.content} media={post.media_link} />
       <PostComment   post={post} onPostUpdate={onPostUpdate}/>
       <PostActions post={post} onPostUpdate={onPostUpdate} />

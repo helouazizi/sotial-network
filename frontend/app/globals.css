@@ -3,7 +3,9 @@
 @import url("./styles/footer.css");
 @import url("./styles/header.css");
 @import url("./styles/home.css");
+@import url("./styles/register.css");
 @import url("./styles/chat.css");
+@import url("./styles/login.css");
 
 :root {
   --bg-color: #12111a;
@@ -55,6 +57,7 @@ main {
   width: 100%;
   min-height: 100vh;
   padding: 120px 20px;
+  
 }
 
 svg {

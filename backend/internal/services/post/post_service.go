@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"strconv"
 	"strings"
 
 	"github.com/ismailsayen/social-network/internal/models"
@@ -68,14 +67,11 @@ func (s *PostService) SavePost(post *models.Post, img *models.Image) error {
 	return s.repo.SavePost(post, img) // img may be nil
 }
 
-func (s *PostService) GetPosts(start, limit string) ([]models.Post, error) {
-	strt, err := strconv.Atoi(start)
-	if err != nil {
-		return []models.Post{}, err
+func (s *PostService) GetPosts(offset, limit int) ([]models.Post, error) {
+	// Basic sanity checks
+	if limit <= 0 || offset < 0 {
+		return []models.Post{}, errors.New("Invalid limit and offset for pagination")
 	}
-	lmt, err1 := strconv.Atoi(limit)
-	if err1 != nil {
-		return []models.Post{}, err1
-	}
-	return s.repo.GetPosts(strt, lmt)
+
+	return s.repo.GetPosts(offset, limit)
 }

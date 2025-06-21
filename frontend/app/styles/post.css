@@ -33,7 +33,7 @@
   gap: var(--size-gap-stack);
   width: min(60%, 800px);
   max-height: 100dvh;
-  overflow-y: auto;
+  /* overflow-y: auto; */
 }
 
 /* -----------------------------------------------

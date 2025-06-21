@@ -55,8 +55,6 @@ func (s *AuthService) SaveUser(user *models.User) (string, models.Error){
 		return "", Errors
 	}
 
-	
-
 	// Generate session token
 	token, tokenerr := token.GenerateToken() // assuming utils.GenerateToken exists
 	if tokenerr != nil {
@@ -79,7 +77,7 @@ func (s *AuthService) SaveUser(user *models.User) (string, models.Error){
 	
 
 	// All good, return session
-	return "",  models.Error{Code: http.StatusOK}
+	return token,  models.Error{Code: http.StatusOK}
 }
 
 func (s *AuthService) LogUser(user *models.User) (string, models.Error) {
@@ -97,6 +95,7 @@ func (s *AuthService) LogUser(user *models.User) (string, models.Error) {
 	}
 	Err, credentiale := s.repo.GetUserCredential(user)
 	if Err.Code != http.StatusOK {
+		
 		return "", Err
 	}
 	err := utils.ComparePass([]byte(credentiale.Pass), []byte(user.PassWord))

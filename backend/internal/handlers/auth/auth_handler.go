@@ -42,7 +42,7 @@ func (h *UserHandler) Register(w http.ResponseWriter, r *http.Request) {
 		utils.ResponseJSON(w, http.StatusBadRequest, err)
 		return
 	}
-	cookie := &http.Cookie{Name: "Token", Value: token, MaxAge: 3600, HttpOnly: true, SameSite: http.SameSiteStrictMode, Path: "/", Secure: false}
+	cookie := &http.Cookie{Name: "Token", Value: token, HttpOnly: true,  Path: "/", Secure: false}
 	http.SetCookie(w, cookie)
 
 	utils.ResponseJSON(w, err.Code, err)
@@ -74,9 +74,7 @@ func (h *UserHandler) Login(w http.ResponseWriter, r *http.Request) {
 	cookie := &http.Cookie{
 	Name:     "Token",
 	Value:    token,
-	MaxAge:   3600,
 	HttpOnly: true,
-	SameSite: http.SameSiteLaxMode, // Lax allows cookies on top-level navigation
 	Path:     "/",
 	Secure:   false,                // Because no HTTPS on localhost
 }

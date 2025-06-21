@@ -72,7 +72,7 @@ input:focus {
 }
 
 /* Button Styles */
-button[type="submit"] {
+/* button[type="submit"] {
   align-self: flex-start;
   background-color: var(--accent-color);
   color: var(--btn-text);
@@ -87,4 +87,4 @@ button[type="submit"] {
 
 button[type="submit"]:hover {
   background-color: var(--accent-hover);
-}
+} */

@@ -46,7 +46,7 @@
 .input-group input::placeholder {
   color: var(--text-muted);
 }
-
+/* 
 button {
   width: 100%;
   padding: 12px;
@@ -68,4 +68,4 @@ p {
   margin-top: 20px;
   text-align: center;
   color: var(--danger-color);
-}
+} */

@@ -1,5 +1,15 @@
 export default function GroupsChat() {
-    return (
-        <h1>hello groups</h1>
-    )
+  return (
+    <>
+      <li>group 1</li>
+      <li>group 1</li>
+      <li>group 1</li>
+      <li>group 1</li>
+      <li>group 1</li>
+      <li>group 1</li>
+      <li>group 1</li>
+      <li>group 1</li>
+      <li>group 1</li>
+    </>
+  );
 }

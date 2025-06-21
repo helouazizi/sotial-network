@@ -3,6 +3,7 @@
 @import url("./styles/footer.css");
 @import url("./styles/header.css");
 @import url("./styles/home.css");
+@import url("./styles/register.css");
 
 :root {
   --bg-color: #12111a;

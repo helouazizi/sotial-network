@@ -21,8 +21,8 @@ func AuthMiddleware(next http.Handler, db *sql.DB) http.HandlerFunc {
 			return
 		}
 		const query = `
-			SELECT user_id
-			FROM sessions 
+			SELECT id
+			FROM users 
 			WHERE token = ?
 		`
 

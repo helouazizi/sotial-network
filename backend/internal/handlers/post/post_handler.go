@@ -38,9 +38,7 @@ func (h *PostHandler) GetPosts(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err, "here")
 		return
 	}
-
 	
-
 	utils.ResponseJSON(w, http.StatusOK, posts)
 }
 

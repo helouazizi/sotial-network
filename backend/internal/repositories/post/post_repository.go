@@ -97,7 +97,7 @@ func (r *PostRepository) GetPosts(start, limit int) ([]models.Post, error) {
 			&p.ID,
 			&p.Title,
 			&p.Content,
-			&media,           // scan media into sql.NullString
+			&media, // scan media into sql.NullString
 			&p.Type,
 			&p.CreatedAt,
 			&p.Likes,

@@ -2,6 +2,7 @@ package profile
 
 import (
 	"database/sql"
+	"fmt"
 
 	"github.com/ismailsayen/social-network/internal/models"
 )
@@ -41,6 +42,55 @@ func (repo *ProfileRepository) GetMyProfile(sessionID, userId int, profile *mode
 	}
 	if sessionID == userId {
 		profile.MyAcount = true
+		profile.Posts, err = repo.GetPosts(userId)
+		if err != nil {
+			return nil, err
+		}
 	}
 	return profile, nil
+}
+
+func (repo *ProfileRepository) GetPosts(userId int) ([]models.Post, error) {
+	const q = `
+	SELECT id, title, content, media, type, created_at, likes, dislikes, comments
+	FROM posts
+	WHERE user_id=?
+	ORDER BY created_at DESC
+	LIMIT 15 OFFSET 0;
+`
+	rows, err := repo.db.Query(q, userId)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var posts []models.Post
+	for rows.Next() {
+		var p models.Post
+		var media sql.NullString
+		err := rows.Scan(
+			&p.ID,
+			&p.Title,
+			&p.Content,
+			&media,
+			&p.Type,
+			&p.CreatedAt,
+			&p.Likes,
+			&p.Dislikes,
+			&p.TotalComments,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		if media.Valid {
+			p.MediaLink = media.String
+		} else {
+			p.MediaLink = ""
+		}
+
+		posts = append(posts, p)
+	}
+	fmt.Println(posts)
+	return posts, rows.Err()
 }

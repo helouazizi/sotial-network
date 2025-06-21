@@ -10,40 +10,69 @@ export default function PostActions({
 }: {
   post: Post;
   onPostUpdate: (id: number, updatedPost: Partial<Post>) => void;
- 
+
 }) {
   const [userVote, setUserVote] = useState<"like" | "dislike" | null>(null);
   const [showComments, setShowComments] = useState(false);
 
-  const handleLike = () => {
+  const votePost = async (action: "like" | "dislike" | "unlike" | "undislike") => {
+    try {
+      const res = await fetch("http://localhost:8080/api/v1/posts/vote", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include", // if you're using cookies
+        body: JSON.stringify({
+          post_id: post.id,
+          action,
+        }),
+      });
+
+      if (!res.ok) throw new Error("Failed to vote");
+
+      console.log("Vote saved successfully.");
+    } catch (err) {
+      console.error("❌ Vote error:", err);
+    }
+  };
+
+
+  const handleLike = async () => {
     if (userVote === "like") {
       onPostUpdate(post.id, { likes: post.likes - 1 });
       setUserVote(null);
+      await votePost("unlike");
     } else if (userVote === "dislike") {
       onPostUpdate(post.id, {
         dislikes: post.dislikes - 1,
         likes: post.likes + 1,
       });
       setUserVote("like");
+      await votePost("like");
     } else {
       onPostUpdate(post.id, { likes: post.likes + 1 });
       setUserVote("like");
+      await votePost("like");
     }
   };
 
-  const handleDislike = () => {
+  const handleDislike = async () => {
     if (userVote === "dislike") {
       onPostUpdate(post.id, { dislikes: post.dislikes - 1 });
       setUserVote(null);
+      await votePost("undislike");
     } else if (userVote === "like") {
       onPostUpdate(post.id, {
         likes: post.likes - 1,
         dislikes: post.dislikes + 1,
       });
       setUserVote("dislike");
+      await votePost("dislike");
     } else {
       onPostUpdate(post.id, { dislikes: post.dislikes + 1 });
       setUserVote("dislike");
+      await votePost("dislike");
     }
   };
 
@@ -84,3 +113,6 @@ export default function PostActions({
     </div>
   );
 }
+
+
+

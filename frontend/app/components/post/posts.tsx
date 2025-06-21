@@ -78,7 +78,7 @@ export default function Posts() {
       if (scrollBottom >= docHeight - 150 && hasMore && !isLoading) {
         fetchPosts();
       }
-    }, 300);
+    }, 1000);
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);

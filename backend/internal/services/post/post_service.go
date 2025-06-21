@@ -75,3 +75,19 @@ func (s *PostService) GetPosts(offset, limit int) ([]models.Post, error) {
 
 	return s.repo.GetPosts(offset, limit)
 }
+
+func (s *PostService) PostVote(vote models.VoteRequest) error {
+	if vote.PostID <= 0 {
+		return errors.New("invalid post ID")
+	}
+
+	validActions := map[string]bool{
+		"like": true, "dislike": true,
+		"unlike": true, "undislike": true,
+	}
+	if !validActions[vote.Action] {
+		return errors.New("invalid vote action")
+	}
+
+	return s.repo.PostVote(vote)
+}

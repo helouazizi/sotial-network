@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -119,3 +120,40 @@ func (r *PostRepository) GetPosts(start, limit int) ([]models.Post, error) {
 
 	return posts, rows.Err()
 }
+
+func (r *PostRepository) PostVote(vote models.VoteRequest) error {
+	var query string
+	switch vote.Action {
+	case "like":
+		query = "UPDATE posts SET likes = likes + 1 WHERE id = ?"
+	case "unlike":
+		query = "UPDATE posts SET likes = likes - 1 WHERE id = ?"
+	case "dislike":
+		query = "UPDATE posts SET dislikes = dislikes + 1 WHERE id = ?"
+	case "undislike":
+		query = "UPDATE posts SET dislikes = dislikes - 1 WHERE id = ?"
+	default:
+		return errors.New("invalid action")
+	}
+	_, err := r.db.Exec(query, vote.PostID)
+	return err
+}
+
+// func (r *PostRepository) UpdatePostVote(postID int, action string) error {
+// 	var query string
+// 	switch action {
+// 	case "like":
+// 		query = "UPDATE posts SET likes = likes + 1 WHERE id = ?"
+// 	case "unlike":
+// 		query = "UPDATE posts SET likes = likes - 1 WHERE id = ?"
+// 	case "dislike":
+// 		query = "UPDATE posts SET dislikes = dislikes + 1 WHERE id = ?"
+// 	case "undislike":
+// 		query = "UPDATE posts SET dislikes = dislikes - 1 WHERE id = ?"
+// 	default:
+// 		return errors.New("invalid action")
+// 	}
+
+// 	_, err := r.db.Exec(query, postID)
+// 	return err
+// }

@@ -26,3 +26,8 @@ type PaginationRequest struct {
 	Offset int `json:"offset"` // 0‑based index
 	Limit  int `json:"limit"`  // page size
 }
+
+type VoteRequest struct {
+	PostID int    `json:"post_id"`
+	Action string `json:"action"` // "like" | "dislike" | "unlike" | "undislike"
+}

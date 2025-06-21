@@ -113,3 +113,27 @@ func (h *PostHandler) CreatePost(w http.ResponseWriter, r *http.Request) {
 		"status":  http.StatusOK,
 	})
 }
+
+func (h *PostHandler) HandlePostVote(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
+			"message": "Method not allowed",
+			"status":  http.StatusMethodNotAllowed,
+		})
+		return
+	}
+	var vote models.VoteRequest
+	if err := json.NewDecoder(r.Body).Decode(&vote); err != nil {
+		http.Error(w, "Invalid input", http.StatusBadRequest)
+		return
+	}
+
+	// Update the vote in your database here
+	err := h.service.PostVote(vote)
+	if err != nil {
+		http.Error(w, "Failed to vote", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}

@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/ismailsayen/social-network/internal/models"
@@ -36,8 +37,8 @@ func (h *UserHandler) Register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	token, err := h.service.SaveUser(user)
-	fmt.Println(token , "token")
-	if err.Code  != http.StatusOK{
+	fmt.Println(token, "token")
+	if err.Code != http.StatusOK {
 		fmt.Println(err)
 		utils.ResponseJSON(w, err.Code, err)
 		return

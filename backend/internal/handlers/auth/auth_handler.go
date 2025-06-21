@@ -43,7 +43,7 @@ func (h *UserHandler) Register(w http.ResponseWriter, r *http.Request) {
 		utils.ResponseJSON(w, err.Code, err)
 		return
 	}
-	cookie := &http.Cookie{Name: "Token", Value: token, HttpOnly: true,  Path: "/", Secure: false}
+	cookie := &http.Cookie{Name: "Token", Value: token, HttpOnly: true, Path: "/", Secure: false}
 	http.SetCookie(w, cookie)
 
 	utils.ResponseJSON(w, err.Code, err)
@@ -67,18 +67,19 @@ func (h *UserHandler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	token, errLog := h.service.LogUser(user)
-	fmt.Println(token)
+	fmt.Println(errLog)
+
 	if errLog.Code != http.StatusOK {
 		utils.ResponseJSON(w, errLog.Code, errLog)
 		return
 	}
 	cookie := &http.Cookie{
-	Name:     "Token",
-	Value:    token,
-	HttpOnly: true,
-	Path:     "/",
-	Secure:   false,                // Because no HTTPS on localhost
-}
+		Name:     "Token",
+		Value:    token,
+		HttpOnly: true,
+		Path:     "/",
+		Secure:   false, // Because no HTTPS on localhost
+	}
 
 	http.SetCookie(w, cookie)
 

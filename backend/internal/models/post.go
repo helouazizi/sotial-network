@@ -30,4 +30,5 @@ type PaginationRequest struct {
 type VoteRequest struct {
 	PostID int    `json:"post_id"`
 	Action string `json:"action"` // "like" | "dislike" | "unlike" | "undislike"
+	UserId int
 }

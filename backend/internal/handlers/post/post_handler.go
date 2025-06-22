@@ -127,10 +127,12 @@ func (h *PostHandler) HandlePostVote(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid input", http.StatusBadRequest)
 		return
 	}
-
+	userId := r.Context().Value("userID").(int)
+	vote.UserId = userId
 	// Update the vote in your database here
 	err := h.service.PostVote(vote)
 	if err != nil {
+		fmt.Println(err,"vote")
 		http.Error(w, "Failed to vote", http.StatusInternalServerError)
 		return
 	}

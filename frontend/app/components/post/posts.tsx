@@ -5,6 +5,7 @@ import { Post } from "@/app/types/post";
 import PostCard from "./postcrad";
 
 const LIMIT = 10;
+//  bbbbbbbbbbbbbbbbbbbbbbbbbbe care full the posts duplacetesd
 
 /* ---- Throttle utility ---- */
 function throttle<T extends (...args: any[]) => void>(fn: T, delay = 500): T {
@@ -20,7 +21,6 @@ function throttle<T extends (...args: any[]) => void>(fn: T, delay = 500): T {
 }
 
 
-
 export default function Posts() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -29,40 +29,46 @@ export default function Posts() {
   const page = useRef(0);
 
   /* ---- Fetch Posts ---- */
-  const fetchPosts = useCallback(async () => {
-    if (isLoading || !hasMore) return;
-    setIsLoading(true);
+const fetchPosts = useCallback(async () => {
+  if (isLoading || !hasMore) return;
+  setIsLoading(true);
 
-    try {
-      const res = await fetch("http://localhost:8080/api/v1/posts", {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          offset: page.current * LIMIT,
-          limit: LIMIT,
-        }),
-      });
+  try {
+    const res = await fetch("http://localhost:8080/api/v1/posts", {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        offset: page.current * LIMIT,
+        limit: LIMIT,
+      }),
+    });
 
-      if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+    if (!res.ok) throw new Error(`HTTP error ${res.status}`);
 
-      const data = await res.json();
+    const data = await res.json();
 
-      if (Array.isArray(data)) {
-        console.log(data,"posts")
-        setPosts(prev => [...prev, ...data]);
-        page.current += 1;
-        if (data.length < LIMIT) setHasMore(false);
-      } else {
-        setHasMore(false);
-      }
-    } catch (error) {
-      console.error("Failed to fetch posts:", error);
-    } finally {
-      setIsLoading(false);
-      setLoadedOnce(true);
+    if (Array.isArray(data)) {
+      // 👉 On first load (page.current === 0), replace; otherwise append
+      setPosts(prev =>
+        page.current === 0
+          ? data
+          : [...prev, ...data.filter(p => !prev.some(post => post.id === p.id))]
+      );
+
+      page.current += 1;
+
+      if (data.length < LIMIT) setHasMore(false);
+    } else {
+      setHasMore(false);
     }
-  }, [isLoading, hasMore]);
+  } catch (error) {
+    console.error("Failed to fetch posts:", error);
+  } finally {
+    setIsLoading(false);
+    setLoadedOnce(true);
+  }
+}, [isLoading, hasMore]);
 
   /* ---- Initial Load ---- */
   useEffect(() => {

@@ -122,21 +122,28 @@ func (r *PostRepository) GetPosts(start, limit int) ([]models.Post, error) {
 }
 
 func (r *PostRepository) PostVote(vote models.VoteRequest) error {
-	var query string
+	// Validate action
 	switch vote.Action {
-	case "like":
-		query = "UPDATE posts SET likes = likes + 1 WHERE id = ?"
-	case "unlike":
-		query = "UPDATE posts SET likes = likes - 1 WHERE id = ?"
-	case "dislike":
-		query = "UPDATE posts SET dislikes = dislikes + 1 WHERE id = ?"
-	case "undislike":
-		query = "UPDATE posts SET dislikes = dislikes - 1 WHERE id = ?"
+	case "like", "dislike":
+		// Insert or update the user's reaction
+		_, err := r.db.Exec(`
+			INSERT INTO post_reactions (user_id, post_id, reaction)
+			VALUES (?, ?, ?)
+			ON CONFLICT(user_id, post_id)
+			DO UPDATE SET reaction = excluded.reaction
+		`, vote.UserId, vote.PostID, vote.Action)
+		return err
+
+	case "unlike", "undislike":
+		// Delete the user's reaction
+		_, err := r.db.Exec(`
+			DELETE FROM post_reactions WHERE user_id = ? AND post_id = ?
+		`, vote.UserId, vote.PostID)
+		return err
+
 	default:
-		return errors.New("invalid action")
+		return errors.New("invalid vote action")
 	}
-	_, err := r.db.Exec(query, vote.PostID)
-	return err
 }
 
 // func (r *PostRepository) UpdatePostVote(postID int, action string) error {

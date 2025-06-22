@@ -27,6 +27,7 @@
   display: flex;
   height: 100vh;
   padding-bottom: 20px;
+  gap: 30px;
 }
 
 .chatPage section:first-child {
@@ -36,6 +37,8 @@
 .chatPage .chatMessages {
   flex: 4;
   height: 100%;
+  background-color: var(--card-bg);
+  border-radius: 8px;
 }
 
 .chatPage .myName {

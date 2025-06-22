@@ -10,7 +10,7 @@ const Profile = ({ profileid }: { profileid: string }) => {
           `http://localhost:8080/api/v1/profile?id=${profileid}`,
           {
             method: "GET",
-            credentials: "include", // 👈 required to send cookies
+            credentials: "include", 
           }
         );
         const data: ProfileInt = await res.json();

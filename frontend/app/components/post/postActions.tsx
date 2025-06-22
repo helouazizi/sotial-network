@@ -23,8 +23,6 @@ export default function PostActions({
   }, [post.user_vote]);
 
 
-
-
   const votePost = async (
     action: "like" | "dislike" | "unlike" | "undislike"
   ) => {

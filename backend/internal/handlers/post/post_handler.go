@@ -40,10 +40,12 @@ func (h *PostHandler) GetPosts(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
+	userId := r.Context().Value("userID").(int)
 
 	// Fetch posts
-	posts, err := h.service.GetPosts(req.Offset, req.Limit)
+	posts, err := h.service.GetPosts(userId,req.Offset, req.Limit)
 	if err != nil {
+		fmt.Println(err ,"postststss f")
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
 			"message": "Internal server error",
 			"status":  http.StatusInternalServerError,

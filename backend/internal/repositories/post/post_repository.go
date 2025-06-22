@@ -77,25 +77,27 @@ func (r *PostRepository) SavePost(post *models.Post, img *models.Image) error {
 	return err
 }
 
-func (r *PostRepository) GetPosts(start, limit int) ([]models.Post, error) {
+func (r *PostRepository) GetPosts(userId, start, limit int) ([]models.Post, error) {
 	const q = `
-	SELECT
-	p.id,
-	p.title, 
-	p.content, 
-	p.media, 
-	p.type, 
-	p.created_at, 
-	p.likes, 
-	p.dislikes, 
-	p.comments
-	pr.reaction AS user_vote
-	FROM posts p
-		LEFT JOIN post_reactions AS pr
-	ORDER BY created_at DESC
-	LIMIT ? OFFSET ? `
+		SELECT
+			p.id,
+			p.title, 
+			p.content, 
+			p.media, 
+			p.type, 
+			p.created_at, 
+			p.likes, 
+			p.dislikes, 
+			p.comments,
+			pr.reaction AS user_vote
+		FROM posts p
+		LEFT JOIN post_reactions pr 
+			ON pr.post_id = p.id AND pr.user_id = ?
+		ORDER BY p.created_at DESC
+		LIMIT ? OFFSET ?;
+    `
 
-	rows, err := r.db.Query(q, limit, start)
+	rows, err := r.db.Query(q, userId, limit, start)
 	if err != nil {
 		return nil, err
 	}
@@ -115,6 +117,7 @@ func (r *PostRepository) GetPosts(start, limit int) ([]models.Post, error) {
 			&p.Likes,
 			&p.Dislikes,
 			&p.TotalComments,
+			&p.UserVote,
 		)
 		if err != nil {
 			return nil, err

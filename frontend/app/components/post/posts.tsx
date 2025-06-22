@@ -50,6 +50,7 @@ const fetchPosts = useCallback(async () => {
 
     if (Array.isArray(data)) {
       // 👉 On first load (page.current === 0), replace; otherwise append
+      console.log(data,"posts")
       setPosts(prev =>
         page.current === 0
           ? data

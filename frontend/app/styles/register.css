@@ -29,7 +29,7 @@
 }
 
 /* Input Fields */
-input[type="text"],
+/* input[type="text"],
 input[type="email"],
 input[type="password"],
 input[type="date"],
@@ -42,14 +42,14 @@ input[type="file"] {
   border: 1px solid var(--border-color);
   border-radius: 8px;
   transition: all 0.3s ease;
-}
+} */
 
 /* Focus state for inputs */
-input:focus {
+/* input:focus {
   outline: none;
   border-color: var(--accent-color);
   background-color: var(--bg-color);
-}
+} */
 
 /* Layout for input pairs */
 .names,

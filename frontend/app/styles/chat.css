@@ -30,8 +30,10 @@
   gap: 30px;
 }
 
-.chatPage section:first-child {
-  flex: 1.05;
+.chatPage .sidebar {
+  display: flex;
+  flex-direction: column;
+  flex: 1.1;
 }
 
 .chatPage .chatMessages {
@@ -39,6 +41,8 @@
   height: 100%;
   background-color: var(--card-bg);
   border-radius: 8px;
+  display: flex;
+  flex-direction: column;
 }
 
 .chatPage .myName {
@@ -105,10 +109,11 @@
   padding: 15px 0px;
   border-radius: 8px;
   position: relative;
-  height: 90%;
+  flex: 1;
+  overflow: hidden;
 }
 
-.chatPage .friends .friends-list{
+.chatPage .friends .friends-list {
   padding-top: 50px;
   height: 100%;
 }
@@ -141,4 +146,93 @@
 
 .chatPage .friends ul li:hover {
   background-color: var(--border-color);
+}
+
+.chatHeader {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 40px;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.chatHeader .userName {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.chatHeader .online span {
+  width: 10px;
+  height: 10px;
+  display: inline-block;
+  background-color: var(--online-color);
+  border-radius: 50%;
+}
+
+.chatBody {
+  flex: 1;
+  padding: 20px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.chatFooter {
+  padding: 20px 40px;
+  border-top: 2px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.chatFooter textarea {
+  flex: 1;
+  resize: none;
+  outline: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 1rem;
+  line-height: 1.5;
+  background-color: var(--input-bg);
+  color: var(--input-text);
+  border: 1px solid var(--border-color);
+  height: 50px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-bg);
+}
+
+.chatFooter button{
+  padding: 12px 24px;
+  background-color: var(--btn-bg);
+  border: none;
+  outline: none;
+  cursor: pointer;
+  color: var(--btn-text);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+}
+
+.chatBody .sender{
+  display: flex;
+    justify-content: end;
+
+}
+
+.chatBody > div p{
+  padding: 10px 20px;
+  border-radius: 8px;
+}
+
+.chatBody .sender p{
+  background-color: var(--bg-color);
+
+}
+
+.chatBody .receiver{
+  display: flex;
+}
+
+.chatBody .receiver p {
+  background-color: var(--btn-bg);
 }

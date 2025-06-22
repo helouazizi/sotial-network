@@ -40,10 +40,12 @@ func (h *PostHandler) GetPosts(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
+	userId := r.Context().Value("userID").(int)
 
 	// Fetch posts
-	posts, err := h.service.GetPosts(req.Offset, req.Limit)
+	posts, err := h.service.GetPosts(userId,req.Offset, req.Limit)
 	if err != nil {
+		fmt.Println(err ,"postststss f")
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
 			"message": "Internal server error",
 			"status":  http.StatusInternalServerError,
@@ -112,4 +114,30 @@ func (h *PostHandler) CreatePost(w http.ResponseWriter, r *http.Request) {
 		"message": "Successfully created post",
 		"status":  http.StatusOK,
 	})
+}
+
+func (h *PostHandler) HandlePostVote(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
+			"message": "Method not allowed",
+			"status":  http.StatusMethodNotAllowed,
+		})
+		return
+	}
+	var vote models.VoteRequest
+	if err := json.NewDecoder(r.Body).Decode(&vote); err != nil {
+		http.Error(w, "Invalid input", http.StatusBadRequest)
+		return
+	}
+	userId := r.Context().Value("userID").(int)
+	vote.UserId = userId
+	// Update the vote in your database here
+	err := h.service.PostVote(vote)
+	if err != nil {
+		fmt.Println(err,"vote")
+		http.Error(w, "Failed to vote", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
 }

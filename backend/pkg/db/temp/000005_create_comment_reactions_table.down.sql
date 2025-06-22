@@ -1,1 +1,1 @@
-DROP TABLE if EXISTS commentReactions;
+DROP TABLE if EXISTS comment_reactions;

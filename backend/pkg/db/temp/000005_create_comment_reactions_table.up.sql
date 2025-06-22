@@ -1,4 +1,4 @@
-CREATE TABLE commentReactions(
+CREATE TABLE comment_reactions(
     id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,
     user_id INTEGER NOT NULL,
     comment_id INTEGER NOT NULL,

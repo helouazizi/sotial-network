@@ -44,9 +44,9 @@ func (h *ChatHandler) ChatMessagesHandler(w http.ResponseWriter, r *http.Request
 	h.service.SaveClient(userID, conn)
 
 	for {
-		var chat models.Chat
+		var chat models.Chat 
 		err := conn.ReadJSON(&chat)
-		if err != nil && !strings.Contains(err.Error(), "close 1005") {
+		if err != nil && !strings.Contains(err.Error(), "close") {
 			conn.WriteJSON(map[string]any{
 				"error": "Error reading message: " + err.Error(),
 			})

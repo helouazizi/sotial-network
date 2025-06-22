@@ -33,7 +33,7 @@
 .chatPage .sidebar {
   display: flex;
   flex-direction: column;
-  flex: 1.1;
+  flex: 2;
 }
 
 .chatPage .chatMessages {
@@ -43,6 +43,12 @@
   border-radius: 8px;
   display: flex;
   flex-direction: column;
+}
+
+.chatPage .suggestionGroups{
+  background-color: var(--card-bg);
+  flex: 2;
+  border-radius: 8px;
 }
 
 .chatPage .myName {

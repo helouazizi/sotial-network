@@ -25,7 +25,6 @@ export default function Login() {
 
 
       if (res.ok) {
-        setMessage('Login successful! Welcome back.');
         router.push("/")
         // You can add redirect logic here, e.g., router.push('/dashboard')
       } else {

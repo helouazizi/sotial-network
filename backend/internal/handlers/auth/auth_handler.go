@@ -37,8 +37,8 @@ func (h *UserHandler) Register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	token, err := h.service.SaveUser(user)
-	fmt.Println(token , "token")
-	if err.Code  != http.StatusOK{
+	fmt.Println(token, "token")
+	if err.Code != http.StatusOK {
 		fmt.Println(err)
 		utils.ResponseJSON(w, err.Code, err)
 		return
@@ -67,8 +67,6 @@ func (h *UserHandler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	token, errLog := h.service.LogUser(user)
-	fmt.Println(errLog)
-
 	if errLog.Code != http.StatusOK {
 		utils.ResponseJSON(w, errLog.Code, errLog)
 		return

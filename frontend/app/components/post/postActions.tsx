@@ -64,7 +64,6 @@ export default function PostActions({
     }
   };
 
-  /* -------------- Dislike handler ----------- */
   const handleDislike = async () => {
     const prevVote = userVote;
     try {

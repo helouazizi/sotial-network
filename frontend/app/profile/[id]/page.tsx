@@ -1,6 +1,7 @@
-import CommonInfo from "@/app/components/profile/CommonInfo";
-import { ProfileInt } from "@/app/types/profiles";
-import { cookies } from "next/headers";
+import Profile from "@/app/components/profile/Profile";
+
+
+
 
 interface Props {
   params: {
@@ -8,23 +9,14 @@ interface Props {
   };
 }
 
-const Profile = async ({ params }: Props) => {
+const ProfileServer = async ({ params }: Props) => {
   let { id } = await params;
-  const cookieStore = cookies(); // 👈 Get incoming request cookies
-
-  const res = await fetch(`http://localhost:8080/api/v1/profile?id=${id}`, {
-    method: "GET",
-    headers: {
-      Cookie: cookieStore.toString(),
-    }
-  })
-  const data: ProfileInt = await res.json()
-  console.log(data);
-  return (
+  
+   return (
     <main>
-      <CommonInfo />
+      <Profile profileid={id}/>
     </main>
   );
 };
 
-export default Profile;
+export default ProfileServer;

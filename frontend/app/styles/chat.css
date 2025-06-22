@@ -14,33 +14,38 @@
   --info-color: #60a5fa;
   --btn-bg: #2b2a35;
   --btn-text: #e9d5ff;
-  --scrollbar-bg: #1a1a25;
-  --scrollbar-thumb: #7c3aed;
+  --scrollbar-bg: #1e1e2a;
+  --scrollbar-thumb: #a78bfa;
   --icon-color: #d8b4fe;
   --link-color: #c084fc;
   --shadow-color: rgba(0, 0, 0, 0.6);
+  --online-color: #22c55e;
+  --offline-color: #6b7280;
 }
 
-.chatPage{
+.chatPage {
   display: flex;
+  height: 100vh;
+  padding-bottom: 20px;
 }
 
-.chatPage section:first-child{
-  flex: 1;
+.chatPage section:first-child {
+  flex: 1.05;
 }
 
-.chatPage .chat{
+.chatPage .chatMessages {
   flex: 4;
+  height: 100%;
 }
 
-.chatPage .myName{
+.chatPage .myName {
   background-color: var(--card-bg);
   padding: 15px 30px;
   border-radius: 8px;
-  margin-bottom: 20px;  
+  margin-bottom: 20px;
 }
 
-.chatPage .myName p{
+.chatPage .myName p {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -48,18 +53,21 @@
   font-weight: 500;
 }
 
-.chatPage svg{
+.chatPage svg {
   color: var(--accent-color);
 }
 
-.chatPage .type{
+.chatPage .chatNav {
   display: flex;
   justify-content: space-between;
   margin-bottom: 20px;
   gap: 2px;
+  padding: 0px 30px;
+  position: absolute;
+  width: 100%;
 }
 
-.chatPage .type a{
+.chatPage .chatNav a {
   width: 45%;
   padding: 10px 20px;
   text-align: center;
@@ -74,8 +82,8 @@
   border: 1px solid var(--border-color);
 }
 
-.chatPage .type a.active::after{
-  content: '';
+.chatPage .chatNav a.active::after {
+  content: "";
   position: absolute;
   bottom: 0;
   left: 0;
@@ -85,26 +93,49 @@
   border-radius: 8px;
 }
 
-.chatPage .type a:hover{
+.chatPage .chatNav a:hover {
   background-color: var(--border-color);
 }
 
-.chatPage .friends{
+.chatPage .friends {
   background-color: var(--card-bg);
-  padding: 15px 30px;
+  padding: 15px 0px;
   border-radius: 8px;
+  position: relative;
+  height: 90%;
 }
 
-.chatPage .friends ul{
+.chatPage .friends .friends-list{
+  padding-top: 50px;
+  height: 100%;
+}
+
+.chatPage .friends ul {
   display: flex;
-  flex-direction: column; 
+  height: 100%;
+  padding: 10px 20px;
+  flex-direction: column;
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-bg);
 }
 
-.chatPage .friends ul li{
-  padding: 13px 26px;
+.chatPage .friends ul li {
+  padding: 10px 20px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.chatPage .friends ul li:hover{
+.chatPage .friends ul li svg {
+  background-color: var(--bg-color);
+  padding: 9px;
+  color: var(--text-primary);
+  font-size: 2em;
+  border-radius: 50%;
+}
+
+.chatPage .friends ul li:hover {
   background-color: var(--border-color);
 }

@@ -22,7 +22,9 @@ export default function PostActions({
     );
   }, [post.user_vote]);
 
-  /* -------------- API helper ---------------- */
+
+
+
   const votePost = async (
     action: "like" | "dislike" | "unlike" | "undislike"
   ) => {
@@ -35,7 +37,7 @@ export default function PostActions({
     if (!res.ok) throw new Error(await res.text());
   };
 
-  /* -------------- Like handler -------------- */
+
   const handleLike = async () => {
     const prevVote = userVote;
     try {

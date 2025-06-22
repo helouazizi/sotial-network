@@ -3,6 +3,7 @@
 import { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
+import Welcomingmessage from '../components/Auth/welcomingMessage';
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -37,16 +38,17 @@ export default function Login() {
 
   return (
     <div className="login-container">
-      {/* Your existing JSX */}
+      <Welcomingmessage/>
 
-      <section>
-        <div id="welcom">
-          <h1>Welcome</h1>
-          <p>Something here</p>
+
+      <section id='user-info'>
+        <div id="user-welcom">
+          <h1 className='user-welcom-title'>Welcome</h1>
+          <p className='user-welcom-p'>Join gazillions of people online</p>
         </div>
 
-        <div id="emailcontainer" className="input-group">
-          <label htmlFor="email" className="sr-only">Email</label>
+        <div id="emailcontainer" className="user-input-group">
+          <label htmlFor="email" className="user-sr-only">Email</label>
           <input
             type="email"
             name="email"
@@ -57,15 +59,15 @@ export default function Login() {
           />
         </div>
 
-        <div id="passwordcontainer" className="input-group">
-          <label htmlFor="password" className="sr-only">Password</label>
+        <div id="passwordcontainer" className="user-input-group">
+          <label htmlFor="password" className="user-sr-only">Password</label>
           <input
             type="password"
             name="password"
             id="password"
             placeholder="Password"
             value={password}
-        
+
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
@@ -74,8 +76,11 @@ export default function Login() {
           <button onClick={handleLogin}>Login</button>
         </div>
 
-        {message && <p>{message}</p>}
+        {message && <p className='user-message'>{message}</p>}
       </section>
+
     </div>
   );
 }
+
+

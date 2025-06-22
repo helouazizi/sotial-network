@@ -65,6 +65,7 @@ export default function Login() {
             id="password"
             placeholder="Password"
             value={password}
+        
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>

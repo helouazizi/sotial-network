@@ -15,9 +15,7 @@ func SetupRoutes(app *app.Application) *http.ServeMux {
 	mux.HandleFunc("/api/v1/user/login", app.AuthHundler.Login)
 
 	//================== Profile routes =======================///
-	mux.HandleFunc("/api/v1/profile", middleware.AuthMiddleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		app.ProfileHandler.ProfileHandler(w, r)
-	}), app.DB))
+	mux.HandleFunc("/api/v1/profile", middleware.AuthMiddleware(http.HandlerFunc(app.ProfileHandler.ProfileHandler), app.DB))
 
 	//================== posts routes =========================///
 	mux.Handle("/api/v1/posts", middleware.AuthMiddleware(http.HandlerFunc(app.PostHandler.GetPosts), app.DB))

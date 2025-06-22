@@ -1,8 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-
 import { useRouter } from 'next/navigation';
+import { MdOutlineLaptopWindows } from "react-icons/md";
+import { CiChat2 } from "react-icons/ci";
+import { LiaNewspaperSolid } from "react-icons/lia";
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -37,16 +39,52 @@ export default function Login() {
 
   return (
     <div className="login-container">
-      {/* Your existing JSX */}
+      <section id='user-welcoming'>
+        <div className="logo">
+          Social <span>Net</span>work
+        </div>
+        <div className='user-community'>
+          <div className='user-community-logo'>
+            <MdOutlineLaptopWindows />
+          </div>
+          <div className='user-community-content'>
+            <h1 className='user-community-title'> Community</h1>
+            <p className='user-community-p'> Where connections grow and communities thrive.</p>
+          </div>
+        </div>
+        <div className='user-chat'>
+          <div className='user-chat-logo'>
+            <CiChat2 />
+          </div>
+          <div className='user-chat-content'>
+            <h1 className='user-chat-title'> Chat</h1>
+            <p className='user-chat-p'>Conversations that bring people closer—instantly.</p>
 
-      <section>
-        <div id="welcom">
-          <h1>Welcome</h1>
-          <p>Something here</p>
+          </div>
+        </div>
+        <div className='user-name'>
+          <div className='user-name-logo'>
+            <LiaNewspaperSolid />
+          </div>
+          <div className='user-name-content'>
+            <h1 className='user-namelogo'> News</h1>
+            <p className='user-name-p'>Share moments. Stay informed. Be heard.</p>
+          </div>
+
         </div>
 
-        <div id="emailcontainer" className="input-group">
-          <label htmlFor="email" className="sr-only">Email</label>
+
+      </section>
+
+
+      <section id='user-info'>
+        <div id="user-welcom">
+          <h1 className='user-welcom-title'>Welcome</h1>
+          <p className='user-welcom-p'>Join gazillions of people online</p>
+        </div>
+
+        <div id="emailcontainer" className="user-input-group">
+          <label htmlFor="email" className="user-sr-only">Email</label>
           <input
             type="email"
             name="email"
@@ -57,15 +95,15 @@ export default function Login() {
           />
         </div>
 
-        <div id="passwordcontainer" className="input-group">
-          <label htmlFor="password" className="sr-only">Password</label>
+        <div id="passwordcontainer" className="user-input-group">
+          <label htmlFor="password" className="user-sr-only">Password</label>
           <input
             type="password"
             name="password"
             id="password"
             placeholder="Password"
             value={password}
-        
+
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
@@ -74,8 +112,9 @@ export default function Login() {
           <button onClick={handleLogin}>Login</button>
         </div>
 
-        {message && <p>{message}</p>}
+        {message && <p className='user-message'>{message}</p>}
       </section>
+
     </div>
   );
 }

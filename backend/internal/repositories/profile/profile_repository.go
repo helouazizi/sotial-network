@@ -59,7 +59,7 @@ func (repo *ProfileRepository) GetMyProfile(sessionID, userId int) (*models.Comm
 	}
 
 	// Cas : autre utilisateur
-	status, err := repo.getFollowStatus(sessionID, userId)
+	id, status, err := repo.getFollowStatus(sessionID, userId)
 	if err != nil {
 		return nil, err
 	}
@@ -68,6 +68,7 @@ func (repo *ProfileRepository) GetMyProfile(sessionID, userId int) (*models.Comm
 	}
 
 	profile.Subscription = &models.Subscription{
+		Id:         id,
 		Status:     status,
 		FollowerID: sessionID,
 		FollowedID: userId,
@@ -86,7 +87,6 @@ func (repo *ProfileRepository) GetMyProfile(sessionID, userId int) (*models.Comm
 	}
 	return &profile, nil
 }
-
 
 func (repo *ProfileRepository) GetPosts(userId int) ([]models.Post, error) {
 	const q = `
@@ -133,22 +133,23 @@ func (repo *ProfileRepository) GetPosts(userId int) ([]models.Post, error) {
 	return posts, rows.Err()
 }
 
-func (repo *ProfileRepository) getFollowStatus(sessionID, userId int) (string, error) {
+func (repo *ProfileRepository) getFollowStatus(sessionID, userId int) (int, string, error) {
+	var id int
 	var status string
 	query := `
-		SELECT status 
+		SELECT id,status 
 		FROM followers 
 		WHERE follower_id=? AND followed_id=? AND (status='accepted' OR status='pending');
 
 	`
-	err := repo.db.QueryRow(query, sessionID, userId).Scan(&status)
+	err := repo.db.QueryRow(query, sessionID, userId).Scan(&id, &status)
 	if err == sql.ErrNoRows {
-		return "", nil
+		return 0, "", nil
 	}
 
 	if err != nil {
-		return "", nil
+		return 0, "", err
 	}
 
-	return status, nil
+	return id, status, nil
 }

@@ -67,13 +67,13 @@ func (s *PostService) SavePost(post *models.Post, img *models.Image) error {
 	return s.repo.SavePost(post, img) // img may be nil
 }
 
-func (s *PostService) GetPosts(userId,offset, limit int) ([]models.Post, error) {
+func (s *PostService) GetPosts(userId, offset, limit int) ([]models.Post, error) {
 	// Basic sanity checks
 	if limit <= 0 || offset < 0 {
 		return []models.Post{}, errors.New("Invalid limit and offset for pagination")
 	}
 
-	return s.repo.GetPosts(userId,offset, limit)
+	return s.repo.GetPosts(userId, offset, limit)
 }
 
 func (s *PostService) PostVote(vote models.VoteRequest) error {
@@ -90,4 +90,22 @@ func (s *PostService) PostVote(vote models.VoteRequest) error {
 	}
 
 	return s.repo.PostVote(vote)
+}
+
+func (s *PostService) CreatePostComment(comment models.Comment) error {
+	// Validate comment length
+	if len(comment.Comment) < 1 {
+		return errors.New("comment must be at least 1 characters long")
+	}
+
+	if len(strings.Fields(comment.Comment)) == 0 {
+		return errors.New("comment must be at least 1 characters long")
+	}
+
+	// Optional: Validate post ID and author ID
+	if comment.PostID <= 0 || comment.AuthorID <= 0 {
+		return errors.New("post ID and author ID must be provided")
+	}
+
+	return s.repo.CreatePostComment(comment)
 }

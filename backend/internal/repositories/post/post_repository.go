@@ -160,21 +160,35 @@ func (r *PostRepository) PostVote(vote models.VoteRequest) error {
 	}
 }
 
-// func (r *PostRepository) UpdatePostVote(postID int, action string) error {
-// 	var query string
-// 	switch action {
-// 	case "like":
-// 		query = "UPDATE posts SET likes = likes + 1 WHERE id = ?"
-// 	case "unlike":
-// 		query = "UPDATE posts SET likes = likes - 1 WHERE id = ?"
-// 	case "dislike":
-// 		query = "UPDATE posts SET dislikes = dislikes + 1 WHERE id = ?"
-// 	case "undislike":
-// 		query = "UPDATE posts SET dislikes = dislikes - 1 WHERE id = ?"
-// 	default:
-// 		return errors.New("invalid action")
-// 	}
+func (r *PostRepository) PostComment(vote models.VoteRequest) error {
+	// Validate action
+	switch vote.Action {
+	case "like", "dislike":
+		// Insert or update the user's reaction
+		_, err := r.db.Exec(`
+			INSERT INTO post_reactions (user_id, post_id, reaction)
+			VALUES (?, ?, ?)
+			ON CONFLICT(user_id, post_id)
+			DO UPDATE SET reaction = excluded.reaction
+		`, vote.UserId, vote.PostID, vote.Action)
+		return err
 
-// 	_, err := r.db.Exec(query, postID)
-// 	return err
-// }
+	case "unlike", "undislike":
+		// Delete the user's reaction
+		_, err := r.db.Exec(`
+			DELETE FROM post_reactions WHERE user_id = ? AND post_id = ?
+		`, vote.UserId, vote.PostID)
+		return err
+
+	default:
+		return errors.New("invalid vote action")
+	}
+}
+
+func (r *PostRepository) CreatePostComment(coment models.Comment) error {
+	_, err := r.db.Exec(`
+		INSERT INTO comments (post_id, user_id, comment, created_at)
+		VALUES (?, ?, ?, ?)
+	`, coment.PostID, coment.AuthorID, coment.Comment, coment.CreatedAt)
+	return err
+}

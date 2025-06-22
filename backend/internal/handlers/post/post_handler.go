@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/ismailsayen/social-network/internal/models"
 	services "github.com/ismailsayen/social-network/internal/services/post"
@@ -43,9 +44,9 @@ func (h *PostHandler) GetPosts(w http.ResponseWriter, r *http.Request) {
 	userId := r.Context().Value("userID").(int)
 
 	// Fetch posts
-	posts, err := h.service.GetPosts(userId,req.Offset, req.Limit)
+	posts, err := h.service.GetPosts(userId, req.Offset, req.Limit)
 	if err != nil {
-		fmt.Println(err ,"postststss f")
+		fmt.Println(err, "postststss f")
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
 			"message": "Internal server error",
 			"status":  http.StatusInternalServerError,
@@ -134,10 +135,42 @@ func (h *PostHandler) HandlePostVote(w http.ResponseWriter, r *http.Request) {
 	// Update the vote in your database here
 	err := h.service.PostVote(vote)
 	if err != nil {
-		fmt.Println(err,"vote")
+		fmt.Println(err, "vote")
 		http.Error(w, "Failed to vote", http.StatusInternalServerError)
 		return
 	}
 
 	w.WriteHeader(http.StatusOK)
+}
+
+func (h *PostHandler) CreatePostComment(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	var coment models.Comment
+	if err := json.NewDecoder(r.Body).Decode(&coment); err != nil {
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		return
+	}
+
+	// Replace with actual user ID (e.g. from session or token)
+	userId := r.Context().Value("userID").(int)
+	coment.AuthorID = userId
+	coment.CreatedAt = time.Now().Format(time.RFC3339)
+
+	err := h.service.CreatePostComment(coment)
+	if err != nil {
+		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
+			"message": "Bad request",
+			"status":  http.StatusBadRequest,
+		})
+		fmt.Println(err, "errt")
+		return
+	}
+	utils.ResponseJSON(w, http.StatusOK, map[string]any{
+		"message": "Successfully created comment",
+		"status":  http.StatusOK,
+	})
 }

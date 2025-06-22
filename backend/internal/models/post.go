@@ -33,3 +33,12 @@ type VoteRequest struct {
 	Action string `json:"action"` // "like" | "dislike" | "unlike" | "undislike"
 	UserId int
 }
+
+
+type Comment struct {
+    ID        int    `json:"id"`
+    PostID    int    `json:"post_id"`
+    AuthorID  int    `json:"author"` // or `UserID`
+    Comment   string `json:"comment"`
+    CreatedAt string `json:"created_at"`
+}

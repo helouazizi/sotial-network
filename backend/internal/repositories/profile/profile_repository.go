@@ -22,6 +22,7 @@ func (repo *ProfileRepository) GetMyProfile(sessionID, userId int) (*models.Comm
 			u.last_name,
 			u.first_name,
 			u.email,
+			u.avatar,
 			u.date_of_birth,
 			u.is_private,
 			u.about_me,
@@ -39,7 +40,7 @@ func (repo *ProfileRepository) GetMyProfile(sessionID, userId int) (*models.Comm
 	var profile models.CommunInfoProfile
 	err := repo.db.QueryRow(query, userId).Scan(
 		&profile.Id, &profile.Nickname, &profile.LastName,
-		&profile.FirstName, &profile.Email, &profile.DateOfBirth,
+		&profile.FirstName, &profile.Email, &profile.Avatar, &profile.DateOfBirth,
 		&profile.IsPrivate, &profile.AboutMe,
 		&profile.Followers, &profile.Followed, &profile.NbPosts,
 	)
@@ -58,7 +59,7 @@ func (repo *ProfileRepository) GetMyProfile(sessionID, userId int) (*models.Comm
 	}
 
 	// Cas : autre utilisateur
-	id, status, err := repo.getFollowStatus(sessionID, userId)
+	status, err := repo.getFollowStatus(sessionID, userId)
 	if err != nil {
 		return nil, err
 	}
@@ -67,7 +68,6 @@ func (repo *ProfileRepository) GetMyProfile(sessionID, userId int) (*models.Comm
 	}
 
 	profile.Subscription = &models.Subscription{
-		Id:         id,
 		Status:     status,
 		FollowerID: sessionID,
 		FollowedID: userId,
@@ -131,23 +131,22 @@ func (repo *ProfileRepository) GetPosts(userId int) ([]models.Post, error) {
 	return posts, rows.Err()
 }
 
-func (repo *ProfileRepository) getFollowStatus(sessionID, userId int) (int, string, error) {
-	var id int
+func (repo *ProfileRepository) getFollowStatus(sessionID, userId int) (string, error) {
 	var status string
 	query := `
-		SELECT id,status 
+		SELECT status 
 		FROM followers 
 		WHERE follower_id=? AND followed_id=? AND (status='accepted' OR status='pending');
 
 	`
-	err := repo.db.QueryRow(query, sessionID, userId).Scan(&id, &status)
+	err := repo.db.QueryRow(query, sessionID, userId).Scan(&status)
 	if err == sql.ErrNoRows {
-		return 0, "", nil
+		return "", nil
 	}
 
 	if err != nil {
-		return 0, "", err
+		return "", err
 	}
 
-	return id, status, nil
+	return status, nil
 }

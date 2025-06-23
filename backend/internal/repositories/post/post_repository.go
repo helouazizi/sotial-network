@@ -128,6 +128,7 @@ func (r *PostRepository) GetPosts(userId, start, limit int) ([]models.Post, erro
 		} else {
 			p.MediaLink = ""
 		}
+		fmt.Println(p,"jhghgjh")
 
 		posts = append(posts, p)
 	}
@@ -164,7 +165,7 @@ func (r *PostRepository) GetPostComments(c models.ComentPaginationRequest) ([]mo
 	query := `
 		SELECT 
 			c.id, c.post_id, c.user_id, c.comment, c.created_at,
-			u.nickname, u.first_name, u.last_name
+			u.nickname, u.first_name, u.last_name , u.avatar
 		FROM comments c
 		LEFT JOIN users u ON c.user_id = u.id
 		WHERE c.post_id = ?
@@ -183,7 +184,7 @@ func (r *PostRepository) GetPostComments(c models.ComentPaginationRequest) ([]mo
 		var cm models.Comment
 		err := rows.Scan(
 			&cm.ID, &cm.PostID, &cm.AuthorID, &cm.Comment, &cm.CreatedAt,
-			&cm.Author.UserName, &cm.Author.FirstName, &cm.Author.LastName,
+			&cm.Author.UserName, &cm.Author.FirstName, &cm.Author.LastName, &cm.Author.Avatar,
 		)
 		if err != nil {
 			return nil, err

@@ -1,7 +1,14 @@
 export interface Comment {
-  author: string;
+  author: Author;
   comment: string;
   created_at: string;
+}
+
+export interface Author {
+  user_name : string;
+  first_name : string;
+  last_name : string;
+   avatar : string;
 }
 
 export interface Post {

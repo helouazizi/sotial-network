@@ -5,6 +5,7 @@ import PostBody from "./postBody";
 import { AiFillLike } from "react-icons/ai";
 import { AiFillDislike } from "react-icons/ai";
 import { FaComment } from "react-icons/fa";
+import CommentList from "./commentList";
 
 
 export default function PostActions({
@@ -103,38 +104,37 @@ export default function PostActions({
       <div className="post-btns">
         <button
           onClick={handleLike}
-           className={`vote-btn like ${userVote === "like" ? "voted" : ""}`}
+          className={`vote-btn like ${userVote === "like" ? "voted" : ""}`}
         >
-          <AiFillLike /> {post.likes} 
+          <AiFillLike /> {post.likes}
         </button>
 
         <button
           onClick={handleDislike}
-         className={`vote-btn dislike ${userVote === "dislike" ? "voted" : ""}`}
+          className={`vote-btn dislike ${userVote === "dislike" ? "voted" : ""}`}
         >
-         <AiFillDislike /> {post.dislikes} 
+          <AiFillDislike /> {post.dislikes}
         </button>
 
         <button className="vote-btn" onClick={() => setShowComments(!showComments)}>
-         <FaComment /> {post.total_comments}
+          <FaComment /> {post.total_comments}
         </button>
       </div>
 
-      {showComments && post.comments && (
-       <div className="comments-list">
-         
-          {post.comments.map((c: Comment, i) => (
-            <div className="comment" key={i}>
-              <PostMeta
-                author={`user-${c.author}`}
-                createdAt={c.created_at}
-                avatarUrl="/avatar.png"
-              />
-              <PostBody content={c.comment} title="" media="" />
-            </div>
-          ))}
-        
-       </div>
+      {showComments && (
+        //  <div className="comments-list">
+        //     {post.comments.map((c: Comment, i) => (
+        //       <div className="comment" key={i}>
+        //         <PostMeta
+        //           author={`user-${c.author}`}
+        //           createdAt={c.created_at}
+        //           avatarUrl="/avatar.png"
+        //         />
+        //         <PostBody content={c.comment} title="" media="" />
+        //       </div>
+        //     ))}
+        //  </div>
+        <CommentList postId={post.id} />
       )}
     </div>
   );

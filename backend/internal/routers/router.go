@@ -22,7 +22,7 @@ func SetupRoutes(app *app.Application) *http.ServeMux {
 	mux.Handle("/api/v1/posts/create", middleware.AuthMiddleware(http.HandlerFunc(app.PostHandler.CreatePost), app.DB))
 	mux.Handle("/api/v1/posts/vote", middleware.AuthMiddleware(http.HandlerFunc(app.PostHandler.HandlePostVote), app.DB))
 	mux.Handle("/api/v1/posts/addComment", middleware.AuthMiddleware(http.HandlerFunc(app.PostHandler.CreatePostComment), app.DB))
-	mux.HandleFunc("/api/v1/posts/getCommens", (app.PostHandler.GetPostComment))
+	mux.HandleFunc("/api/v1/posts/getComments", (app.PostHandler.GetPostComment))
 
 	//================== chat routes =========================///
 	mux.HandleFunc("/ws", app.ChatHandler.ChatMessagesHandler)

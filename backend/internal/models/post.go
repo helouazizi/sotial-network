@@ -54,4 +54,5 @@ type PostUser struct {
 	UserName  string `json:"user_name"`
 	LastName  string `json:"first_name"`
 	FirstName string `json:"last_name"`
+	Avatar    string `json:"avatar"`
 }

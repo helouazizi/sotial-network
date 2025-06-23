@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import "./globals.css";
 import Header from "@/app/components/header/header";
+import SocketProvider from "./context/socketContext";
 
 interface RootLayoutProps {
   children: ReactNode;
@@ -16,8 +17,10 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
       <body>
-        <Header />
-        {children}
+        <SocketProvider>
+          <Header />
+          {children}
+        </SocketProvider>
       </body>
     </html>
   );

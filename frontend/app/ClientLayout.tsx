@@ -23,6 +23,9 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
 
         if (res.ok) {
           setIsAuthenticated(true);
+          if(pathname == '/register' || pathname == '/login'){
+            router.push('/')
+          }
         } else {
           if (pathname !== '/register' && pathname !== '/login') {
             router.push('/login');
@@ -37,6 +40,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
     };
 
     checkAuth();
+
   }, [pathname, router]);
 
 

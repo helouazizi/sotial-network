@@ -74,7 +74,7 @@ export default function Login() {
         </div>
         <div className='user-account'>
           <p className='user-account-content'>you don't have an account? :</p>
-          <button className='user-account-button' onClick={() => router.push("/register")}> Login</button>
+          <button className='user-account-button' onClick={() => router.push("/register")}> Register</button>
         </div>
 
         {message && <p className='user-message'>{message}</p>}

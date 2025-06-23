@@ -1,20 +1,14 @@
 import Profile from "@/app/components/profile/Profile";
-
-
-
-
 interface Props {
   params: {
     id: string;
   };
 }
-
 const ProfileServer = async ({ params }: Props) => {
   let { id } = await params;
-  
-   return (
+  return (
     <main>
-      <Profile profileid={id}/>
+      <Profile profileid={id} />
     </main>
   );
 };

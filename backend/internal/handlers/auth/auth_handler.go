@@ -2,8 +2,10 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
+	"io"
 	"net/http"
+	"os"
+	"path/filepath"
 
 	"github.com/ismailsayen/social-network/internal/models"
 	services "github.com/ismailsayen/social-network/internal/services/auth"
@@ -19,6 +21,7 @@ func NewAuthHandler(AuthService *services.AuthService) *UserHandler {
 }
 
 func (h *UserHandler) Register(w http.ResponseWriter, r *http.Request) {
+	// Only accept POST
 	if r.Method != http.MethodPost {
 		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
 			"message": "Method not allowed",
@@ -27,26 +30,78 @@ func (h *UserHandler) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var user *models.User
-	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
-		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
-			"message": "Internal Server Error ",
-			"status":  http.StatusInternalServerError,
+	// Parse multipart form (max 10MB)
+	errForm := r.ParseMultipartForm(10 << 20)
+	if errForm != nil {
+		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
+			"message": "Invalid form data",
+			"status":  http.StatusBadRequest,
 		})
 		return
 	}
 
+	// Fill user struct from form values
+	user := &models.User{
+		Nickname:    r.FormValue("nickname"),
+		Email:       r.FormValue("email"),
+		PassWord:    r.FormValue("password"),
+		FirstName:   r.FormValue("firstname"),
+		Lastname:    r.FormValue("lastname"),
+		DateofBirth: r.FormValue("dateofbirth"),
+		AboutMe:     r.FormValue("aboutme"),
+	}
+
+	// Try to get the optional avatar file
+	file, header, errFile := r.FormFile("avatar")
+	if errFile == nil && file != nil {
+		defer file.Close()
+
+		// Generate a unique filename and save path
+		filename := header.Filename
+		avatarPath := filepath.Join("pkg/db/images/Auth", filename)
+
+		dst, err := os.Create(avatarPath)
+		if err != nil {
+			utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+				"message": "Failed to save avatar",
+				"status":  http.StatusInternalServerError,
+			})
+			return
+		}
+		defer dst.Close()
+
+		// Copy uploaded file content to destination file
+		_, err = io.Copy(dst, file)
+		if err != nil {
+			utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+				"message": "Failed to save avatar",
+				"status":  http.StatusInternalServerError,
+			})
+			return
+		}
+
+		// Save the path in the user struct
+		user.Avatar = filename
+	} else {
+		// No avatar uploaded, optional - you can set default or leave empty
+		user.Avatar = ""
+	}
+
 	token, err := h.service.SaveUser(user)
-	fmt.Println(token, "token")
 	if err.Code != http.StatusOK {
-		fmt.Println(err)
 		utils.ResponseJSON(w, err.Code, err)
 		return
 	}
+
+	// Set auth cookie
 	cookie := &http.Cookie{Name: "Token", Value: token, HttpOnly: true, Path: "/", Secure: false}
 	http.SetCookie(w, cookie)
 
-	utils.ResponseJSON(w, err.Code, err)
+	// Respond success
+	utils.ResponseJSON(w, err.Code, map[string]any{
+		"message": "User registered successfully",
+		"token":   token,
+	})
 }
 
 func (h *UserHandler) Login(w http.ResponseWriter, r *http.Request) {

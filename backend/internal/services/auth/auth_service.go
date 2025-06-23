@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/ismailsayen/social-network/internal/models"
@@ -22,36 +23,44 @@ func (s *AuthService) SaveUser(user *models.User) (string, models.Error){
 
 	// Validation checks
 	if !utils.ValidPass(user.PassWord) {
+		Errors.Code = http.StatusUnauthorized
 		Errors.UserErrors.HasErro = true
 		Errors.UserErrors.Email = "Password is not valid"
 	}
 	if !utils.ValidUsername(user.Nickname) {
+		Errors.Code = http.StatusUnauthorized
 		Errors.UserErrors.HasErro = true
 		Errors.UserErrors.Nickname = "Username is not valid"
 	}
 	if !utils.ValidEmail(user.Email) {
+		Errors.Code = http.StatusUnauthorized
 		Errors.UserErrors.HasErro = true
 		Errors.UserErrors.Email = "Email is not valid"
 	}
 	if !utils.ValidName(user.FirstName) {
+		Errors.Code = http.StatusUnauthorized
 		Errors.UserErrors.HasErro = true
 		Errors.UserErrors.FirstName = "First Name is not valid"
 	}
 	if !utils.ValidName(user.Lastname) {
+		Errors.Code = http.StatusUnauthorized
 		Errors.UserErrors.HasErro = true
 		Errors.UserErrors.Lastname = "Last Name is not valid"
 	}
 	if err := utils.ValidDateOfBirth(user.DateofBirth); err != nil {
+		Errors.Code = http.StatusUnauthorized
 		Errors.UserErrors.HasErro = true
 		Errors.UserErrors.DateofBirth = "Date of Birth is not valid"
 	}
 	if err := utils.ValidateAboutMe(user.AboutMe); err != nil {
+		Errors.Code = http.StatusUnauthorized
 		Errors.UserErrors.HasErro = true
 		Errors.UserErrors.AboutMe = "About Me is not valid"
 	}
 
 	// Return early if any validation errors
 	if Errors.UserErrors.HasErro {
+		fmt.Println(Errors, "hi")
 		return "", Errors
 	}
 
@@ -68,10 +77,11 @@ func (s *AuthService) SaveUser(user *models.User) (string, models.Error){
 	// Save user
 	saveErr := s.repo.SaveUser(user)
 	if saveErr.Code != http.StatusOK {
+		fmt.Println(saveErr , "SaveUser")
 		return "", saveErr
 	}
 
-	
+
 
 
 	

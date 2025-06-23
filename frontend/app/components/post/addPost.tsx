@@ -4,6 +4,7 @@ import React, { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Post, PostErrors } from "@/app/types/post";
 
+
 type Props = {
   onCreated: (newPost: Post) => void;
 };
@@ -105,7 +106,8 @@ export default function CreatePostForm({ onCreated }: Props) {
         comments: [],
         total_comments : 0 ,
         createdAt :"2025-06-11T13:45:00Z",
-        media : ""
+        media : "",
+        user_vote : null
 
       }
       onCreated(newPost)
@@ -117,7 +119,9 @@ export default function CreatePostForm({ onCreated }: Props) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="post-form">
+    <>
+     
+     <form onSubmit={handleSubmit} className="post-form">
       <h2>Create a Post</h2>
       <label>
         Title
@@ -155,6 +159,8 @@ export default function CreatePostForm({ onCreated }: Props) {
 
       <button type="submit">Submit Post</button>
     </form>
+    </>
+   
   );
 }
 

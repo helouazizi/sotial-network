@@ -28,6 +28,26 @@
 .create-post .post-form {
   background-color: var(--card-bg);
 }
+
+.create-post button {
+  background-color: var(--bg-color);
+  border: none;
+  color: var(--btn-text);
+  font-size: large;
+  cursor: pointer;
+  margin: 0px auto;
+}
+
+.create-post button .addPostBtn {
+  color: var(--accent-color);
+  font-size: 1.5rem;
+}
+
+.create-post .add-post-holder {
+  max-width: 600px;
+  margin: 2rem auto;
+}
+
 .create-post .post-form {
   max-width: 600px;
   margin: 2rem auto;
@@ -57,6 +77,7 @@
   background-color: var(--input-bg);
   transition: border-color 0.2s, box-shadow 0.1s;
   color: var(--input-text);
+  border: 1px solid var(--border-color);
 }
 
 .create-post .post-form input:focus,
@@ -73,6 +94,7 @@
 .create-post .post-form select option {
   background-color: var(--accent-color);
 }
+
 .create-post .post-form button {
   padding: 0.75rem 1.25rem;
   font-size: 1rem;
@@ -139,7 +161,8 @@
   block-size: 32px;
   border-radius: 50%;
   object-fit: cover;
-  background: red; /* consider using a placeholder color var */
+  background: red;
+  /* consider using a placeholder color var */
 }
 
 /* -----------------------------------------------
@@ -169,7 +192,7 @@
   gap: 0.5rem;
 }
 
-.post-actions > div {
+.post-actions>div {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
@@ -250,10 +273,12 @@
 .comments-list::-webkit-scrollbar {
   width: 6px;
 }
+
 .comments-list::-webkit-scrollbar-thumb {
   background: var(--clr-scroll-thumb);
   border-radius: 3px;
 }
+
 .comments-list::-webkit-scrollbar-track {
   background: transparent;
 }

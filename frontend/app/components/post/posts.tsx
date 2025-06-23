@@ -3,6 +3,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import CreatePostForm from "./addPost";
 import { Post } from "@/app/types/post";
 import PostCard from "./postcrad";
+import { FaPenToSquare } from "react-icons/fa6";
 
 const LIMIT = 10;
 //  bbbbbbbbbbbbbbbbbbbbbbbbbbe care full the posts duplacetesd
@@ -23,53 +24,54 @@ function throttle<T extends (...args: any[]) => void>(fn: T, delay = 500): T {
 
 export default function Posts() {
   const [posts, setPosts] = useState<Post[]>([]);
+    const [showForm, setShowForm] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [loadedOnce, setLoadedOnce] = useState(false);
   const page = useRef(0);
 
   /* ---- Fetch Posts ---- */
-const fetchPosts = useCallback(async () => {
-  if (isLoading || !hasMore) return;
-  setIsLoading(true);
+  const fetchPosts = useCallback(async () => {
+    if (isLoading || !hasMore) return;
+    setIsLoading(true);
 
-  try {
-    const res = await fetch("http://localhost:8080/api/v1/posts", {
-      method: "POST",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        offset: page.current * LIMIT,
-        limit: LIMIT,
-      }),
-    });
+    try {
+      const res = await fetch("http://localhost:8080/api/v1/posts", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          offset: page.current * LIMIT,
+          limit: LIMIT,
+        }),
+      });
 
-    if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+      if (!res.ok) throw new Error(`HTTP error ${res.status}`);
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if (Array.isArray(data)) {
-      // 👉 On first load (page.current === 0), replace; otherwise append
-      console.log(data,"posts")
-      setPosts(prev =>
-        page.current === 0
-          ? data
-          : [...prev, ...data.filter(p => !prev.some(post => post.id === p.id))]
-      );
+      if (Array.isArray(data)) {
+        // 👉 On first load (page.current === 0), replace; otherwise append
+        console.log(data, "posts")
+        setPosts(prev =>
+          page.current === 0
+            ? data
+            : [...prev, ...data.filter(p => !prev.some(post => post.id === p.id))]
+        );
 
-      page.current += 1;
+        page.current += 1;
 
-      if (data.length < LIMIT) setHasMore(false);
-    } else {
-      setHasMore(false);
+        if (data.length < LIMIT) setHasMore(false);
+      } else {
+        setHasMore(false);
+      }
+    } catch (error) {
+      console.error("Failed to fetch posts:", error);
+    } finally {
+      setIsLoading(false);
+      setLoadedOnce(true);
     }
-  } catch (error) {
-    console.error("Failed to fetch posts:", error);
-  } finally {
-    setIsLoading(false);
-    setLoadedOnce(true);
-  }
-}, [isLoading, hasMore]);
+  }, [isLoading, hasMore]);
 
   /* ---- Initial Load ---- */
   useEffect(() => {
@@ -102,11 +104,16 @@ const fetchPosts = useCallback(async () => {
     );
   };
 
+    const toggleForm = () => {
+    setShowForm((prev) => !prev); // Step 3
+  };
+
   /* ---- Render ---- */
   return (
     <>
       <section className="create-post">
-        <CreatePostForm onCreated={addPost} />
+        <div className="add-post-holder">        <button onClick={toggleForm}><FaPenToSquare className="addPostBtn" /> Add-Post</button></div>
+        {showForm &&<CreatePostForm onCreated={addPost} />}
       </section>
 
       <section className="posts-list space-y-4">

@@ -120,10 +120,6 @@
 }
 
 
-
-
-
-
 /* =======================POSTS SECTION ======================== */
 
 
@@ -310,7 +306,7 @@
   color: var(--text-primary);  
 }
 
-/* Optional: hover effects for better UX */
+
 .vote-btn.like:hover {
   background-color: var(--online-color-hover, #4a9c68); 
   color: var(--text-primary);
@@ -331,46 +327,6 @@
     padding: 2rem;
   }
 }
-
-@media (max-width: 480px) {
-  /* .post-comment {
-    flex-direction: column;
-    align-items: stretch;
-  } */
-
-  /* .post-comment button {
-    width: 100%;
-  } */
-
-  /* .vote-btn {
-    flex: 1 1 100%;
-  } */
-}
-
-
-
-
-/* -----------------------------------------------
-   Responsiveness
------------------------------------------------ */
-/* @media (max-width: 768px) {
-  .posts-list {
-    width: 95%;
-  }
-
-  .post-body h2 {
-    font-size: 1.2rem;
-    margin-block: 1.5rem;
-  }
-
-  .post-body p {
-    margin-block: 1.5rem;
-  }
-} */
-
-
-
-
 
 
 /* =================================== no posts ============================== */

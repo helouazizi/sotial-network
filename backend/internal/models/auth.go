@@ -1,7 +1,9 @@
 package models
 
+import "mime/multipart"
+
 type User struct {
-	ID          int    
+	ID          int
 	Nickname    string `json:"nickname"`
 	Email       string `json:"email"`
 	PassWord    string `json:"password"`
@@ -9,7 +11,12 @@ type User struct {
 	Lastname    string `json:"lastname"`
 	DateofBirth string `json:"dateofbirth"`
 	AboutMe     string `json:"aboutme"`
-	Token     string
+	Avatar      string `json:"avatar"`
+	File        multipart.File
+	Header *multipart.FileHeader
+	FileErr error
+
+	Token string
 }
 
 type UserError struct {
@@ -22,12 +29,9 @@ type UserError struct {
 	AboutMe     string
 	HasErro     bool
 }
- 
-type UserCredential struct {
-	
-	Email string 
-	Pass string
-	Token     string
-	
-}
 
+type UserCredential struct {
+	Email string
+	Pass  string
+	Token string
+}

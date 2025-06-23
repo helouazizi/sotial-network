@@ -9,7 +9,7 @@ import { usePathname } from "next/navigation";
 
 export default function Header() {
   const pathname = usePathname()
-  
+
   return (
     <header>
       <nav>
@@ -18,18 +18,20 @@ export default function Header() {
         </Link>
         <ul>
           <li>
-            <Link href={"/"}><TiHome className={pathname === "/" ? "active" : " "}/></Link>
-          </li> 
-          <li>  
-            <Link href={"/chat/privateChat"}><LuMessageCircleMore  className={pathname === "/chat/privateChat" ? "active" : ""}/></Link>
+            <Link href={"/"}><TiHome className={pathname === "/" ? "active" : " "} /></Link>
+          </li>
+          <li>
+            <Link href={"/chat/privateChat"}><LuMessageCircleMore className={pathname === "/chat/privateChat" ? "active" : ""} /></Link>
           </li>
           <li>
             <Link href={"/chat/groups"}><MdGroups2 className={pathname === "/chat/groups" ? "active groupIconHeader" : "groupIconHeader"} /></Link>
           </li>
         </ul>
         <div>
-          <button className="notification"><IoIosNotifications /></button>          
-          <button className="profile"><FaUser /></button>
+          <button className="notification"><IoIosNotifications /></button>
+          <Link href={"/profile/1"}>
+            <button className="profile"><FaUser /></button>
+          </Link>
         </div>
       </nav>
     </header>

@@ -11,6 +11,7 @@ func SetupRoutes(app *app.Application) *http.ServeMux {
 	mux := http.NewServeMux()
 
 	//================== user routes =======================///
+	mux.HandleFunc("/app/v1/user/Auth" , middleware.AuthMiddleware(http.HandlerFunc(app.AuthHundler.CheckAuth), app.DB))
 	mux.HandleFunc("/api/v1/user/register", app.AuthHundler.Register)
 	mux.HandleFunc("/api/v1/user/login", app.AuthHundler.Login)
 

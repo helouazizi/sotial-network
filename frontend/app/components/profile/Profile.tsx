@@ -2,9 +2,10 @@
 
 import { ProfileInt } from "@/app/types/profiles";
 import React, { useEffect, useState } from "react";
-
+import ProfileHeader from "./ProfileHeader";
 const Profile = ({ profileid }: { profileid: string }) => {
-  const [dataProfile, setDataProfile] = useState({})
+  const [dataProfile, setDataProfile] = useState<ProfileInt | null>(null);
+
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -16,22 +17,23 @@ const Profile = ({ profileid }: { profileid: string }) => {
           }
         );
         const data: ProfileInt = await res.json();
-        setDataProfile(data)
-        console.log(dataProfile);
-
+        setDataProfile(data);
       } catch (err) {
-        console.error("Failed to fetch profile:", err);
+        console.error("Failed to fetch profprofileile:", err);
       }
     };
 
     fetchProfile();
-  });
+  }, [profileid]);
 
+  console.log("Fetched profile:", dataProfile);
   return (
-    <div>
-
+    <div className="profile-container">
+        <div className="profile-header">
+          <ProfileHeader avatar={dataProfile?.avatar}/>
+        </div>
     </div>
-  )
+  );
 };
 
 export default Profile;

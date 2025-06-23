@@ -57,6 +57,10 @@
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
+    h3{
+        display: flex;
+        align-items: center;
+    }
 }
 
 /* From Uiverse.io by mrhyddenn */
@@ -65,8 +69,8 @@
     font-size: 17px;
     position: relative;
     display: inline-block;
-    width: 62px;
-    height: 35px;
+    width: 45px;
+    height: 20px;
 }
 
 /* Hide default HTML checkbox */
@@ -93,8 +97,8 @@
 .slider:before {
     position: absolute;
     content: "";
-    height: 1.9em;
-    width: 1.9em;
+    height: 1em;
+    width: 1em;
     border-radius: 16px;
     left: 1.2px;
     top: 0;

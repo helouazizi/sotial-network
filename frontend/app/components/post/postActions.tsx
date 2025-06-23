@@ -2,6 +2,10 @@ import { Post, Comment } from "@/app/types/post";
 import { useState, useEffect } from "react";
 import PostMeta from "./postMeta";
 import PostBody from "./postBody";
+import { AiFillLike } from "react-icons/ai";
+import { AiFillDislike } from "react-icons/ai";
+import { FaComment } from "react-icons/fa";
+
 
 export default function PostActions({
   post,
@@ -101,18 +105,18 @@ export default function PostActions({
           onClick={handleLike}
           className={userVote === "like" ? "vote-btn active" : "vote-btn"}
         >
-          👍 {post.likes} <span className="extra">Like</span>
+          <AiFillLike /> {post.likes} <span className="extra">Like</span>
         </button>
 
         <button
           onClick={handleDislike}
           className={userVote === "dislike" ? "vote-btn active" : "vote-btn"}
         >
-          👎 {post.dislikes} <span className="extra">Dislike</span>
+         <AiFillDislike /> {post.dislikes} <span className="extra">Dislike</span>
         </button>
 
         <button onClick={() => setShowComments(!showComments)}>
-          💬 {post.total_comments} <span className="extra">Comment</span>
+         <FaComment /> {post.total_comments} <span className="extra">Comment</span>
         </button>
       </div>
 

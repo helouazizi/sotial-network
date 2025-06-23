@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Post } from "@/app/types/post";
-
+import { BsFillSendFill } from "react-icons/bs";
 export default function PostComment({
   post,
   onPostUpdate,
@@ -68,7 +68,7 @@ export default function PostComment({
         disabled={sending}
       />
       <button onClick={handleAddComment} disabled={sending}>
-        💬 <span className="extra">Send</span>
+      <BsFillSendFill /> <span className="extra">Send</span>
       </button>
     </div>
   );

@@ -7,7 +7,7 @@
   background-color: var(--bg-color);
   color: var(--text-primary);
   flex-direction: row;
-  gap: 40px;
+  gap: 60px;
 }
 
 .login-container section {
@@ -39,6 +39,9 @@
 .user-community-logo,
 .user-chat-logo,
 .user-name-logo {
+  border: 1px solid white; 
+  border-radius: 5px;
+  padding: 8px;
   font-size: 1.5rem;
   color: var(--icon-color);
 }

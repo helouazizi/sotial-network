@@ -67,11 +67,27 @@ func (s *PostService) SavePost(post *models.Post, img *models.Image) error {
 	return s.repo.SavePost(post, img) // img may be nil
 }
 
-func (s *PostService) GetPosts(offset, limit int) ([]models.Post, error) {
+func (s *PostService) GetPosts(userId,offset, limit int) ([]models.Post, error) {
 	// Basic sanity checks
 	if limit <= 0 || offset < 0 {
 		return []models.Post{}, errors.New("Invalid limit and offset for pagination")
 	}
 
-	return s.repo.GetPosts(offset, limit)
+	return s.repo.GetPosts(userId,offset, limit)
+}
+
+func (s *PostService) PostVote(vote models.VoteRequest) error {
+	if vote.PostID <= 0 {
+		return errors.New("invalid post ID")
+	}
+
+	validActions := map[string]bool{
+		"like": true, "dislike": true,
+		"unlike": true, "undislike": true,
+	}
+	if !validActions[vote.Action] {
+		return errors.New("invalid vote action")
+	}
+
+	return s.repo.PostVote(vote)
 }

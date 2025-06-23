@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/ismailsayen/social-network/internal/models"
@@ -19,35 +20,6 @@ func NewAuthRepo(db *sql.DB) *AuthRepository {
 }
 
 func (r *AuthRepository) SaveUser(user *models.User) models.Error {
-	duplicate, field, err := r.CheckIfExiste(user)
-	if err.Code != http.StatusOK {
-		fmt.Println("CheckIfExiste")
-		return err
-	}
-	if duplicate {
-		fmt.Println("duplicate")
-		userError := models.UserError{
-			HasErro: true,
-		}
-		msg := ""
-
-		switch field {
-		case "email":
-			userError.Email = "Email already exists"
-			msg = "Email already exists"
-		case "nickname":
-			userError.Nickname = "Nickname already exists"
-			msg = "Nickname already exists"
-		default:
-			msg = "Email or nickname already exists"
-		}
-
-		return models.Error{
-			Code:       http.StatusConflict, // 409 Conflict
-			UserErrors: userError,
-			Message:    msg,
-		}
-	}
 
 	hashedPassword, errHash := utils.HashPassWord(user.PassWord)
 	if errHash != nil {
@@ -57,7 +29,13 @@ func (r *AuthRepository) SaveUser(user *models.User) models.Error {
 			Message: "Internal Server Error while hashing password",
 		}
 	}
-
+	user.Nickname = strings.TrimSpace(user.Nickname)
+	var nickname *string
+	if user.Nickname == "" {
+		nickname = nil
+	} else {
+		nickname = &user.Nickname
+	}
 	query := `
 	INSERT INTO users (
 		last_name,
@@ -78,7 +56,7 @@ func (r *AuthRepository) SaveUser(user *models.User) models.Error {
 	_, errExec := r.db.Exec(query,
 		user.Lastname,
 		user.FirstName,
-		user.Nickname,
+		nickname,
 		user.Email,
 		hashedPassword,
 		user.DateofBirth,
@@ -164,14 +142,14 @@ func (r *AuthRepository) GetUserCredential(user *models.User) (models.Error, mod
 		if err == sql.ErrNoRows {
 			// Handle the case where no rows were returned
 			return models.Error{
-					Code:    http.StatusUnauthorized,
-					Message: "Invalid credentials",
-				}, models.UserCredential{}
+				Code:    http.StatusUnauthorized,
+				Message: "Invalid credentials",
+			}, models.UserCredential{}
 		}
 		return models.Error{
-				Code:    http.StatusInternalServerError,
-				Message: "Internal Server Error while saving user",
-			}, models.UserCredential{}
+			Code:    http.StatusInternalServerError,
+			Message: "Internal Server Error while saving user",
+		}, models.UserCredential{}
 	}
 
 	return models.Error{

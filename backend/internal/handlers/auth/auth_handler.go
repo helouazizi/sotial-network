@@ -2,10 +2,8 @@ package handlers
 
 import (
 	"encoding/json"
-	"io"
+	"fmt"
 	"net/http"
-	"os"
-	"path/filepath"
 
 	"github.com/ismailsayen/social-network/internal/models"
 	services "github.com/ismailsayen/social-network/internal/services/auth"
@@ -18,6 +16,20 @@ type UserHandler struct {
 
 func NewAuthHandler(AuthService *services.AuthService) *UserHandler {
 	return &UserHandler{service: AuthService}
+}
+
+func (h *UserHandler) CheckAuth(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
+			"message": "Method not allowed",
+			"status":  http.StatusMethodNotAllowed,
+		})
+		return
+	}
+	utils.ResponseJSON(w, http.StatusOK, map[string]any{
+		"message": " you have the token",
+		"Code":    http.StatusOK,
+	})
 }
 
 func (h *UserHandler) Register(w http.ResponseWriter, r *http.Request) {
@@ -50,46 +62,20 @@ func (h *UserHandler) Register(w http.ResponseWriter, r *http.Request) {
 		DateofBirth: r.FormValue("dateofbirth"),
 		AboutMe:     r.FormValue("aboutme"),
 	}
-
-	// Try to get the optional avatar file
 	file, header, errFile := r.FormFile("avatar")
-	if errFile == nil && file != nil {
-		defer file.Close()
-
-		// Generate a unique filename and save path
-		filename := header.Filename
-		avatarPath := filepath.Join("pkg/db/images/Auth", filename)
-
-		dst, err := os.Create(avatarPath)
-		if err != nil {
-			utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
-				"message": "Failed to save avatar",
-				"status":  http.StatusInternalServerError,
-			})
-			return
-		}
-		defer dst.Close()
-
-		// Copy uploaded file content to destination file
-		_, err = io.Copy(dst, file)
-		if err != nil {
-			utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
-				"message": "Failed to save avatar",
-				"status":  http.StatusInternalServerError,
-			})
-			return
-		}
-
-		// Save the path in the user struct
-		user.Avatar = filename
-	} else {
-		// No avatar uploaded, optional - you can set default or leave empty
-		user.Avatar = ""
+	user.File = file
+	user.Header = header
+	user.FileErr = errFile
+	updateUser, avatarErr := h.service.HundleAvatar(user)
+	if avatarErr.Code != http.StatusOK {
+		utils.ResponseJSON(w, avatarErr.Code, avatarErr.Message)
+		fmt.Println(avatarErr)
+		return
 	}
-
-	token, err := h.service.SaveUser(user)
+	token, err := h.service.SaveUser(&updateUser)
 	if err.Code != http.StatusOK {
 		utils.ResponseJSON(w, err.Code, err)
+		fmt.Println(err)
 		return
 	}
 
@@ -100,7 +86,7 @@ func (h *UserHandler) Register(w http.ResponseWriter, r *http.Request) {
 	// Respond success
 	utils.ResponseJSON(w, err.Code, map[string]any{
 		"message": "User registered successfully",
-		"token":   token,
+		"Code":    http.StatusOK,
 	})
 }
 

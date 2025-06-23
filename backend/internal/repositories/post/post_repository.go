@@ -169,8 +169,7 @@ func (r *PostRepository) GetPostComments(c models.ComentPaginationRequest) ([]mo
 		FROM comments c
 		LEFT JOIN users u ON c.user_id = u.id
 		WHERE c.post_id = ?
-		ORDER BY c.created_at ASC
-		
+		ORDER BY c.created_at DESC
 	`
 	// LIMIT ? OFFSET ?
 	rows, err := r.db.Query(query, c.PostId)

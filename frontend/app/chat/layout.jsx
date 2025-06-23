@@ -46,9 +46,6 @@ export default function ChatLayout({ children }) {
         </div>
         <ChatFooter />
       </section>
-      <section className="suggestionGroups">
-        
-      </section>
     </main>
   );
 }

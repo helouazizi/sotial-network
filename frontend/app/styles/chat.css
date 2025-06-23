@@ -45,12 +45,6 @@
   flex-direction: column;
 }
 
-.chatPage .suggestionGroups{
-  background-color: var(--card-bg);
-  flex: 2;
-  border-radius: 8px;
-}
-
 .chatPage .myName {
   background-color: var(--card-bg);
   padding: 15px 30px;

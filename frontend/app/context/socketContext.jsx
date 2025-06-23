@@ -14,7 +14,10 @@ export default function SocketProvider({ children }) {
     const shouldConnect = !excludedPaths.includes(pathname);
 
     useEffect(() => {
-        if (!shouldConnect) return;
+        if (!shouldConnect) {
+            console.log(ws.current)
+            return
+        }
 
         ws.current = new WebSocket("ws://localhost:8080/ws")
 

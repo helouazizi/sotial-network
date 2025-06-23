@@ -109,3 +109,7 @@ func (s *PostService) CreatePostComment(comment models.Comment) error {
 
 	return s.repo.CreatePostComment(comment)
 }
+
+func (s *PostService) GetPostComment(comment models.ComentPaginationRequest) ([]models.Comment, error) {
+	return s.repo.GetPostComments(comment)
+}

@@ -98,7 +98,7 @@
 }
 
 .create-post .post-form select option {
-  background-color: var(--accent-color);
+  cursor: pointer;
 }
 
 .create-post .post-form button {
@@ -280,8 +280,10 @@
 
 /* =========== vote  */
 .vote-btn {
-  background-color: var(--btn-bg);      /* Neutral base */
-  color: var(--btn-text);               /* Default text color */
+  background-color: var(--btn-bg);
+  /* Neutral base */
+  color: var(--btn-text);
+  /* Default text color */
   padding: 0.5rem 0.75rem;
   border: none;
   border-radius: 8px;
@@ -293,29 +295,23 @@
 }
 
 .vote-btn svg {
-  fill: currentColor;                   /* Icon follows text color */
+  fill: currentColor;
+  /* Icon follows text color */
 }
 
 .vote-btn.like.voted {
-  background-color: var(--accent-color);  
-  color: var(--text-primary);           
+  background-color: var(--accent-color);
+  color: var(--text-primary);
 }
 
 .vote-btn.dislike.voted {
-  background-color: var(--accent-color);  
-  color: var(--text-primary);  
-}
-
-
-.vote-btn.like:hover {
-  background-color: var(--online-color-hover, #4a9c68); 
+  background-color: var(--accent-color);
   color: var(--text-primary);
 }
 
-.vote-btn.dislike:hover {
-  background-color: var(--danger-color-hover, #a84040cc); 
-  color: var(--text-primary);
-}
+
+
+
 
 
 @media (min-width: 500px) {

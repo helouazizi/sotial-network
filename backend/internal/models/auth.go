@@ -1,7 +1,7 @@
 package models
 
 type User struct {
-	ID          int    
+	ID          int
 	Nickname    string `json:"nickname"`
 	Email       string `json:"email"`
 	PassWord    string `json:"password"`
@@ -10,7 +10,7 @@ type User struct {
 	DateofBirth string `json:"dateofbirth"`
 	AboutMe     string `json:"aboutme"`
 	Avatar      string `json:"avatar"`
-	Token     string
+	Token       string
 }
 
 type UserError struct {
@@ -23,12 +23,9 @@ type UserError struct {
 	AboutMe     string
 	HasErro     bool
 }
- 
-type UserCredential struct {
-	
-	Email string 
-	Pass string
-	Token     string
-	
-}
 
+type UserCredential struct {
+	Email string
+	Pass  string
+	Token string
+}

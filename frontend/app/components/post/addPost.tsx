@@ -10,14 +10,14 @@ type Props = {
 };
 export default function CreatePostForm({ onCreated }: Props) {
   const [errors, setErrors] = useState<PostErrors>({})
-  const privacy = useRef("public");
+  const[ privacy,setPrivacy] = useState("public");
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const form = e.currentTarget as HTMLFormElement;
     const formData = new FormData(form);
-    formData.append("privacy", privacy.current);
+    formData.append("privacy", privacy);
     
     // ============ validate data in front ================//
     const fileInput = form.elements.namedItem("media") as HTMLInputElement;
@@ -78,7 +78,7 @@ export default function CreatePostForm({ onCreated }: Props) {
     ];
     const privacyy = formData.get("privacy")?.toString().trim();
     if (
-      !allowedPrivacy.includes(privacy.current)
+      !allowedPrivacy.includes(privacy)
     ) {
       setErrors((prev: PostErrors) => ({
         ...prev,
@@ -145,14 +145,14 @@ export default function CreatePostForm({ onCreated }: Props) {
         Privacy
         <select
           name="privacy"
-          value={privacy.current}
-          onChange={(e) => (privacy.current = e.target.value)}
+          value={privacy}
+          onChange={(e) => (setPrivacy(e.target.value))}
         >
           <option value="public">Public (for all users)</option>
           <option value="almost_private">
             Almost Private (for followers onlly)
           </option>
-          <option value="private">Private (for creator)</option>
+          <option value="private">Private (for specific folowers)</option>
         </select>
         {errors.privacy_error && (<p className="errors">{errors.privacy_error}</p>)}
       </label>
@@ -160,7 +160,6 @@ export default function CreatePostForm({ onCreated }: Props) {
       <button type="submit" className="submit-post-btn">Submit Post</button>
     </form>
     </>
-   
   );
 }
 

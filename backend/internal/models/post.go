@@ -28,17 +28,30 @@ type PaginationRequest struct {
 	Limit  int `json:"limit"`  // page size
 }
 
+type ComentPaginationRequest struct {
+	PostId int `json:"post_id"`
+	Offset int `json:"offset"` // 0‑based index
+	Limit  int `json:"limit"`  // page size
+}
+
 type VoteRequest struct {
 	PostID int    `json:"post_id"`
 	Action string `json:"action"` // "like" | "dislike" | "unlike" | "undislike"
 	UserId int
 }
 
-
 type Comment struct {
-    ID        int    `json:"id"`
-    PostID    int    `json:"post_id"`
-    AuthorID  int    `json:"author"` // or `UserID`
-    Comment   string `json:"comment"`
-    CreatedAt string `json:"created_at"`
+	ID     int `json:"id"`
+	PostID int `json:"post_id"`
+
+	AuthorID  int
+	Comment   string   `json:"comment"`
+	CreatedAt string   `json:"created_at"`
+	Author    PostUser `json:"author"` // or `UserID`
+}
+
+type PostUser struct {
+	UserName  string `json:"user_name"`
+	LastName  string `json:"first_name"`
+	FirstName string `json:"last_name"`
 }

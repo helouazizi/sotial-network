@@ -160,29 +160,46 @@ func (r *PostRepository) PostVote(vote models.VoteRequest) error {
 	}
 }
 
-func (r *PostRepository) PostComment(vote models.VoteRequest) error {
-	// Validate action
-	switch vote.Action {
-	case "like", "dislike":
-		// Insert or update the user's reaction
-		_, err := r.db.Exec(`
-			INSERT INTO post_reactions (user_id, post_id, reaction)
-			VALUES (?, ?, ?)
-			ON CONFLICT(user_id, post_id)
-			DO UPDATE SET reaction = excluded.reaction
-		`, vote.UserId, vote.PostID, vote.Action)
-		return err
-
-	case "unlike", "undislike":
-		// Delete the user's reaction
-		_, err := r.db.Exec(`
-			DELETE FROM post_reactions WHERE user_id = ? AND post_id = ?
-		`, vote.UserId, vote.PostID)
-		return err
-
-	default:
-		return errors.New("invalid vote action")
+func (r *PostRepository) GetPostComments(c models.ComentPaginationRequest) ([]models.Comment, error) {
+	query := `
+		SELECT 
+			c.id, c.post_id, c.user_id, c.comment, c.created_at,
+			u.nickname, u.first_name, u.last_name
+		FROM comments c
+		LEFT JOIN users u ON c.user_id = u.id
+		WHERE c.post_id = ?
+		ORDER BY c.created_at ASC
+		
+	`
+	// LIMIT ? OFFSET ?
+	rows, err := r.db.Query(query, c.PostId)
+	if err != nil {
+		return nil, err
 	}
+	defer rows.Close()
+
+	var comments []models.Comment
+	for rows.Next() {
+		var cm models.Comment
+		err := rows.Scan(
+			&cm.ID, &cm.PostID, &cm.AuthorID, &cm.Comment, &cm.CreatedAt,
+			&cm.Author.UserName, &cm.Author.FirstName, &cm.Author.LastName,
+		)
+		if err != nil {
+			return nil, err
+		}
+		if cm.Author.UserName != "" {
+			cm.Author.FirstName = ""
+			cm.Author.LastName = ""
+		}
+		comments = append(comments, cm)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return comments, nil
 }
 
 func (r *PostRepository) CreatePostComment(coment models.Comment) error {

@@ -127,7 +127,10 @@ func (h *PostHandler) HandlePostVote(w http.ResponseWriter, r *http.Request) {
 	}
 	var vote models.VoteRequest
 	if err := json.NewDecoder(r.Body).Decode(&vote); err != nil {
-		http.Error(w, "Invalid input", http.StatusBadRequest)
+		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
+			"message": "Bad request",
+			"status":  http.StatusBadRequest,
+		})
 		return
 	}
 	userId := r.Context().Value("userID").(int)
@@ -151,7 +154,10 @@ func (h *PostHandler) CreatePostComment(w http.ResponseWriter, r *http.Request) 
 
 	var coment models.Comment
 	if err := json.NewDecoder(r.Body).Decode(&coment); err != nil {
-		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
+			"message": "Bad request",
+			"status":  http.StatusBadRequest,
+		})
 		return
 	}
 
@@ -173,4 +179,32 @@ func (h *PostHandler) CreatePostComment(w http.ResponseWriter, r *http.Request) 
 		"message": "Successfully created comment",
 		"status":  http.StatusOK,
 	})
+}
+
+func (h *PostHandler) GetPostComment(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	var coment models.ComentPaginationRequest
+	if err := json.NewDecoder(r.Body).Decode(&coment); err != nil {
+		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
+			"message": "Bad request",
+			"status":  http.StatusBadRequest,
+		})
+		fmt.Println(err)
+		return
+	}
+
+	commnets, err := h.service.GetPostComment(coment)
+	if err != nil {
+		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
+			"message": "Bad request",
+			"status":  http.StatusBadRequest,
+		})
+		fmt.Println(err, "errt")
+		return
+	}
+	utils.ResponseJSON(w, http.StatusOK, commnets)
 }

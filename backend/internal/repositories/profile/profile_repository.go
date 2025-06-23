@@ -2,7 +2,6 @@ package profile
 
 import (
 	"database/sql"
-	"fmt"
 
 	"github.com/ismailsayen/social-network/internal/models"
 )
@@ -129,7 +128,6 @@ func (repo *ProfileRepository) GetPosts(userId int) ([]models.Post, error) {
 
 		posts = append(posts, p)
 	}
-	fmt.Println(posts)
 	return posts, rows.Err()
 }
 

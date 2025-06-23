@@ -1,7 +1,6 @@
-import { Post, Comment } from "@/app/types/post";
+import { Post } from "@/app/types/post";
 import { useState, useEffect } from "react";
-import PostMeta from "./postMeta";
-import PostBody from "./postBody";
+
 import { AiFillLike } from "react-icons/ai";
 import { AiFillDislike } from "react-icons/ai";
 import { FaComment } from "react-icons/fa";
@@ -122,18 +121,6 @@ export default function PostActions({
       </div>
 
       {showComments && (
-        //  <div className="comments-list">
-        //     {post.comments.map((c: Comment, i) => (
-        //       <div className="comment" key={i}>
-        //         <PostMeta
-        //           author={`user-${c.author}`}
-        //           createdAt={c.created_at}
-        //           avatarUrl="/avatar.png"
-        //         />
-        //         <PostBody content={c.comment} title="" media="" />
-        //       </div>
-        //     ))}
-        //  </div>
         <CommentList postId={post.id} />
       )}
     </div>

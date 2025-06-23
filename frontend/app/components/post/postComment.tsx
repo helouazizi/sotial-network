@@ -1,71 +1,80 @@
 import { useState } from "react";
 import { Post } from "@/app/types/post";
 import { BsFillSendFill } from "react-icons/bs";
-export default function PostComment({
-  post,
-  onPostUpdate,
-}: {
 
-
-  
+type PostCommentProps = {
   post: Post;
   onPostUpdate: (id: number, updatedPost: Partial<Post>) => void;
-}) {
-  const [comment, setComment] = useState("");
-  const [sending, setSending] = useState(false);
+};
+
+export default function PostComment({ post, onPostUpdate }: PostCommentProps) {
+  const [commentText, setCommentText] = useState("");
+  const [isSending, setIsSending] = useState(false);
 
   const handleAddComment = async () => {
-    const txt = comment.trim();
+    const trimmed = commentText.trim();
+    if (isSending) return;
 
-    if (txt.length < 3 || sending) return;           
-    setSending(true);
+    setIsSending(true);
 
-    const tempComment = {
-      comment: txt,
-      author: "you",                                 
+    const optimisticComment = {
+      comment: trimmed,
+      author: {user_name :"you",first_name : "You",last_name:"You",avatar : "avatar.png"},
       created_at: new Date().toISOString(),
     };
+
+    // Optimistically update UI
+    const previousComments = post.comments || [];
     onPostUpdate(post.id, {
-      comments: [tempComment, ...(post.comments || [])],
+      comments: [optimisticComment, ...previousComments],
       total_comments: post.total_comments + 1,
     });
-    setComment("");
+
+    setCommentText("");
 
     try {
-      const res = await fetch("http://localhost:8080/api/v1/posts/addComment", {
+      const response = await fetch("http://localhost:8080/api/v1/posts/addComment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "include",                    
+        credentials: "include",
         body: JSON.stringify({
           post_id: post.id,
-          comment: txt,
+          comment: trimmed,
         }),
       });
 
-      if (!res.ok) throw new Error(await res.text());
-     
-    } catch (err) {
-      console.error("❌ comment failed:", err);
+      if (!response.ok) {
+        throw new Error(await response.text());
+      }
+    } catch (error) {
+      console.error("❌ Failed to post comment:", error);
+      // Roll back optimistic update
       onPostUpdate(post.id, {
-        comments: post.comments,                    // restore original slice
+        comments: previousComments,
         total_comments: post.total_comments,
       });
-      alert("Could not save your comment. Please try again.");
+
+      setCommentText(trimmed); // Restore input
     } finally {
-      setSending(false);
+      setIsSending(false);
     }
   };
 
   return (
     <div className="post-comment">
       <input
+        type="text"
         placeholder="Write a comment…"
-        value={comment}
-        onChange={(e) => setComment(e.target.value)}
-        disabled={sending}
+        value={commentText}
+        onChange={(e) => setCommentText(e.target.value)}
+        disabled={isSending}
       />
-      <button onClick={handleAddComment} disabled={sending}>
-      <BsFillSendFill />
+      <button
+        onClick={handleAddComment}
+        disabled={isSending || commentText.trim().length < 3}
+        title="Post comment"
+      >
+        <BsFillSendFill />
       </button>
     </div>
   );

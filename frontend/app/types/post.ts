@@ -15,6 +15,7 @@ export interface Post {
   likes: number;
   dislikes: number;
   total_comments: number;
+  user_vote: string | null;
   comments: Comment[];
 }
 

@@ -9,6 +9,7 @@ type User struct {
 	Lastname    string `json:"lastname"`
 	DateofBirth string `json:"dateofbirth"`
 	AboutMe     string `json:"aboutme"`
+	Avatar      string `json:"avatar"`
 	Token     string
 }
 

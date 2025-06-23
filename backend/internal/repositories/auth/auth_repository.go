@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"database/sql"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -20,9 +21,11 @@ func NewAuthRepo(db *sql.DB) *AuthRepository {
 func (r *AuthRepository) SaveUser(user *models.User) models.Error {
 	duplicate, field, err := r.CheckIfExiste(user)
 	if err.Code != http.StatusOK {
+		fmt.Println("CheckIfExiste")
 		return err
 	}
 	if duplicate {
+		fmt.Println("duplicate")
 		userError := models.UserError{
 			HasErro: true,
 		}
@@ -48,6 +51,7 @@ func (r *AuthRepository) SaveUser(user *models.User) models.Error {
 
 	hashedPassword, errHash := utils.HashPassWord(user.PassWord)
 	if errHash != nil {
+		fmt.Println("HashPassWord")
 		return models.Error{
 			Code:    http.StatusInternalServerError,
 			Message: "Internal Server Error while hashing password",
@@ -64,10 +68,11 @@ func (r *AuthRepository) SaveUser(user *models.User) models.Error {
 		date_of_birth,
 		is_private,
 		about_me,
+		avatar,
 		token,
 		created_at,
 		updated_at
-	) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+	) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?);
 	`
 
 	_, errExec := r.db.Exec(query,
@@ -79,12 +84,15 @@ func (r *AuthRepository) SaveUser(user *models.User) models.Error {
 		user.DateofBirth,
 		0,
 		user.AboutMe,
+		user.Avatar,
 		user.Token,
 		time.Now(),
 		time.Now(),
 	)
 
 	if errExec != nil {
+		fmt.Println(errExec)
+		fmt.Println("db")
 		return models.Error{
 			Code:    http.StatusInternalServerError,
 			Message: "Internal Server Error while saving user",

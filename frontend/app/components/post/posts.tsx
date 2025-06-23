@@ -117,7 +117,7 @@ export default function Posts() {
         {showForm && <CreatePostForm onCreated={addPost} />}
       </section>
 
-      <section className="posts-list space-y-4">
+      <section className="posts-list ">
         {posts.map(post => (
           <PostCard key={post.id} post={post} onPostUpdate={updatePost} />
         ))}

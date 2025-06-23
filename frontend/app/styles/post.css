@@ -197,19 +197,6 @@
   display: flex;
   gap: 1rem;
 
-  button {
-    cursor: pointer;
-    background-color: var(--btn-bg);
-    color: var(--btn-text);
-    padding: 0.5rem 0.75rem;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-  }
 }
 
 
@@ -295,6 +282,46 @@
 }
 
 
+/* =========== vote  */
+.vote-btn {
+  background-color: var(--btn-bg);      /* Neutral base */
+  color: var(--btn-text);               /* Default text color */
+  padding: 0.5rem 0.75rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.vote-btn svg {
+  fill: currentColor;                   /* Icon follows text color */
+}
+
+.vote-btn.like.voted {
+  background-color: var(--accent-color);  
+  color: var(--text-primary);           
+}
+
+.vote-btn.dislike.voted {
+  background-color: var(--accent-color);  
+  color: var(--text-primary);  
+}
+
+/* Optional: hover effects for better UX */
+.vote-btn.like:hover {
+  background-color: var(--online-color-hover, #4a9c68); 
+  color: var(--text-primary);
+}
+
+.vote-btn.dislike:hover {
+  background-color: var(--danger-color-hover, #a84040cc); 
+  color: var(--text-primary);
+}
+
+
 @media (min-width: 500px) {
   .post-card .extra {
     display: none;
@@ -306,18 +333,18 @@
 }
 
 @media (max-width: 480px) {
-  .post-comment {
+  /* .post-comment {
     flex-direction: column;
     align-items: stretch;
-  }
+  } */
 
-  .post-comment button {
+  /* .post-comment button {
     width: 100%;
-  }
+  } */
 
-  .vote-btn {
+  /* .vote-btn {
     flex: 1 1 100%;
-  }
+  } */
 }
 
 

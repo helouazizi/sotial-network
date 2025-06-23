@@ -103,20 +103,20 @@ export default function PostActions({
       <div className="post-btns">
         <button
           onClick={handleLike}
-          className={userVote === "like" ? "vote-btn active" : "vote-btn"}
+           className={`vote-btn like ${userVote === "like" ? "voted" : ""}`}
         >
-          <AiFillLike /> {post.likes} <span className="extra">Like</span>
+          <AiFillLike /> {post.likes} 
         </button>
 
         <button
           onClick={handleDislike}
-          className={userVote === "dislike" ? "vote-btn active" : "vote-btn"}
+         className={`vote-btn dislike ${userVote === "dislike" ? "voted" : ""}`}
         >
-         <AiFillDislike /> {post.dislikes} <span className="extra">Dislike</span>
+         <AiFillDislike /> {post.dislikes} 
         </button>
 
-        <button onClick={() => setShowComments(!showComments)}>
-         <FaComment /> {post.total_comments} <span className="extra">Comment</span>
+        <button className="vote-btn" onClick={() => setShowComments(!showComments)}>
+         <FaComment /> {post.total_comments}
         </button>
       </div>
 

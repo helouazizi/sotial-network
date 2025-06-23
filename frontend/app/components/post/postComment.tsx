@@ -5,6 +5,9 @@ export default function PostComment({
   post,
   onPostUpdate,
 }: {
+
+
+  
   post: Post;
   onPostUpdate: (id: number, updatedPost: Partial<Post>) => void;
 }) {
@@ -17,10 +20,9 @@ export default function PostComment({
     if (txt.length < 3 || sending) return;           
     setSending(true);
 
-    /* ---------- optimistic UI update ---------- */
     const tempComment = {
       comment: txt,
-      author: "you",                                 // change if you have username
+      author: "you",                                 
       created_at: new Date().toISOString(),
     };
     onPostUpdate(post.id, {
@@ -30,11 +32,10 @@ export default function PostComment({
     setComment("");
 
     try {
-      /* ---------- API call ---------- */
       const res = await fetch("http://localhost:8080/api/v1/posts/addComment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "include",                      // cookie / session
+        credentials: "include",                    
         body: JSON.stringify({
           post_id: post.id,
           comment: txt,
@@ -42,12 +43,8 @@ export default function PostComment({
       });
 
       if (!res.ok) throw new Error(await res.text());
-      // Optionally: replace the tempComment with the server-returned comment
-      // const saved = await res.json();
-      // onPostUpdate(post.id, { comments: [saved, ...post.comments!] });
-
+     
     } catch (err) {
-      /* ---------- rollback on failure ---------- */
       console.error("❌ comment failed:", err);
       onPostUpdate(post.id, {
         comments: post.comments,                    // restore original slice
@@ -68,7 +65,7 @@ export default function PostComment({
         disabled={sending}
       />
       <button onClick={handleAddComment} disabled={sending}>
-      <BsFillSendFill /> <span className="extra">Send</span>
+      <BsFillSendFill />
       </button>
     </div>
   );

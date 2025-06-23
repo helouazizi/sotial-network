@@ -33,7 +33,7 @@ export default function SocketProvider({ children }) {
     }, [shouldConnect])
 
     return (
-        <SocketContext.Provider value={{ messages, setMessages }}>
+        <SocketContext.Provider value={{ messages, setMessages, ws }}>
             {children}
         </SocketContext.Provider>
     )

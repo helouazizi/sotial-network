@@ -29,18 +29,24 @@
   background-color: var(--card-bg);
 }
 
-.create-post button {
-  background-color: var(--bg-color);
-  border: none;
+.create-post .submit-post-btn {
   color: var(--btn-text);
   font-size: large;
   cursor: pointer;
   margin: 0px auto;
+  width: 100%;
 }
 
-.create-post button .addPostBtn {
+.create-post .addPostBtn {
+  background-color: var(--bg-color);
+  border: none;
+  color: var(--btn-text);
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+
+.create-post .addPostIcon {
   color: var(--accent-color);
-  font-size: 1.5rem;
 }
 
 .create-post .add-post-holder {
@@ -112,6 +118,11 @@
 .create-post .post-form button[type="submit"]:hover {
   background-color: var(--accent-hover);
 }
+
+
+
+
+
 
 /* =======================POSTS SECTION ======================== */
 
@@ -291,6 +302,19 @@
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* -----------------------------------------------
    Responsiveness
 ----------------------------------------------- */
@@ -309,37 +333,44 @@
   }
 }
 
+
+
+
+
+
 /* =================================== no posts ============================== */
 
-.no-posts-message {
-  text-align: center;
-  padding: 40px 20px;
-  color: #555;
-  background-color: #292323;
-  border: 2px dashed #cfcfcf;
-  border-radius: 8px;
-  margin-top: 20px;
+.no-posts-yet {
+  margin: 0%;
+  height: 400px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  border-radius: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-evenly;
+  justify-content: space-between;
+  border-radius: 8px;
+  border: 2px dashed var(--border-color);
+  padding: 1rem;
+  color: var(--text-primary);
+ 
 }
 
-.no-posts-message h2 {
+.no-posts-yet img {
+  width: 300px;
+  border-radius: 8px;
+}
+
+.no-posts-yet p {
   font-size: 24px;
   margin-bottom: 10px;
   color: #adadad;
 }
 
-.no-posts-message p {
-  font-size: 16px;
-  color: #818181;
-}
 
-.postImg {
-  max-width: 100%;
-  max-height: 300px;
-}
+
+
 
 .errors {
   color: red;

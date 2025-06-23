@@ -3,6 +3,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import CreatePostForm from "./addPost";
 import { Post } from "@/app/types/post";
 import PostCard from "./postcrad";
+import NoPostsYet from "./noPostsYet";
 import { FaPenToSquare } from "react-icons/fa6";
 
 const LIMIT = 10;
@@ -24,7 +25,7 @@ function throttle<T extends (...args: any[]) => void>(fn: T, delay = 500): T {
 
 export default function Posts() {
   const [posts, setPosts] = useState<Post[]>([]);
-    const [showForm, setShowForm] = useState(false);
+  const [showForm, setShowForm] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [loadedOnce, setLoadedOnce] = useState(false);
@@ -104,7 +105,7 @@ export default function Posts() {
     );
   };
 
-    const toggleForm = () => {
+  const toggleForm = () => {
     setShowForm((prev) => !prev); // Step 3
   };
 
@@ -112,8 +113,8 @@ export default function Posts() {
   return (
     <>
       <section className="create-post">
-        <div className="add-post-holder">        <button onClick={toggleForm}><FaPenToSquare className="addPostBtn" /> Add-Post</button></div>
-        {showForm &&<CreatePostForm onCreated={addPost} />}
+        <div className="add-post-holder">        <button className="addPostBtn" onClick={toggleForm}><FaPenToSquare className="addPostIcon" /> Add-Post</button></div>
+        {showForm && <CreatePostForm onCreated={addPost} />}
       </section>
 
       <section className="posts-list space-y-4">
@@ -124,9 +125,8 @@ export default function Posts() {
         {isLoading && <p className="loading">Loading...</p>}
 
         {!isLoading && loadedOnce && posts.length === 0 && (
-          <p className="no-posts">No posts available.</p>
+          <NoPostsYet />
         )}
-
         {!isLoading && !hasMore && posts.length > 0 && (
           <p className="no-posts">No more posts.</p>
         )}

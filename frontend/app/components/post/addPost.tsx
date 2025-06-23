@@ -157,7 +157,7 @@ export default function CreatePostForm({ onCreated }: Props) {
         {errors.privacy_error && (<p className="errors">{errors.privacy_error}</p>)}
       </label>
 
-      <button type="submit">Submit Post</button>
+      <button type="submit" className="submit-post-btn">Submit Post</button>
     </form>
     </>
    

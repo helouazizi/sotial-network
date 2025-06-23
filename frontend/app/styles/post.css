@@ -141,7 +141,7 @@
   flex-direction: column;
   gap: 1rem;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-   margin: 1rem auto;
+  margin: 1rem auto;
 }
 
 .post-card:hover {
@@ -165,7 +165,7 @@
   border: 2px solid var(--accent-color);
 }
 
- .post-card .post-body h2 {
+.post-card .post-body h2 {
   font-size: 1.25rem;
   margin-bottom: 0.5rem;
   color: var(--text-primary);
@@ -185,6 +185,33 @@
   margin-top: 1rem;
   border: 1px solid var(--border-color);
 }
+
+.post-card .post-actions {
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+}
+
+
+.post-card .post-actions .post-btns {
+  display: flex;
+  gap: 1rem;
+
+  button {
+    cursor: pointer;
+    background-color: var(--btn-bg);
+    color: var(--btn-text);
+    padding: 0.5rem 0.75rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+}
+
 
 .post-card .post-comment {
   display: flex;
@@ -220,23 +247,47 @@
   background-color: var(--accent-hover);
 }
 
-.post-card .post-actions {
+
+.post-card .comments-list {
+  max-height: 200px;
+  overflow-y: scroll;
   display: flex;
+  flex-direction: column;
   gap: 1rem;
-  flex-wrap: wrap;
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-bg);
 }
 
-.post-card .vote-btn {
-  background-color: var(--btn-bg);
-  color: var(--btn-text);
-  padding: 0.5rem 0.75rem;
-  border: none;
+.post-card .comments-list .comment {
   border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
+  background-color: var(--offline-color);
+  width: 100%;
+  padding: 0.5rem;
+}
+
+.post-card .comments-list .post-body {
+  overflow-wrap: break-word;
+  margin-left: 3.5rem;
+  color: var(--text-primary);
+}
+
+.post-card .comments-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.post-card .comments-list::-webkit-scrollbar-track {
+  background: var(--scrollbar-bg);
+  border-radius: 8px;
+}
+
+.post-card .comments-list::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb);
+  border-radius: 8px;
+  border: 2px solid var(--scrollbar-bg);
+}
+
+.post-card .comments-list::-webkit-scrollbar-thumb:hover {
+  background-color: var(--accent-hover);
 }
 
 .post-card .vote-btn:hover {
@@ -244,11 +295,10 @@
 }
 
 
-
 @media (min-width: 500px) {
-.post-card .extra {
-  display: none;
-}
+  .post-card .extra {
+    display: none;
+  }
 
   .post-card {
     padding: 2rem;
@@ -313,7 +363,7 @@
   border: 2px dashed var(--border-color);
   padding: 1rem;
   color: var(--text-primary);
- 
+
 }
 
 .no-posts-yet img {

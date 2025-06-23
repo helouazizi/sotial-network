@@ -96,37 +96,41 @@ export default function PostActions({
 
   return (
     <div className="post-actions">
-      <button
-        onClick={handleLike}
-        className={userVote === "like" ? "vote-btn active" : "vote-btn"}
-      >
-        👍 {post.likes} <span className="extra">Like</span>
-      </button>
+      <div className="post-btns">
+        <button
+          onClick={handleLike}
+          className={userVote === "like" ? "vote-btn active" : "vote-btn"}
+        >
+          👍 {post.likes} <span className="extra">Like</span>
+        </button>
 
-      <button
-        onClick={handleDislike}
-        className={userVote === "dislike" ? "vote-btn active" : "vote-btn"}
-      >
-        👎 {post.dislikes} <span className="extra">Dislike</span>
-      </button>
+        <button
+          onClick={handleDislike}
+          className={userVote === "dislike" ? "vote-btn active" : "vote-btn"}
+        >
+          👎 {post.dislikes} <span className="extra">Dislike</span>
+        </button>
 
-      <button onClick={() => setShowComments(!showComments)}>
-        💬 {post.total_comments} <span className="extra">Comment</span>
-      </button>
+        <button onClick={() => setShowComments(!showComments)}>
+          💬 {post.total_comments} <span className="extra">Comment</span>
+        </button>
+      </div>
 
       {showComments && post.comments && (
-        <ul className="comments-list">
+       <div className="comments-list">
+         
           {post.comments.map((c: Comment, i) => (
-            <li key={i}>
+            <div className="comment" key={i}>
               <PostMeta
                 author={`user-${c.author}`}
                 createdAt={c.created_at}
                 avatarUrl="/avatar.png"
               />
               <PostBody content={c.comment} title="" media="" />
-            </li>
+            </div>
           ))}
-        </ul>
+        
+       </div>
       )}
     </div>
   );

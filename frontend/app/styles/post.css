@@ -126,192 +126,6 @@
 
 /* =======================POSTS SECTION ======================== */
 
-.posts-list {
-  list-style: none;
-  margin: 0 auto;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--size-gap-stack);
-  width: min(60%, 800px);
-  max-height: 100dvh;
-  /* overflow-y: auto; */
-}
-
-/* -----------------------------------------------
-   Post Card
------------------------------------------------ */
-.post-card {
-  background: var(--clr-bg-card);
-  padding: 1.5rem;
-  border: 1px solid var(--clr-border-card);
-  border-radius: var(--size-radius-card);
-  box-shadow: 0 4px 8px var(--clr-shadow-card);
-  transition: transform var(--size-transition) ease,
-    box-shadow var(--size-transition) ease;
-}
-
-.post-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px var(--clr-shadow-card-hover);
-}
-
-/* -----------------------------------------------
-   Meta & Avatar
------------------------------------------------ */
-.post-meta {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.9rem;
-  color: var(--clr-meta);
-}
-
-.avatar {
-  inline-size: 32px;
-  block-size: 32px;
-  border-radius: 50%;
-  object-fit: cover;
-  background: red;
-  /* consider using a placeholder color var */
-}
-
-/* -----------------------------------------------
-   Body
------------------------------------------------ */
-.post-body h2 {
-  font-size: 1.4rem;
-  margin-block: 2rem;
-  color: var(--clr-text-heading);
-}
-
-.post-body p {
-  margin-block: 2rem;
-  line-height: 1.6;
-  color: var(--clr-text-body);
-}
-
-/* -----------------------------------------------
-   Actions
------------------------------------------------ */
-.post-actions {
-  margin-top: 1rem;
-  padding-block: 0.75rem;
-  border-top: 1px solid #e0e0e0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.post-actions>div {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.post-actions .extra {
-  color: #555;
-  font-weight: 500;
-}
-
-.post-actions button,
-.post-comment button {
-  padding: 0.5rem 1rem;
-  margin-right: 0.5rem;
-  border: none;
-  border-radius: var(--size-radius-card);
-  font-size: 0.875rem;
-  cursor: pointer;
-  background: var(--clr-action-bg);
-  color: var(--clr-action-text);
-  transition: background-color var(--size-transition) ease;
-}
-
-.post-actions button:hover,
-.post-comment button:hover {
-  background: var(--clr-action-bg-hover);
-}
-
-/* -----------------------------------------------
-   Comment Input
------------------------------------------------ */
-.post-comment {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.post-comment input {
-  flex: 1 1 auto;
-  padding: 0.5rem 0.75rem;
-  border: none;
-  border-radius: var(--size-radius-input);
-  background: var(--clr-text-muted);
-  color: #ffffff;
-  font-size: 1rem;
-  outline: none;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.post-comment input::placeholder {
-  color: #cccccc;
-}
-
-.post-comment input:focus {
-  background: #616161;
-  box-shadow: 0 0 0 2px #888888;
-}
-
-/* -----------------------------------------------
-   Comments List
------------------------------------------------ */
-.comments-list {
-  margin-top: 0.75rem;
-  padding: 0.75rem 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  max-height: 200px;
-  overflow-y: auto;
-  background: var(--clr-comment-bg);
-  border-left: 3px solid var(--clr-comment-border);
-  border-radius: 0 0 var(--size-radius-card) var(--size-radius-card);
-  font-size: 0.875rem;
-  color: #333;
-  transition: max-height 0.3s ease, opacity 0.3s ease;
-}
-
-.comments-list::-webkit-scrollbar {
-  width: 6px;
-}
-
-.comments-list::-webkit-scrollbar-thumb {
-  background: var(--clr-scroll-thumb);
-  border-radius: 3px;
-}
-
-.comments-list::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.comments-list li {
-  list-style: none;
-  padding: 0.5rem 0.75rem;
-  background: var(--clr-bg-card);
-  border-radius: calc(var(--size-radius-card) - 6px);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-}
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -341,7 +155,8 @@
 /* =================================== no posts ============================== */
 
 .no-posts-yet {
-  margin: 0%;
+  margin: 0% auto;
+  max-width: 500px;
   height: 400px;
   background-repeat: no-repeat;
   background-size: cover;
@@ -358,7 +173,7 @@
 }
 
 .no-posts-yet img {
-  width: 300px;
+  max-width: 300px;
   border-radius: 8px;
 }
 

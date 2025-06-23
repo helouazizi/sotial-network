@@ -247,7 +247,7 @@
 
 .post-card .comments-list .comment {
   border-radius: 8px;
-  background-color: var(--offline-color);
+  background-color: var(--bg-color);
   width: 100%;
   padding: 0.5rem;
 }

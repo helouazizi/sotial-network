@@ -14,7 +14,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
   const router = useRouter();
   const pathname = usePathname();
 
-  useEffect(() => {
+
     const checkAuth = async () => {
       try {
         const res = await fetch('http://localhost:8080/app/v1/user/Auth', {
@@ -41,7 +41,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
 
     checkAuth();
 
-  }, [pathname, router]);
+  ;
 
 
   return (

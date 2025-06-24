@@ -1,6 +1,8 @@
 import './globals.css';
 import { ReactNode } from 'react';
-import ClientLayout from './ClientLayout'; // make sure path is correct
+
+import ClientLayout from './ClientLayout';
+
 
 export const metadata = {
   title: "Social Network",
@@ -11,9 +13,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body>
-        <ClientLayout>
+
+        <ClientLayout>Add commentMore actions
           {children}
         </ClientLayout>
+
       </body>
     </html>
   );

@@ -1,12 +1,10 @@
 "use client";
 
-import React  from "react";
-import ProfileHeader from "./ProfileHeader";
+import React from "react";
+import ProfileBody from "./ProfileBody";
 const Profile = () => {
   return (
-    <div className="profile-container">
-      <ProfileHeader />
-    </div>
+    <ProfileBody />
   );
 };
 

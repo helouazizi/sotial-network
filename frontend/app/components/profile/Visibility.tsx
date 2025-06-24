@@ -17,13 +17,13 @@ const Visibility = () => {
         <>
             {
                 dataProfile?.myAccount ?
-                    <>
+                    <div className='switch-visibility'>
                         <label className="switch" >
                             <input type="checkbox" checked={dataProfile?.is_private == 1 ? true : false} onChange={change} />
                             <span className="slider"></span>
                         </label>
-                        {dataProfile?.is_private == 1 ? <p>switch to PUBLIC</p> : <p>switch to PRIVATE</p>}
-                    </>
+                        {dataProfile?.is_private == 1 ? <p style={{color:"#5fdd54"}}>PUBLIC</p> : <p style={{color:"red"}}>PRIVATE</p>}
+                    </div>
                     :
                     ""
             }

@@ -1,22 +1,19 @@
 "use client"
-import Profile from "@/app/components/profile/Profile";
-import { ProfileProvider } from "@/app/context/ProfileContext";
-import { useParams } from "next/navigation";
-interface Props {
-  params: {
-    id: string;
-  };
-}
+
+import Forbiden from "@/app/components/profile/Forbiden";
+import { useProfile } from "@/app/context/ProfileContext";
+
 const ProfileServer = () => {
-  const params = useParams()
-  const id = params.id as string
+
+  const { dataProfile, setDataProfile } = useProfile()
+  
 
   return (
-    <ProfileProvider profileId={id}>
-      <main>
-        <Profile />
-      </main>
-    </ProfileProvider>
+
+    <div className="data-profile">
+      <Forbiden/>
+    </div>
+
   );
 };
 

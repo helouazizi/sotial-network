@@ -26,7 +26,7 @@ func SetupRoutes(app *app.Application) *http.ServeMux {
 	mux.Handle("/api/v1/posts/vote", middleware.AuthMiddleware(http.HandlerFunc(app.PostHandler.HandlePostVote), app.DB))
 
 	//================== chat routes =========================///
-	mux.HandleFunc("/ws", app.ChatHandler.ChatMessagesHandler)
+	mux.HandleFunc("/ws", middleware.AuthMiddleware(http.HandlerFunc(app.ChatHandler.ChatMessagesHandler), app.DB))
 
 	fs := http.FileServer(http.Dir("pkg/db/images"))
 	mux.Handle("/images/", http.StripPrefix("/images/", fs))

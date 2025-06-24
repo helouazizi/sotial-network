@@ -95,6 +95,7 @@ export default function Posts() {
   /* ---- Helpers ---- */
   const addPost = (newPost: Post) => {
     setPosts(prev => [{ ...newPost, id: prev.length + 1 }, ...prev]);
+    setShowForm(false)
   };
 
   const updatePost = (postId: number, updated: Partial<Post>) => {

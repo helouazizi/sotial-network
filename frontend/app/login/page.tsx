@@ -1,16 +1,14 @@
 "use client";
 
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Welcomingmessage from "../components/Auth/welcomingMessage";
-import { SocketContext, SocketContextType } from "../context/socketContext";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const router = useRouter();
-  const { ws } = useContext(SocketContext) as SocketContextType
 
   const handleLogin = async () => {
     setMessage(""); // clear previous messages
@@ -35,10 +33,6 @@ export default function Login() {
     } catch (error) {
       setMessage("Network error. Please try again later.");
     }
-  };
-
-  const handlerClickWebSocket = () => {
-    console.log(ws.current);
   };
 
   return (
@@ -95,8 +89,6 @@ export default function Login() {
         </div>
 
         {message && <p className="user-message">{message}</p>}
-
-        <button onClick={handlerClickWebSocket}>Send to web socket</button>
       </section>
     </div>
   );

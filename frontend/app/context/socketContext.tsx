@@ -22,7 +22,7 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!shouldConnect) {
-      return () => ws.current?.close()
+      return
     }
 
     ws.current = new WebSocket("ws://localhost:8080/ws");

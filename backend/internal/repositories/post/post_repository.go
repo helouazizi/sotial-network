@@ -128,7 +128,6 @@ func (r *PostRepository) GetPosts(userId, start, limit int) ([]models.Post, erro
 		} else {
 			p.MediaLink = ""
 		}
-		fmt.Println(p,"jhghgjh")
 
 		posts = append(posts, p)
 	}

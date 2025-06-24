@@ -23,7 +23,6 @@ export default function CreatePostForm({ onCreated }: Props) {
     const fileInput = form.elements.namedItem("media") as HTMLInputElement;
     const file = fileInput?.files?.[0];
     
-
     if (file) {
       const allowedTypes = [
         "image/jpeg",

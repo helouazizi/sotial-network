@@ -2,7 +2,7 @@ export interface Comment {
   author: Author;
   comment: string;
   created_at: string;
-  media_link: string
+  media_link: string | undefined
 }
 
 export interface Author {
@@ -23,7 +23,6 @@ export interface Post {
   dislikes: number;
   total_comments: number;
   user_vote: string | null;
-  comments: Comment[];
 }
 
 

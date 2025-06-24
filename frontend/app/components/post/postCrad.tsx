@@ -29,7 +29,7 @@ export default function PostCard({ post }: postProps) {
       comment,
       author: { user_name: "you", first_name: "You", last_name: "You", avatar: "avatar.png" },
       created_at: new Date().toISOString(),
-      media_link : ""
+      media_link : img?.name 
     };
     setComments((prev) => [new_comment, ...(prev|| [])]);
     setTotal_comments((prev) => prev + 1);

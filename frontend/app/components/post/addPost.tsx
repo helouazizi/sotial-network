@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import React, { useState } from "react";
 import { Post, PostErrors } from "@/app/types/post";
 
 
@@ -101,7 +100,7 @@ export default function CreatePostForm({ onCreated }: Props) {
         author : "test1",
         likes: 0,
         dislikes : 0,
-        comments: [],
+       
         total_comments : 0 ,
         createdAt :"2025-06-11T13:45:00Z",
         user_vote : null

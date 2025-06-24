@@ -92,7 +92,7 @@ func (s *PostService) PostVote(vote models.VoteRequest) error {
 	return s.repo.PostVote(vote)
 }
 
-func (s *PostService) CreatePostComment(comment models.Comment) error {
+func (s *PostService) CreatePostComment(comment models.Comment, img *models.Image) error {
 	// Validate comment length
 	if len(comment.Comment) < 1 {
 		return errors.New("comment must be at least 1 characters long")
@@ -107,9 +107,45 @@ func (s *PostService) CreatePostComment(comment models.Comment) error {
 		return errors.New("post ID and author ID must be provided")
 	}
 
-	return s.repo.CreatePostComment(comment)
+	err := checkImage(img)
+	if err != nil {
+		return err
+	}
+
+	return s.repo.CreatePostComment(comment, img)
 }
 
 func (s *PostService) GetPostComment(comment models.ComentPaginationRequest) ([]models.Comment, error) {
 	return s.repo.GetPostComments(comment)
+}
+
+func checkImage(img *models.Image) error {
+	if img != nil && (img.ImgHeader != nil || img.ImgContent != nil) {
+		if img.ImgHeader != nil && len(img.ImgHeader.Filename) < 3 {
+			return errors.New("invalid image name")
+		}
+
+		if img.ImgContent != nil {
+			file := img.ImgContent
+			buf := make([]byte, 512)
+			if _, err := file.Read(buf); err != nil {
+				return fmt.Errorf("could not read file: %w", err)
+			}
+			if seeker, ok := file.(io.Seeker); ok {
+				_, _ = seeker.Seek(0, io.SeekStart)
+			}
+
+			allowed := map[string]bool{
+				"image/jpeg": true,
+				"image/png":  true,
+				"image/gif":  true,
+				"image/webp": true,
+			}
+			if ct := http.DetectContentType(buf); !allowed[ct] {
+				return errors.New("unsupported image type")
+			}
+		}
+	}
+
+	return nil
 }

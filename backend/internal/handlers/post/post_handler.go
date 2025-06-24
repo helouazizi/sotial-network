@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/ismailsayen/social-network/internal/models"
@@ -11,6 +12,7 @@ import (
 	"github.com/ismailsayen/social-network/pkg/utils"
 )
 
+const maxUpload = 10 << 20 // 10 MB
 type PostHandler struct {
 	service *services.PostService
 }
@@ -67,7 +69,8 @@ func (h *PostHandler) CreatePost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	userId := r.Context().Value("userID").(int)
-	err := r.ParseMultipartForm(10 << 20) // 10 MB
+	r.Body = http.MaxBytesReader(w, r.Body, maxUpload)
+	err := r.ParseMultipartForm(maxUpload) // 10 MB
 	if err != nil {
 		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
 			"message": "Bad Request",
@@ -153,21 +156,44 @@ func (h *PostHandler) CreatePostComment(w http.ResponseWriter, r *http.Request) 
 	}
 
 	var coment models.Comment
-	if err := json.NewDecoder(r.Body).Decode(&coment); err != nil {
+	r.Body = http.MaxBytesReader(w, r.Body, maxUpload)
+	if err := r.ParseMultipartForm(maxUpload); err != nil {
 		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
-			"message": "Bad request",
+			"message": "invalid multipart form",
 			"status":  http.StatusBadRequest,
 		})
 		return
 	}
 
 	// Replace with actual user ID (e.g. from session or token)
+	postIdStr := r.FormValue("post_id")
+	postId, err := strconv.Atoi(postIdStr)
+	if err != nil {
+		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
+			"message": "invalid multipart form",
+			"status":  http.StatusBadRequest,
+		})
+		return
+	}
+	coment.Comment = r.FormValue("comment")
+	coment.PostID = postId
 	userId := r.Context().Value("userID").(int)
 	coment.AuthorID = userId
 	coment.CreatedAt = time.Now().Format(time.RFC3339)
-	fmt.Println(coment)
 
-	err := h.service.CreatePostComment(coment)
+	//  extartct the image
+	file, header, err := r.FormFile("image")
+	var img *models.Image
+	if err == nil {
+		img = &models.Image{
+			ImgHeader:  header,
+			ImgContent: file,
+		}
+
+		defer file.Close()
+	}
+
+	err = h.service.CreatePostComment(coment, img)
 	if err != nil {
 		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
 			"message": "Bad request",

@@ -201,7 +201,7 @@ func (r *PostRepository) GetPostComments(c models.ComentPaginationRequest) ([]mo
 	return comments, nil
 }
 
-func (r *PostRepository) CreatePostComment(coment models.Comment) error {
+func (r *PostRepository) CreatePostComment(coment models.Comment, img *models.Image) error {
 	_, err := r.db.Exec(`
 		INSERT INTO comments (post_id, user_id, comment, created_at)
 		VALUES (?, ?, ?, ?)

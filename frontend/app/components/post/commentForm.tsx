@@ -3,7 +3,7 @@ import { BsFillSendFill } from "react-icons/bs";
 import { FaImage } from "react-icons/fa";
 
 interface CommentFormProps {
-  onSubmit: (text: string) => void;
+  onSubmit: (comment: string , img : File | null) => void;
 }
 
 export default function CommentPostForm({ onSubmit }: CommentFormProps) {
@@ -37,7 +37,7 @@ export default function CommentPostForm({ onSubmit }: CommentFormProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!comment.trim() && !img) return;
-    onSubmit(comment);
+    onSubmit(comment , img);
     setComment(""); // Clear input after submission
     setImg(null);
   };
@@ -52,6 +52,7 @@ export default function CommentPostForm({ onSubmit }: CommentFormProps) {
           value={comment}
           onChange={(e) => setComment(e.target.value)}
         />
+        {commentErr && (<span>{commentErr}</span>)}
         <button
           type="button"
           className="upload-btn"

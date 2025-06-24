@@ -23,8 +23,8 @@ export default function PostCard({ post }: postProps) {
     setComments(res);
   };
 
-  const newComment = async (comment: string) => {
-    await addComment(post.id, comment);
+  const newComment = async (comment: string , img : File | null) => {
+    await addComment(post.id, comment , img );
     const new_comment = {
       comment,
       author: { user_name: "you", first_name: "You", last_name: "You", avatar: "avatar.png" },

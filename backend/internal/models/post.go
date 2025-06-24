@@ -41,9 +41,8 @@ type VoteRequest struct {
 }
 
 type Comment struct {
-	ID     int `json:"id"`
-	PostID int `json:"post_id"`
-
+	ID        int `json:"id"`
+	PostID    int `json:"post_id"`
 	AuthorID  int
 	Comment   string   `json:"comment"`
 	CreatedAt string   `json:"created_at"`

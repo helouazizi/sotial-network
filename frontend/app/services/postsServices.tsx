@@ -16,13 +16,16 @@ export const getComments = async (post_id: number) => {
     return await res.json()
 }
 
-export const addComment = async (post_id: number, comment: string) => {
+export const addComment = async (post_id: number, comment: string, img: File | null) => {
+    const form = new FormData();
+    form.append("post_id", post_id.toString())
+    form.append("comment", comment)
+    if (img) form.append("image", img)
     const res = await fetch(`${API_URL}/addComment`,
         {
             method: "POST",
             credentials: "include",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ post_id: post_id, comment: comment })
+            body: form
 
         }
     )

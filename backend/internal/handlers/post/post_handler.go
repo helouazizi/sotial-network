@@ -165,6 +165,7 @@ func (h *PostHandler) CreatePostComment(w http.ResponseWriter, r *http.Request) 
 	userId := r.Context().Value("userID").(int)
 	coment.AuthorID = userId
 	coment.CreatedAt = time.Now().Format(time.RFC3339)
+	fmt.Println(coment)
 
 	err := h.service.CreatePostComment(coment)
 	if err != nil {

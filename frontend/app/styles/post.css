@@ -195,40 +195,55 @@
 
 }
 
-
-.post-card .post-comment {
+/*  post comments form */
+.comment-form {
   display: flex;
-  gap: 0.5rem;
   align-items: center;
+  justify-content: space-between;
+  border-radius: 12px;
 }
 
-.post-card .post-comment input {
-  flex: 1;
-  background-color: var(--input-bg);
-  color: var(--input-text);
-  padding: 0.6rem 1rem;
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
+.input-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.comment-input {
+  flex-grow: 1;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 10px;
   outline: none;
+  transition: border 0.2s ease;
 }
 
-.post-card .post-comment input::placeholder {
-  color: var(--text-muted);
+.comment-input:focus {
+  border-color:var(--accent-color);
 }
 
-.post-card .post-comment button {
-  background-color: var(--btn-bg);
-  color: var(--btn-text);
-  padding: 0.6rem 1rem;
+.upload-btn {
+  background: none;
   border: none;
-  border-radius: 8px;
+  font-size: 1.4rem;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  color: var(--info-color);
+  padding: 0.4rem;
+  border-radius: 6px;
+  transition: background 0.2s ease;
 }
 
-.post-card .post-comment button:hover {
-  background-color: var(--accent-hover);
+.upload-btn:hover {
+  background-color: var(--bg-color);
 }
+
+.comment-form  .comment-img-name {
+  color: var(--info-color);
+  font-size: small;
+}
+/* =============== */
+
 
 
 .post-card .comments-list {

@@ -7,7 +7,7 @@ export default function PostBody({
   content: string;
   media: string;
 }) {
-  const baseMediaPath = "http://localhost:8080/images/posts/";
+  const baseMediaPath = "http://localhost:8080/images/posts/undefined";
 
   return (
     <div className="post-body">

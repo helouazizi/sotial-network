@@ -3,6 +3,11 @@ package handlers
 
 import (
 	"net/http"
+	"os"
+	"path/filepath"
+	"strings"
+
+	"github.com/ismailsayen/social-network/pkg/utils"
 )
 
 type ImageHandler struct {
@@ -18,9 +23,20 @@ func NewImageHandler(baseDir string) *ImageHandler {
 }
 
 func (h *ImageHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	// Optional: put extra security / logging here
-	// e.g. validate path, add Cache-Control, etc.
+	relPath := strings.TrimPrefix(r.URL.Path, "/images/")
+	cleanPath := filepath.Clean(relPath)
 
-	// Strip the prefix so /images/foo.png maps to pkg/db/images/foo.png
+	baseDir := "pkg/db/images" // correct relative path from working dir
+	fullPath := filepath.Join(baseDir, cleanPath)
+
+	fileInfo, err := os.Stat(fullPath)
+	if err != nil || fileInfo.IsDir() {
+		utils.ResponseJSON(w, http.StatusNotFound, map[string]any{
+			"message": "Not Found",
+			"status":  http.StatusNotFound,
+		})
+		return
+	}
+
 	http.StripPrefix("/images/", h.fs).ServeHTTP(w, r)
 }

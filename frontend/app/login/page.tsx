@@ -70,7 +70,7 @@ export default function Login() {
           />
         </div>
         <div className="form-buttons">
-          <button type="button" onClick={handleLogin}>Register</button>
+          <button type="button" onClick={handleLogin}>Login</button>
         </div>
         <div className='user-account'>
           <p className='user-account-content'>you don't have an account? :</p>

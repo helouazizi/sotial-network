@@ -26,6 +26,7 @@ func (h *UserHandler) CheckAuth(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
+	
 	utils.ResponseJSON(w, http.StatusOK, map[string]any{
 		"message": " you have the token",
 		"Code":    http.StatusOK,

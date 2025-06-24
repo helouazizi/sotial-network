@@ -1,32 +1,32 @@
 :root {
-  --bg-color: #12111a;
-  --card-bg: #1c1b23;
-  --input-bg: #1a1922;
-  --border-color: #2a2835;
-  --text-primary: #f4f4f8;
-  --text-secondary: #b0acc0;
-  --text-muted: #8e8a9d;
-  --input-text: #ddddee;
-  --accent-color: #a78bfa;
-  --accent-hover: #8b5cf6;
-  --danger-color: #f87171;
-  --warning-color: #fbbf24;
-  --info-color: #60a5fa;
-  --btn-bg: #2b2a35;
-  --btn-text: #e9d5ff;
-  --scrollbar-bg: #1e1e2a;
-  --scrollbar-thumb: #a78bfa;
-  --icon-color: #d8b4fe;
-  --link-color: #c084fc;
-  --shadow-color: rgba(0, 0, 0, 0.6);
-  --online-color: #22c55e;
-  --offline-color: #6b7280;
+    --bg-color: #12111a;
+    --card-bg: #1c1b23;
+    --input-bg: #1a1922;
+    --border-color: #2a2835;
+    --text-primary: #f4f4f8;
+    --text-secondary: #b0acc0;
+    --text-muted: #8e8a9d;
+    --input-text: #ddddee;
+    --accent-color: #a78bfa;
+    --accent-hover: #8b5cf6;
+    --danger-color: #f87171;
+    --warning-color: #fbbf24;
+    --info-color: #60a5fa;
+    --btn-bg: #2b2a35;
+    --btn-text: #e9d5ff;
+    --scrollbar-bg: #1e1e2a;
+    --scrollbar-thumb: #a78bfa;
+    --icon-color: #d8b4fe;
+    --link-color: #c084fc;
+    --shadow-color: rgba(0, 0, 0, 0.6);
+    --online-color: #22c55e;
+    --offline-color: #6b7280;
 }
 
 .profile-container {
     width: 70%;
     height: 100%;
-    padding: 10px 10px;
+    padding: 30px 15px;
     border-radius: 10px;
     border: 1px solid var(--text-secondary);
     margin: auto;
@@ -165,12 +165,36 @@ input:checked+.slider:before {
     border: none;
     font-size: 18px;
     cursor: pointer;
-    background-color: var(--btn-bg);    
-    transition: .5s ease-in-out;    
+    background-color: var(--btn-bg);
+    transition: .5s ease-in-out;
 }
+
 .statique-Profile .follow {
-        color: var(--text-primary);
+    color: var(--text-primary);
 }
-.statique-Profile .follow:hover{
+
+.statique-Profile .follow:hover {
     background-color: var(--accent-hover);
+}
+
+.profile-body {
+    width: 100%;
+
+    padding: 10px 5px;
+    margin: 20px 0;
+}
+
+.navigation-profile {
+    display: flex;
+    li {
+        background-color: var(--btn-bg);
+        padding: 15px 10px;
+        width: 25%;
+        text-align: center;
+        cursor: pointer;
+        a {
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+    }
 }

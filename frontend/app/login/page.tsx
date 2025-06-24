@@ -36,7 +36,7 @@ export default function Login() {
 
   return (
     <div className="login-container">
-      <Welcomingmessage/>
+      <Welcomingmessage />
 
 
       <section id='user-info'>
@@ -69,9 +69,12 @@ export default function Login() {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-
-        <div>
-          <button onClick={handleLogin}>Login</button>
+        <div className="form-buttons">
+          <button type="button" onClick={handleLogin}>Login</button>
+        </div>
+        <div className='user-account'>
+          <p className='user-account-content'>you don't have an account? :</p>
+          <button className='user-account-button' onClick={() => router.push("/register")}> Register</button>
         </div>
 
         {message && <p className='user-message'>{message}</p>}

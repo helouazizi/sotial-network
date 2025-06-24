@@ -2,7 +2,10 @@ package services
 
 import (
 	"fmt"
+	"io"
 	"net/http"
+	"os"
+	"path/filepath"
 
 	"github.com/ismailsayen/social-network/internal/models"
 	repositories "github.com/ismailsayen/social-network/internal/repositories/auth"
@@ -18,7 +21,7 @@ func NewAuthService(Authrepo *repositories.AuthRepository) *AuthService {
 	return &AuthService{repo: Authrepo}
 }
 
-func (s *AuthService) SaveUser(user *models.User) (string, models.Error){
+func (s *AuthService) SaveUser(user *models.User) (string, models.Error) {
 	var Errors models.Error
 
 	// Validation checks
@@ -60,7 +63,6 @@ func (s *AuthService) SaveUser(user *models.User) (string, models.Error){
 
 	// Return early if any validation errors
 	if Errors.UserErrors.HasErro {
-		fmt.Println(Errors, "hi")
 		return "", Errors
 	}
 
@@ -73,39 +75,52 @@ func (s *AuthService) SaveUser(user *models.User) (string, models.Error){
 		}
 	}
 	user.Token = token
+	duplicate, err := s.repo.CheckIfExiste(user)
+	if err.Code != http.StatusOK {
+		fmt.Println("CheckIfExiste")
+		return "", err
+	}
+	if duplicate {
+		userError := models.UserError{
+			HasErro: true,
+			Email:   "Email already exists",
+		}
+
+		msg := "Email already exists"
+
+		return "", models.Error{
+			Code:       http.StatusConflict, // 409 Conflict
+			UserErrors: userError,
+			Message:    msg,
+		}
+	}
 
 	// Save user
 	saveErr := s.repo.SaveUser(user)
 	if saveErr.Code != http.StatusOK {
-		fmt.Println(saveErr , "SaveUser")
+		fmt.Println(saveErr, "SaveUser")
 		return "", saveErr
 	}
 
-
-
-
-	
-
 	// All good, return session
-	return token,  models.Error{Code: http.StatusOK}
+	return token, models.Error{Code: http.StatusOK}
 }
 
 func (s *AuthService) LogUser(user *models.User) (string, models.Error) {
 	if len(user.Email) == 0 {
-		return "",  models.Error{
+		return "", models.Error{
 			Code:    http.StatusBadRequest,
 			Message: "Email cannot be empty",
 		}
 	}
 	if len(user.PassWord) == 0 {
-		return  "",models.Error{
+		return "", models.Error{
 			Code:    http.StatusBadRequest,
 			Message: "Password cannot be empty",
 		}
 	}
 	Err, credentiale := s.repo.GetUserCredential(user)
 	if Err.Code != http.StatusOK {
-		
 		return "", Err
 	}
 	err := utils.ComparePass([]byte(credentiale.Pass), []byte(user.PassWord))
@@ -115,11 +130,47 @@ func (s *AuthService) LogUser(user *models.User) (string, models.Error) {
 			Message: "Invalid credentials ",
 		}
 	}
-	
-       
-	
+
 	return credentiale.Token, models.Error{
-		Code: http.StatusOK,
+		Code:    http.StatusOK,
 		Message: "this operation went smouthly ",
+	}
+}
+
+func (s *AuthService) HundleAvatar(user *models.User) (models.User, models.Error) {
+	if user.FileErr == nil && user.File != nil {
+		defer user.File.Close()
+
+		// Generate a unique filename and save path
+		filename := user.Header.Filename
+		avatarPath := filepath.Join("pkg/db/images/Auth", filename)
+
+		dst, err := os.Create(avatarPath)
+		if err != nil {
+			return models.User{}, models.Error{
+				Code:    http.StatusInternalServerError,
+				Message: "Failed to save avatar",
+			}
+		}
+		defer dst.Close()
+
+		// Copy uploaded file content to destination file
+		_, err = io.Copy(dst, user.File)
+		if err != nil {
+			return models.User{}, models.Error{
+				Code:    http.StatusInternalServerError,
+				Message: "Failed to save avatar",
+			}
+		}
+
+		// Save the path in the user struct
+		user.Avatar = filename
+	} else {
+		// No avatar uploaded, optional - you can set default or leave empty
+		user.Avatar = ""
+	}
+	return *user, models.Error{
+		Code:    http.StatusOK,
+		Message: "avatar ops went smouthly",
 	}
 }

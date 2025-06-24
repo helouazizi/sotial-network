@@ -6,6 +6,7 @@ export interface ProfileInt {
     last_name: string;
     first_name: string;
     email: string;
+    avatar: string;
     date_of_birth: string;
     is_private: number;
     about_me: string;
@@ -14,7 +15,7 @@ export interface ProfileInt {
     nbPosts: number;
     myAccount: boolean;
     posts: Post[];
-    im_follower?: boolean;
+    im_follower: boolean;
     subscription?: Subscription;
 }
 export interface Subscription {

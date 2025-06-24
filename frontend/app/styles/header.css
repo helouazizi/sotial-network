@@ -116,3 +116,33 @@ nav > div {
   vertical-align: middle;
   font-size: 1.35em;
 }
+.user-logout {
+  border: none;
+  outline: none;
+  cursor: pointer;
+  color: var(--text-primary);
+  background: none;
+  font-size: 1.1em;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease-in-out;
+}
+
+.user-logout svg {
+  font-size: 1.35em;
+  color: var(--icon-color);
+  transition: color 0.2s ease-in-out;
+}
+
+.user-logout:hover {
+  background-color: var(--btn-bg);
+  color: var(--accent-hover);
+}
+
+.user-logout:hover svg {
+  color: var(--accent-hover);
+}

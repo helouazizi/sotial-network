@@ -12,86 +12,89 @@
 }
 
 /* Left Section - Branding / Welcome Message */
-.Welcomingmessage {
+#user-welcoming {
   width: 100%;
   max-width: 500px;
   border: 1px solid var(--accent-hover);
   border-radius: 12px;
   padding: 40px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
   background-color: var(--card-bg);
   transition: transform 0.3s ease;
 }
 
-.Welcomingmessage:hover {
+#user-welcoming:hover {
   transform: translateY(-4px);
 }
 
-.Welcomingmessage .logo {
-  font-size: 2.4rem;
-  font-weight: bold;
-  color: var(--accent-color);
-  text-align: center;
-  margin-bottom: 16px;
-  letter-spacing: 0.5px;
-}
-
-.Welcomingmessage .logo span {
-  color: var(--text-primary);
-}
-
-.Welcomingmessage .user-community,
-.Welcomingmessage .user-chat,
-.Welcomingmessage .user-name {
+.user-community,
+.user-chat,
+.user-name {
   display: flex;
   align-items: center;
   gap: 16px;
   margin: 20px auto;
-  max-width: 320px;
-  padding: 12px 16px;
-  background-color: var(--bg-color);
+  max-width: 300px;
+  padding: 10px 14px;
   border-radius: 8px;
   transition: background-color 0.3s ease;
 }
 
-.Welcomingmessage .user-community:hover,
-.Welcomingmessage .user-chat:hover,
-.Welcomingmessage .user-name:hover {
+.user-community:hover,
+.user-chat:hover,
+.user-name:hover {
+  background-color: var(--bg-color);
+}
+
+.user-community-logo,
+.user-chat-logo,
+.user-name-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
   background-color: var(--input-bg);
-}
-
-.Welcomingmessage .user-community-logo,
-.Welcomingmessage .user-chat-logo,
-.Welcomingmessage .user-name-logo {
-  font-size: 1.8rem;
+  font-size: 1.5rem;
   color: var(--icon-color);
+  transition: all 0.3s ease;
 }
 
-.Welcomingmessage .user-community-content,
-.Welcomingmessage .user-chat-content,
-.Welcomingmessage .user-name-content {
+.user-community-logo:hover,
+.user-chat-logo:hover,
+.user-name-logo:hover {
+  background-color: var(--accent-color);
+  color: var(--text-primary);
+  border-color: var(--accent-hover);
+}
+
+.user-community-content,
+.user-chat-content,
+.user-name-content {
   display: flex;
   flex-direction: column;
 }
 
-.Welcomingmessage .user-community-title,
-.Welcomingmessage .user-chat-title,
-.Welcomingmessage .user-name-title {
-  font-size: 1.1rem;
+.user-community-title,
+.user-chat-title,
+.user-name-title {
+  font-size: 1rem;
   margin-bottom: 4px;
   color: var(--text-primary);
 }
 
-.Welcomingmessage .user-community-p,
-.Welcomingmessage .user-chat-p,
-.Welcomingmessage .user-name-p {
-  font-size: 0.9rem;
+.user-community-p,
+.user-chat-p,
+.user-name-p {
+  font-size: 0.85rem;
   color: var(--text-muted);
-  line-height: 1.4;
+  line-height: 1.3;
 }
 
 /* Right Section - Registration Form */
-.register-form {
+#user-info {
   width: 100%;
   max-width: 500px;
   background-color: transparent;
@@ -106,6 +109,20 @@
   gap: 24px;
 }
 
+.register-form h2 {
+  font-size: 1.6rem;
+  text-align: center;
+  margin-bottom: 8px;
+  color: var(--text-primary);
+}
+
+.register-form p {
+  font-size: 0.95rem;
+  text-align: center;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+}
+
 .names {
   display: flex;
   gap: 16px;
@@ -116,17 +133,18 @@
   flex: 1;
 }
 
-.firstname h1,
-.lastname h1,
-.email h1,
-.password h1,
-.username h1,
-.profile h1,
-.dob h1,
-.aboutme h1 {
+.firstname label,
+.lastname label,
+.email label,
+.password label,
+.username label,
+.user-avatar label,
+.dob label,
+.aboutme label {
   font-size: 1rem;
   margin-bottom: 6px;
   color: var(--text-primary);
+  display: block;
 }
 
 .firstname input,
@@ -134,7 +152,7 @@
 .email input,
 .password input,
 .username input,
-.profile input,
+.user-avatar input,
 .dob input,
 .aboutme input {
   width: 100%;
@@ -153,7 +171,7 @@
 .email input:focus,
 .password input:focus,
 .username input:focus,
-.profile input:focus,
+.user-avatar input:focus,
 .dob input:focus,
 .aboutme input:focus {
   border: 1px solid var(--accent-color);
@@ -168,20 +186,45 @@
 }
 
 .username,
-.profile {
+.user-avatar {
   flex: 1;
 }
 
-.aboutme input {
+.aboutme textarea {
+  width: 100%;
   padding: 12px 16px;
+  border: none;
+  border-radius: 6px;
+  background-color: var(--input-bg);
+  color: var(--input-text);
+  font-size: 1rem;
+  resize: vertical;
+  min-height: 80px;
+  outline: none;
 }
 
-.register-form button {
-  width: 100%;
-  padding: 14px;
-  font-size: 1.05rem;
+/* Error Messages */
+.user-error {
+  font-size: 0.85rem;
+  color: var(--danger-color);
+  margin-top: 4px;
+  margin-bottom: 8px;
+}
+
+/* Step Navigation Buttons */
+.form-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  gap: 12px;
+}
+
+.form-buttons button {
+  flex: 1;
+  padding: 12px;
+  font-size: 1rem;
   font-weight: 600;
-  background: linear-gradient(to right, var(--btn-bg), var(--accent-color));
+  background-color: var(--btn-bg);
   color: var(--btn-text);
   border: none;
   border-radius: 6px;
@@ -190,16 +233,60 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-.register-form button:hover {
+.form-buttons button:hover {
   background-color: var(--accent-hover);
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
 }
 
-.register-form p {
-  text-align: center;
-  margin-top: 12px;
-  color: var(--danger-color);
-  font-size: 0.95rem;
-  font-style: italic;
+/* Submit/Register Button (Step 2) */
+.register-form button[type="button"]:last-child {
+  background: linear-gradient(to right, var(--btn-bg), var(--accent-color));
+}
+
+/* Account toggle link */
+.user-account {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.user-account-content {
+  font-size: 16px;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.user-account-button {
+  background-color: var(--btn-bg);
+  color: var(--btn-text);
+  border: none;
+  padding: 8px 16px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.user-account-button:hover {
+  background-color: var(--accent-hover);
+  transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  #user-main {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  #user-welcoming,
+  #user-info {
+    max-width: 100%;
+    width: 100%;
+  }
 }

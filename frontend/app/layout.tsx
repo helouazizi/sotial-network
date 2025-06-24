@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import "./globals.css";
 import Header from "@/app/components/header/header";
+import SocketProvider from "./context/socketContext";
 
 interface RootLayoutProps {
   children: ReactNode;
@@ -8,17 +9,19 @@ interface RootLayoutProps {
 
 export const metadata = {
   title: "Social Network",
-  description:
-    "Social Network is a web app to share and comunnicate with the world",
+  description: "Social Network is a web app to share and communicate with the world",
 };
 
-export default function RootLayout({ children }: RootLayoutProps) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body>
-        <Header />
-        {children}
+        <SocketProvider>
+          <Header />
+          {children}
+        </SocketProvider>
       </body>
     </html>
   );
 }
+

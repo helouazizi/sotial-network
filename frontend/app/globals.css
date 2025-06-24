@@ -6,6 +6,7 @@
 @import url("./styles/register.css");
 @import url("./styles/chat.css");
 @import url("./styles/login.css");
+@import url("./styles/profile.css");
 
 :root {
   --bg-color: #12111a;
@@ -86,12 +87,12 @@ svg {
 
 @media (min-width: 1200px) {
   .container {
-    width: 100%;
+    width: 1200px;
   }
 }
 
-@media (min-width: 1900px) {
+/* @media (min-width: 1900px) {
   .container {
     max-width: 1900px;
   }
-}
+} */

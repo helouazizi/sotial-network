@@ -3,7 +3,6 @@ import React from 'react'
 
 const ProfileStatique = () => {
   const { dataProfile, setDataProfile } = useProfile()
-  console.log(dataProfile);
 
   return (
     <div className='statique-Profile'>

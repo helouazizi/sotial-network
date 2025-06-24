@@ -170,7 +170,7 @@ input:checked+.slider:before {
 }
 
 .statique-Profile .follow {
-    color: var(--text-primary);
+    color: var(--btn-text);
 }
 
 .statique-Profile .follow:hover {
@@ -179,22 +179,58 @@ input:checked+.slider:before {
 
 .profile-body {
     width: 100%;
-
-    padding: 10px 5px;
-    margin: 20px 0;
+    margin-top: 20px;
 }
 
 .navigation-profile {
     display: flex;
+
     li {
         background-color: var(--btn-bg);
         padding: 15px 10px;
         width: 25%;
         text-align: center;
         cursor: pointer;
+        transition: .5s ease-in-out;
+
         a {
             text-decoration: none;
-            color: var(--text-primary);
+            color: var(--btn-text);
+            transition: .5s ease-in-out;
         }
+    }
+
+    li:hover {
+        background-color: var(--card-bg);
+
+        a {
+            color: var(--accent-hover);
+        }
+    }
+}
+
+.navigation-profile .active {
+    background-color: var(--card-bg);
+
+    a {
+        color: var(--accent-hover);
+    }
+}
+
+.data-profile {
+    width: 100%;
+    min-height: 520px;
+    background-color: var(--card-bg);
+}
+
+.data-profile .Forbiden {
+    width: 100%;
+    height: 520px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    svg{
+        width: 100px;
+        height: 100px;
     }
 }

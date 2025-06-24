@@ -6,9 +6,30 @@ import { LuMessageCircleMore } from "react-icons/lu";
 import { IoIosNotifications } from "react-icons/io";
 import { FaUser } from "react-icons/fa";
 import { usePathname } from "next/navigation";
-
+import { IoIosLogOut } from "react-icons/io";
+import { useRouter } from 'next/navigation';
 export default function Header() {
+  const router = useRouter();
   const pathname = usePathname()
+  const handleClickLogout = async () => {
+    try {
+      const res = await fetch("http://localhost:8080/app/v1/user/logout", {
+        method: 'GET',
+        credentials: 'include',
+      });
+      console.log(res);
+
+      if (res.ok) {
+        router.push('/login')
+        console.log("Iam heer");
+
+      }
+
+    } catch (error) {
+      router.push('/login')
+    }
+
+  }
 
   return (
     <header>
@@ -32,7 +53,11 @@ export default function Header() {
           <Link href={"/profile/1"}>
             <button className="profile"><FaUser /></button>
           </Link>
+
+          <button className="user-logout" onClick={handleClickLogout}><IoIosLogOut /></button>
+
         </div>
+
       </nav>
     </header>
   );

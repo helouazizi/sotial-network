@@ -26,7 +26,7 @@ func (h *UserHandler) CheckAuth(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
-	
+
 	utils.ResponseJSON(w, http.StatusOK, map[string]any{
 		"message": " you have the token",
 		"Code":    http.StatusOK,
@@ -124,4 +124,21 @@ func (h *UserHandler) Login(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, cookie)
 
 	utils.ResponseJSON(w, errLog.Code, errLog)
+}
+
+func (h *UserHandler) LogOut(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
+			"message": "Method not allowed",
+			"status":  http.StatusMethodNotAllowed,
+		})
+		return
+	}
+	cookie := &http.Cookie{Name: "Token", Value: "", HttpOnly: true, Path: "/", Secure: false, MaxAge: -1}
+	http.SetCookie(w, cookie)
+
+	utils.ResponseJSON(w, http.StatusOK, map[string]any{
+		"message": "User logout successfully",
+		"Code":    http.StatusOK,
+	})
 }

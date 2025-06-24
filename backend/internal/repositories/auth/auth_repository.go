@@ -83,47 +83,31 @@ func (r *AuthRepository) SaveUser(user *models.User) models.Error {
 	}
 }
 
-func (r *AuthRepository) CheckIfExiste(user *models.User) (bool, string, models.Error) {
-	var emailExists, nicknameExists bool
+func (r *AuthRepository) CheckIfExiste(user *models.User) (bool, models.Error) {
+	var emailExists bool
 
 	// Check if email exists
 	queryEmail := "SELECT EXISTS(SELECT 1 FROM users WHERE email = ?)"
 	err := r.db.QueryRow(queryEmail, user.Email).Scan(&emailExists)
 	if err != nil {
-		return false, "", models.Error{
+		return false,  models.Error{
 			Code:    500,
 			Message: "Internal Server Error while checking email",
 		}
 	}
 
-	// Check if nickname exists only if provided
-	if user.Nickname != "" {
-		queryNickname := "SELECT EXISTS(SELECT 1 FROM users WHERE nickname = ?)"
-		err = r.db.QueryRow(queryNickname, user.Nickname).Scan(&nicknameExists)
-		if err != nil {
-			return false, "", models.Error{
-				Code:    500,
-				Message: "Internal Server Error while checking nickname",
-			}
-		}
-	}
 
 	// Determine what exists
 	if emailExists {
-		return true, "email", models.Error{
+		return true,  models.Error{
 			Code:    409, // Conflict
 			Message: "Email already in use",
 		}
 	}
-	if nicknameExists {
-		return true, "nickname", models.Error{
-			Code:    409, // Conflict
-			Message: "Nickname already in use",
-		}
-	}
+	
 
 	// If neither exists
-	return false, "none", models.Error{
+	return false,models.Error{
 		Code:    200,
 		Message: "No duplicate found",
 	}

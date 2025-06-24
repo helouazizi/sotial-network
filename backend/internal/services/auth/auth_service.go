@@ -63,7 +63,6 @@ func (s *AuthService) SaveUser(user *models.User) (string, models.Error) {
 
 	// Return early if any validation errors
 	if Errors.UserErrors.HasErro {
-	
 		return "", Errors
 	}
 
@@ -76,27 +75,18 @@ func (s *AuthService) SaveUser(user *models.User) (string, models.Error) {
 		}
 	}
 	user.Token = token
-	duplicate, field, err := s.repo.CheckIfExiste(user)
+	duplicate, err := s.repo.CheckIfExiste(user)
 	if err.Code != http.StatusOK {
 		fmt.Println("CheckIfExiste")
-		return"", err
+		return "", err
 	}
 	if duplicate {
 		userError := models.UserError{
 			HasErro: true,
+			Email:   "Email already exists",
 		}
-		msg := ""
 
-		switch field {
-		case "email":
-			userError.Email = "Email already exists"
-			msg = "Email already exists"
-		case "nickname":
-			userError.Nickname = "Nickname already exists"
-			msg = "Nickname already exists"
-		default:
-			msg = "Email or nickname already exists"
-		}
+		msg := "Email already exists"
 
 		return "", models.Error{
 			Code:       http.StatusConflict, // 409 Conflict
@@ -149,7 +139,7 @@ func (s *AuthService) LogUser(user *models.User) (string, models.Error) {
 
 func (s *AuthService) HundleAvatar(user *models.User) (models.User, models.Error) {
 	if user.FileErr == nil && user.File != nil {
-		defer user.File .Close()
+		defer user.File.Close()
 
 		// Generate a unique filename and save path
 		filename := user.Header.Filename
@@ -157,9 +147,8 @@ func (s *AuthService) HundleAvatar(user *models.User) (models.User, models.Error
 
 		dst, err := os.Create(avatarPath)
 		if err != nil {
-		
 			return models.User{}, models.Error{
-				Code:http.StatusInternalServerError ,
+				Code:    http.StatusInternalServerError,
 				Message: "Failed to save avatar",
 			}
 		}
@@ -168,9 +157,8 @@ func (s *AuthService) HundleAvatar(user *models.User) (models.User, models.Error
 		// Copy uploaded file content to destination file
 		_, err = io.Copy(dst, user.File)
 		if err != nil {
-			
 			return models.User{}, models.Error{
-				Code:http.StatusInternalServerError ,
+				Code:    http.StatusInternalServerError,
 				Message: "Failed to save avatar",
 			}
 		}
@@ -181,8 +169,8 @@ func (s *AuthService) HundleAvatar(user *models.User) (models.User, models.Error
 		// No avatar uploaded, optional - you can set default or leave empty
 		user.Avatar = ""
 	}
-	return *user , models.Error{
-		Code: http.StatusOK,
+	return *user, models.Error{
+		Code:    http.StatusOK,
 		Message: "avatar ops went smouthly",
 	}
 }

@@ -1,6 +1,11 @@
-import './globals.css';
-import { ReactNode } from 'react';
-import ClientLayout from './ClientLayout'; // make sure path is correct
+import { ReactNode } from "react";
+import "./globals.css";
+import Header from "@/app/components/header/header";
+import SocketProvider from "./context/socketContext";
+
+interface RootLayoutProps {
+  children: ReactNode;
+}
 
 export const metadata = {
   title: "Social Network",
@@ -11,10 +16,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body>
-        <ClientLayout>
+        <SocketProvider>
+          <Header />
           {children}
-        </ClientLayout>
+        </SocketProvider>
       </body>
     </html>
   );
 }
+

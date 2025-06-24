@@ -17,7 +17,6 @@ export default function PostActions({
   const [userVote, setUserVote] = useState<"like" | "dislike" | null>(null);
   const [showComments, setShowComments] = useState(false);
 
-  /** keep local state in sync with backend value */
   useEffect(() => {
     setUserVote(
       post.user_vote === "like" || post.user_vote === "dislike"

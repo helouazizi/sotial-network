@@ -2,6 +2,7 @@ package profile
 
 import (
 	"database/sql"
+	"fmt"
 
 	"github.com/ismailsayen/social-network/internal/models"
 )
@@ -48,7 +49,6 @@ func (repo *ProfileRepository) GetMyProfile(sessionID, userId int) (*models.Comm
 		return nil, err
 	}
 
-	// Cas : c’est mon propre compte
 	if sessionID == userId {
 		profile.MyAcount = true
 		profile.Posts, err = repo.GetPosts(userId)
@@ -74,11 +74,14 @@ func (repo *ProfileRepository) GetMyProfile(sessionID, userId int) (*models.Comm
 	}
 
 	if profile.IsPrivate == 1 && status != "accepted" {
-		profile.ImFollower = false
+		profile.AboutMe = ""
+		profile.Email = ""
+		profile.DateOfBirth = ""
+		fmt.Println(profile)
 		return &profile, nil
 	}
 
-	profile.ImFollower = (status == "accepted")
+	profile.ImFollower = (status == "accepted") || (profile.IsPrivate == 0)
 
 	profile.Posts, err = repo.GetPosts(userId)
 	if err != nil {

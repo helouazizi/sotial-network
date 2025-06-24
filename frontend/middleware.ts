@@ -23,11 +23,15 @@ export default async function middleware(request: NextRequest) {
     return NextResponse.next()
   } catch (err) {
     console.error("Error :", err)
+    if (request.nextUrl.pathname === "/login" || request.nextUrl.pathname === "/register") {
+      return NextResponse.next()
+    }
+    
     return NextResponse.redirect(new URL("/login", request.nextUrl))
   }
 
 }
 
 export const config = {
-  matcher: ['/', "/login", "/register", "/chat/:path"],
+  matcher: ['/', "/login", "/register", "/chat/:path", "/chat"],
 }

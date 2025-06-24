@@ -1,19 +1,34 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from 'next/server'
 
-export async function middleware(request: NextRequest) {
+// This function can be marked `async` if using `await` inside
+export default async function middleware(request: NextRequest) {
   try {
-    const res = await fetch("http://localhost:8080/app/v1/user/Auth", {
-      credentials: "include",
-    });
-    console.log(res , "res");
-    
-    if (res.ok) {
-      return NextResponse.next();
-    } else {
-      return NextResponse.redirect(new URL("/login", request.url));
+    let response = await fetch('http://localhost:8080/app/v1/user/Auth', {
+      headers: {
+        Cookie: request.headers.get('cookie') || ""
+      }
+    })
+
+    if (!response.ok) {
+      if (request.nextUrl.pathname === "/login" || request.nextUrl.pathname === "/register") {
+        return NextResponse.next()
+      }
+
+     return NextResponse.redirect(new URL("/login", request.nextUrl))
     }
-  } catch (error) {
-    return NextResponse.redirect(new URL("/login", request.url));
+
+    if (request.nextUrl.pathname === "/login" || request.nextUrl.pathname === "/register") {
+      return NextResponse.redirect(new URL("/", request.nextUrl))
+    }
+
+    return NextResponse.next()
+  } catch (err) {
+    console.error("Error :", err)
+    return NextResponse.redirect(new URL("/login", request.nextUrl))
   }
+
+}
+
+export const config = {
+  matcher: ['/', "/login", "/register", "/chat/:path"],
 }

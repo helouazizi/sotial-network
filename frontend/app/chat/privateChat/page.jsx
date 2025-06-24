@@ -1,3 +1,4 @@
+"use client"
 import { FaUser } from "react-icons/fa";
 
 export default function PrivateChat() {
@@ -18,16 +19,6 @@ export default function PrivateChat() {
       <li><FaUser /> Mohammed</li>
       <li><FaUser /> Mohammed</li>
       <li><FaUser /> Mohammed</li>
-      <li><FaUser /> Mohammed</li>
-      <li><FaUser /> Mohammed</li>
-      <li><FaUser /> Mohammed</li>
-      <li><FaUser /> Mohammed</li>
-      <li><FaUser /> Mohammed</li>
-      <li><FaUser /> Mohammed</li>
-      <li><FaUser /> Mohammed</li>
-      <li><FaUser /> Mohammed</li>
-      <li><FaUser /> asqdqsqds</li>
-
     </>
   );
 }

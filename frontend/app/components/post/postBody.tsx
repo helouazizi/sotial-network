@@ -7,19 +7,16 @@ export default function PostBody({
   content: string;
   media: string;
 }) {
+  const baseMediaPath = "http://localhost:8080/images/posts/";
+
   return (
     <div className="post-body">
       <h2>{title}</h2>
       <p>{content}</p>
 
-      {media && (
-        <img
-          src={`http://localhost:8080/images/posts/${media}`}
-          alt={title}
-          className="postImg"
-        />
+      {media && media !== baseMediaPath && (
+        <img src={media} alt={title} className="postImg" />
       )}
     </div>
   );
 }
-

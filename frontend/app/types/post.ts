@@ -1,7 +1,15 @@
 export interface Comment {
-  author: string;
+  author: Author;
   comment: string;
   created_at: string;
+  media_link: string | undefined
+}
+
+export interface Author {
+  user_name : string;
+  first_name : string;
+  last_name : string;
+   avatar : string;
 }
 
 export interface Post {
@@ -10,13 +18,11 @@ export interface Post {
   title: string;
   author: string;
   createdAt: string;
-  media: string;
   media_link: string;
   likes: number;
   dislikes: number;
   total_comments: number;
   user_vote: string | null;
-  comments: Comment[];
 }
 
 

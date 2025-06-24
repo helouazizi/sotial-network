@@ -3,6 +3,8 @@ package app
 import (
 	"database/sql"
 
+	staticHandlers "github.com/ismailsayen/social-network/internal/handlers/static"
+
 	handlers "github.com/ismailsayen/social-network/internal/handlers/auth"
 	repositories "github.com/ismailsayen/social-network/internal/repositories/auth"
 	services "github.com/ismailsayen/social-network/internal/services/auth"
@@ -27,6 +29,7 @@ type Application struct {
 	ChatHandler    *chatHandlers.ChatHandler
 	PostHandler    *posthandlers.PostHandler
 	ProfileHandler *profileHandlers.ProfileHandler
+	StaticHandler  *staticHandlers.ImageHandler
 }
 
 func NewApp(db *sql.DB) *Application {
@@ -46,11 +49,16 @@ func NewApp(db *sql.DB) *Application {
 	ProfileRepo := profileRepo.NewProfileRepository(db)
 	ProfileServices := profileServices.NewProfileService(ProfileRepo)
 	ProfileHandler := profileHandlers.NewProfileHandler(ProfileServices)
+
+	//================ static =========================//
+	staticHAndler := staticHandlers.NewImageHandler("pkg/db/images")
+
 	return &Application{
 		DB:             db,
 		AuthHundler:    AuthHandler,
 		ChatHandler:    ChatHandler,
 		ProfileHandler: ProfileHandler,
 		PostHandler:    PostHandler,
+		StaticHandler:  staticHAndler,
 	}
 }

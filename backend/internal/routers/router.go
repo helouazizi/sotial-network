@@ -11,11 +11,10 @@ func SetupRoutes(app *app.Application) *http.ServeMux {
 	mux := http.NewServeMux()
 
 	//================== user routes =======================///
-	mux.HandleFunc("/app/v1/user/logout",app.AuthHundler.LogOut)
+	mux.HandleFunc("/app/v1/user/logout", app.AuthHundler.LogOut)
 	mux.HandleFunc("/api/v1/user/register", app.AuthHundler.Register)
 	mux.HandleFunc("/api/v1/user/login", app.AuthHundler.Login)
-	mux.HandleFunc("/app/v1/user/Auth" , middleware.AuthMiddleware(http.HandlerFunc(app.AuthHundler.CheckAuth), app.DB))
-
+	mux.HandleFunc("/app/v1/user/Auth", middleware.AuthMiddleware(http.HandlerFunc(app.AuthHundler.CheckAuth), app.DB))
 
 	//================== Profile routes =======================///
 	mux.HandleFunc("/api/v1/profile", middleware.AuthMiddleware(http.HandlerFunc(app.ProfileHandler.ProfileHandler), app.DB))
@@ -30,8 +29,9 @@ func SetupRoutes(app *app.Application) *http.ServeMux {
 	//================== chat routes =========================///
 	mux.HandleFunc("/ws", app.ChatHandler.ChatMessagesHandler)
 
-	fs := http.FileServer(http.Dir("pkg/db/images"))
-	mux.Handle("/images/", http.StripPrefix("/images/", fs))
+	// ================ static ==============================//
+
+	mux.Handle("/images/", app.StaticHandler)
 
 	return mux
 }

@@ -16,7 +16,7 @@ export default function PostCard({ post }: postProps) {
   const [likes, setLikes] = useState(post.likes);
   const [dislikes, setDislikes] = useState(post.dislikes);
   const [total_comments, setTotal_comments] = useState(post.total_comments);
-  const [userVote, setUserVote] = useState<"like" | "dislike" | null>(null);
+  const [userVote, setUserVote] = useState<"like" | "dislike" | null>(post.user_vote === "like" || post.user_vote === "dislike" ? post.user_vote : null);
 
   const fetchComments = async () => {
     const res = await getComments(post.id);

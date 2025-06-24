@@ -41,7 +41,7 @@ func (r *PostRepository) SavePost(post *models.Post, img *models.Image) error {
 		}
 
 		// Sanitize and generate unique filename
-		origName := filepath.Base(img.ImgHeader.Filename) // basic sanitization
+		origName := filepath.Base(time.Now().Format(time.DateTime) + "_" + img.ImgHeader.Filename) // basic sanitization
 
 		path := filepath.Join(dir, origName)
 
@@ -227,7 +227,7 @@ func (r *PostRepository) CreatePostComment(coment models.Comment, img *models.Im
 		}
 
 		// Sanitize and generate unique filename
-		origName := filepath.Base(img.ImgHeader.Filename) // basic sanitization
+		origName := filepath.Base(time.Now().Format(time.DateTime) + "_" + img.ImgHeader.Filename) // basic sanitization
 
 		path := filepath.Join(dir, origName)
 

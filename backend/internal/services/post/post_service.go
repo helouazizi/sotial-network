@@ -36,32 +36,9 @@ func (s *PostService) SavePost(post *models.Post, img *models.Image) error {
 	if !allowedPrivacy[post.Type] {
 		return errors.New("unsuported privacy")
 	}
-
-	if img != nil && (img.ImgHeader != nil || img.ImgContent != nil) {
-		if img.ImgHeader != nil && len(img.ImgHeader.Filename) < 3 {
-			return errors.New("invalid image name")
-		}
-
-		if img.ImgContent != nil {
-			file := img.ImgContent
-			buf := make([]byte, 512)
-			if _, err := file.Read(buf); err != nil {
-				return fmt.Errorf("could not read file: %w", err)
-			}
-			if seeker, ok := file.(io.Seeker); ok {
-				_, _ = seeker.Seek(0, io.SeekStart)
-			}
-
-			allowed := map[string]bool{
-				"image/jpeg": true,
-				"image/png":  true,
-				"image/gif":  true,
-				"image/webp": true,
-			}
-			if ct := http.DetectContentType(buf); !allowed[ct] {
-				return errors.New("unsupported image type")
-			}
-		}
+	err := checkImage(img)
+	if err != nil {
+		return err
 	}
 
 	return s.repo.SavePost(post, img) // img may be nil
@@ -93,10 +70,6 @@ func (s *PostService) PostVote(vote models.VoteRequest) error {
 }
 
 func (s *PostService) CreatePostComment(comment models.Comment, img *models.Image) error {
-	// Validate comment length
-	// if len(comment.Comment) < 1 && img.ImgHeader == nil {
-	// 	return errors.New("comment must be at least 1 characters long")
-	// }
 
 	if len(strings.Fields(comment.Comment)) == 0 && img.ImgHeader == nil {
 		return errors.New("comment must be at least 1 characters long")

@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-// This function can be marked `async` if using `await` inside
 export default async function middleware(request: NextRequest) {
   try {
     let response = await fetch('http://localhost:8080/app/v1/user/Auth', {

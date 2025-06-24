@@ -201,7 +201,7 @@ export default function Register() {
                     )}
                 </form>
 
-                {message && <p>{message}</p>}
+                {message && <p className='user-error'>{message}</p>}
                 <div className='user-account'>
                     <p className='user-account-content'>Alrady have an account? :</p>
                     <button className='user-account-button' onClick={()=> router.push("/login")}> Login</button>

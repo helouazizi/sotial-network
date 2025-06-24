@@ -29,7 +29,6 @@ export default function CommentPostForm({ onSubmit }: CommentFormProps) {
         setCommentErr("file too large")
       }
       setImg(file);
-      console.log(file.name, "comment file")
     }
   };
 

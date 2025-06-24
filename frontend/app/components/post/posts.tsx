@@ -53,13 +53,11 @@ export default function Posts() {
 
       if (Array.isArray(data)) {
         // 👉 On first load (page.current === 0), replace; otherwise append
-        console.log(data, "posts")
         setPosts(prev =>
           page.current === 0
             ? data
             : [...prev, ...data.filter(p => !prev.some(post => post.id === p.id))]
         );
-
         page.current += 1;
 
         if (data.length < LIMIT) setHasMore(false);

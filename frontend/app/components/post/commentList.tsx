@@ -1,46 +1,19 @@
-// app/components/commentList.tsx
-import { useEffect, useState } from "react";
 import { Comment } from "@/app/types/post";
-import PostMeta from "./postMeta";
+import PostHeader from "./postHeader";
 import PostBody from "./postBody";
+interface CommentListProps {
+    comments: Comment[];
+}
 
-export default function CommentList({ postId }: { postId: number }) {
-    const [comments, setComments] = useState<Comment[]>([]);
-    useEffect(() => {
-        const fetchComments = async () => {
-            try {
-                const res = await fetch("http://localhost:8080/api/v1/posts/getComments", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    credentials: "include",
-                    body: JSON.stringify({
-                        post_id: postId,
-                    }),
-                });
-
-                if (!res.ok) throw new Error(await res.text());
-                const data = await res.json();
-                setComments(data);
-            } catch (err: any) {
-                console.error("Failed to load comments:", err);
-
-            }
-        };
-
-        fetchComments();
-    }, [postId]);
-
-
+export default function CommentList({ comments }: CommentListProps) {
     return (
         <div className="comments-list">
-            {comments && comments.map((c, i) => (
-                <div className="comment" key={i}>
-                    <PostMeta
+            {comments && comments.map((c, idx) => (
+                <div key={idx} className="comment">
+                    <PostHeader
                         author={c.author.user_name || `${c.author.first_name}-${c.author.last_name}`}
                         createdAt={c.created_at}
-                        avatarUrl={`http://localhost:8080/images/Auth/${c.author.avatar}`}
+                        avatarUrl={`http://localhost:8080/images/Auth/${c.author.avatar}` || "/avatar.bng"}
                     />
                     <PostBody content={c.comment} title="" media="" />
                 </div>

@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import CreatePostForm from "./addPost";
 import { Post } from "@/app/types/post";
-import PostCard from "./postcrad";
+import PostCard from "./postCrad";
 import NoPostsYet from "./noPostsYet";
 import { FaPenToSquare } from "react-icons/fa6";
 
@@ -113,13 +113,13 @@ export default function Posts() {
   return (
     <>
       <section className="create-post">
-        <div className="add-post-holder">        <button className="addPostBtn" onClick={toggleForm}><FaPenToSquare className="addPostIcon" /> Add-Post</button></div>
+        <div className="add-post-holder"><button className="addPostBtn" onClick={toggleForm}><FaPenToSquare className="addPostIcon" /> Add-Post</button></div>
         {showForm && <CreatePostForm onCreated={addPost} />}
       </section>
 
       <section className="posts-list ">
         {posts.map(post => (
-          <PostCard key={post.id} post={post} onPostUpdate={updatePost} />
+          <PostCard key={post.id} post={post}  /*onPostUpdate={updatePost}*/ />
         ))}
 
         {isLoading && <p className="loading">Loading...</p>}

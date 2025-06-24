@@ -25,7 +25,7 @@ export default function PostActions({
 }: PostActionsProps) {
   const [showComments, setShowComments] = useState(false);
   const [commentsFetched, setCommentsFetched] = useState(false);
-
+  console.log(comments, "jjjjjj")
   const toggleComments = async () => {
     if (!showComments && !commentsFetched) {
       await fetchComments();

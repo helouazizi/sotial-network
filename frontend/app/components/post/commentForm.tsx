@@ -64,7 +64,7 @@ export default function CommentPostForm({ onSubmit }: CommentFormProps) {
         </button>
         <input
           type="file"
-          name="media"
+          name="image"
           accept="image/*,image/gif"
           ref={fileInputRef}
           onChange={handleImageChange}

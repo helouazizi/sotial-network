@@ -4,18 +4,16 @@ import "mime/multipart"
 
 type Post struct {
 	UserId        int
-	ID            int      `json:"id"`
-	Title         string   `json:"title"`
-	Content       string   `json:"content"`
-	Media         []byte   `json:"media,omitempty"`
-	MediaLink     string   `json:"media_link,omitempty"`
-	Likes         int      `json:"likes"`
-	Dislikes      int      `json:"dislikes"`
-	TotalComments int      `json:"total_comments"`
-	UserVote      *string  `json:"user_vote"`
-	Comments      []string `json:"comments"`
-	Type          string   `json:"privacy"`
-	CreatedAt     string   `json:"created_at"`
+	ID            int     `json:"id"`
+	Title         string  `json:"title"`
+	Content       string  `json:"content"`
+	MediaLink     string  `json:"media_link,omitempty"`
+	Likes         int     `json:"likes"`
+	Dislikes      int     `json:"dislikes"`
+	TotalComments int     `json:"total_comments"`
+	UserVote      *string `json:"user_vote"`
+	Type          string  `json:"privacy"`
+	CreatedAt     string  `json:"created_at"`
 }
 
 type Image struct {
@@ -46,6 +44,7 @@ type Comment struct {
 	AuthorID  int
 	Comment   string   `json:"comment"`
 	CreatedAt string   `json:"created_at"`
+	MediaLink string   `json:"media_link,omitempty"`
 	Author    PostUser `json:"author"` // or `UserID`
 }
 

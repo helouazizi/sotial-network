@@ -163,7 +163,7 @@ func (r *PostRepository) PostVote(vote models.VoteRequest) error {
 func (r *PostRepository) GetPostComments(c models.ComentPaginationRequest) ([]models.Comment, error) {
 	query := `
 		SELECT 
-			c.id, c.post_id, c.user_id, c.comment, c.created_at,
+			c.id, c.post_id, c.user_id, c.comment, c.media, c.created_at,
 			u.nickname, u.first_name, u.last_name , u.avatar
 		FROM comments c
 		LEFT JOIN users u ON c.user_id = u.id
@@ -180,8 +180,9 @@ func (r *PostRepository) GetPostComments(c models.ComentPaginationRequest) ([]mo
 	var comments []models.Comment
 	for rows.Next() {
 		var cm models.Comment
+		var media sql.NullString
 		err := rows.Scan(
-			&cm.ID, &cm.PostID, &cm.AuthorID, &cm.Comment, &cm.CreatedAt,
+			&cm.ID, &cm.PostID, &cm.AuthorID, &cm.Comment, &media, &cm.CreatedAt,
 			&cm.Author.UserName, &cm.Author.FirstName, &cm.Author.LastName, &cm.Author.Avatar,
 		)
 		if err != nil {
@@ -190,6 +191,11 @@ func (r *PostRepository) GetPostComments(c models.ComentPaginationRequest) ([]mo
 		if cm.Author.UserName != "" {
 			cm.Author.FirstName = ""
 			cm.Author.LastName = ""
+		}
+		if media.Valid {
+			cm.MediaLink = media.String
+		} else {
+			cm.MediaLink = ""
 		}
 		comments = append(comments, cm)
 	}
@@ -202,9 +208,52 @@ func (r *PostRepository) GetPostComments(c models.ComentPaginationRequest) ([]mo
 }
 
 func (r *PostRepository) CreatePostComment(coment models.Comment, img *models.Image) error {
-	_, err := r.db.Exec(`
-		INSERT INTO comments (post_id, user_id, comment, created_at)
-		VALUES (?, ?, ?, ?)
-	`, coment.PostID, coment.AuthorID, coment.Comment, coment.CreatedAt)
+	const qry = `
+		INSERT INTO comments (post_id, user_id, comment,media, created_at)
+		VALUES (?, ?, ?, ?, ?)
+	`
+	var fileName sql.NullString // will be NULL if no image
+
+	if img != nil && img.ImgContent != nil && img.ImgHeader != nil {
+		// Reset file read pointer
+		if seeker, ok := (img.ImgContent).(io.Seeker); ok {
+			_, _ = seeker.Seek(0, io.SeekStart)
+		}
+
+		// Ensure directory exists
+		const dir = "pkg/db/images/comments"
+		if err := os.MkdirAll(dir, 0o755); err != nil {
+			return fmt.Errorf("ensure image dir: %w", err)
+		}
+
+		// Sanitize and generate unique filename
+		origName := filepath.Base(img.ImgHeader.Filename) // basic sanitization
+
+		path := filepath.Join(dir, origName)
+
+		dst, err := os.Create(path)
+		if err != nil {
+			return fmt.Errorf("create image file: %w", err)
+		}
+
+		_, err = io.Copy(dst, img.ImgContent)
+		dst.Close() // close file after copy
+		if err != nil {
+			return fmt.Errorf("write image: %w", err)
+		}
+
+		fileName = sql.NullString{String: origName, Valid: true}
+	}
+
+	stmt, err := r.db.Prepare(qry)
+	if err != nil {
+		return fmt.Errorf("prepare stmt: %w", err)
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(
+		coment.PostID, coment.AuthorID, coment.Comment, fileName, coment.CreatedAt,
+	)
+
 	return err
 }

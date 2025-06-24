@@ -2,6 +2,7 @@ export interface Comment {
   author: Author;
   comment: string;
   created_at: string;
+  media_link: string
 }
 
 export interface Author {
@@ -17,7 +18,6 @@ export interface Post {
   title: string;
   author: string;
   createdAt: string;
-  media: string;
   media_link: string;
   likes: number;
   dislikes: number;

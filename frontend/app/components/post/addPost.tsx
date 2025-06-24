@@ -11,7 +11,7 @@ type Props = {
 export default function CreatePostForm({ onCreated }: Props) {
   const [errors, setErrors] = useState<PostErrors>({})
   const[ privacy,setPrivacy] = useState("public");
-  const router = useRouter();
+  // const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,7 +20,7 @@ export default function CreatePostForm({ onCreated }: Props) {
     formData.append("privacy", privacy);
     
     // ============ validate data in front ================//
-    const fileInput = form.elements.namedItem("media") as HTMLInputElement;
+    const fileInput = form.elements.namedItem("image") as HTMLInputElement;
     const file = fileInput?.files?.[0];
     
     if (file) {
@@ -75,7 +75,6 @@ export default function CreatePostForm({ onCreated }: Props) {
       "almost_private",
       "private",
     ];
-    const privacyy = formData.get("privacy")?.toString().trim();
     if (
       !allowedPrivacy.includes(privacy)
     ) {
@@ -105,13 +104,12 @@ export default function CreatePostForm({ onCreated }: Props) {
         comments: [],
         total_comments : 0 ,
         createdAt :"2025-06-11T13:45:00Z",
-        media : "",
         user_vote : null
 
       }
       onCreated(newPost)
-      console.log(res.status)
-      router.push("/");
+      // console.log(res.status)
+      // router.push("/");
     } else {
       alert("Failed to create post.");
     }
@@ -136,7 +134,7 @@ export default function CreatePostForm({ onCreated }: Props) {
 
       <label>
         Image or GIF
-        <input type="file" name="media" accept="image/*,image/gif" />
+        <input type="file" name="image" accept="image/*,image/gif" />
         {errors.image_error && (<p className="errors">{errors.image_error}</p>)}
       </label>
 
@@ -145,7 +143,7 @@ export default function CreatePostForm({ onCreated }: Props) {
         <select
           name="privacy"
           value={privacy}
-          onChange={(e) => (setPrivacy(e.target.value))}
+          onChange={(e) => (setPrivacy(e.target.value.trim()))}
         >
           <option value="public">Public (for all users)</option>
           <option value="almost_private">

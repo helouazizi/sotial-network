@@ -14,7 +14,7 @@ export default function PostBody({
 
       {media && (
         <img
-          src={`http://localhost:8080/images/posts/${media}`}
+          src={media}
           alt={title}
           className="postImg"
         />

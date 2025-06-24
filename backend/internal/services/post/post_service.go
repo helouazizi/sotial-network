@@ -94,14 +94,13 @@ func (s *PostService) PostVote(vote models.VoteRequest) error {
 
 func (s *PostService) CreatePostComment(comment models.Comment, img *models.Image) error {
 	// Validate comment length
-	if len(comment.Comment) < 1 {
+	// if len(comment.Comment) < 1 && img.ImgHeader == nil {
+	// 	return errors.New("comment must be at least 1 characters long")
+	// }
+
+	if len(strings.Fields(comment.Comment)) == 0 && img.ImgHeader == nil {
 		return errors.New("comment must be at least 1 characters long")
 	}
-
-	if len(strings.Fields(comment.Comment)) == 0 {
-		return errors.New("comment must be at least 1 characters long")
-	}
-
 	// Optional: Validate post ID and author ID
 	if comment.PostID <= 0 || comment.AuthorID <= 0 {
 		return errors.New("post ID and author ID must be provided")

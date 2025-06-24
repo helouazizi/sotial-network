@@ -91,7 +91,7 @@ func (h *PostHandler) CreatePost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Try to read the file
-	file, header, err := r.FormFile("media")
+	file, header, err := r.FormFile("image")
 	var img *models.Image // nil unless file is provided
 
 	if err == nil {
@@ -199,7 +199,7 @@ func (h *PostHandler) CreatePostComment(w http.ResponseWriter, r *http.Request) 
 			"message": "Bad request",
 			"status":  http.StatusBadRequest,
 		})
-		fmt.Println(err, "errt")
+		fmt.Println(err, "here")
 		return
 	}
 	utils.ResponseJSON(w, http.StatusOK, map[string]any{

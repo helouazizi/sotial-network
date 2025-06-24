@@ -100,7 +100,6 @@ export default function CreatePostForm({ onCreated }: Props) {
         author : "test1",
         likes: 0,
         dislikes : 0,
-       
         total_comments : 0 ,
         createdAt :"2025-06-11T13:45:00Z",
         user_vote : null

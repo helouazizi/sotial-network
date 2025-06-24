@@ -1,24 +1,26 @@
 :root {
-    --bg-color: #12111a;
-    --card-bg: #1c1b23;
-    --input-bg: #1a1922;
-    --border-color: #2a2835;
-    --text-primary: #f4f4f8;
-    --text-secondary: #b0acc0;
-    --text-muted: #8e8a9d;
-    --input-text: #ddddee;
-    --accent-color: #a78bfa;
-    --accent-hover: #8b5cf6;
-    --danger-color: #f87171;
-    --warning-color: #fbbf24;
-    --info-color: #60a5fa;
-    --btn-bg: #2b2a35;
-    --btn-text: #e9d5ff;
-    --scrollbar-bg: #1a1a25;
-    --scrollbar-thumb: #7c3aed;
-    --icon-color: #d8b4fe;
-    --link-color: #c084fc;
-    --shadow-color: rgba(0, 0, 0, 0.6);
+  --bg-color: #12111a;
+  --card-bg: #1c1b23;
+  --input-bg: #1a1922;
+  --border-color: #2a2835;
+  --text-primary: #f4f4f8;
+  --text-secondary: #b0acc0;
+  --text-muted: #8e8a9d;
+  --input-text: #ddddee;
+  --accent-color: #a78bfa;
+  --accent-hover: #8b5cf6;
+  --danger-color: #f87171;
+  --warning-color: #fbbf24;
+  --info-color: #60a5fa;
+  --btn-bg: #2b2a35;
+  --btn-text: #e9d5ff;
+  --scrollbar-bg: #1e1e2a;
+  --scrollbar-thumb: #a78bfa;
+  --icon-color: #d8b4fe;
+  --link-color: #c084fc;
+  --shadow-color: rgba(0, 0, 0, 0.6);
+  --online-color: #22c55e;
+  --offline-color: #6b7280;
 }
 
 .profile-container {
@@ -31,10 +33,11 @@
 }
 
 .profile-header {
-    width: 100%;
+    width: 82%;
     display: flex;
+    justify-content: space-evenly;
+    margin: auto;
 
-    gap: 10px;
 }
 
 .avatar-profile {
@@ -57,7 +60,8 @@
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
-    h3{
+
+    h3 {
         display: flex;
         align-items: center;
     }
@@ -115,4 +119,58 @@ input:checked+.slider {
 
 input:checked+.slider:before {
     transform: translateX(1.5em);
+}
+
+.switch-visibility {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.left-sec {
+    display: flex;
+    gap: 10px;
+}
+
+.statique-Profile {
+    width: 38%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.statique-Profile .numbers {
+    display: flex;
+    justify-content: space-between;
+}
+
+.statique-Profile .numbers div {
+    text-align: center;
+
+    p {
+        color: var(--text-secondary);
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    h1 {
+        color: var(--accent-color);
+    }
+}
+
+.statique-Profile button {
+    padding: 8px 4px;
+    margin-top: 10px;
+    border-radius: 8px;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    background-color: var(--btn-bg);    
+    transition: .5s ease-in-out;    
+}
+.statique-Profile .follow {
+        color: var(--text-primary);
+}
+.statique-Profile .follow:hover{
+    background-color: var(--accent-hover);
 }

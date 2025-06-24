@@ -78,7 +78,7 @@ func (repo *ProfileRepository) GetMyProfile(sessionID, userId int) (*models.Comm
 		return &profile, nil
 	}
 
-	profile.ImFollower = (status == "accepted")
+	profile.ImFollower = (status == "accepted") || (profile.IsPrivate == 0)
 
 	profile.Posts, err = repo.GetPosts(userId)
 	if err != nil {

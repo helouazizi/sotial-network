@@ -77,7 +77,7 @@ export default function PostCard({ post }: postProps) {
   return (
     <div className="post-card">
       <PostHeader author={`test-user`} createdAt="2025-06-11T13:45:00Z" avatarUrl="/avatar.png" />
-      <PostBody title={post.title} content={post.content} media={`http://localhost:8080/images/posts/${post.media_link}`} />
+      <PostBody title={post.title} content={post.content} media={post.media_link} body_type='post' />
       <CommentPostForm onSubmit={newComment} />
       <PostActions
         likes={likes}

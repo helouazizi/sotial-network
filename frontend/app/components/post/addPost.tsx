@@ -10,7 +10,8 @@ type Props = {
 export default function CreatePostForm({ onCreated }: Props) {
   const [errors, setErrors] = useState<PostErrors>({})
   const [privacy, setPrivacy] = useState("public");
-  // const router = useRouter();
+  const [sharedWith, setSharedWith] = useState<string[]>([]);
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,7 +30,7 @@ export default function CreatePostForm({ onCreated }: Props) {
         "image/gif",
         "image/webp",
       ];
-      const maxSize = 10 * 1024 * 1024; // 10MB
+      const maxSize = 10 * 1024 * 1024;
 
       if (!allowedTypes.includes(file.type)) {
         setErrors((prev: PostErrors) => ({
@@ -46,9 +47,6 @@ export default function CreatePostForm({ onCreated }: Props) {
         }));
         return;
       }
-
-      // Optional: Check dimensions
-      // await validateImageDimensions(file);
     }
 
     const title = formData.get("title")?.toString().trim();
@@ -64,7 +62,7 @@ export default function CreatePostForm({ onCreated }: Props) {
     if (typeof body !== "string" || body.length < 1 || body.length > 500) {
       setErrors((prev: PostErrors) => ({
         ...prev,
-        body_error: "TBody must be betwen {1-500} characters",
+        body_error: "Body must be betwen {1-500} characters",
       }));
       return;
     }
@@ -83,6 +81,13 @@ export default function CreatePostForm({ onCreated }: Props) {
       }));
       return;
     }
+
+    //  send users lists
+    // if (privacy === "private" && sharedWith.length > 0) {
+    //   sharedWith.forEach((username) => {
+    //     formData.append("shared_with", username);
+    //   });
+    // }
 
     const res = await fetch("http://localhost:8080/api/v1/posts/create", {
       method: "POST",
@@ -103,11 +108,9 @@ export default function CreatePostForm({ onCreated }: Props) {
         total_comments: 0,
         createdAt: "2025-06-11T13:45:00Z",
         user_vote: null
-
       }
       onCreated(newPost)
-      // console.log(res.status)
-      // router.push("/");
+      console.log(sharedWith,"folowers")
     } else {
       alert("Failed to create post.");
     }
@@ -115,7 +118,6 @@ export default function CreatePostForm({ onCreated }: Props) {
 
   return (
     <>
-
       <form onSubmit={handleSubmit} className="post-form">
         <h2>Create a Post</h2>
         <label>
@@ -151,7 +153,30 @@ export default function CreatePostForm({ onCreated }: Props) {
           </select>
           {errors.privacy_error && (<p className="errors">{errors.privacy_error}</p>)}
         </label>
-
+        {privacy === "private" && (
+          <div className="share-with-users">
+            <label className="share-with-label">Share with specific folowers</label>
+            <ul className="user-checkbox-list">
+              {["user1", "user2", "user3","user4"].map((username) => (
+                <li key={username} className="user-checkbox-item">
+                  <div className="post-folowers-user">{username}</div>
+                  <input
+                    type="checkbox"
+                    value={username}
+                    checked={sharedWith.includes(username)}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setSharedWith([...sharedWith, username]);
+                      } else {
+                        setSharedWith(sharedWith.filter((u) => u !== username));
+                      }
+                    }}
+                  />
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
         <button type="submit" className="submit-post-btn">Submit Post</button>
       </form>
     </>

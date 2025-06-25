@@ -6,7 +6,7 @@ import { FaUnlock } from 'react-icons/fa';
 import { FaLock } from 'react-icons/fa6';
 import ProfileStatique from './ProfileStatique';
 
-const generateAvatar = (firstName?: string, lastName?: string) => {
+export const GenerateAvatar = (firstName?: string, lastName?: string) => {
   const firstInitial = firstName?.charAt(0).toUpperCase() || '';
   const lastInitial = lastName?.charAt(0).toUpperCase() || '';
 
@@ -26,7 +26,7 @@ const ProfileHeader = () => {
             className="avatar-profile"
           />
         ) : (
-          <div className="avatar-profile"><h2>{generateAvatar(dataProfile?.first_name, dataProfile?.last_name)}</h2></div>
+          <div className="avatar-profile"><h2>{GenerateAvatar(dataProfile?.first_name, dataProfile?.last_name)}</h2></div>
         )}
         <div className="full-name-profile">
           <h3>{dataProfile?.first_name?.toUpperCase()} {dataProfile?.last_name?.toUpperCase()}  {dataProfile?.is_private == 1 ? <FaLock /> : <FaUnlock />}</h3>

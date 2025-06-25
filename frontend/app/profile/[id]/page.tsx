@@ -8,10 +8,13 @@ const ProfileServer = () => {
   const { dataProfile, setDataProfile } = useProfile()
   
 
+
   return (
 
     <div className="data-profile">
-      <Forbiden/>
+      {
+        dataProfile?.myAccount || dataProfile?.im_follower?<h3>hello</h3>:<Forbiden />
+      }
     </div>
 
   );

@@ -84,6 +84,7 @@ func (h *ChatHandler) ChatMessagesHandler(w http.ResponseWriter, r *http.Request
 
 			conn.WriteJSON(map[string]any {
 				"data": user,
+				"type": "getUser",
 			})
 		default:
 			err = h.service.SaveMessage(&chat)

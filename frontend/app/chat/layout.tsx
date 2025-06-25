@@ -1,14 +1,20 @@
+"use client"
+
 import { FaUser } from "react-icons/fa";
 import ChatNav from "../components/chat/chatNav";
 import ChatFooter from "../components/chat/chatFooter";
+import { ReactNode, useContext } from "react";
+import { SocketContext } from "../context/socketContext";
 
-export default function ChatLayout({ children }) {
+export default function ChatLayout({ children } : {children : ReactNode}) {
+  const {user} = useContext(SocketContext) ?? {}
+
   return (
     <main className="container chatPage">
       <section className="sidebar">
         <div className="myName">
           <p>
-            <FaUser /> Africano
+            <FaUser /> {user?.nickname}
           </p>
         </div>
         <div className="friends">

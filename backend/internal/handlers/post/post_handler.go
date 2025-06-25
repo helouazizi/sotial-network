@@ -235,3 +235,22 @@ func (h *PostHandler) GetPostComment(w http.ResponseWriter, r *http.Request) {
 	}
 	utils.ResponseJSON(w, http.StatusOK, commnets)
 }
+
+func (h *PostHandler) GetFolowers(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+	userId := r.Context().Value("userID").(int)
+
+	folowers, err := h.service.GetFolowers(userId)
+	if err != nil {
+		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
+			"message": "Bad request",
+			"status":  http.StatusBadRequest,
+		})
+		fmt.Println(err, "errt")
+		return
+	}
+	utils.ResponseJSON(w, http.StatusOK, folowers)
+}

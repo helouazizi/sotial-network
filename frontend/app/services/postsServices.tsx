@@ -43,3 +43,18 @@ export const votePost = async (post_id: number, action: "like" | "dislike" | "un
     });
     if (!res.ok) throw new Error(await res.text());
 };
+
+
+export const GetFolowers = async ()/*: Promise<PostFollower[]>*/ => {
+  const res = await fetch(`${API_URL}/folowers`, {
+    method: "GET",
+    credentials: "include",
+  });
+
+  if (!res.ok) {
+    const errorText = await res.text();
+    throw new Error(`Failed to fetch followers: ${errorText}`);
+  }
+
+  return res.json();
+};

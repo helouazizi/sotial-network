@@ -54,3 +54,8 @@ type PostUser struct {
 	FirstName string `json:"last_name"`
 	Avatar    string `json:"avatar"`
 }
+
+type PostFolower struct {
+	User PostUser `json:"author"`
+	Id   int      `json:"id"`
+}

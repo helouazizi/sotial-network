@@ -32,7 +32,8 @@ export interface PostErrors {
   privacy_error?: string
 }
 
-export interface Follower extends Author {
+export interface Follower  {
+  author : Author
   id: number;
 }
 

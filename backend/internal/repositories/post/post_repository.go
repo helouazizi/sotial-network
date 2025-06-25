@@ -257,3 +257,38 @@ func (r *PostRepository) CreatePostComment(coment models.Comment, img *models.Im
 
 	return err
 }
+
+func (r *PostRepository) GetFollowers(userID int) ([]models.PostFolower, error) {
+	const query = `
+		SELECT id, nickname, first_name, last_name, avatar
+		FROM users;
+	`
+
+	rows, err := r.db.Query(query)
+	if err != nil {
+		return nil, fmt.Errorf("query all users: %w", err)
+	}
+	defer rows.Close()
+
+	var followers []models.PostFolower
+
+	for rows.Next() {
+		var f models.PostFolower
+		if err := rows.Scan(
+			&f.Id,
+			&f.User.UserName,
+			&f.User.FirstName,
+			&f.User.LastName,
+			&f.User.Avatar,
+		); err != nil {
+			return nil, fmt.Errorf("scan user: %w", err)
+		}
+		followers = append(followers, f)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return followers, nil
+}

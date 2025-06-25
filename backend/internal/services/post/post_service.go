@@ -70,7 +70,6 @@ func (s *PostService) PostVote(vote models.VoteRequest) error {
 }
 
 func (s *PostService) CreatePostComment(comment models.Comment, img *models.Image) error {
-
 	if len(strings.Fields(comment.Comment)) == 0 && img.ImgHeader == nil {
 		return errors.New("comment must be at least 1 characters long")
 	}
@@ -89,6 +88,10 @@ func (s *PostService) CreatePostComment(comment models.Comment, img *models.Imag
 
 func (s *PostService) GetPostComment(comment models.ComentPaginationRequest) ([]models.Comment, error) {
 	return s.repo.GetPostComments(comment)
+}
+
+func (s *PostService) GetFolowers(userID int) ([]models.PostFolower, error) {
+	return s.repo.GetFollowers(userID)
 }
 
 func checkImage(img *models.Image) error {

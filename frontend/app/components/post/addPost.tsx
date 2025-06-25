@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
-import { Post, PostErrors } from "@/app/types/post";
+import React, { useState, useEffect } from "react";
+import { Post, PostErrors, Follower } from "@/app/types/post";
 import { BuildMediaLinkCAS } from "@/app/utils/posts";
+import { GetFolowers } from "@/app/services/postsServices";
 
 type Props = {
   onCreated: (newPost: Post) => void;
@@ -10,8 +11,27 @@ type Props = {
 export default function CreatePostForm({ onCreated }: Props) {
   const [errors, setErrors] = useState<PostErrors>({})
   const [privacy, setPrivacy] = useState("public");
-  const [sharedWith, setSharedWith] = useState<string[]>([]);
+  const [followers, setFollowers] = useState<Follower[]>([]);
+  const [sharedWith, setSharedWith] = useState<number[]>([]);
 
+  useEffect(() => {
+    if (privacy !== "private") {
+      setFollowers([]);
+      setSharedWith([]);
+      return;
+    }
+
+    GetFolowers()
+      .then((data) => setFollowers(data))
+      .catch((err) => console.error("Failed to load followers", err));
+  }, [privacy]);
+
+  /* -------------------------------------------------------------- */
+  const handleToggleFollower = (id: number, checked: boolean) => {
+    setSharedWith((prev) =>
+      checked ? [...prev, id] : prev.filter((uid) => uid !== id)
+    );
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -81,13 +101,13 @@ export default function CreatePostForm({ onCreated }: Props) {
       }));
       return;
     }
-
-    //  send users lists
     // if (privacy === "private" && sharedWith.length > 0) {
-    //   sharedWith.forEach((username) => {
-    //     formData.append("shared_with", username);
+    //   sharedWith.forEach((id) => {
+    //     formData.append("shared_with", id.toString());
     //   });
     // }
+
+    
 
     const res = await fetch("http://localhost:8080/api/v1/posts/create", {
       method: "POST",
@@ -110,7 +130,7 @@ export default function CreatePostForm({ onCreated }: Props) {
         user_vote: null
       }
       onCreated(newPost)
-      console.log(sharedWith,"folowers")
+      // console.log(sharedWith,"folowers")
     } else {
       alert("Failed to create post.");
     }
@@ -153,30 +173,32 @@ export default function CreatePostForm({ onCreated }: Props) {
           </select>
           {errors.privacy_error && (<p className="errors">{errors.privacy_error}</p>)}
         </label>
-        {privacy === "private" && (
-          <div className="share-with-users">
-            <label className="share-with-label">Share with specific folowers</label>
-            <ul className="user-checkbox-list">
-              {["user1", "user2", "user3","user4"].map((username) => (
-                <li key={username} className="user-checkbox-item">
-                  <div className="post-folowers-user">{username}</div>
-                  <input
-                    type="checkbox"
-                    value={username}
-                    checked={sharedWith.includes(username)}
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        setSharedWith([...sharedWith, username]);
-                      } else {
-                        setSharedWith(sharedWith.filter((u) => u !== username));
-                      }
-                    }}
-                  />
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+       {privacy === "private" && (
+        <div className="share-with-users">
+          <label className="share-with-label">
+            Share with specific followers
+          </label>
+
+          <ul className="user-checkbox-list">
+            {followers.map((f) => (
+              <li key={f.id} className="user-checkbox-item">
+                {/* only show first & last name (username optional) */}
+                <div className="post-folowers-user">
+                  {f.author.first_name} {f.author.last_name}
+                </div>
+
+                {/* checkbox carries *no value* – we pass the ID via closure */}
+                <input
+                  type="checkbox"
+                  checked={sharedWith.includes(f.id)}
+                  onChange={(e) => handleToggleFollower(f.id, e.target.checked)}
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
         <button type="submit" className="submit-post-btn">Submit Post</button>
       </form>
     </>

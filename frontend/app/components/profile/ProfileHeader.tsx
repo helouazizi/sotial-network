@@ -10,7 +10,6 @@ const generateAvatar = (firstName?: string, lastName?: string) => {
   const firstInitial = firstName?.charAt(0).toUpperCase() || '';
   const lastInitial = lastName?.charAt(0).toUpperCase() || '';
 
-
   return `${firstInitial}${lastInitial}`;
 };
 
@@ -22,7 +21,7 @@ const ProfileHeader = () => {
       <div className="left-sec">
         {dataProfile?.avatar ? (
           <img
-            src={`http://localhost:8080/images/Auth/${dataProfile?.avatar}`}
+            src={`http://localhost:8080/images/user/${dataProfile?.avatar}`}
             alt={`${dataProfile?.avatar}`}
             className="avatar-profile"
           />

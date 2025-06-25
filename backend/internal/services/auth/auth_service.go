@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/ismailsayen/social-network/internal/models"
 	repositories "github.com/ismailsayen/social-network/internal/repositories/auth"
@@ -142,8 +143,9 @@ func (s *AuthService) HundleAvatar(user *models.User) (models.User, models.Error
 		defer user.File.Close()
 
 		// Generate a unique filename and save path
-		filename := user.Header.Filename
-		avatarPath := filepath.Join("pkg/db/images/Auth", filename)
+		// user.Header.Filename
+		filename := fmt.Sprintf("%s_%s", user.Header.Filename, time.Now())
+		avatarPath := filepath.Join("pkg/db/images/user", filename)
 
 		dst, err := os.Create(avatarPath)
 		if err != nil {

@@ -1,4 +1,3 @@
-/* Main container */
 :root {
   --bg-color: #12111a;
   --card-bg: #1c1b23;
@@ -23,333 +22,147 @@
   --online-color: #22c55e;
   --offline-color: #6b7280;
 }
+
 #user-main {
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
+  padding: 40px 20px;
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+}
+
+/* Desktop/tablet layout */
+
+#user-main {
+   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 60px 20px;
+  padding: 40px 20px;
   background-color: var(--bg-color);
   color: var(--text-primary);
   flex-direction: row;
-  gap: 80px;
+  gap: 60px;
 }
 
-/* Left Section - Branding / Welcome Message */
-#user-welcoming {
-  width: 100%;
-  max-width: 500px;
-  border: 1px solid var(--accent-hover);
-  border-radius: 16px;
-  padding: 48px;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
-  background-color: var(--card-bg);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+.register-form {
+
+  max-width: 30%;
 }
 
-#user-welcoming:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
-}
 
-.user-community,
-.user-chat,
-.user-name {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  margin: 24px auto;
-  max-width: 320px;
-  padding: 14px 18px;
-  border-radius: 10px;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  cursor: pointer;
-}
-
-.user-community:hover,
-.user-chat:hover,
-.user-name:hover {
+.register-form {
   background-color: var(--bg-color);
-  transform: translateX(4px);
+  align-items: center;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.3s ease;
 }
 
-.user-community-logo,
-.user-chat-logo,
-.user-name-logo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 48px;
-  height: 48px;
-  border: 1px solid var(--border-color);
+
+
+.register-form h1 {
+  font-size: 1rem;
+  margin-bottom: 8px;
+  color: var(--text-secondary);
+}
+
+.register-form input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid var(--text-secondary);
+  background-color: var(--btn-text);
+  color: var(--input-bg);
   border-radius: 8px;
-  background-color: var(--input-bg);
-  font-size: 1.7rem;
-  color: var(--icon-color);
+  font-size: 1rem;
   transition: all 0.3s ease;
 }
 
-.user-community-logo:hover,
-.user-chat-logo:hover,
-.user-name-logo:hover {
-  background-color: var(--accent-color);
-  color: var(--text-primary);
-  border-color: var(--accent-hover);
-  transform: scale(1.1);
-}
-
-.user-community-content,
-.user-chat-content,
-.user-name-content {
-  display: flex;
-  flex-direction: column;
-}
-
-.user-community-title,
-.user-chat-title,
-.user-name-title {
-  font-size: 1.1rem;
-  margin-bottom: 6px;
-  color: var(--text-primary);
-  font-weight: 600;
-}
-
-.user-community-p,
-.user-chat-p,
-.user-name-p {
-  font-size: 0.9rem;
-  color: var(--text-muted);
-  line-height: 1.4;
-}
-
-/* Right Section - Registration Form */
-#user-info {
-  width: 100%;
-  max-width: 500px;
-  background-color: transparent;
-  border: none;
-  box-shadow: none;
-  padding: 0;
-}
-
-.register-form form {
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-}
-
-.register-form h2 {
-  font-size: 1.8rem;
-  text-align: center;
-  margin-bottom: 12px;
-  color: var(--text-primary);
-  font-weight: 700;
-}
-
-.register-form p {
-  font-size: 1rem;
-  text-align: center;
 
 
-}
-
-.names {
-  display: flex;
-  gap: 20px;
-}
-
-.firstname,
-.lastname {
-  flex: 1;
-}
-
-.firstname label,
-.lastname label,
-.email label,
-.password label,
-.username label,
-.user-avatar label,
-.dob label,
-.aboutme label {
-  font-size: 1rem;
-  margin-bottom: 8px;
-  color: var(--text-primary);
-  display: block;
-  font-weight: 500;
-}
-
-.firstname input,
-.lastname input,
-.email input,
-.password input,
-.username input,
-.user-avatar input,
-.dob input,
-.aboutme input {
-  width: 100%;
-  padding: 14px 18px;
-  border: none;
-  border-radius: 8px;
-  background-color: var(--input-bg);
-  color: var(--input-text);
-  font-size: 1rem;
-  outline: none;
-  transition: border 0.3s ease, box-shadow 0.3s ease;
-}
-
-.firstname input:focus,
-.lastname input:focus,
-.email input:focus,
-.password input:focus,
-.username input:focus,
-.user-avatar input:focus,
-.dob input:focus,
-.aboutme input:focus {
-  border: 1px solid var(--accent-color);
-  box-shadow: 0 0 0 3px rgba(171, 119, 255, 0.2);
-}
-
+.names,
 .credential,
 .opt,
 .dob-about {
   display: flex;
-  flex-direction: column;
   gap: 20px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
 }
 
+.firstname,
+.lastname,
+.email,
+.password,
 .username,
-.user-avatar {
-  flex: 1;
+.user-avatar,
+.dob,
+.aboutme {
+  flex: 1 1 30%;
 }
 
-.aboutme textarea {
-  width: 100%;
-  padding: 14px 18px;
-  border: none;
+.custom-file-upload {
+  display: inline-block;
+  padding: 12px 16px;
+  background-color: var(--btn-bg);
+  color: var(--btn-text);
+  border: 1px solid var(--border-color);
   border-radius: 8px;
-  background-color: var(--input-bg);
-  color: var(--input-text);
+  cursor: pointer;
   font-size: 1rem;
-  resize: vertical;
-  min-height: 100px;
-  outline: none;
-  transition: box-shadow 0.3s ease;
+  transition: all 0.3s ease;
 }
 
-.aboutme textarea:focus {
-  box-shadow: 0 0 0 3px rgba(171, 119, 255, 0.2);
+.custom-file-upload:hover {
+  background-color: var(--accent-color);
+  color: white;
+  border-color: var(--accent-color);
 }
 
-/* Error Messages */
+.user-avatar-content {
+  display: none;
+}
+
 .user-error {
-  font-size: 0.85rem;
   color: var(--danger-color);
+  font-size: 0.875rem;
   margin-top: 4px;
-  margin-bottom: 8px;
-  animation: fadeInUp 0.3s ease;
 }
 
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Step Navigation Buttons */
 .form-buttons {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 24px;
-  gap: 16px;
+  margin-top: 20px;
+  text-align: right;
 }
 
 .form-buttons button {
-  flex: 1;
-  padding: 14px;
-  font-size: 1rem;
-  font-weight: 600;
-  background-color: var(--btn-bg);
-  color: var(--btn-text);
+  background-color: var(--accent-color);
+  color: white;
   border: none;
+  padding: 12px 24px;
+  font-size: 1rem;
   border-radius: 8px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease;
 }
 
 .form-buttons button:hover {
   background-color: var(--accent-hover);
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
-/* Submit/Register Button (Step 2) */
-.register-form button[type="button"]:last-child {
-  background: linear-gradient(to right, var(--btn-bg), var(--accent-color));
-}
-
-/* Account toggle link */
 .user-account {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  margin-top: 28px;
-  font-family: Arial, sans-serif;
-}
-
-.user-account-content {
-  font-size: 16px;
-  color: var(--text-primary);
-  margin: 0;
+  margin-top: 20px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.95rem;
 }
 
 .user-account-button {
-    background-color: var(--btn-bg);
-    color: var(--btn-text);
-    cursor: pointer;
-    border: none;
-    border-radius: 8px;
-    flex: 1;
-    padding: 14px;
-    font-size: 1rem;
-    font-weight: 600;
-    transition: all .3s;
-    box-shadow: 0 4px 14px #0003;
-}
-
-
-.user-account-button:hover {
-  background-color: var(--accent-hover);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-/* Responsive */
-@media (max-width: 992px) {
-  #user-main {
-    flex-direction: column;
-    gap: 40px;
-    padding: 40px 16px;
-  }
-
-  #user-welcoming,
-  #user-info {
-    max-width: 100%;
-    width: 100%;
-    padding: 32px 24px;
-  }
-
-  .register-form h2 {
-    font-size: 1.6rem;
-  }
-
-  .register-form p {
-    font-size: 0.95rem;
-  }
+  background: transparent;
+  border: none;
+  color: var(--link-color);
+  cursor: pointer;
+  text-decoration: underline;
+  margin-left: 5px;
 }

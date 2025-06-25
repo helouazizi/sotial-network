@@ -1,5 +1,7 @@
 'use client';
 import { useState, ChangeEvent } from 'react';
+import React from 'react'
+
 import { useRouter } from 'next/navigation';
 import Welcomingmessage from '../components/Auth/welcomingMessage';
 
@@ -90,125 +92,126 @@ export default function Register() {
     return (
         <section id='user-main'>
             <section className="register-form">
+
                 <form>
-                    {step === 1 && (
-                        <div className="step-one">
-                            <div className="names">
-                                <div className="firstname">
-                                    <h1>First Name</h1>
-                                    <input
-                                        type="text"
-                                        id="first-name"
-                                        value={firstname}
-                                        onChange={(e) => setFirstName(e.target.value)}
-                                    />
-                                    {firstnameErr && <p className='user-error'>{firstnameErr}</p>}
-                                </div>
-                                <div className="lastname">
-                                    <h1>Last Name</h1>
-                                    <input
-                                        type="text"
-                                        id="last-name"
-                                        value={lastname}
-                                        onChange={(e) => setLastName(e.target.value)}
-                                    />
-                                    {lastnameErr && <p className='user-error'>{lastnameErr}</p>}
-                                </div>
-                            </div>
-
-                            <div className="credential">
-                                <div className="email">
-                                    <h1>Email:</h1>
-                                    <input
-                                        type="email"
-                                        id="email"
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                    />
-                                    {emailErr && <p className='user-error'>{emailErr}</p>}
-                                </div>
-                                <div className="password">
-                                    <h1>Password:</h1>
-                                    <input
-                                        type="password"
-                                        id="password"
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                    />
-                                    {passwordErr && <p className='user-error'>{passwordErr}</p>}
-                                </div>
-                            </div>
-                            <div className="form-buttons">
-
-                                <button type="button" onClick={() => setStep(2)}>Next</button>
-                            </div>
+                    <div className="names">
+                        <div className="firstname">
+                            <h1>First Name</h1>
+                            <input
+                                type="text"
+                                id="first-name"
+                                value={firstname}
+                                placeholder='Enter your First Name'
+                                onChange={(e) => setFirstName(e.target.value)}
+                            />
+                            {firstnameErr && <p className='user-error'>{firstnameErr}</p>}
                         </div>
-                    )}
-
-                    {step === 2 && (
-                        <div className="step-two">
-                            <div className="opt">
-                                <div className="username">
-                                    <h1>Username:</h1>
-                                    <input
-                                        type="text"
-                                        id="username"
-                                        value={username}
-                                        onChange={(e) => setUser(e.target.value)}
-                                    />
-                                    {nicknameErr && <p className='user-error'>{nicknameErr}</p>}
-                                </div>
-                                <div className="user-avatar">
-                                    <h1 className='user-avatar-title'>Avatar:</h1>
-                                    <input
-                                        className='user-avatar-content'
-                                        type="file"
-                                        id="avatar"
-                                        accept="image/*"
-                                        onChange={handleFileChange}
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="dob-about">
-                                <div className="dob">
-                                    <h1>Date of Birth:</h1>
-                                    <input
-                                        type="date"
-                                        id="dob"
-                                        value={DOB}
-                                        onChange={(e) => setDOB(e.target.value)}
-                                    />
-                                    {dobErr && <p className='user-error'>{dobErr}</p>}
-                                </div>
-                                <div className="aboutme">
-                                    <h1>About Me:</h1>
-                                    <input
-                                        type="text"
-                                        id="about"
-                                        value={about}
-                                        onChange={(e) => setAboutme(e.target.value)}
-                                    />
-                                    {aboutmeErr && <p className='user-error'>{aboutmeErr}</p>}
-                                </div>
-                            </div>
-
-                            <div className="form-buttons">
-                                <button type="button" onClick={() => setStep(1)}>Back</button>
-                                <button type="button" onClick={HandleRegister}>Register</button>
-                            </div>
+                        <div className="lastname">
+                            <h1>Last Name</h1>
+                            <input
+                                type="text"
+                                id="last-name"
+                                value={lastname}
+                                placeholder='Enter your Last Name'
+                                onChange={(e) => setLastName(e.target.value)}
+                            />
+                            {lastnameErr && <p className='user-error'>{lastnameErr}</p>}
                         </div>
-                    )}
+                    </div>
+
+                    <div className="credential">
+                        <div className="email">
+                            <h1>Email:</h1>
+                            <input
+                                type="email"
+                                id="email"
+                                value={email}
+                                placeholder='Enter your Email'
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
+                            {emailErr && <p className='user-error'>{emailErr}</p>}
+                        </div>
+                        <div className="password">
+                            <h1>Password:</h1>
+                            <input
+                                type="password"
+                                id="password"
+                                value={password}
+                                placeholder='Enter your Password'
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
+                            {passwordErr && <p className='user-error'>{passwordErr}</p>}
+                        </div>
+                    </div>
+
+                    <div className="opt">
+                        <div className="username">
+                            <h1>nickname:</h1>
+                            <input
+                                type="text"
+                                id="username"
+                                value={username}
+                                placeholder='Enter your Nickname '
+                                onChange={(e) => setUser(e.target.value)}
+                            />
+                            {nicknameErr && <p className='user-error'>{nicknameErr}</p>}
+                        </div>
+                        <div className="user-avatar">
+                            <h1 className='user-avatar-title'>Avatar:</h1>
+                            <label htmlFor="avatar" className="custom-file-upload">
+                                {avatar ? avatar.name : "Choose Avatar"}
+                            </label>
+                            <input
+                                className='user-avatar-content'
+                                type="file"
+                                id="avatar"
+                                accept="image/*"
+                                onChange={handleFileChange}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="dob-about">
+                        <div className="dob">
+                            <h1>Date of Birth:</h1>
+                            <input
+                                type="date"
+                                id="dob"
+                                value={DOB}
+                                onChange={(e) => setDOB(e.target.value)}
+                            />
+                            {dobErr && <p className='user-error'>{dobErr}</p>}
+                        </div>
+                        <div className="aboutme">
+                            <h1>About Me:</h1>
+                            <input
+                                type="text"
+                                id="about"
+                                value={about}
+                                placeholder='Enter semmething'
+                                onChange={(e) => setAboutme(e.target.value)}
+                            />
+                            {aboutmeErr && <p className='user-error'>{aboutmeErr}</p>}
+                        </div>
+                    </div>
+
+                    <div className="form-buttons">
+
+                        <button type="button" onClick={HandleRegister}>Register</button>
+                    </div>
+
                 </form>
 
                 {message && <p className='user-error'>{message}</p>}
                 <div className='user-account'>
                     <p className='user-account-content'>Alrady have an account? :</p>
-                    <button className='user-account-button' onClick={()=> router.push("/login")}> Login</button>
+                    <button className='user-account-button' onClick={() => router.push("/login")}> Login</button>
                 </div>
 
             </section>
             <Welcomingmessage />
+
+
         </section>
     );
 }

@@ -44,3 +44,19 @@ func (r *ChatRepository) GetMessages(senderID, receiverID int) ([]*models.Chat, 
 
 	return messages, nil
 }
+
+func (r *ChatRepository) GetUser(userID int) (*models.User, error) {
+	query := `
+		SELECT id, nickname ,first_name, last_name
+		FROM users
+		WHERE id = ?
+	`
+
+	var user models.User
+	err := r.db.QueryRow(query, userID).Scan(&user.ID, &user.Nickname, &user.FirstName, &user.Lastname)
+	if err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+}

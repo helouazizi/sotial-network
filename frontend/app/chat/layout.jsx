@@ -43,6 +43,7 @@ export default function ChatLayout({ children }) {
           <div className="receiver">
             <p>ana receiver</p>
           </div>  
+          
         </div>
         <ChatFooter />
       </section>

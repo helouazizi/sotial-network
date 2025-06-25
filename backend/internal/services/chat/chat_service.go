@@ -57,3 +57,7 @@ func (s *ChatService) RemoveClient(userID int) {
 	s.mu.Lock()
 	delete(s.clients, userID)
 }
+
+func (s *ChatService) GetUser(userID int) (*models.User, error) {
+	return s.repo.GetUser(userID)
+}

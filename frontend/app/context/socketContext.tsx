@@ -8,6 +8,8 @@ export interface SocketContextType {
   setMessages: React.Dispatch<React.SetStateAction<any[]>>
   user: User | null
   setUser: React.Dispatch<React.SetStateAction<User | null>>
+  friends: User[] | null
+  setFriends: React.Dispatch<React.SetStateAction<User[] | null>>
 }
 
 export const SocketContext = createContext<SocketContextType | null>(null);
@@ -17,6 +19,8 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
   const [messages, setMessages] = useState<any[]>([]);
   const pathname = usePathname();
   const [user, setUser] = useState<User | null>(null)
+  const [friends, setFriends] = useState<User[] | null>(null)
+
 
   const excludedPaths = ["/login", "/register"];
   const shouldConnect = !excludedPaths.includes(pathname);
@@ -38,7 +42,7 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
     };
 
     ws.current.onmessage = (event) => {
-      let res = JSON.parse(event.data) 
+      let res = JSON.parse(event.data)
 
       if (res.type === "getUser") {
         const userInfos: User = {
@@ -47,8 +51,19 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
           firstName: res.data.firstname,
           lastName: res.data.lastname,
         }
-
         setUser(userInfos)
+      }
+
+      if (res.type === "getFriends") {
+        const friendsList: User[] = res.data.map((friend: any) => {
+          return {
+            id: friend.ID,
+            nickname: friend.nickname,
+            firstName: friend.firstname,
+            lastName: friend.lastname
+          }
+        })
+        setFriends(friendsList)
       }
     };
 
@@ -60,7 +75,7 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
   }, [shouldConnect]);
 
   return (
-    <SocketContext.Provider value={{ ws, messages, setMessages, user, setUser }}>
+    <SocketContext.Provider value={{ ws, messages, setMessages, user, setUser, friends, setFriends }}>
       {children}
     </SocketContext.Provider>
   );

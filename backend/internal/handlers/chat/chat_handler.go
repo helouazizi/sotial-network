@@ -82,9 +82,22 @@ func (h *ChatHandler) ChatMessagesHandler(w http.ResponseWriter, r *http.Request
 				continue
 			}
 
-			conn.WriteJSON(map[string]any {
+			conn.WriteJSON(map[string]any{
 				"data": user,
 				"type": "getUser",
+			})
+		case "getFriends":
+			users, err := h.service.GetFriends(userID)
+			if err != nil {
+				conn.WriteJSON(map[string]any{
+					"error": err.Error(),
+				})
+				continue
+			}
+
+			conn.WriteJSON(map[string]any{
+				"data": users,
+				"type": "getFriends",
 			})
 		default:
 			err = h.service.SaveMessage(&chat)

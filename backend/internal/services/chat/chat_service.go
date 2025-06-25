@@ -61,3 +61,7 @@ func (s *ChatService) RemoveClient(userID int) {
 func (s *ChatService) GetUser(userID int) (*models.User, error) {
 	return s.repo.GetUser(userID)
 }
+
+func (s *ChatService) GetFriends(userID int) ([]*models.User, error) {
+	return s.repo.GetFriends(userID)
+}

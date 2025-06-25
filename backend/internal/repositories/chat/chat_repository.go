@@ -60,3 +60,29 @@ func (r *ChatRepository) GetUser(userID int) (*models.User, error) {
 
 	return &user, nil
 }
+
+func (r *ChatRepository) GetFriends(userID int) ([]*models.User, error) {
+	query := `
+		SELECT id, nickname ,first_name, last_name
+		FROM users
+		WHERE id != ?
+	`
+
+	rows, err := r.db.Query(query, userID)
+	if err != nil {
+		return nil, err
+	}
+
+	var users []*models.User
+	for rows.Next() {
+		var user models.User
+		err = rows.Scan(&user.ID, &user.Nickname, &user.FirstName, &user.Lastname)
+		if err != nil {
+			return nil, err
+		}
+
+		users = append(users, &user)
+	}
+
+	return users, nil
+}

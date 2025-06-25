@@ -13,7 +13,7 @@ export default function CommentList({ comments }: CommentListProps) {
                     <PostHeader
                         author={c.author.user_name || `${c.author.first_name}-${c.author.last_name}`}
                         createdAt={c.created_at}
-                        avatarUrl={`http://localhost:8080/images/Auth/${c.author.avatar}` || "/avatar.bng"}
+                        avatarUrl={c.author.avatar ? c.author.avatar : "avatar.png"}
                     />
                     <PostBody content={c.comment} title="" media={c.media_link || ""} body_type="comment" />
                 </div>

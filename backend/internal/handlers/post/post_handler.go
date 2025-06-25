@@ -83,6 +83,9 @@ func (h *PostHandler) CreatePost(w http.ResponseWriter, r *http.Request) {
 	content := r.FormValue("content")
 	privacy := r.FormValue("privacy")
 
+	folowersIds := r.Form["shared-with"]
+	fmt.Println(folowersIds, "ids")
+
 	post := &models.Post{
 		Title:   title,
 		Content: content,

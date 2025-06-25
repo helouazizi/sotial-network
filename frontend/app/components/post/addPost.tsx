@@ -173,32 +173,32 @@ export default function CreatePostForm({ onCreated }: Props) {
           </select>
           {errors.privacy_error && (<p className="errors">{errors.privacy_error}</p>)}
         </label>
-      {privacy === "private" && (
-  <div className="share-with-users">
-    <label className="share-with-label">
-      Share with specific followers
-    </label>
+        {privacy === "private" && (
+          <div className="share-with-users">
+            <label className="share-with-label">
+              Share with specific followers
+            </label>
 
-    <ul className="user-checkbox-list">
-      {followers.map((f) => (
-        <li key={f.id} className="user-checkbox-item">
-          <label id="follower-checkbox-label">
-            <PostHeader
-              author={`${f.author.first_name} ${f.author.last_name}`}
-              createdAt=""
-              avatarUrl={f.author.avatar || "avatar.png"}
-            />
-            <input
-              type="checkbox"
-              checked={sharedWith.includes(f.id)}
-              onChange={(e) => handleToggleFollower(f.id, e.target.checked)}
-            />
-          </label>
-        </li>
-      ))}
-    </ul>
-  </div>
-)}
+            <ul className="user-checkbox-list">
+              {followers.map((f) => (
+                <li key={f.id} className="user-checkbox-item">
+                  <label id="follower-checkbox-label">
+                    <PostHeader
+                      author={`${f.author.first_name} ${f.author.last_name}`}
+                      createdAt=""
+                      avatarUrl={f.author.avatar || "avatar.png"}
+                    />
+                    <input
+                      type="checkbox"
+                      checked={sharedWith.includes(f.id)}
+                      onChange={(e) => handleToggleFollower(f.id, e.target.checked)}
+                    />
+                  </label>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
 
         <button type="submit" className="submit-post-btn">Submit Post</button>

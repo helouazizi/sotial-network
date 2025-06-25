@@ -1,28 +1,27 @@
 "use client";
 
-import React, { useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import React, { useState } from "react";
 import { Post, PostErrors } from "@/app/types/post";
+
 
 type Props = {
   onCreated: (newPost: Post) => void;
 };
 export default function CreatePostForm({ onCreated }: Props) {
   const [errors, setErrors] = useState<PostErrors>({})
-  const privacy = useRef("public");
-  const router = useRouter();
+  const[ privacy,setPrivacy] = useState("public");
+  // const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const form = e.currentTarget as HTMLFormElement;
     const formData = new FormData(form);
-    formData.append("privacy", privacy.current);
+    formData.append("privacy", privacy);
     
     // ============ validate data in front ================//
-    const fileInput = form.elements.namedItem("media") as HTMLInputElement;
+    const fileInput = form.elements.namedItem("image") as HTMLInputElement;
     const file = fileInput?.files?.[0];
     
-
     if (file) {
       const allowedTypes = [
         "image/jpeg",
@@ -75,9 +74,8 @@ export default function CreatePostForm({ onCreated }: Props) {
       "almost_private",
       "private",
     ];
-    const privacyy = formData.get("privacy")?.toString().trim();
     if (
-      !allowedPrivacy.includes(privacy.current)
+      !allowedPrivacy.includes(privacy)
     ) {
       setErrors((prev: PostErrors) => ({
         ...prev,
@@ -102,22 +100,23 @@ export default function CreatePostForm({ onCreated }: Props) {
         author : "test1",
         likes: 0,
         dislikes : 0,
-        comments: [],
         total_comments : 0 ,
         createdAt :"2025-06-11T13:45:00Z",
-        media : ""
+        user_vote : null
 
       }
       onCreated(newPost)
-      console.log(res.status)
-      router.push("/");
+      // console.log(res.status)
+      // router.push("/");
     } else {
       alert("Failed to create post.");
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="post-form">
+    <>
+     
+     <form onSubmit={handleSubmit} className="post-form">
       <h2>Create a Post</h2>
       <label>
         Title
@@ -133,7 +132,7 @@ export default function CreatePostForm({ onCreated }: Props) {
 
       <label>
         Image or GIF
-        <input type="file" name="media" accept="image/*,image/gif" />
+        <input type="file" name="image" accept="image/*,image/gif" />
         {errors.image_error && (<p className="errors">{errors.image_error}</p>)}
       </label>
 
@@ -141,20 +140,21 @@ export default function CreatePostForm({ onCreated }: Props) {
         Privacy
         <select
           name="privacy"
-          value={privacy.current}
-          onChange={(e) => (privacy.current = e.target.value)}
+          value={privacy}
+          onChange={(e) => (setPrivacy(e.target.value.trim()))}
         >
           <option value="public">Public (for all users)</option>
           <option value="almost_private">
             Almost Private (for followers onlly)
           </option>
-          <option value="private">Private (for creator)</option>
+          <option value="private">Private (for specific folowers)</option>
         </select>
         {errors.privacy_error && (<p className="errors">{errors.privacy_error}</p>)}
       </label>
 
-      <button type="submit">Submit Post</button>
+      <button type="submit" className="submit-post-btn">Submit Post</button>
     </form>
+    </>
   );
 }
 

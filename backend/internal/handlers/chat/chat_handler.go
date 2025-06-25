@@ -34,7 +34,7 @@ func (h *ChatHandler) ChatMessagesHandler(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	userID := 1
+	userID := r.Context().Value("userID").(int)
 
 	defer func() {
 		conn.Close()
@@ -44,7 +44,7 @@ func (h *ChatHandler) ChatMessagesHandler(w http.ResponseWriter, r *http.Request
 	h.service.SaveClient(userID, conn)
 
 	for {
-		var chat models.Chat 
+		var chat models.Chat
 		err := conn.ReadJSON(&chat)
 		if err != nil && !strings.Contains(err.Error(), "close") {
 			conn.WriteJSON(map[string]any{
@@ -72,6 +72,18 @@ func (h *ChatHandler) ChatMessagesHandler(w http.ResponseWriter, r *http.Request
 
 			conn.WriteJSON(map[string]any{
 				"data": messages,
+			})
+		case "getUser":
+			user, err := h.service.GetUser(userID)
+			if err != nil {
+				conn.WriteJSON(map[string]any{
+					"error": err.Error(),
+				})
+				continue
+			}
+
+			conn.WriteJSON(map[string]any {
+				"data": user,
 			})
 		default:
 			err = h.service.SaveMessage(&chat)

@@ -1,6 +1,5 @@
 
-export default function PostMeta({ author, createdAt, avatarUrl }: { author: string; createdAt: string, avatarUrl: string }) {
-
+export default function PostHeader({ author, createdAt, avatarUrl }: { author: string; createdAt: string, avatarUrl: string }) {
   return (
     <div className="post-meta">
       <img src={avatarUrl} alt={`${author}'s avatar`} className="avatar" />

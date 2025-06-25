@@ -8,9 +8,12 @@ import { FaUser } from "react-icons/fa";
 import { usePathname } from "next/navigation";
 import { IoIosLogOut } from "react-icons/io";
 import { useRouter } from 'next/navigation';
+import { useContext } from "react";
+import { SocketContext, SocketContextType } from "@/app/context/socketContext";
 export default function Header() {
   const router = useRouter();
   const pathname = usePathname()
+  const { ws } = useContext(SocketContext) as SocketContextType
   const handleClickLogout = async () => {
     try {
       const res = await fetch("http://localhost:8080/app/v1/user/logout", {
@@ -20,12 +23,18 @@ export default function Header() {
       console.log(res);
 
       if (res.ok) {
+        if (ws.current) {
+          ws.current.close()
+        }
         router.push('/login')
         console.log("Iam heer");
 
       }
 
     } catch (error) {
+      if (ws.current) {
+        ws.current.close()
+      }
       router.push('/login')
     }
 

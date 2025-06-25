@@ -1,290 +1,72 @@
-
-
 :root {
-  /* Color palette (override from your global variables file if present) */
-  --clr-bg-card: #ffffff;
-  --clr-border-card: #e5e7eb;
-  --clr-shadow-card: rgba(0, 0, 0, 0.04);
-  --clr-shadow-card-hover: rgba(0, 0, 0, 0.08);
-  --clr-text-heading: #222222;
-  --clr-text-body: #444444;
-  --clr-text-muted: #8a8a8a;
-  --clr-meta: #cccccc;
-  --clr-action-bg: #e0e7ff;
-  --clr-action-bg-hover: #c7d2fe;
-  --clr-action-text: #1e40af;
-  --clr-comment-bg: #f9fafb;
-  --clr-comment-border: #1e40af;
-  --clr-scroll-thumb: #c7d2fe;
-
-  /* Sizing & spacing */
-  --size-gap-stack: 1.5rem;
-  --size-radius-card: 0.75rem; /* 12px */
-  --size-radius-input: 0.4rem;
-  --size-transition: 0.2s;
+  --bg-color: #12111a;
+  --card-bg: #1c1b23;
+  --input-bg: #1a1922;
+  --border-color: #2a2835;
+  --text-primary: #f4f4f8;
+  --text-secondary: #b0acc0;
+  --text-muted: #8e8a9d;
+  --input-text: #ddddee;
+  --accent-color: #a78bfa;
+  --accent-hover: #8b5cf6;
+  --danger-color: #f87171;
+  --warning-color: #fbbf24;
+  --info-color: #60a5fa;
+  --btn-bg: #2b2a35;
+  --btn-text: #e9d5ff;
+  --scrollbar-bg: #1e1e2a;
+  --scrollbar-thumb: #a78bfa;
+  --icon-color: #d8b4fe;
+  --link-color: #c084fc;
+  --shadow-color: rgba(0, 0, 0, 0.6);
+  --online-color: #22c55e;
+  --offline-color: #6b7280;
 }
 
-.posts-list {
-  list-style: none;
-  margin: 0 auto;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--size-gap-stack);
-  width: min(60%, 800px);
-  max-height: 100dvh;
-  /* overflow-y: auto; */
+/* ======================================== CREATE POST FORM SECTION ============================*/
+
+.create-post .post-form {
+  background-color: var(--card-bg);
 }
 
-/* -----------------------------------------------
-   Post Card
------------------------------------------------ */
-.post-card {
-  background: var(--clr-bg-card);
-  padding: 1.5rem;
-  border: 1px solid var(--clr-border-card);
-  border-radius: var(--size-radius-card);
-  box-shadow: 0 4px 8px var(--clr-shadow-card);
-  transition: transform var(--size-transition) ease,
-              box-shadow var(--size-transition) ease;
+.create-post .submit-post-btn {
+  color: var(--btn-text);
+  font-size: large;
+  cursor: pointer;
+  margin: 0px auto;
+  width: 100%;
 }
 
-.post-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px var(--clr-shadow-card-hover);
-}
-
-/* -----------------------------------------------
-   Meta & Avatar
------------------------------------------------ */
-.post-meta {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.9rem;
-  color: var(--clr-meta);
-}
-
-.avatar {
-  inline-size: 32px;
-  block-size: 32px;
-  border-radius: 50%;
-  object-fit: cover;
-  background: red; /* consider using a placeholder color var */
-}
-
-/* -----------------------------------------------
-   Body
------------------------------------------------ */
-.post-body h2 {
+.create-post .addPostBtn {
+  background-color: var(--bg-color);
+  border: none;
+  color: var(--btn-text);
   font-size: 1.4rem;
-  margin-block: 2rem;
-  color: var(--clr-text-heading);
-}
-
-.post-body p {
-  margin-block: 2rem;
-  line-height: 1.6;
-  color: var(--clr-text-body);
-}
-
-/* -----------------------------------------------
-   Actions
------------------------------------------------ */
-.post-actions {
-  margin-top: 1rem;
-  padding-block: 0.75rem;
-  border-top: 1px solid #e0e0e0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.post-actions > div {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.post-actions .extra {
-  color: #555;
-  font-weight: 500;
-}
-
-.post-actions button,
-.post-comment button {
-  padding: 0.5rem 1rem;
-  margin-right: 0.5rem;
-  border: none;
-  border-radius: var(--size-radius-card);
-  font-size: 0.875rem;
-  cursor: pointer;
-  background: var(--clr-action-bg);
-  color: var(--clr-action-text);
-  transition: background-color var(--size-transition) ease;
-}
-
-.post-actions button:hover,
-.post-comment button:hover {
-  background: var(--clr-action-bg-hover);
-}
-
-/* -----------------------------------------------
-   Comment Input
------------------------------------------------ */
-.post-comment {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.post-comment input {
-  flex: 1 1 auto;
-  padding: 0.5rem 0.75rem;
-  border: none;
-  border-radius: var(--size-radius-input);
-  background: var(--clr-text-muted);
-  color: #ffffff;
-  font-size: 1rem;
-  outline: none;
-  transition: background-color 0.3s ease,
-              box-shadow 0.3s ease;
-}
-
-.post-comment input::placeholder {
-  color: #cccccc;
-}
-
-.post-comment input:focus {
-  background: #616161;
-  box-shadow: 0 0 0 2px #888888;
-}
-
-/* -----------------------------------------------
-   Comments List
------------------------------------------------ */
-.comments-list {
-  margin-top: 0.75rem;
-  padding: 0.75rem 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  max-height: 200px;
-  overflow-y: auto;
-  background: var(--clr-comment-bg);
-  border-left: 3px solid var(--clr-comment-border);
-  border-radius: 0 0 var(--size-radius-card) var(--size-radius-card);
-  font-size: 0.875rem;
-  color: #333;
-  transition: max-height 0.3s ease, opacity 0.3s ease;
-}
-
-.comments-list::-webkit-scrollbar {
-  width: 6px;
-}
-.comments-list::-webkit-scrollbar-thumb {
-  background: var(--clr-scroll-thumb);
-  border-radius: 3px;
-}
-.comments-list::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.comments-list li {
-  list-style: none;
-  padding: 0.5rem 0.75rem;
-  background: var(--clr-bg-card);
-  border-radius: calc(var(--size-radius-card) - 6px);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-}
-
-/* -----------------------------------------------
-   Responsiveness
------------------------------------------------ */
-@media (max-width: 768px) {
-  .posts-list {
-    width: 95%;
-  }
-
-  .post-body h2 {
-    font-size: 1.2rem;
-    margin-block: 1.5rem;
-  }
-
-  .post-body p {
-    margin-block: 1.5rem;
-  }
-}
-
-
-/* =================================== no posts ============================== */
-
-.no-posts-message {
-  text-align: center;
-  padding: 40px 20px;
-  color: #555;
-  background-color: #292323;
-  border: 2px dashed #cfcfcf;
-  border-radius: 8px;
-  margin-top: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-evenly;
-}
-
-.no-posts-message h2 {
-  font-size: 24px;
-  margin-bottom: 10px;
-  color: #adadad;
-}
-
-.no-posts-message p {
-  font-size: 16px;
-  color: #818181;
-}
-.create-post-button {
-  margin-top: 12rem;
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
   cursor: pointer;
 }
 
-.create-post-button:hover {
-  background-color: #0056b3;
+.create-post .addPostIcon {
+  color: var(--accent-color);
 }
 
+.create-post .add-post-holder {
+  max-width: 600px;
+  margin: 2rem auto;
+}
 
-
-
-
-/* ======================================== form */
-
-.post-form {
+.create-post .post-form {
   max-width: 600px;
   margin: 2rem auto;
   padding: 2rem;
-  background-color: #ffffff;
-  color: #000000;
+  color: var(--text-primary);
   border-radius: 12px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  gap: 1rem;
 }
 
-.post-form h2 {
-  font-size: 1.8rem;
-  color: #1f2937;
-  margin-bottom: 1rem;
-  text-align: center;
-}
-
-.post-form label {
+.create-post .post-form label {
   display: flex;
   flex-direction: column;
   font-weight: 500;
@@ -292,68 +74,307 @@
   gap: 0.5rem;
 }
 
-.post-form input[type="text"],
-.post-form input[type="file"],
-.post-form textarea,
-.post-form select {
+.create-post .post-form input[type="text"],
+.create-post .post-form input[type="file"],
+.create-post .post-form textarea,
+.create-post .post-form select {
   padding: 0.75rem 1rem;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  font-size: 1rem;
-  background-color: #f9fafb;
-  transition: border-color 0.2s, box-shadow 0.2s;
-   color: #000000;
+  border-radius: 10px;
+  background-color: var(--input-bg);
+  transition: border-color 0.2s, box-shadow 0.1s;
+  color: var(--input-text);
+  border: 1px solid var(--border-color);
 }
 
-.post-form input:focus,
-.post-form textarea:focus,
-.post-form select:focus {
-  border-color: #6366f1;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
+.create-post .post-form input:focus,
+.create-post .post-form textarea:focus,
+.create-post .post-form select:focus {
+  border-color: var(--accent-color);
   outline: none;
-   color: #000000;
 }
 
-.post-form textarea {
+.create-post .post-form textarea {
   resize: vertical;
 }
 
-.post-form button {
+.create-post .post-form select option {
+  cursor: pointer;
+}
+
+.create-post .post-form button {
   padding: 0.75rem 1.25rem;
   font-size: 1rem;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.3s ease;
 }
 
-.post-form button[type="submit"] {
-  background-color: #4f46e5;
-  color: white;
+.create-post .post-form button[type="submit"] {
+  background-color: var(--btn-bg);
+  color: var(--btn-text);
 }
 
-.post-form button[type="submit"]:hover {
-  background-color: #4338ca;
+.create-post .post-form button[type="submit"]:hover {
+  background-color: var(--accent-hover);
 }
 
-.post-form button:not([type="submit"]) {
-  background-color: #e5e7eb;
-  color: #1f2937;
+
+/* =======================POSTS SECTION ======================== */
+
+
+.post-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 10px var(--shadow-color);
+  color: var(--text-primary);
+  max-width: 600px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  margin: 1rem auto;
 }
 
-.post-form button:not([type="submit"]):hover {
-  background-color: #d1d5db;
+.post-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px var(--shadow-color);
 }
 
-.postImg{
-  max-width: 100%;
+.post-card .post-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.post-card .avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--accent-color);
+}
+
+.post-card .post-body h2 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.post-card .post-body p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.post-card .postImg {
+  width: 100%;
   max-height: 300px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-top: 1rem;
+  border: 1px solid var(--border-color);
+}
+
+.post-card .post-actions {
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+}
+
+
+.post-card .post-actions .post-btns {
+  display: flex;
+  gap: 1rem;
+
+}
+
+/*  post comments form */
+.comment-form {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 12px;
+}
+
+.input-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.comment-input {
+  flex-grow: 1;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  outline: none;
+  transition: border 0.2s ease;
+}
+
+.comment-input:focus {
+  border-color:var(--accent-color);
+}
+
+.upload-btn {
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  cursor: pointer;
+  color: var(--info-color);
+  padding: 0.4rem;
+  border-radius: 6px;
+  transition: background 0.2s ease;
+}
+
+.upload-btn:hover {
+  background-color: var(--bg-color);
+}
+
+.comment-form  .comment-img-name {
+  color: var(--info-color);
+  font-size: small;
+}
+/* =============== */
+
+
+
+.post-card .comments-list {
+  max-height: 200px;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-bg);
+}
+
+.post-card .comments-list .comment {
+  border-radius: 8px;
+  background-color: var(--bg-color);
+  width: 100%;
+  padding: 0.5rem;
+}
+
+.post-card .comments-list .post-body {
+  overflow-wrap: break-word;
+  margin-left: 3.5rem;
+  color: var(--text-primary);
+}
+
+.post-card .comments-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.post-card .comments-list::-webkit-scrollbar-track {
+  background: var(--scrollbar-bg);
+  border-radius: 8px;
+}
+
+.post-card .comments-list::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb);
+  border-radius: 8px;
+  border: 2px solid var(--scrollbar-bg);
+}
+
+.post-card .comments-list::-webkit-scrollbar-thumb:hover {
+  background-color: var(--accent-hover);
+}
+
+.post-card .vote-btn:hover {
+  background-color: var(--accent-hover);
+}
+
+
+/* =========== vote  */
+.vote-btn {
+  background-color: var(--btn-bg);
+  /* Neutral base */
+  color: var(--btn-text);
+  /* Default text color */
+  padding: 0.5rem 0.75rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.vote-btn svg {
+  fill: currentColor;
+  /* Icon follows text color */
+}
+
+.vote-btn.like.voted {
+  background-color: var(--accent-color);
+  color: var(--text-primary);
+}
+
+.vote-btn.dislike.voted {
+  background-color: var(--accent-color);
+  color: var(--text-primary);
 }
 
 
 
 
 
-.errors{
+
+@media (min-width: 500px) {
+  .post-card .extra {
+    display: none;
+  }
+
+  .post-card {
+    padding: 2rem;
+  }
+}
+
+
+/* =================================== no posts ============================== */
+
+.no-posts-yet {
+  margin: 0% auto;
+  max-width: 500px;
+  height: 400px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 8px;
+  border: 2px dashed var(--border-color);
+  padding: 1rem;
+  color: var(--text-primary);
+
+}
+
+.no-posts-yet img {
+  max-width: 300px;
+  border-radius: 8px;
+}
+
+.no-posts-yet p {
+  font-size: 24px;
+  margin-bottom: 10px;
+  color: #adadad;
+}
+
+
+
+
+
+.errors {
   color: red;
 }

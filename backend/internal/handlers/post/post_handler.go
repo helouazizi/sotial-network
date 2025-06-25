@@ -53,6 +53,7 @@ func (h *PostHandler) GetPosts(w http.ResponseWriter, r *http.Request) {
 			"message": "Internal server error",
 			"status":  http.StatusInternalServerError,
 		})
+		fmt.Println(err, "jhjhhjh")
 		return
 	}
 

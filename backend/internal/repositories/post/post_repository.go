@@ -81,23 +81,35 @@ func (r *PostRepository) GetPosts(userId, start, limit int) ([]models.Post, erro
 	const q = `
 		SELECT
 			p.id,
-			p.title, 
-			p.content, 
-			p.media, 
-			p.type, 
-			p.created_at, 
-			p.likes, 
-			p.dislikes, 
+			p.title,
+			p.content,
+			p.media,
+			p.type,
+			p.created_at,
+			p.likes,
+			p.dislikes,
 			p.comments,
 			pr.reaction AS user_vote
 		FROM posts p
-		LEFT JOIN post_reactions pr 
-			ON pr.post_id = p.id AND pr.user_id = ?
-		ORDER BY p.created_at DESC
-		LIMIT ? OFFSET ?;
-    `
+		LEFT JOIN post_reactions pr ON pr.post_id = p.id AND pr.user_id = ?  
 
-	rows, err := r.db.Query(q, userId, limit, start)
+		--  visibility filter
+		WHERE 
+		      p.type = 'public'
+		  OR ( p.type = 'private' AND (
+					p.user_id = ?                                             -- owner sees own post
+				OR	EXISTS ( SELECT 1 FROM post_allowed_users pau            -- shared-with rule
+							WHERE pau.post_id = p.id 
+							  AND pau.user_id = ?
+				)
+		  ))
+
+		ORDER BY p.created_at DESC
+		LIMIT  ? OFFSET ?               -- pagination
+	`
+
+	// userId is used three times in the query
+	rows, err := r.db.Query(q, userId, userId, userId, limit, start)
 	if err != nil {
 		return nil, err
 	}
@@ -105,33 +117,29 @@ func (r *PostRepository) GetPosts(userId, start, limit int) ([]models.Post, erro
 
 	var posts []models.Post
 	for rows.Next() {
-		var p models.Post
-		var media sql.NullString
-		err := rows.Scan(
+		var (
+			p     models.Post
+			media sql.NullString
+		)
+		if err := rows.Scan(
 			&p.ID,
 			&p.Title,
 			&p.Content,
-			&media, // scan media into sql.NullString
+			&media,
 			&p.Type,
 			&p.CreatedAt,
 			&p.Likes,
 			&p.Dislikes,
 			&p.TotalComments,
 			&p.UserVote,
-		)
-		if err != nil {
+		); err != nil {
 			return nil, err
 		}
-
 		if media.Valid {
 			p.MediaLink = media.String
-		} else {
-			p.MediaLink = ""
 		}
-
 		posts = append(posts, p)
 	}
-
 	return posts, rows.Err()
 }
 

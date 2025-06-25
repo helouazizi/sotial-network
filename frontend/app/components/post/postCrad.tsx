@@ -5,6 +5,7 @@ import CommentPostForm from './commentForm';
 import { getComments, addComment, votePost } from '@/app/services/postsServices';
 import { Post, Comment } from '@/app/types/post';
 import { useState } from 'react';
+import { BuildMediaLinkCAS } from '@/app/utils/posts';
 
 
 type postProps = {
@@ -29,7 +30,7 @@ export default function PostCard({ post }: postProps) {
       comment,
       author: { user_name: "you", first_name: "You", last_name: "You", avatar: "avatar.png" },
       created_at: new Date().toISOString(),
-      media_link : img?.name 
+      media_link : img? BuildMediaLinkCAS(img) : ""
     };
     setComments((prev) => [new_comment, ...(prev|| [])]);
     setTotal_comments((prev) => prev + 1);

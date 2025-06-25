@@ -2,14 +2,14 @@
 
 import React, { useState } from "react";
 import { Post, PostErrors } from "@/app/types/post";
-
+import { BuildMediaLinkCAS } from "@/app/utils/posts";
 
 type Props = {
   onCreated: (newPost: Post) => void;
 };
 export default function CreatePostForm({ onCreated }: Props) {
   const [errors, setErrors] = useState<PostErrors>({})
-  const[ privacy,setPrivacy] = useState("public");
+  const [privacy, setPrivacy] = useState("public");
   // const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -17,11 +17,11 @@ export default function CreatePostForm({ onCreated }: Props) {
     const form = e.currentTarget as HTMLFormElement;
     const formData = new FormData(form);
     formData.append("privacy", privacy);
-    
+
     // ============ validate data in front ================//
     const fileInput = form.elements.namedItem("image") as HTMLInputElement;
     const file = fileInput?.files?.[0];
-    
+
     if (file) {
       const allowedTypes = [
         "image/jpeg",
@@ -87,22 +87,22 @@ export default function CreatePostForm({ onCreated }: Props) {
     const res = await fetch("http://localhost:8080/api/v1/posts/create", {
       method: "POST",
       body: formData,
-      credentials : 'include'
+      credentials: 'include'
     });
 
     if (res.ok) {
       // now lets update the posta state to hold the new postscreated 
       let newPost: Post = {
-        id :0,
+        id: 0,
         title: title,
         content: body,
-        media_link :file?.name ? file.name: "",
-        author : "test1",
+        media_link: file ? BuildMediaLinkCAS(file) : "",
+        author: "test1",
         likes: 0,
-        dislikes : 0,
-        total_comments : 0 ,
-        createdAt :"2025-06-11T13:45:00Z",
-        user_vote : null
+        dislikes: 0,
+        total_comments: 0,
+        createdAt: "2025-06-11T13:45:00Z",
+        user_vote: null
 
       }
       onCreated(newPost)
@@ -115,45 +115,45 @@ export default function CreatePostForm({ onCreated }: Props) {
 
   return (
     <>
-     
-     <form onSubmit={handleSubmit} className="post-form">
-      <h2>Create a Post</h2>
-      <label>
-        Title
-        <input type="text" name="title" required maxLength={255} />
-        {errors.title_error && (<p className="errors">{errors.title_error}</p>)}
-      </label>
 
-      <label>
-        Body
-        <textarea name="content" rows={4} required maxLength={500} />
-        {errors.body_error && (<p className="errors">{errors.body_error}</p>)}
-      </label>
+      <form onSubmit={handleSubmit} className="post-form">
+        <h2>Create a Post</h2>
+        <label>
+          Title
+          <input type="text" name="title" required maxLength={255} />
+          {errors.title_error && (<p className="errors">{errors.title_error}</p>)}
+        </label>
 
-      <label>
-        Image or GIF
-        <input type="file" name="image" accept="image/*,image/gif" />
-        {errors.image_error && (<p className="errors">{errors.image_error}</p>)}
-      </label>
+        <label>
+          Body
+          <textarea name="content" rows={4} required maxLength={500} />
+          {errors.body_error && (<p className="errors">{errors.body_error}</p>)}
+        </label>
 
-      <label>
-        Privacy
-        <select
-          name="privacy"
-          value={privacy}
-          onChange={(e) => (setPrivacy(e.target.value.trim()))}
-        >
-          <option value="public">Public (for all users)</option>
-          <option value="almost_private">
-            Almost Private (for followers onlly)
-          </option>
-          <option value="private">Private (for specific folowers)</option>
-        </select>
-        {errors.privacy_error && (<p className="errors">{errors.privacy_error}</p>)}
-      </label>
+        <label>
+          Image or GIF
+          <input type="file" name="image" accept="image/*,image/gif" />
+          {errors.image_error && (<p className="errors">{errors.image_error}</p>)}
+        </label>
 
-      <button type="submit" className="submit-post-btn">Submit Post</button>
-    </form>
+        <label>
+          Privacy
+          <select
+            name="privacy"
+            value={privacy}
+            onChange={(e) => (setPrivacy(e.target.value.trim()))}
+          >
+            <option value="public">Public (for all users)</option>
+            <option value="almost_private">
+              Almost Private (for followers onlly)
+            </option>
+            <option value="private">Private (for specific folowers)</option>
+          </select>
+          {errors.privacy_error && (<p className="errors">{errors.privacy_error}</p>)}
+        </label>
+
+        <button type="submit" className="submit-post-btn">Submit Post</button>
+      </form>
     </>
   );
 }

@@ -227,10 +227,117 @@ input:checked+.slider:before {
     width: 100%;
     height: 520px;
     display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: var(--accent-color);
+    align-items: center;
+
+    svg {
+        width: 90px;
+        height: 90px;
+    }
+
+    h3 {
+        font-weight: lighter;
+    }
+}
+
+.data-profile form {
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    svg{
-        width: 100px;
-        height: 100px;
+    width: 60%;
+    padding: 20px 10px;
+    display: flex;
+    margin: auto;
+
+    .updateImage {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 7px;
+
+        div {
+            margin-bottom: 10px;
+            display: flex;
+            gap: 30px;
+            align-items: center;
+
+            label {
+                transition: .4s ease-in-out;
+                color: var(--icon-color);
+            }
+
+            label:hover {
+                color: var(--text-primary);
+                cursor: pointer;
+            }
+
+            button {
+                border: none;
+                padding: 8px;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: .5s ease-in-out;
+            }
+
+            button[disabled]:hover {
+                background-color: var(--icon-color);
+                color: white;
+            }
+
+            .submit {
+                transition: .5s ease-in-out;
+                background-color: var(--btn-bg);
+                color: var(--btn-text);
+            }
+
+            .submit:hover {
+                color: var(--btn-bg);
+                background-color: var(--btn-text)
+            }
+        }
+
+        input {
+            display: none;
+        }
+    }
+}
+
+.info-user {
+    width: 100%;
+    padding: 15px 7px;
+
+    .details {
+        display: flex;
+        gap: 50px;
+        align-items: start;
+        label {
+            width: 30%;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-size: 22px;
+            font-weight: bold;
+            align-items: end;
+            span{
+                font-size: 16px;
+                color: var(--text-muted);
+                font-style: italic;
+                font-weight: lighter;
+            }
+        }
+
+        textarea {
+            width: 300px;
+            height: 150px;
+            resize: none;
+            border: none;
+            color: var(--text-primary);
+            border-radius: 8px;
+            background-color: var(--btn-bg);
+            padding: 14px 7px;
+        }
     }
 }

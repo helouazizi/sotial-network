@@ -79,24 +79,25 @@ func (h *PostHandler) CreatePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	title := r.FormValue("title")
-	content := r.FormValue("content")
-	privacy := r.FormValue("privacy")
-
-	folowersIds := r.Form["shared-with"]
-	fmt.Println(folowersIds, "ids")
-
 	post := &models.Post{
-		Title:   title,
-		Content: content,
-		Type:    privacy,
 		UserId:  userId,
+		Title:   r.FormValue("title"),
+		Content: r.FormValue("content"),
+		Type:    r.FormValue("privacy"),
+	}
+
+	if post.Type == "private" {
+		idStrs := r.Form["shared_with"]
+		for _, s := range idStrs {
+			if id, err := strconv.Atoi(s); err == nil {
+				post.AllowedUsres = append(post.AllowedUsres, id)
+			}
+		}
 	}
 
 	// Try to read the file
 	file, header, err := r.FormFile("image")
 	var img *models.Image // nil unless file is provided
-
 	if err == nil {
 		img = &models.Image{
 			ImgHeader:  header,
@@ -105,9 +106,8 @@ func (h *PostHandler) CreatePost(w http.ResponseWriter, r *http.Request) {
 
 		defer file.Close()
 	}
-
 	// Pass image as nil if not uploaded
-	err = h.service.SavePost(post, img)
+	err = h.service.SavePost(r.Context(), post, img)
 	if err != nil {
 		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
 			"message": "Bad request",
@@ -119,7 +119,7 @@ func (h *PostHandler) CreatePost(w http.ResponseWriter, r *http.Request) {
 
 	utils.ResponseJSON(w, http.StatusOK, map[string]any{
 		"message": "Successfully created post",
-		"status":  http.StatusOK,
+		"status":  http.StatusCreated,
 	})
 }
 

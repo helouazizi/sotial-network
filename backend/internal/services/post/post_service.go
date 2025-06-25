@@ -1,6 +1,7 @@
 package services
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"io"
@@ -19,7 +20,7 @@ func NewAuthService(postRepo *repositories.PostRepository) *PostService {
 	return &PostService{repo: postRepo}
 }
 
-func (s *PostService) SavePost(post *models.Post, img *models.Image) error {
+func (s *PostService) SavePost(ctx context.Context, post *models.Post, img *models.Image) error {
 	if n := len(strings.Fields(post.Title)); n == 0 || n > 255 {
 		return errors.New("title is required and must be less than 256 characters")
 	}
@@ -41,7 +42,7 @@ func (s *PostService) SavePost(post *models.Post, img *models.Image) error {
 		return err
 	}
 
-	return s.repo.SavePost(post, img) // img may be nil
+	return s.repo.SavePost(ctx,post, img) // img may be nil
 }
 
 func (s *PostService) GetPosts(userId, offset, limit int) ([]models.Post, error) {

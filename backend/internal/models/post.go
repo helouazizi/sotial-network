@@ -14,6 +14,7 @@ type Post struct {
 	UserVote      *string `json:"user_vote"`
 	Type          string  `json:"privacy"`
 	CreatedAt     string  `json:"created_at"`
+	AllowedUsres  []int   // if the post is private
 }
 
 type Image struct {

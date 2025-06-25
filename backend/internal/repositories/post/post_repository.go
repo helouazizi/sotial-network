@@ -1,6 +1,7 @@
 package repositories
 
 import (
+	"context"
 	"database/sql"
 	"errors"
 	"fmt"
@@ -20,52 +21,29 @@ func NewPostRepo(db *sql.DB) *PostRepository {
 	return &PostRepository{db: db}
 }
 
-func (r *PostRepository) SavePost(post *models.Post, img *models.Image) error {
-	const qry = `
+func (r *PostRepository) SavePost(ctx context.Context, post *models.Post, img *models.Image) error {
+	//  lets craete a transaction
+	tx, err := r.db.BeginTx(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("begin tx: %w", err)
+	}
+	defer func() {
+		if err != nil {
+			_ = tx.Rollback()
+		}
+	}()
+
+	const InsertPost = `
 		INSERT INTO posts (user_id, title, content, type, media, created_at)
 		VALUES (?, ?, ?, ?, ?, ?)
 	`
 
-	var fileName sql.NullString // will be NULL if no image
-
-	if img != nil && img.ImgContent != nil && img.ImgHeader != nil {
-		// Reset file read pointer
-		if seeker, ok := (img.ImgContent).(io.Seeker); ok {
-			_, _ = seeker.Seek(0, io.SeekStart)
-		}
-
-		// Ensure directory exists
-		const dir = "pkg/db/images/posts"
-		if err := os.MkdirAll(dir, 0o755); err != nil {
-			return fmt.Errorf("ensure image dir: %w", err)
-		}
-
-		// Sanitize and generate unique filename
-		origName := filepath.Base(time.Now().Format(time.DateTime) + "_" + img.ImgHeader.Filename) // basic sanitization
-
-		path := filepath.Join(dir, origName)
-
-		dst, err := os.Create(path)
-		if err != nil {
-			return fmt.Errorf("create image file: %w", err)
-		}
-
-		_, err = io.Copy(dst, img.ImgContent)
-		dst.Close() // close file after copy
-		if err != nil {
-			return fmt.Errorf("write image: %w", err)
-		}
-
-		fileName = sql.NullString{String: origName, Valid: true}
-	}
-
-	stmt, err := r.db.Prepare(qry)
+	fileName, err := handleImage(img)
 	if err != nil {
-		return fmt.Errorf("prepare stmt: %w", err)
+		return err
 	}
-	defer stmt.Close()
 
-	_, err = stmt.Exec(
+	res, err := tx.Exec(InsertPost,
 		post.UserId,
 		post.Title,
 		post.Content,
@@ -73,8 +51,30 @@ func (r *PostRepository) SavePost(post *models.Post, img *models.Image) error {
 		fileName,
 		time.Now(),
 	)
+	if err != nil {
+		return fmt.Errorf("insert post: %w", err)
+	}
 
-	return err
+	// add logic for pravte posts
+	if post.Type == "private" && len(post.AllowedUsres) > 0 {
+		const insertAllowedUsers = `
+            INSERT INTO post_allowed_users (post_id, user_id) VALUES (?, ?)
+        `
+		postID, _ := res.LastInsertId()
+		stmt, err2 := tx.Prepare(insertAllowedUsers)
+		if err2 != nil {
+			return fmt.Errorf("prepare audience stmt: %w", err2)
+		}
+		defer stmt.Close()
+
+		for _, uid := range post.AllowedUsres {
+			if _, err2 = stmt.Exec(postID, uid); err2 != nil {
+				return fmt.Errorf("insert user in private post  (%d): %w", uid, err2)
+			}
+		}
+	}
+
+	return tx.Commit()
 }
 
 func (r *PostRepository) GetPosts(userId, start, limit int) ([]models.Post, error) {
@@ -291,4 +291,40 @@ func (r *PostRepository) GetFollowers(userID int) ([]models.PostFolower, error) 
 	}
 
 	return followers, nil
+}
+
+func handleImage(img *models.Image) (sql.NullString, error) {
+	var fileName sql.NullString // will be NULL if no image
+
+	if img != nil && img.ImgContent != nil && img.ImgHeader != nil {
+		// Reset file read pointer
+		if seeker, ok := (img.ImgContent).(io.Seeker); ok {
+			_, _ = seeker.Seek(0, io.SeekStart)
+		}
+
+		// Ensure directory exists
+		const dir = "pkg/db/images/posts"
+		if err := os.MkdirAll(dir, 0o755); err != nil {
+			return fileName, fmt.Errorf("ensure image dir: %w", err)
+		}
+
+		// Sanitize and generate unique filename
+		origName := filepath.Base(time.Now().Format(time.DateTime) + "_" + img.ImgHeader.Filename)
+
+		path := filepath.Join(dir, origName)
+
+		dst, err := os.Create(path)
+		if err != nil {
+			return fileName, fmt.Errorf("create image file: %w", err)
+		}
+
+		_, err = io.Copy(dst, img.ImgContent)
+		dst.Close() // close file after copy
+		if err != nil {
+			return fileName, fmt.Errorf("write image: %w", err)
+		}
+
+		fileName = sql.NullString{String: origName, Valid: true}
+	}
+	return fileName, nil
 }

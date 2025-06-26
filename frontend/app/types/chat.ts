@@ -5,9 +5,9 @@ export interface User {
     lastName: string
 }
 
-export interface Messages {
+export interface Message {
     id: number 
-    senderId: number
-    receiverId: number
+    sender_id: number
+    receiver_id: number
     message: string
 }

@@ -2,7 +2,7 @@
 
 import ChatFooter from "@/app/components/chat/chatFooter";
 import { SocketContext } from "@/app/context/socketContext";
-import { User } from "@/app/types/chat";
+import { Message, User } from "@/app/types/chat";
 import { useParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import { FaUser } from "react-icons/fa";
@@ -18,20 +18,32 @@ export default function PrivateChat() {
         })
 
         setFriend(friend)
-        
+
         if (ws?.current && friend) {
             ws.current.send(JSON.stringify({
                 "type": "getMessages",
                 "receiver_id": friend.id
             }))
         }
-
-        
     }, [friends])
-    
-    useEffect(() => {
-        console.log("=>>>", messages)
-    }, [messages])
+
+    const displayMessages = () => {
+        return messages?.map((message: Message) => {
+            if (message.receiver_id === friend?.id) {
+                return (
+                    <div key={message.id} className="receiver">
+                        <p>{message.message}</p>
+                    </div>
+                )
+            }
+
+            return (
+                <div key={message.id} className="sender">
+                    <p>{message.message}</p>
+                </div>
+            )
+        })
+    }
 
     return (
         <>
@@ -40,25 +52,7 @@ export default function PrivateChat() {
                 <p className="online"><span></span> online</p>
             </div>
             <div className="chatBody">
-
-                <div className="sender">
-                    <p>ana sender</p>
-                </div>
-                <div className="receiver">
-                    <p>ana receiver</p>
-                </div>
-                <div className="sender">
-                    <p>ana sender</p>
-                </div>
-                <div className="receiver">
-                    <p>ana receiver</p>
-                </div>
-                <div className="sender">
-                    <p>ana sender</p>
-                </div>
-                <div className="receiver">
-                    <p>ana receiver</p>
-                </div>
+                {displayMessages()}
             </div>
             <ChatFooter />
         </>

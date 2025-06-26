@@ -14,6 +14,9 @@ func NewProfileService(repo *repositories.ProfileRepository) *ProfileService {
 }
 
 func (s *ProfileService) GetProfile(sessionID, userId int) (*models.CommunInfoProfile, error) {
-	
-	return s.repo.GetMyProfile(sessionID, userId, )
+	return s.repo.GetMyProfile(sessionID, userId)
+}
+
+func (s *ProfileService) ChangeVisbility(sessionID int) error {
+	return s.repo.ChangeVisbility(sessionID)
 }

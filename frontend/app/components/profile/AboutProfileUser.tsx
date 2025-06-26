@@ -1,8 +1,9 @@
 "use client"
 import { useProfile } from '@/app/context/ProfileContext'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { GenerateAvatar } from './ProfileHeader';
 import Toast from '../toast/Toast';
+import { Debounce } from '@/app/utils/Debounce';
 
 const AboutProfileUser = () => {
     const { dataProfile, setDataProfile } = useProfile()
@@ -37,20 +38,27 @@ const AboutProfileUser = () => {
         const target = e.target as HTMLTextAreaElement;
         setAbout(target.value);
     }
+    const debouncedSubmit = useCallback(
+        Debounce(() => {
+            if (
+                (avatar === `http://localhost:8080/images/user/${dataProfile?.avatar}` || !avatar) &&
+                (about === dataProfile?.about_me || !about) &&
+                (nickname === dataProfile?.nickname || !nickname)
+            ) {
+                setShowError(true)
+                return
+            }
+            setShowError(false)
+        }, 500),
+        [avatar, about, nickname, dataProfile]
+    )
+
     const submitForm = (e: React.FormEvent) => {
         e.preventDefault()
-        if (
-            (avatar === `http://localhost:8080/images/user/${dataProfile?.avatar}` || avatar === "" || avatar === null) &&
-            (about === dataProfile?.about_me || about === "" || about === null) &&
-            (nickname === dataProfile?.nickname || nickname === "" || nickname === null)
-        ) {
-            setShowError(true)
-            return
-        }
-        setShowError(false)
-
-
+        debouncedSubmit()
     }
+
+
     return (
         <>
 

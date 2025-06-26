@@ -6,9 +6,7 @@ import React from 'react'
 const ProfileBody = () => {
     const { dataProfile, setDataProfile } = useProfile()
     const path = usePathname()
-    const styleLeft = {
-
-    }
+   
     return (
         <div className='profile-body'>
             <ul className='navigation-profile'>

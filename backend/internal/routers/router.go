@@ -18,7 +18,7 @@ func SetupRoutes(app *app.Application) *http.ServeMux {
 
 	//================== Profile routes =======================///
 	mux.HandleFunc("/api/v1/profile", middleware.AuthMiddleware(http.HandlerFunc(app.ProfileHandler.ProfileHandler), app.DB))
-
+	mux.HandleFunc("/api/v1/ChangeVisibilityProfile", middleware.AuthMiddleware(http.HandlerFunc(app.ProfileHandler.ChangeVisbility), app.DB))
 	//================== posts routes =========================///
 	mux.Handle("/api/v1/posts", middleware.AuthMiddleware(http.HandlerFunc(app.PostHandler.GetPosts), app.DB))
 	mux.Handle("/api/v1/posts/create", middleware.AuthMiddleware(http.HandlerFunc(app.PostHandler.CreatePost), app.DB))

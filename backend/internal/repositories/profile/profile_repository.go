@@ -151,3 +151,7 @@ func (repo *ProfileRepository) getFollowStatus(sessionID, userId int) (string, e
 
 	return status, nil
 }
+
+func (repo *ProfileRepository) ChangeVisbility(sessionID int) error {
+	return nil
+}

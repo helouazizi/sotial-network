@@ -308,36 +308,54 @@ input:checked+.slider:before {
 .info-user {
     width: 100%;
     padding: 15px 7px;
+    display: flex;
+    justify-content: space-between;
 
-    .details {
-        display: flex;
-        gap: 50px;
-        align-items: start;
-        label {
-            width: 30%;
+    .labels {
+        width: 50%;
+
+        div {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 20px;
-            font-size: 22px;
+            margin: 10px 0;
             font-weight: bold;
-            align-items: end;
-            span{
-                font-size: 16px;
-                color: var(--text-muted);
+
+            .editabel {
                 font-style: italic;
+                font-size: 14px;
                 font-weight: lighter;
+                color: var(--text-muted);
             }
         }
+    }
 
-        textarea {
-            width: 300px;
-            height: 150px;
-            resize: none;
-            border: none;
-            color: var(--text-primary);
-            border-radius: 8px;
-            background-color: var(--btn-bg);
-            padding: 14px 7px;
+    .inputs {
+        width: 50%;
+        padding: 0 10px;
+
+        div {
+            margin: 10px 0;
+
+            textarea {
+                border: none;
+                background-color: var(--btn-bg);
+                width: 200px;
+                height: 200px;
+                overflow-y: auto;
+                resize: none;
+                border-radius: 8px;
+                padding: 10px 7px;
+                color: var(--btn-text);
+            }
+            input{
+                border: none;
+                border-radius: 8px;
+                padding:  8px 4px;
+                width: 200px;
+                background-color: var(--btn-bg);
+                color: var(--btn-text);
+                outline: none;
+            }
         }
     }
 }

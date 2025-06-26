@@ -2,6 +2,7 @@ package profile
 
 import (
 	"database/sql"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -44,6 +45,7 @@ func (h *ProfileHandler) ProfileHandler(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 	if err != nil {
+		fmt.Println(err)
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
 			"message": "Error, please try again.",
 			"status":  http.StatusInternalServerError,

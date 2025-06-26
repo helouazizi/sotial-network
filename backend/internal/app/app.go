@@ -45,7 +45,7 @@ func NewApp(db *sql.DB) *Application {
 	ChatRepo := chatRepo.NewChatRepo(db)
 	ChatService := chatServices.NewChatService(ChatRepo)
 	ChatHandler := chatHandlers.NewChatHandler(ChatService)
-
+	//================= profile =================//
 	ProfileRepo := profileRepo.NewProfileRepository(db)
 	ProfileServices := profileServices.NewProfileService(ProfileRepo)
 	ProfileHandler := profileHandlers.NewProfileHandler(ProfileServices)

@@ -2,7 +2,6 @@ package profile
 
 import (
 	"database/sql"
-	"fmt"
 
 	"github.com/ismailsayen/social-network/internal/models"
 )
@@ -77,7 +76,6 @@ func (repo *ProfileRepository) GetMyProfile(sessionID, userId int) (*models.Comm
 		profile.AboutMe = ""
 		profile.Email = ""
 		profile.DateOfBirth = ""
-		fmt.Println(profile)
 		return &profile, nil
 	}
 
@@ -152,4 +150,8 @@ func (repo *ProfileRepository) getFollowStatus(sessionID, userId int) (string, e
 	}
 
 	return status, nil
+}
+
+func (repo *ProfileRepository) ChangeVisbility(sessionID int) error {
+	return nil
 }

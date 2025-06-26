@@ -2,6 +2,7 @@ package profile
 
 import (
 	"database/sql"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -44,6 +45,7 @@ func (h *ProfileHandler) ProfileHandler(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 	if err != nil {
+		fmt.Println(err)
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
 			"message": "Error, please try again.",
 			"status":  http.StatusInternalServerError,
@@ -51,4 +53,20 @@ func (h *ProfileHandler) ProfileHandler(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 	utils.ResponseJSON(w, http.StatusOK, profile)
+}
+
+func (h *ProfileHandler) ChangeVisbility(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
+			"message": "Method not allowed",
+			"status":  http.StatusMethodNotAllowed,
+		})
+		return
+	}
+	fmt.Println("cc")
+	// sessionID := r.Context().Value("userID").(int)
+	utils.ResponseJSON(w, http.StatusOK, map[string]any{
+		"message": "ok",
+		"status":  http.StatusMethodNotAllowed,
+	})
 }

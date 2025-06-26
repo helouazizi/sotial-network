@@ -1,11 +1,11 @@
 "use client"
 import { usePathname } from "next/navigation"
 import React, { createContext, useEffect, useRef, useState, ReactNode, RefObject } from "react"
-import { User } from "../types/user";
+import { Messages, User } from "../types/chat";
 export interface SocketContextType {
   ws: RefObject<WebSocket | null>
-  messages: any[]
-  setMessages: React.Dispatch<React.SetStateAction<any[]>>
+  messages: Messages[] | null
+  setMessages: React.Dispatch<React.SetStateAction<Messages[] | null>>
   user: User | null
   setUser: React.Dispatch<React.SetStateAction<User | null>>
   friends: User[] | null
@@ -16,7 +16,7 @@ export const SocketContext = createContext<SocketContextType | null>(null);
 
 export default function SocketProvider({ children }: { children: ReactNode }) {
   const ws = useRef<WebSocket | null>(null);
-  const [messages, setMessages] = useState<any[]>([]);
+  const [messages, setMessages] = useState<Messages[] | null>([]);
   const pathname = usePathname();
   const [user, setUser] = useState<User | null>(null)
   const [friends, setFriends] = useState<User[] | null>(null)
@@ -41,7 +41,7 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
       );
     };
 
-    ws.current.onmessage = (event) => {
+    ws.current.onmessage = (event: MessageEvent) => {
       let res = JSON.parse(event.data)
 
       if (res.type === "getUser") {
@@ -65,6 +65,20 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
         })
         setFriends(friendsList)
       }
+
+      if (res.type === "getMessages") {
+        const messagesList: Messages[] = res.data.map((message: any) => {
+          return {
+            id: message.id,
+            senderId: message.sender_id,
+            receiverId: message.receiver_id,
+            message: message.message
+          }
+        })
+
+        setMessages(messagesList)
+      }
+ 
     };
 
     ws.current.onclose = () => {

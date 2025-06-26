@@ -62,6 +62,7 @@ func (h *ChatHandler) ChatMessagesHandler(w http.ResponseWriter, r *http.Request
 
 		switch chat.Type {
 		case "getMessages":
+			chat.SenderID = userID
 			messages, err := h.service.GetMessages(chat.SenderID, chat.ReceiverID)
 			if err != nil {
 				conn.WriteJSON(map[string]any{
@@ -69,9 +70,10 @@ func (h *ChatHandler) ChatMessagesHandler(w http.ResponseWriter, r *http.Request
 				})
 				continue
 			}
-
+			
 			conn.WriteJSON(map[string]any{
 				"data": messages,
+				"type": "getMessages",
 			})
 		case "getUser":
 			user, err := h.service.GetUser(userID)

@@ -221,6 +221,7 @@ input:checked+.slider:before {
     width: 100%;
     min-height: 520px;
     background-color: var(--card-bg);
+
 }
 
 .data-profile .Forbiden {
@@ -347,15 +348,23 @@ input:checked+.slider:before {
                 padding: 10px 7px;
                 color: var(--btn-text);
             }
-            input{
+
+            input {
                 border: none;
                 border-radius: 8px;
-                padding:  8px 4px;
+                padding: 8px 4px;
                 width: 200px;
                 background-color: var(--btn-bg);
                 color: var(--btn-text);
                 outline: none;
             }
         }
+    }
+}
+
+.toast {
+    p {
+        color: var(--danger-color);
+        font-size: 16px;
     }
 }

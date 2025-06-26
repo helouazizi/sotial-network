@@ -2,12 +2,14 @@
 
 import { SocketContext } from "@/app/context/socketContext";
 import { User } from "@/app/types/user";
+import { useRouter } from "next/navigation";
 import { useContext, useEffect } from "react";
 import { FaUser } from "react-icons/fa";
 
 
 export default function Friends() {
     const { ws, friends, setFriends } = useContext(SocketContext) ?? {}
+    const router = useRouter()
 
     useEffect(() => {
         if (ws?.current) {
@@ -21,9 +23,8 @@ export default function Friends() {
         }
     }, [ws?.current])
 
-    const handleClickUser = (e: any) => {
-        console.log(e.target.key)
-        console.log(e.target)
+    const handleClickUser = (e: React.MouseEvent<HTMLElement>) => {
+        router.push("/chat/privateChat/" + e.currentTarget.id)
     }
 
     return (

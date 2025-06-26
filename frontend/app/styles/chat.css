@@ -236,3 +236,17 @@
 .chatBody .receiver p {
   background-color: var(--btn-bg);
 }
+
+.noChat{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+  justify-content: center;
+}
+
+.noChat svg{
+  font-size: 8em;
+  color: var(--text-secondary);
+}

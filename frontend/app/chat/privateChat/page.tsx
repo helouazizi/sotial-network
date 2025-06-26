@@ -1,29 +1,13 @@
 "use client"
-import { SocketContext } from "@/app/context/socketContext";
-import { User } from "@/app/types/user";
-import { useContext, useEffect } from "react";
-import { FaUser } from "react-icons/fa";
 
-export default function PrivateChat() {
-  const { ws, friends, setFriends } = useContext(SocketContext) ?? {}
+import { AiOutlineMessage } from "react-icons/ai";
 
-  useEffect(() => {
-    if (ws?.current) {
-      ws.current.send(JSON.stringify({
-        type: "getFriends"
-      }));
-    }
-
-    return () => {
-      if (setFriends) setFriends(null)
-    }
-  }, [ws?.current]) 
-
+export default function Chat() {
   return (
-    <>
-      {friends?.map((friend: User) => {
-        return <li key={friend.id}><FaUser /> {friend.firstName} {friend.lastName}</li>
-      }) || <li>Loading friends...</li> }
-    </>
-  );
+    <div className="noChat">
+      <AiOutlineMessage />
+      <h3>Your messages</h3>
+      <p>Send private messages to a friend or a group.</p>
+    </div>
+  )
 }

@@ -2,6 +2,8 @@ package profile
 
 import (
 	"database/sql"
+	"fmt"
+	"time"
 
 	"github.com/ismailsayen/social-network/internal/models"
 )
@@ -152,6 +154,12 @@ func (repo *ProfileRepository) getFollowStatus(sessionID, userId int) (string, e
 	return status, nil
 }
 
-func (repo *ProfileRepository) ChangeVisbility(sessionID int) error {
+func (repo *ProfileRepository) ChangeVisbility(sessionID, to int) error {
+	fmt.Println("/", to)
+	query := `UPDATE users SET is_private=?, updated_at=? WHERE id=?;`
+	_, err := repo.db.Exec(query, to, time.Now(), sessionID)
+	if err != nil {
+		return err
+	}
 	return nil
 }

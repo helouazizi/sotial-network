@@ -215,8 +215,6 @@
 
 .chatBody .sender{
   display: flex;
-    justify-content: end;
-
 }
 
 .chatBody > div p{
@@ -231,6 +229,7 @@
 
 .chatBody .receiver{
   display: flex;
+  justify-content: end;
 }
 
 .chatBody .receiver p {
@@ -248,5 +247,9 @@
 
 .noChat svg{
   font-size: 8em;
+  color: var(--text-secondary);
+}
+
+.noChat h3, .noChat p{
   color: var(--text-secondary);
 }

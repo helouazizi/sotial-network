@@ -6,6 +6,7 @@ import { Message, User } from "@/app/types/chat";
 import { useParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import { FaUser } from "react-icons/fa";
+import Chat from "../page";
 
 export default function PrivateChat() {
     const { id } = useParams()
@@ -18,6 +19,8 @@ export default function PrivateChat() {
         })
 
         setFriend(friend)
+
+        console.log(friend)
 
         if (ws?.current && friend) {
             ws.current.send(JSON.stringify({
@@ -47,14 +50,25 @@ export default function PrivateChat() {
 
     return (
         <>
-            <div className="chatHeader">
-                <p className="userName"><FaUser /> <span id={`${friend?.id}`}>{friend?.firstName} {friend?.lastName}</span></p>
-                <p className="online"><span></span> online</p>
-            </div>
-            <div className="chatBody">
-                {displayMessages()}
-            </div>
-            <ChatFooter />
+            {friend === undefined ? (
+                <Chat />
+            ) : (
+                <>
+                    <div className="chatHeader">
+                        <p className="userName">
+                            <FaUser />
+                            <span id={`${friend?.id}`}>
+                                {friend?.firstName} {friend?.lastName}
+                            </span>
+                        </p>
+                        <p className="online">
+                            <span></span> online
+                        </p>
+                    </div>
+                    <div className="chatBody">{displayMessages()}</div>
+                    <ChatFooter />
+                </>
+            )}
         </>
-    )
+    );
 }

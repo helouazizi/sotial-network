@@ -2,10 +2,12 @@ package profile
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"strconv"
 
+	"github.com/ismailsayen/social-network/internal/models"
 	services "github.com/ismailsayen/social-network/internal/services/profile"
 	"github.com/ismailsayen/social-network/pkg/utils"
 )
@@ -56,17 +58,34 @@ func (h *ProfileHandler) ProfileHandler(w http.ResponseWriter, r *http.Request) 
 }
 
 func (h *ProfileHandler) ChangeVisbility(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
+	if r.Method != http.MethodPut {
 		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
 			"message": "Method not allowed",
 			"status":  http.StatusMethodNotAllowed,
 		})
 		return
 	}
-	fmt.Println("cc")
-	// sessionID := r.Context().Value("userID").(int)
+	var data models.UpdateVsibility
+	err := json.NewDecoder(r.Body).Decode(&data)
+	if err != nil {
+		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+			"message": "Server Error",
+			"status":  http.StatusInternalServerError,
+		})
+		return
+	}
+	fmt.Println(data, data.To)
+	sessionID := r.Context().Value("userID").(int)
+	err = h.service.ChangeVisbility(sessionID, data.To)
+	if err != nil {
+		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+			"message": "Server Error",
+			"status":  http.StatusInternalServerError,
+		})
+		return
+	}
 	utils.ResponseJSON(w, http.StatusOK, map[string]any{
-		"message": "ok",
-		"status":  http.StatusMethodNotAllowed,
+		"message": "Visibilty Updated successfully",
+		"status":  http.StatusOK,
 	})
 }

@@ -1,6 +1,8 @@
 package services
 
 import (
+	"fmt"
+
 	"github.com/ismailsayen/social-network/internal/models"
 	repositories "github.com/ismailsayen/social-network/internal/repositories/profile"
 )
@@ -17,6 +19,7 @@ func (s *ProfileService) GetProfile(sessionID, userId int) (*models.CommunInfoPr
 	return s.repo.GetMyProfile(sessionID, userId)
 }
 
-func (s *ProfileService) ChangeVisbility(sessionID int) error {
-	return s.repo.ChangeVisbility(sessionID)
+func (s *ProfileService) ChangeVisbility(sessionID, to int) error {
+	fmt.Println("=>",to)
+	return s.repo.ChangeVisbility(sessionID, to)
 }

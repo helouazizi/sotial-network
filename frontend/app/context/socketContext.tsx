@@ -4,22 +4,25 @@ import React, { createContext, useEffect, useRef, useState, ReactNode, RefObject
 import { Message, User } from "../types/chat";
 export interface SocketContextType {
   ws: RefObject<WebSocket | null>
-  messages: Message[] | null
-  setMessages: React.Dispatch<React.SetStateAction<Message[] | null>>
+  messages: Message[]
+  setMessages: React.Dispatch<React.SetStateAction<Message[]>>
   user: User | null
   setUser: React.Dispatch<React.SetStateAction<User | null>>
   friends: User[] | null
   setFriends: React.Dispatch<React.SetStateAction<User[] | null>>
+  sendMessage: Message | undefined 
+  setSendMessage: React.Dispatch<React.SetStateAction<Message | undefined>>
 }
 
 export const SocketContext = createContext<SocketContextType | null>(null);
 
 export default function SocketProvider({ children }: { children: ReactNode }) {
   const ws = useRef<WebSocket | null>(null);
-  const [messages, setMessages] = useState<Message[] | null>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const pathname = usePathname();
   const [user, setUser] = useState<User | null>(null)
   const [friends, setFriends] = useState<User[] | null>(null)
+  const [sendMessage, setSendMessage] = useState<Message | undefined>(undefined) 
 
 
   const excludedPaths = ["/login", "/register"];
@@ -69,6 +72,10 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
       if (res.type === "getMessages") {
         setMessages(res.data)
       }
+
+      if (res.type === "saveMessage") {
+        setSendMessage(res.message)
+      }
  
     };
 
@@ -80,7 +87,17 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
   }, [shouldConnect]);
 
   return (
-    <SocketContext.Provider value={{ ws, messages, setMessages, user, setUser, friends, setFriends }}>
+    <SocketContext.Provider value={{
+      ws, 
+      messages, 
+      setMessages, 
+      user, 
+      setUser, 
+      friends, 
+      setFriends, 
+      sendMessage,
+      setSendMessage
+    }}>
       {children}
     </SocketContext.Provider>
   );

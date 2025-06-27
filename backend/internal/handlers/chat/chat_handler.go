@@ -60,9 +60,28 @@ func (h *ChatHandler) ChatMessagesHandler(w http.ResponseWriter, r *http.Request
 			return
 		}
 
+		chat.SenderID = userID
+
 		switch chat.Type {
+		case "saveMessage":
+			lastMessageID, err := h.service.SaveMessage(&chat)
+			if err != nil {
+				conn.WriteJSON(map[string]any{
+					"error": err.Error(),
+				})
+				continue
+			}
+
+			conn.WriteJSON(map[string]any{
+				"message": map[string]any{
+					"id": lastMessageID,
+					"receiver_id": chat.ReceiverID, 
+					"sender_id": chat.SenderID,
+					"message": chat.Message,
+				},
+				"type": "saveMessage",
+			})
 		case "getMessages":
-			chat.SenderID = userID
 			messages, err := h.service.GetMessages(chat.SenderID, chat.ReceiverID)
 			if err != nil {
 				conn.WriteJSON(map[string]any{
@@ -70,7 +89,7 @@ func (h *ChatHandler) ChatMessagesHandler(w http.ResponseWriter, r *http.Request
 				})
 				continue
 			}
-			
+
 			conn.WriteJSON(map[string]any{
 				"data": messages,
 				"type": "getMessages",
@@ -100,18 +119,6 @@ func (h *ChatHandler) ChatMessagesHandler(w http.ResponseWriter, r *http.Request
 			conn.WriteJSON(map[string]any{
 				"data": users,
 				"type": "getFriends",
-			})
-		default:
-			err = h.service.SaveMessage(&chat)
-			if err != nil {
-				conn.WriteJSON(map[string]any{
-					"error": err.Error(),
-				})
-				continue
-			}
-
-			conn.WriteJSON(map[string]any{
-				"message": "Message added successfully",
 			})
 		}
 	}

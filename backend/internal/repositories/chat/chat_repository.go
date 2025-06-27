@@ -15,10 +15,12 @@ func NewChatRepo(db *sql.DB) *ChatRepository {
 	return &ChatRepository{db: db}
 }
 
-func (r *ChatRepository) SaveMessage(chat *models.Chat) error {
-	query := `INSERT INTO chat_message (sender_id, receiver_id, content, sent_at) VALUES (?,?,?,?)`
-	_, err := r.db.Exec(query, chat.SenderID, chat.ReceiverID, chat.Message, time.Now())
-	return err
+func (r *ChatRepository) SaveMessage(chat *models.Chat) (int, error) {
+	query := `INSERT INTO chat_message (sender_id, receiver_id, content, sent_at) VALUES (?,?,?,?) RETURNING id`
+
+	lastMessageID := 0
+	err := r.db.QueryRow(query, chat.SenderID, chat.ReceiverID, chat.Message, time.Now()).Scan(&lastMessageID)
+	return lastMessageID, err
 }
 
 func (r *ChatRepository) GetMessages(senderID, receiverID int) ([]*models.Chat, error) {

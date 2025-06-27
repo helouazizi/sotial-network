@@ -10,7 +10,7 @@ import Chat from "../page";
 
 export default function PrivateChat() {
     const { id } = useParams()
-    const { ws, friends, messages } = useContext(SocketContext) ?? {}
+    const { ws, friends, messages, setMessages , sendMessage } = useContext(SocketContext) ?? {}
     let [friend, setFriend] = useState<User | undefined>(undefined)
 
     useEffect(() => {
@@ -20,8 +20,6 @@ export default function PrivateChat() {
 
         setFriend(friend)
 
-        console.log(friend)
-
         if (ws?.current && friend) {
             ws.current.send(JSON.stringify({
                 "type": "getMessages",
@@ -29,6 +27,13 @@ export default function PrivateChat() {
             }))
         }
     }, [friends])
+
+    useEffect(() => {
+        console.log(sendMessage)
+        if (sendMessage && setMessages) {
+            setMessages(prev => [...prev, sendMessage])
+        } 
+    }, [sendMessage]) 
 
     const displayMessages = () => {
         return messages?.map((message: Message) => {
@@ -66,7 +71,7 @@ export default function PrivateChat() {
                         </p>
                     </div>
                     <div className="chatBody">{displayMessages()}</div>
-                    <ChatFooter />
+                    <ChatFooter receiverId = {friend.id}/>
                 </>
             )}
         </>

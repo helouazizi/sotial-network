@@ -1,5 +1,7 @@
 package models
 
+import "mime/multipart"
+
 type CommunInfoProfile struct {
 	Id           int           `json:"id"`
 	Nickname     string        `json:"nickname"`
@@ -22,4 +24,12 @@ type Subscription struct {
 	FollowerID int    `json:"follower_id"`
 	FollowedID int    `json:"followed_id"`
 	Status     string `json:"status"`
+}
+type UpdateVsibility struct {
+	To int `json:"to"`
+}
+type ProfileUpdate struct {
+	File     multipart.File `json:"avatar"`
+	Nickname string         `json:"nickname"`
+	About    string         `json:"about"`
 }

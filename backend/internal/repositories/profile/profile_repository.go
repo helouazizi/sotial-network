@@ -176,5 +176,8 @@ func (repp *ProfileRepository) UpdateProfile(fileHeader *multipart.FileHeader, n
 			  where id=?;
 	`
 	_,err:=repp.db.Exec(query,AvatarPath,nickname,about)
+	if err!=nil{
+		return nil
+	}
 	return nil
 }

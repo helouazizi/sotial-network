@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"mime/multipart"
+	"os"
 	"time"
 
 	"github.com/ismailsayen/social-network/internal/models"
@@ -164,7 +165,7 @@ func (repo *ProfileRepository) ChangeVisbility(sessionID, to int) error {
 	return nil
 }
 
-func (repp *ProfileRepository) UpdateProfile(fileHeader *multipart.FileHeader, nickname, about, oldAvatar string,sessionId int) error {
+func (repp *ProfileRepository) UpdateProfile(fileHeader *multipart.FileHeader, nickname, about, oldAvatar string, sessionId int) error {
 	var AvatarPath string
 	if fileHeader == nil {
 		AvatarPath = oldAvatar
@@ -175,9 +176,14 @@ func (repp *ProfileRepository) UpdateProfile(fileHeader *multipart.FileHeader, n
 			  SET avatar=?,nickname=?,about_me=?
 			  where id=?;
 	`
-	_,err:=repp.db.Exec(query,AvatarPath,nickname,about)
-	if err!=nil{
-		return nil
+	_, err := repp.db.Exec(query, AvatarPath, nickname, about, sessionId)
+	if err != nil {
+		return err
 	}
+	dst, err := os.Create("pkg/db/images/user/" + AvatarPath)
+	if err != nil {
+		return err
+	}
+	defer dst.Close()
 	return nil
 }

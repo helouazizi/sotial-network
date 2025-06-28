@@ -67,7 +67,6 @@
     }
 }
 
-/* From Uiverse.io by mrhyddenn */
 /* The switch - the box around the slider */
 .switch {
     font-size: 17px;
@@ -92,7 +91,7 @@
     left: 0;
     right: 0;
     bottom: 0px;
-    background: #fff;
+    background: var(--online-color);
     transition: .4s;
     border-radius: 30px;
     border: 1px solid #ccc;
@@ -113,7 +112,7 @@
 }
 
 input:checked+.slider {
-    background-color: #5fdd54;
+    background-color: var(--danger-color);
     border: 1px solid transparent;
 }
 

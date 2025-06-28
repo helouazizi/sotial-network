@@ -1,7 +1,8 @@
 package services
 
 import (
-	"fmt"
+	"mime/multipart"
+	"os"
 
 	"github.com/ismailsayen/social-network/internal/models"
 	repositories "github.com/ismailsayen/social-network/internal/repositories/profile"
@@ -20,6 +21,16 @@ func (s *ProfileService) GetProfile(sessionID, userId int) (*models.CommunInfoPr
 }
 
 func (s *ProfileService) ChangeVisbility(sessionID, to int) error {
-	fmt.Println("=>",to)
 	return s.repo.ChangeVisbility(sessionID, to)
+}
+
+func (s *ProfileService) UpdateProfile(fileHeader *multipart.FileHeader, nickname, about, oldAvatar string,sessionId int) error {
+	if fileHeader != nil && oldAvatar != "" {
+		e := os.Remove("pkg/db/images/user/" + oldAvatar)
+		if e != nil {
+			return e
+		}
+	}
+	
+	return s.repo.UpdateProfile(fileHeader, nickname, about,oldAvatar,sessionId)
 }

@@ -3,6 +3,7 @@ package profile
 import (
 	"database/sql"
 	"fmt"
+	"mime/multipart"
 	"time"
 
 	"github.com/ismailsayen/social-network/internal/models"
@@ -155,11 +156,25 @@ func (repo *ProfileRepository) getFollowStatus(sessionID, userId int) (string, e
 }
 
 func (repo *ProfileRepository) ChangeVisbility(sessionID, to int) error {
-	fmt.Println("/", to)
 	query := `UPDATE users SET is_private=?, updated_at=? WHERE id=?;`
 	_, err := repo.db.Exec(query, to, time.Now(), sessionID)
 	if err != nil {
 		return err
 	}
+	return nil
+}
+
+func (repp *ProfileRepository) UpdateProfile(fileHeader *multipart.FileHeader, nickname, about, oldAvatar string,sessionId int) error {
+	var AvatarPath string
+	if fileHeader == nil {
+		AvatarPath = oldAvatar
+	} else {
+		AvatarPath = fmt.Sprintf("%v%v", fileHeader.Filename, time.Now())
+	}
+	query := `UPDATE users 
+			  SET avatar=?,nickname=?,about_me=?
+			  where id=?;
+	`
+	_,err:=repp.db.Exec(query,AvatarPath,nickname,about)
 	return nil
 }

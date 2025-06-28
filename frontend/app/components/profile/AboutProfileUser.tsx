@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { GenerateAvatar } from './ProfileHeader';
 import Toast from '../toast/Toast';
 import { Debounce } from '@/app/utils/Debounce';
+import { UpdateProfile } from '@/app/services/ProfileServices';
 
 const AboutProfileUser = () => {
     const { dataProfile, setDataProfile } = useProfile()
@@ -11,17 +12,21 @@ const AboutProfileUser = () => {
     const [nickname, setNickname] = useState<string | undefined>(undefined)
     const [about, setAbout] = useState<string | undefined>(undefined)
     const [showError, setShowError] = useState(false)
-    const [selectedFile, setSelectedFile] = useState<File | null>(null)
+    const [selectedFile, setSelectedFile] = useState<File | undefined>(undefined)
+
     useEffect(() => {
         if (dataProfile?.avatar) setAvatar(`http://localhost:8080/images/user/${dataProfile?.avatar}`)
         if (dataProfile?.nickname) setNickname(dataProfile?.nickname)
         if (dataProfile?.about_me) setAbout(dataProfile?.about_me)
     }, [dataProfile?.avatar, dataProfile?.about_me, dataProfile?.nickname])
+    
+
     const updateAvatar = (e: React.ChangeEvent<HTMLInputElement>) => {
 
         const file = e.target.files?.[0]
         if (file) {
             setSelectedFile(file)
+
             setAvatar(URL.createObjectURL(file))
         }
 
@@ -39,7 +44,7 @@ const AboutProfileUser = () => {
         setAbout(target.value);
     }
     const debouncedSubmit = useCallback(
-        Debounce(() => {
+        Debounce(async () => {
             if (
                 (avatar === `http://localhost:8080/images/user/${dataProfile?.avatar}` || !avatar) &&
                 (about === dataProfile?.about_me || !about) &&
@@ -48,7 +53,12 @@ const AboutProfileUser = () => {
                 setShowError(true)
                 return
             }
+            console.log(selectedFile);
+
+            await UpdateProfile(selectedFile, nickname, about, dataProfile?.avatar, setDataProfile)
             setShowError(false)
+
+
         }, 500),
         [avatar, about, nickname, dataProfile]
     )
@@ -62,7 +72,7 @@ const AboutProfileUser = () => {
     return (
         <>
 
-            <form onSubmit={submitForm}>
+            <form onSubmit={submitForm} encType='multipart/form-data'>
                 <div className="updateImage">
                     {avatar ? (
                         <img
@@ -104,7 +114,7 @@ const AboutProfileUser = () => {
                         <div>
                             <p>{dataProfile?.email}</p>
                         </div>
-                        <div> <textarea disabled={dataProfile?.myAccount ? false : true} defaultValue={about ? about : "-------"} onChange={updateAbout}></textarea></div>
+                        <div> <textarea disabled={dataProfile?.myAccount ? false : true} defaultValue={dataProfile?.about_me ? dataProfile?.about_me : "-------"} onChange={updateAbout}></textarea></div>
                     </div>
 
                 </div>

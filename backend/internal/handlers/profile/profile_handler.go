@@ -74,7 +74,13 @@ func (h *ProfileHandler) ChangeVisbility(w http.ResponseWriter, r *http.Request)
 		})
 		return
 	}
-	fmt.Println(data, data.To)
+	if data.To != 1 && data.To != 0 {
+		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
+			"message": "Bad Request",
+			"status":  http.StatusBadRequest,
+		})
+		return
+	}
 	sessionID := r.Context().Value("userID").(int)
 	err = h.service.ChangeVisbility(sessionID, data.To)
 	if err != nil {
@@ -86,6 +92,65 @@ func (h *ProfileHandler) ChangeVisbility(w http.ResponseWriter, r *http.Request)
 	}
 	utils.ResponseJSON(w, http.StatusOK, map[string]any{
 		"message": "Visibilty Updated successfully",
+		"status":  http.StatusOK,
+	})
+}
+
+func (h *ProfileHandler) UpdateProfile(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPut {
+		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
+			"message": "Method not allowed",
+			"status":  http.StatusMethodNotAllowed,
+		})
+		return
+	}
+	sessionID := r.Context().Value("userID").(int)
+	errForm := r.ParseMultipartForm(10 << 20)
+	if errForm != nil {
+		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
+			"message": "Invalid form data",
+			"status":  http.StatusBadRequest,
+		})
+		return
+	}
+
+	file, fileHeader, err := r.FormFile("updateImage")
+	if err != nil {
+		if err != http.ErrMissingFile {
+			fmt.Println("Erreur inattendue :", err)
+			return
+		}
+		fileHeader = nil
+		file = nil
+	}
+	if file != nil {
+		defer file.Close()
+	}
+	if err == nil {
+		imageType := fileHeader.Header.Get("Content-Type")
+		if !(imageType == "image/jpeg" || imageType == "image/png" || imageType == "image/jpg") {
+			utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
+				"message": "Only .jpeg .png .jpg",
+				"status":  http.StatusBadRequest,
+			})
+			return
+		}
+	}
+	nickname := r.FormValue("nickname")
+	about := r.FormValue("about")
+	oldAvatar := r.FormValue("oldAvatar")
+
+	NewPath, err := h.service.UpdateProfile(fileHeader, nickname, about, oldAvatar, sessionID)
+	if err != nil {
+		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+			"message": "Failed to update profile.",
+			"status":  http.StatusInternalServerError,
+		})
+		return
+	}
+	utils.ResponseJSON(w, http.StatusOK, map[string]any{
+		"message": "Profile Updated successfully",
+		"newPath": NewPath,
 		"status":  http.StatusOK,
 	})
 }

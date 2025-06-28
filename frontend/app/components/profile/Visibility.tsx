@@ -1,5 +1,6 @@
 "use client";
 import { useProfile } from "@/app/context/ProfileContext";
+import { ChangeVisbiltiy } from "@/app/services/ProfileServices";
 import { Debounce } from "@/app/utils/Debounce";
 import React, { useCallback } from "react";
 
@@ -9,28 +10,9 @@ const Visibility = () => {
   const change = useCallback(
     Debounce(async () => {
       const newVisibility = dataProfile?.is_private === 1 ? 0 : 1;
+      await ChangeVisbiltiy(newVisibility, setDataProfile)
 
-      const req = await fetch(
-        "http://localhost:8080/api/v1/ChangeVisibilityProfile",
-        {
-          method: "PUT",
-          credentials: "include",
-          body: JSON.stringify({
-            to: newVisibility,
-          }),
-        }
-      );
-
-      if (req.ok) {
-        setDataProfile((prev) => {
-          if (!prev) return prev;
-          return {
-            ...prev,
-            is_private: newVisibility,
-          };
-        });
-      }
-    }, 300),
+    }, 500),
     [dataProfile, setDataProfile]
   );
 
@@ -48,7 +30,7 @@ const Visibility = () => {
           </label>
           To:
           {dataProfile?.is_private === 0 ? (
-            <p style={{ color: "red" }}>PRIVATE</p>
+            <p style={{ color: "#f87171" }}>PRIVATE</p>
           ) : (
             <p style={{ color: "#5fdd54" }}>PUBLIC</p>
           )}

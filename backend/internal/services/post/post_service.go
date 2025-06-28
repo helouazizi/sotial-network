@@ -1,3 +1,4 @@
+// backend/internal/services/post/post_service.go
 package services
 
 import (
@@ -20,12 +21,12 @@ func NewAuthService(postRepo *repositories.PostRepository) *PostService {
 	return &PostService{repo: postRepo}
 }
 
-func (s *PostService) SavePost(ctx context.Context, post *models.Post, img *models.Image) error {
+func (s *PostService) SavePost(ctx context.Context, post *models.Post, img *models.Image) (models.Post, error) {
 	if n := len(strings.Fields(post.Title)); n == 0 || n > 255 {
-		return errors.New("title is required and must be less than 256 characters")
+		return models.Post{}, errors.New("title is required and must be less than 256 characters")
 	}
 	if n := len(strings.Fields(post.Content)); n == 0 || n > 500 {
-		return errors.New("body is required and must be less than 500 characters")
+		return models.Post{}, errors.New("body is required and must be less than 500 characters")
 	}
 
 	allowedPrivacy := map[string]bool{
@@ -35,14 +36,14 @@ func (s *PostService) SavePost(ctx context.Context, post *models.Post, img *mode
 	}
 
 	if !allowedPrivacy[post.Type] {
-		return errors.New("unsuported privacy")
+		return models.Post{}, errors.New("unsuported privacy")
 	}
 	err := checkImage(img)
 	if err != nil {
-		return err
+		return models.Post{}, err
 	}
 
-	return s.repo.SavePost(ctx,post, img) // img may be nil
+	return s.repo.SavePost(ctx, post, img) // img may be nil
 }
 
 func (s *PostService) GetPosts(userId, offset, limit int) ([]models.Post, error) {

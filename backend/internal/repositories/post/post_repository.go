@@ -1,3 +1,4 @@
+// backend/internal/repositories/post/post_repository.go
 package repositories
 
 import (
@@ -21,11 +22,11 @@ func NewPostRepo(db *sql.DB) *PostRepository {
 	return &PostRepository{db: db}
 }
 
-func (r *PostRepository) SavePost(ctx context.Context, post *models.Post, img *models.Image) error {
+func (r *PostRepository) SavePost(ctx context.Context, post *models.Post, img *models.Image) (models.Post, error) {
 	//  lets craete a transaction
 	tx, err := r.db.BeginTx(ctx, nil)
 	if err != nil {
-		return fmt.Errorf("begin tx: %w", err)
+		return models.Post{}, fmt.Errorf("begin tx: %w", err)
 	}
 	defer func() {
 		if err != nil {
@@ -40,7 +41,7 @@ func (r *PostRepository) SavePost(ctx context.Context, post *models.Post, img *m
 
 	fileName, err := handleImage(img)
 	if err != nil {
-		return err
+		return models.Post{}, fmt.Errorf("handle image: %w", err)
 	}
 
 	res, err := tx.Exec(InsertPost,
@@ -52,29 +53,31 @@ func (r *PostRepository) SavePost(ctx context.Context, post *models.Post, img *m
 		time.Now(),
 	)
 	if err != nil {
-		return fmt.Errorf("insert post: %w", err)
+		return models.Post{}, fmt.Errorf("exec insert post: %w", err)
 	}
 
+	postID, _ := res.LastInsertId()
 	// add logic for pravte posts
 	if post.Type == "private" && len(post.AllowedUsres) > 0 {
 		const insertAllowedUsers = `
             INSERT INTO post_allowed_users (post_id, user_id) VALUES (?, ?)
         `
-		postID, _ := res.LastInsertId()
+
 		stmt, err2 := tx.Prepare(insertAllowedUsers)
 		if err2 != nil {
-			return fmt.Errorf("prepare audience stmt: %w", err2)
+			return models.Post{}, fmt.Errorf("prepare audience stmt: %w", err2)
 		}
 		defer stmt.Close()
 
 		for _, uid := range post.AllowedUsres {
 			if _, err2 = stmt.Exec(postID, uid); err2 != nil {
-				return fmt.Errorf("insert user in private post  (%d): %w", uid, err2)
+				return models.Post{}, fmt.Errorf("insert user in private post  (%d): %w", uid, err2)
 			}
 		}
 	}
 
-	return tx.Commit()
+	return models.Post{ID: int(postID), MediaLink: fileName.String}, tx.Commit()
+
 }
 
 func (r *PostRepository) GetPosts(userId, start, limit int) ([]models.Post, error) {

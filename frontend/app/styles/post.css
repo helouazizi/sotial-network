@@ -1,3 +1,4 @@
+/* frontend/app/styles/post.css */
 :root {
   --bg-color: #12111a;
   --card-bg: #1c1b23;
@@ -119,8 +120,6 @@
   background-color: var(--accent-hover);
 }
 
-
-
 .share-with-users {
   margin-top: 1rem;
 }
@@ -143,7 +142,7 @@
   overflow-y: scroll;
 }
 
-.user-checkbox-item > #follower-checkbox-label{
+.user-checkbox-item > #follower-checkbox-label {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -180,8 +179,11 @@
   background-color: var(--accent-hover);
 }
 
-/* =======================POSTS SECTION ======================== */
+.hidden-file-input {
+  display: none;
+}
 
+/* =======================POSTS SECTION ======================== */
 
 .post-card {
   background-color: var(--card-bg);
@@ -205,7 +207,7 @@
   box-shadow: 0 6px 16px var(--shadow-color);
 }
 
- .post-meta {
+.post-meta {
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -217,7 +219,7 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  object-fit:contain;
+  object-fit: contain;
   border: 2px solid var(--accent-color);
 }
 
@@ -248,11 +250,9 @@
   flex-direction: column;
 }
 
-
 .post-card .post-actions .post-btns {
   display: flex;
   gap: 1rem;
-
 }
 
 /*  post comments form */
@@ -280,7 +280,7 @@
 }
 
 .comment-input:focus {
-  border-color:var(--accent-color);
+  border-color: var(--accent-color);
 }
 
 .upload-btn {
@@ -298,13 +298,11 @@
   background-color: var(--bg-color);
 }
 
-.comment-form  .comment-img-name {
+.comment-form .comment-img-name {
   color: var(--info-color);
   font-size: small;
 }
 /* =============== */
-
-
 
 .post-card .comments-list {
   max-height: 200px;
@@ -314,6 +312,25 @@
   gap: 1rem;
   scrollbar-width: thin;
   scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-bg);
+}
+
+.post-card .comments-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.post-card .comments-list::-webkit-scrollbar-track {
+  background: var(--scrollbar-bg);
+  border-radius: 8px;
+}
+
+.post-card .comments-list::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb);
+  border-radius: 8px;
+  border: 2px solid var(--scrollbar-bg);
+}
+
+.post-card .comments-list::-webkit-scrollbar-thumb:hover {
+  background-color: var(--accent-hover);
 }
 
 .post-card .comments-list .comment {
@@ -352,7 +369,6 @@
   background-color: var(--accent-hover);
 }
 
-
 /* =========== vote  */
 .vote-btn {
   background-color: var(--btn-bg);
@@ -384,11 +400,6 @@
   color: var(--text-primary);
 }
 
-
-
-
-
-
 @media (min-width: 500px) {
   .post-card .extra {
     display: none;
@@ -398,7 +409,6 @@
     padding: 2rem;
   }
 }
-
 
 /* =================================== no posts ============================== */
 
@@ -417,7 +427,6 @@
   border: 2px dashed var(--border-color);
   padding: 1rem;
   color: var(--text-primary);
-
 }
 
 .no-posts-yet img {
@@ -430,10 +439,6 @@
   margin-bottom: 10px;
   color: #adadad;
 }
-
-
-
-
 
 .errors {
   color: red;

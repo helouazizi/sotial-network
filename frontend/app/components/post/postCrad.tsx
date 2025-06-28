@@ -1,3 +1,4 @@
+// frontend/app/components/post/postCrad.tsx
 import PostHeader from './postHeader';
 import PostBody from './postBody';
 import PostActions from './postActions';

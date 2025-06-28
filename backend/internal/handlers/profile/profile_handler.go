@@ -140,7 +140,7 @@ func (h *ProfileHandler) UpdateProfile(w http.ResponseWriter, r *http.Request) {
 	about := r.FormValue("about")
 	oldAvatar := r.FormValue("oldAvatar")
 
-	err = h.service.UpdateProfile(fileHeader, nickname, about, oldAvatar, sessionID)
+	NewPath, err := h.service.UpdateProfile(fileHeader, nickname, about, oldAvatar, sessionID)
 	if err != nil {
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
 			"message": "Failed to update profile.",
@@ -149,7 +149,8 @@ func (h *ProfileHandler) UpdateProfile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	utils.ResponseJSON(w, http.StatusOK, map[string]any{
-		"message": "Visibilty Updated successfully",
+		"message": "Profile Updated successfully",
+		"newPath": NewPath,
 		"status":  http.StatusOK,
 	})
 }

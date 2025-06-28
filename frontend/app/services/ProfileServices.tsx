@@ -48,7 +48,38 @@ export async function UpdateProfile(file: File | undefined, nickname: string | u
         credentials: "include",
         body: formData
     })
-    console.log(req);
+    if (req.ok) {
+        const resp = await req.json()
+        
+
+        if (file) {
+            setDataProfile((prev) => {
+                if (!prev) return prev;
+                return {
+                    ...prev,
+                    avatar: resp.newPath,
+                };
+            })
+        }
+        if (nickname) {
+            setDataProfile((prev) => {
+                if (!prev) return prev
+                return {
+                    ...prev,
+                    nickname: nickname,
+                }
+            })
+        }
+        if (about) {
+            setDataProfile((prev) => {
+                if (!prev) return prev
+                return {
+                    ...prev,
+                    about_me: about,
+                }
+            })
+        }
+    }
 
 }
 

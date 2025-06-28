@@ -13,11 +13,14 @@ const AboutProfileUser = () => {
     const [about, setAbout] = useState<string | undefined>(undefined)
     const [showError, setShowError] = useState(false)
     const [selectedFile, setSelectedFile] = useState<File | undefined>(undefined)
+
     useEffect(() => {
         if (dataProfile?.avatar) setAvatar(`http://localhost:8080/images/user/${dataProfile?.avatar}`)
         if (dataProfile?.nickname) setNickname(dataProfile?.nickname)
         if (dataProfile?.about_me) setAbout(dataProfile?.about_me)
     }, [dataProfile?.avatar, dataProfile?.about_me, dataProfile?.nickname])
+    
+
     const updateAvatar = (e: React.ChangeEvent<HTMLInputElement>) => {
 
         const file = e.target.files?.[0]

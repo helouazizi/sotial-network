@@ -24,13 +24,13 @@ func (s *ProfileService) ChangeVisbility(sessionID, to int) error {
 	return s.repo.ChangeVisbility(sessionID, to)
 }
 
-func (s *ProfileService) UpdateProfile(fileHeader *multipart.FileHeader, nickname, about, oldAvatar string,sessionId int) error {
-	if fileHeader != nil && oldAvatar != "" {
+func (s *ProfileService) UpdateProfile(fileHeader *multipart.FileHeader, nickname, about, oldAvatar string, sessionId int) (string, error) {
+	if fileHeader != nil && oldAvatar != "" && fileHeader.Filename != oldAvatar {
 		e := os.Remove("pkg/db/images/user/" + oldAvatar)
 		if e != nil {
-			return e
+			return "", e
 		}
 	}
-	
-	return s.repo.UpdateProfile(fileHeader, nickname, about,oldAvatar,sessionId)
+
+	return s.repo.UpdateProfile(fileHeader, nickname, about, oldAvatar, sessionId)
 }

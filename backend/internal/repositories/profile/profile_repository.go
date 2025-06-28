@@ -3,8 +3,10 @@ package profile
 import (
 	"database/sql"
 	"fmt"
+	"io"
 	"mime/multipart"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/ismailsayen/social-network/internal/models"
@@ -165,25 +167,45 @@ func (repo *ProfileRepository) ChangeVisbility(sessionID, to int) error {
 	return nil
 }
 
-func (repp *ProfileRepository) UpdateProfile(fileHeader *multipart.FileHeader, nickname, about, oldAvatar string, sessionId int) error {
+func (repp *ProfileRepository) UpdateProfile(
+	fileHeader *multipart.FileHeader,
+	nickname, about, oldAvatar string,
+	sessionId int,
+) (string, error) {
 	var AvatarPath string
+
 	if fileHeader == nil {
 		AvatarPath = oldAvatar
 	} else {
-		AvatarPath = fmt.Sprintf("%v%v", fileHeader.Filename, time.Now())
+		sanitizedFilename := strings.ReplaceAll(fileHeader.Filename, " ", "_")
+		AvatarPath = fmt.Sprintf("%d_%s", time.Now().Unix(), sanitizedFilename)
+
+		dst, err := os.Create("pkg/db/images/user/" + AvatarPath)
+		if err != nil {
+			return "", err
+		}
+		defer dst.Close()
+
+		src, err := fileHeader.Open()
+		if err != nil {
+			return "", err
+		}
+		defer src.Close()
+
+		_, err = io.Copy(dst, src)
+		if err != nil {
+			return "", err
+		}
 	}
-	query := `UPDATE users 
-			  SET avatar=?,nickname=?,about_me=?
-			  where id=?;
-	`
+
+	query := `UPDATE users
+              SET avatar=?, nickname=?, about_me=?
+              WHERE id=?;`
+
 	_, err := repp.db.Exec(query, AvatarPath, nickname, about, sessionId)
 	if err != nil {
-		return err
+		return "", err
 	}
-	dst, err := os.Create("pkg/db/images/user/" + AvatarPath)
-	if err != nil {
-		return err
-	}
-	defer dst.Close()
-	return nil
+
+	return AvatarPath, nil
 }

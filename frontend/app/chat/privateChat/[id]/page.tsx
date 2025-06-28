@@ -29,14 +29,13 @@ export default function PrivateChat() {
     }, [friends])
 
     useEffect(() => {
-        console.log(sendMessage)
         if (sendMessage && setMessages) {
             setMessages(prev => [...prev ?? [], sendMessage])
         }
+        console.log(messages)
 
         return () => {
             if (setSendMessage) setSendMessage(undefined)
-            if (setMessages) setMessages([])
         }
     }, [sendMessage])
 

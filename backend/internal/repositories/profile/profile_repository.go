@@ -3,6 +3,10 @@ package profile
 import (
 	"database/sql"
 	"fmt"
+	"io"
+	"mime/multipart"
+	"os"
+	"strings"
 	"time"
 
 	"github.com/ismailsayen/social-network/internal/models"
@@ -155,11 +159,53 @@ func (repo *ProfileRepository) getFollowStatus(sessionID, userId int) (string, e
 }
 
 func (repo *ProfileRepository) ChangeVisbility(sessionID, to int) error {
-	fmt.Println("/", to)
 	query := `UPDATE users SET is_private=?, updated_at=? WHERE id=?;`
 	_, err := repo.db.Exec(query, to, time.Now(), sessionID)
 	if err != nil {
 		return err
 	}
 	return nil
+}
+
+func (repp *ProfileRepository) UpdateProfile(
+	fileHeader *multipart.FileHeader,
+	nickname, about, oldAvatar string,
+	sessionId int,
+) (string, error) {
+	var AvatarPath string
+
+	if fileHeader == nil {
+		AvatarPath = oldAvatar
+	} else {
+		sanitizedFilename := strings.ReplaceAll(fileHeader.Filename, " ", "_")
+		AvatarPath = fmt.Sprintf("%d_%s", time.Now().Unix(), sanitizedFilename)
+
+		dst, err := os.Create("pkg/db/images/user/" + AvatarPath)
+		if err != nil {
+			return "", err
+		}
+		defer dst.Close()
+
+		src, err := fileHeader.Open()
+		if err != nil {
+			return "", err
+		}
+		defer src.Close()
+
+		_, err = io.Copy(dst, src)
+		if err != nil {
+			return "", err
+		}
+	}
+
+	query := `UPDATE users
+              SET avatar=?, nickname=?, about_me=?
+              WHERE id=?;`
+
+	_, err := repp.db.Exec(query, AvatarPath, nickname, about, sessionId)
+	if err != nil {
+		return "", err
+	}
+
+	return AvatarPath, nil
 }

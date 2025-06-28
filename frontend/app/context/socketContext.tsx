@@ -10,7 +10,7 @@ export interface SocketContextType {
   setUser: React.Dispatch<React.SetStateAction<User | null>>
   friends: User[] | null
   setFriends: React.Dispatch<React.SetStateAction<User[] | null>>
-  sendMessage: Message | undefined 
+  sendMessage: Message | undefined
   setSendMessage: React.Dispatch<React.SetStateAction<Message | undefined>>
 }
 
@@ -22,7 +22,7 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const [user, setUser] = useState<User | null>(null)
   const [friends, setFriends] = useState<User[] | null>(null)
-  const [sendMessage, setSendMessage] = useState<Message | undefined>(undefined) 
+  const [sendMessage, setSendMessage] = useState<Message | undefined>(undefined)
 
 
   const excludedPaths = ["/login", "/register"];
@@ -76,7 +76,7 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
       if (res.type === "saveMessage") {
         setSendMessage(res.message)
       }
- 
+
     };
 
     ws.current.onclose = () => {
@@ -88,13 +88,13 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
 
   return (
     <SocketContext.Provider value={{
-      ws, 
-      messages, 
-      setMessages, 
-      user, 
-      setUser, 
-      friends, 
-      setFriends, 
+      ws,
+      messages,
+      setMessages,
+      user,
+      setUser,
+      friends,
+      setFriends,
       sendMessage,
       setSendMessage
     }}>

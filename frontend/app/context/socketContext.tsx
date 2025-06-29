@@ -1,21 +1,29 @@
 "use client"
 import { usePathname } from "next/navigation"
-import { createContext, useEffect, useRef, useState, ReactNode } from "react"
-
-// ✅ 1. Define a type for the context value
+import React, { createContext, useEffect, useRef, useState, ReactNode, RefObject } from "react"
+import { Message, User } from "../types/chat";
 export interface SocketContextType {
-  ws: React.MutableRefObject<WebSocket | null>;
-  messages: any[];
-  setMessages: React.Dispatch<React.SetStateAction<any[]>>;
+  ws: RefObject<WebSocket | null>
+  messages: Message[]
+  setMessages: React.Dispatch<React.SetStateAction<Message[]>>
+  user: User | null
+  setUser: React.Dispatch<React.SetStateAction<User | null>>
+  friends: User[] | null
+  setFriends: React.Dispatch<React.SetStateAction<User[] | null>>
+  sendMessage: Message | undefined
+  setSendMessage: React.Dispatch<React.SetStateAction<Message | undefined>>
 }
 
-// ✅ 2. Create the context with that type
 export const SocketContext = createContext<SocketContextType | null>(null);
 
 export default function SocketProvider({ children }: { children: ReactNode }) {
   const ws = useRef<WebSocket | null>(null);
-  const [messages, setMessages] = useState<any[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const pathname = usePathname();
+  const [user, setUser] = useState<User | null>(null)
+  const [friends, setFriends] = useState<User[] | null>(null)
+  const [sendMessage, setSendMessage] = useState<Message | undefined>(undefined)
+
 
   const excludedPaths = ["/login", "/register"];
   const shouldConnect = !excludedPaths.includes(pathname);
@@ -36,8 +44,39 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
       );
     };
 
-    ws.current.onmessage = (event) => {
-      console.log(JSON.parse(event.data));
+    ws.current.onmessage = (event: MessageEvent) => {
+      let res = JSON.parse(event.data)
+
+      if (res.type === "getUser") {
+        const userInfos: User = {
+          id: res.data.ID,
+          nickname: res.data.nickname,
+          firstName: res.data.firstname,
+          lastName: res.data.lastname,
+        }
+        setUser(userInfos)
+      }
+
+      if (res.type === "getFriends") {
+        const friendsList: User[] = res?.data?.map((friend: any) => {
+          return {
+            id: friend.ID,
+            nickname: friend.nickname,
+            firstName: friend.firstname,
+            lastName: friend.lastname
+          }
+        })
+        setFriends(friendsList)
+      }
+
+      if (res.type === "getMessages") {
+        setMessages(res.data)
+      }
+
+      if (res.type === "saveMessage") {
+        setSendMessage(res.message)
+      }
+
     };
 
     ws.current.onclose = () => {
@@ -48,7 +87,17 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
   }, [shouldConnect]);
 
   return (
-    <SocketContext.Provider value={{ ws, messages, setMessages }}>
+    <SocketContext.Provider value={{
+      ws,
+      messages,
+      setMessages,
+      user,
+      setUser,
+      friends,
+      setFriends,
+      sendMessage,
+      setSendMessage
+    }}>
       {children}
     </SocketContext.Provider>
   );

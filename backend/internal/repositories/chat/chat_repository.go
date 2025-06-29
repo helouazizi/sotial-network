@@ -15,10 +15,12 @@ func NewChatRepo(db *sql.DB) *ChatRepository {
 	return &ChatRepository{db: db}
 }
 
-func (r *ChatRepository) SaveMessage(chat *models.Chat) error {
-	query := `INSERT INTO chat_message (sender_id, receiver_id, content, sent_at) VALUES (?,?,?,?)`
-	_, err := r.db.Exec(query, chat.SenderID, chat.ReceiverID, chat.Message, time.Now())
-	return err
+func (r *ChatRepository) SaveMessage(chat *models.Chat) (int, error) {
+	query := `INSERT INTO chat_message (sender_id, receiver_id, content, sent_at) VALUES (?,?,?,?) RETURNING id`
+
+	lastMessageID := 0
+	err := r.db.QueryRow(query, chat.SenderID, chat.ReceiverID, chat.Message, time.Now()).Scan(&lastMessageID)
+	return lastMessageID, err
 }
 
 func (r *ChatRepository) GetMessages(senderID, receiverID int) ([]*models.Chat, error) {
@@ -59,4 +61,30 @@ func (r *ChatRepository) GetUser(userID int) (*models.User, error) {
 	}
 
 	return &user, nil
+}
+
+func (r *ChatRepository) GetFriends(userID int) ([]*models.User, error) {
+	query := `
+		SELECT id, nickname ,first_name, last_name
+		FROM users
+		WHERE id != ?
+	`
+
+	rows, err := r.db.Query(query, userID)
+	if err != nil {
+		return nil, err
+	}
+
+	var users []*models.User
+	for rows.Next() {
+		var user models.User
+		err = rows.Scan(&user.ID, &user.Nickname, &user.FirstName, &user.Lastname)
+		if err != nil {
+			return nil, err
+		}
+
+		users = append(users, &user)
+	}
+
+	return users, nil
 }

@@ -23,3 +23,6 @@ type Subscription struct {
 	FollowedID int    `json:"followed_id"`
 	Status     string `json:"status"`
 }
+type UpdateVsibility struct {
+	To int `json:"to"`
+}

@@ -20,7 +20,6 @@ func NewAuthRepo(db *sql.DB) *AuthRepository {
 }
 
 func (r *AuthRepository) SaveUser(user *models.User) models.Error {
-
 	hashedPassword, errHash := utils.HashPassWord(user.PassWord)
 	if errHash != nil {
 		fmt.Println("HashPassWord")
@@ -30,12 +29,12 @@ func (r *AuthRepository) SaveUser(user *models.User) models.Error {
 		}
 	}
 	user.Nickname = strings.TrimSpace(user.Nickname)
-	var nickname *string
-	if user.Nickname == "" {
-		nickname = nil
-	} else {
-		nickname = &user.Nickname
-	}
+	// var nickname *string
+	// if user.Nickname == "" {
+	// 	nickname = nil
+	// } else {
+	// 	nickname = &user.Nickname
+	// }
 	query := `
 	INSERT INTO users (
 		last_name,
@@ -56,7 +55,7 @@ func (r *AuthRepository) SaveUser(user *models.User) models.Error {
 	_, errExec := r.db.Exec(query,
 		user.Lastname,
 		user.FirstName,
-		nickname,
+		user.Nickname,
 		user.Email,
 		hashedPassword,
 		user.DateofBirth,
@@ -90,24 +89,22 @@ func (r *AuthRepository) CheckIfExiste(user *models.User) (bool, models.Error) {
 	queryEmail := "SELECT EXISTS(SELECT 1 FROM users WHERE email = ?)"
 	err := r.db.QueryRow(queryEmail, user.Email).Scan(&emailExists)
 	if err != nil {
-		return false,  models.Error{
+		return false, models.Error{
 			Code:    500,
 			Message: "Internal Server Error while checking email",
 		}
 	}
 
-
 	// Determine what exists
 	if emailExists {
-		return true,  models.Error{
+		return true, models.Error{
 			Code:    409, // Conflict
 			Message: "Email already in use",
 		}
 	}
-	
 
 	// If neither exists
-	return false,models.Error{
+	return false, models.Error{
 		Code:    200,
 		Message: "No duplicate found",
 	}

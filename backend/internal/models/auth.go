@@ -13,10 +13,9 @@ type User struct {
 	AboutMe     string `json:"aboutme"`
 	Avatar      string `json:"avatar"`
 	File        multipart.File
-	Header *multipart.FileHeader
-	FileErr error
-
-	Token string
+	Header      *multipart.FileHeader
+	FileErr     error
+	Token       string
 }
 
 type UserError struct {

@@ -67,7 +67,6 @@
     }
 }
 
-/* From Uiverse.io by mrhyddenn */
 /* The switch - the box around the slider */
 .switch {
     font-size: 17px;
@@ -92,7 +91,7 @@
     left: 0;
     right: 0;
     bottom: 0px;
-    background: #fff;
+    background: var(--online-color);
     transition: .4s;
     border-radius: 30px;
     border: 1px solid #ccc;
@@ -113,7 +112,7 @@
 }
 
 input:checked+.slider {
-    background-color: #5fdd54;
+    background-color: var(--danger-color);
     border: 1px solid transparent;
 }
 
@@ -221,16 +220,151 @@ input:checked+.slider:before {
     width: 100%;
     min-height: 520px;
     background-color: var(--card-bg);
+
 }
 
 .data-profile .Forbiden {
     width: 100%;
     height: 520px;
     display: flex;
+    flex-direction: column;
     justify-content: center;
+    color: var(--accent-color);
     align-items: center;
-    svg{
-        width: 100px;
-        height: 100px;
+
+    svg {
+        width: 90px;
+        height: 90px;
+    }
+
+    h3 {
+        font-weight: lighter;
     }
 }
+
+.data-profile form {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 60%;
+    padding: 20px 10px;
+    display: flex;
+    margin: auto;
+
+    .updateImage {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 7px;
+
+        div {
+            margin-bottom: 10px;
+            display: flex;
+            gap: 30px;
+            align-items: center;
+
+            label {
+                transition: .4s ease-in-out;
+                color: var(--icon-color);
+            }
+
+            label:hover {
+                color: var(--text-primary);
+                cursor: pointer;
+            }
+
+            button {
+                border: none;
+                padding: 8px;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: .5s ease-in-out;
+            }
+
+            button[disabled]:hover {
+                background-color: var(--icon-color);
+                color: white;
+            }
+
+            .submit {
+                transition: .5s ease-in-out;
+                background-color: var(--btn-bg);
+                color: var(--btn-text);
+            }
+
+            .submit:hover {
+                color: var(--btn-bg);
+                background-color: var(--btn-text)
+            }
+        }
+
+        input {
+            display: none;
+        }
+    }
+}
+
+.info-user {
+    width: 100%;
+    padding: 15px 7px;
+    display: flex;
+    justify-content: space-between;
+
+    .labels {
+        width: 50%;
+
+        div {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            font-weight: bold;
+
+            .editabel {
+                font-style: italic;
+                font-size: 14px;
+                font-weight: lighter;
+                color: var(--text-muted);
+            }
+        }
+    }
+
+    .inputs {
+        width: 50%;
+        padding: 0 10px;
+
+        div {
+            margin: 10px 0;
+
+            textarea {
+                border: none;
+                background-color: var(--btn-bg);
+                width: 200px;
+                height: 200px;
+                overflow-y: auto;
+                resize: none;
+                border-radius: 8px;
+                padding: 10px 7px;
+                color: var(--btn-text);
+            }
+
+            input {
+                border: none;
+                border-radius: 8px;
+                padding: 8px 4px;
+                width: 200px;
+                background-color: var(--btn-bg);
+                color: var(--btn-text);
+                outline: none;
+            }
+        }
+    }
+}
+
+.toast {
+    p {
+        color: var(--danger-color);
+        font-size: 16px;
+    }
+}
+

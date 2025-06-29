@@ -9,7 +9,7 @@ export default function ChatNav() {
     <div className="chatNav">
       <Link
         href="/chat/privateChat"
-        className={pathname === "/chat/privateChat" ? "active" : ""}
+        className={pathname.startsWith("/chat/privateChat") ? "active" : ""}
       >
         Private
       </Link>

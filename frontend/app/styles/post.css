@@ -440,6 +440,20 @@
   color: #adadad;
 }
 
+
+.no-more-posts {
+  background-color: var(--border-color);
+  max-width: 600px;
+  margin: 5rem auto;
+  text-align: center;
+  padding: 2rem 0px;
+  border-radius: 8px;
+
+}
+
 .errors {
   color: red;
 }
+
+
+

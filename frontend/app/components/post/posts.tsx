@@ -6,6 +6,7 @@ import { Post } from "@/app/types/post";
 import PostCard from "./postCrad";
 import NoPostsYet from "./noPostsYet";
 import { FaPenToSquare } from "react-icons/fa6";
+import NoMorePosts from "./noMorePosts";
 
 const LIMIT = 10;
 
@@ -55,9 +56,9 @@ export default function Posts() {
           page.current === 0
             ? data
             : [
-                ...prev,
-                ...data.filter((p) => !prev.some((post) => post.id === p.id)),
-              ]
+              ...prev,
+              ...data.filter((p) => !prev.some((post) => post.id === p.id)),
+            ]
         );
         page.current += 1;
 
@@ -93,6 +94,8 @@ export default function Posts() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [fetchPosts, hasMore, isLoading]);
 
+
+
   const addPost = (newPost: Post) => {
     setPosts((prev) => [newPost, ...prev]);
     setShowForm(false);
@@ -122,9 +125,7 @@ export default function Posts() {
         {isLoading && <p className="loading">Loading...</p>}
 
         {!isLoading && loadedOnce && posts.length === 0 && <NoPostsYet />}
-        {!isLoading && !hasMore && posts.length > 0 && (
-          <p className="no-posts">No more posts.</p>
-        )}
+        {!isLoading && !hasMore && posts.length > 0 && <NoMorePosts /> }
       </section>
     </>
   );

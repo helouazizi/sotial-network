@@ -100,5 +100,5 @@ func (r *ChatRepository) GetLastMessageID() (int, error) {
 
 	var id int
 	err := r.db.QueryRow(query).Scan(&id)
-	return id, err
+	return id + 1, err
 }

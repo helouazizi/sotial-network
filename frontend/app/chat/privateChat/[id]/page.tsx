@@ -78,12 +78,17 @@ export default function PrivateChat() {
                 )
             }
 
-            return (
-                <div key={message.id} id={`${message.id}`} className="sender">
-                    <p>{message.message}</p>
-                </div>
-            )
-        })
+            if (message.sender_id === friend?.id) {
+                return (
+                    <div key={message.id} id={`${message.id}`} className="sender">
+                        <p>{message.message}</p>
+                    </div>
+                )
+            }
+
+        }
+
+        )
     }
 
     return (

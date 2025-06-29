@@ -50,7 +50,7 @@ export async function UpdateProfile(file: File | undefined, nickname: string | u
     })
     if (req.ok) {
         const resp = await req.json()
-        
+
 
         if (file) {
             setDataProfile((prev) => {
@@ -81,6 +81,21 @@ export async function UpdateProfile(file: File | undefined, nickname: string | u
         }
     }
 
+}
+
+export async function HandleRelations(status: string | undefined, visibility: number | undefined, profileUser: number | undefined) {
+    const resp = await fetch(`${API_URL}api/v1/relations/realtions`, {
+        method: "POST",
+        credentials: 'include',
+        body: JSON.stringify({
+            profileID: profileUser,
+            status: status,
+            visibility: visibility,
+        })
+    })
+    if (resp.ok) {
+        alert('hda 3liya')
+    }
 }
 
 

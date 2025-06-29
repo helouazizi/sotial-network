@@ -176,6 +176,8 @@
   flex-direction: column;
   gap: 20px;
   overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-bg);
 }
 
 .chatFooter {
@@ -203,7 +205,7 @@
   scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-bg);
 }
 
-.chatFooter button{
+.chatFooter button {
   padding: 12px 24px;
   background-color: var(--btn-bg);
   border: none;
@@ -214,21 +216,20 @@
   border-radius: 8px;
 }
 
-.chatBody .sender{
+.chatBody .sender {
   display: flex;
 }
 
-.chatBody > div p{
+.chatBody > div p {
   padding: 10px 20px;
   border-radius: 8px;
 }
 
-.chatBody .sender p{
+.chatBody .sender p {
   background-color: var(--bg-color);
-
 }
 
-.chatBody .receiver{
+.chatBody .receiver {
   display: flex;
   justify-content: end;
 }
@@ -237,7 +238,7 @@
   background-color: var(--btn-bg);
 }
 
-.noChat{
+.noChat {
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -246,11 +247,12 @@
   justify-content: center;
 }
 
-.noChat svg{
+.noChat svg {
   font-size: 8em;
   color: var(--text-secondary);
 }
 
-.noChat h3, .noChat p{
+.noChat h3,
+.noChat p {
   color: var(--text-secondary);
 }

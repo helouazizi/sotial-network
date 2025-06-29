@@ -4,7 +4,7 @@ import ChatFooter from "@/app/components/chat/chatFooter";
 import { SocketContext } from "@/app/context/socketContext";
 import { Message, User } from "@/app/types/chat";
 import { useParams } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { FaUser } from "react-icons/fa";
 import Chat from "../page";
 
@@ -12,6 +12,7 @@ export default function PrivateChat() {
     const { id } = useParams()
     const { ws, friends, messages, setMessages, sendMessage, setSendMessage } = useContext(SocketContext) ?? {}
     let [friend, setFriend] = useState<User | undefined>(undefined)
+    const chatBodyRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
         let friend: User | undefined = friends?.find((f: User) => {
@@ -32,12 +33,18 @@ export default function PrivateChat() {
         if (sendMessage && setMessages) {
             setMessages(prev => [...prev ?? [], sendMessage])
         }
-        console.log(messages)
+
 
         return () => {
             if (setSendMessage) setSendMessage(undefined)
         }
     }, [sendMessage])
+
+    useEffect(() => {
+        chatBodyRef.current?.scrollTo({
+            top: chatBodyRef.current.scrollHeight,
+        })
+    }, [messages])
 
     const displayMessages = () => {
         return messages?.map((message: Message) => {
@@ -74,7 +81,7 @@ export default function PrivateChat() {
                             <span></span> online
                         </p>
                     </div>
-                    <div className="chatBody">{displayMessages()}</div>
+                    <div ref={chatBodyRef} className="chatBody">{displayMessages()}</div>
                     <ChatFooter receiverId={friend.id} />
                 </>
             )}

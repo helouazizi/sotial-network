@@ -9,6 +9,10 @@ import (
 	repositories "github.com/ismailsayen/social-network/internal/repositories/auth"
 	services "github.com/ismailsayen/social-network/internal/services/auth"
 
+	// ===================== relations =============================//
+	relationsH "github.com/ismailsayen/social-network/internal/handlers/relations"
+	relationsR "github.com/ismailsayen/social-network/internal/repositories/relations"
+	relationsS "github.com/ismailsayen/social-network/internal/services/relations"
 	// ===================== posts =================================//
 	chatHandlers "github.com/ismailsayen/social-network/internal/handlers/chat"
 	posthandlers "github.com/ismailsayen/social-network/internal/handlers/post"
@@ -24,12 +28,13 @@ import (
 )
 
 type Application struct {
-	DB             *sql.DB
-	AuthHundler    *handlers.UserHandler
-	ChatHandler    *chatHandlers.ChatHandler
-	PostHandler    *posthandlers.PostHandler
-	ProfileHandler *profileHandlers.ProfileHandler
-	StaticHandler  *staticHandlers.ImageHandler
+	DB               *sql.DB
+	AuthHundler      *handlers.UserHandler
+	ChatHandler      *chatHandlers.ChatHandler
+	PostHandler      *posthandlers.PostHandler
+	ProfileHandler   *profileHandlers.ProfileHandler
+	Relationshandler *relationsH.RelationsHandler
+	StaticHandler    *staticHandlers.ImageHandler
 }
 
 func NewApp(db *sql.DB) *Application {
@@ -49,16 +54,20 @@ func NewApp(db *sql.DB) *Application {
 	ProfileRepo := profileRepo.NewProfileRepository(db)
 	ProfileServices := profileServices.NewProfileService(ProfileRepo)
 	ProfileHandler := profileHandlers.NewProfileHandler(ProfileServices)
-
+	//================ relations ===============//
+	RelationsRepo := relationsR.NewRelationsRepository(db)
+	RelationsSer := relationsS.NewRelationsServices(RelationsRepo)
+	Relationshand := relationsH.NewRelationsHandler(RelationsSer)
 	//================ static =========================//
 	staticHAndler := staticHandlers.NewImageHandler("pkg/db/images")
 
 	return &Application{
-		DB:             db,
-		AuthHundler:    AuthHandler,
-		ChatHandler:    ChatHandler,
-		ProfileHandler: ProfileHandler,
-		PostHandler:    PostHandler,
-		StaticHandler:  staticHAndler,
+		DB:               db,
+		AuthHundler:      AuthHandler,
+		ChatHandler:      ChatHandler,
+		ProfileHandler:   ProfileHandler,
+		PostHandler:      PostHandler,
+		Relationshandler: Relationshand,
+		StaticHandler:    staticHAndler,
 	}
 }

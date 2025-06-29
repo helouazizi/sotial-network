@@ -26,7 +26,7 @@ export default function PrivateChat() {
     }
 
     useEffect(() => {
-        getMessages(1000)
+        getMessages(-1)
     }, [friend])
 
     useEffect(() => {

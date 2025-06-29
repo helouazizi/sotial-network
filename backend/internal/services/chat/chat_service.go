@@ -72,3 +72,7 @@ func (s *ChatService) GetClient(receiverID int) (*websocket.Conn, bool) {
 	conn, ok := s.clients[receiverID]
 	return conn, ok
 }
+
+func (s *ChatService) GetLastMessageID() (int, error) {
+	return s.repo.GetLastMessageID()
+}

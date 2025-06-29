@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -92,6 +93,15 @@ func (h *ChatHandler) ChatMessagesHandler(w http.ResponseWriter, r *http.Request
 			}
 
 		case "getMessages":
+						fmt.Println(chat.LastId)
+
+
+			if chat.LastId == -1 {
+				chat.LastId, err = h.service.GetLastMessageID()
+			}
+
+			fmt.Println(chat.LastId)
+
 			messages, err := h.service.GetMessages(chat.SenderID, chat.ReceiverID, chat.LastId)
 			if err != nil {
 				conn.WriteJSON(map[string]any{

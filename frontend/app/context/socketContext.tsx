@@ -70,8 +70,10 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
       }
 
       if (res.type === "getMessages") {
-        let reverseData = res.data.reverse()
-        setMessages(prev => [...reverseData,...prev])
+        if (res.data) {
+          let reverseData = res.data.reverse()
+          setMessages(prev => [...reverseData, ...prev])
+        }
       }
 
       if (res.type === "saveMessage") {

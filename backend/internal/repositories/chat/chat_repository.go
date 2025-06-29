@@ -90,3 +90,15 @@ func (r *ChatRepository) GetFriends(userID int) ([]*models.User, error) {
 
 	return users, nil
 }
+
+func (r *ChatRepository) GetLastMessageID() (int, error) {
+	query := `
+		SELECT id FROM chat_message
+		ORDER BY id desc
+		LIMIT 1
+	`
+
+	var id int
+	err := r.db.QueryRow(query).Scan(&id)
+	return id, err
+}

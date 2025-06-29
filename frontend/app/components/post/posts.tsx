@@ -125,7 +125,7 @@ export default function Posts() {
         {isLoading && <p className="loading">Loading...</p>}
 
         {!isLoading && loadedOnce && posts.length === 0 && <NoPostsYet />}
-        {!isLoading && !hasMore && posts.length > 0 && <NoMorePosts /> }
+        {!isLoading && !hasMore && posts.length > 0 && <NoMorePosts />}
       </section>
     </>
   );

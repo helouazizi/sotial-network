@@ -14,6 +14,20 @@ export default function PrivateChat() {
     let [friend, setFriend] = useState<User | undefined>(undefined)
     const chatBodyRef = useRef<HTMLDivElement>(null)
 
+    const getMessages = (lastID: number) => {
+        if (ws?.current && friend) {
+            ws.current.send(JSON.stringify({
+                "type": "getMessages",
+                "receiver_id": friend.id,
+                "last_id": lastID
+            }))
+        }
+    }
+
+    useEffect(() => {
+        getMessages(97)
+    }, [friend])
+
     useEffect(() => {
         let friend: User | undefined = friends?.find((f: User) => {
             return f.id === Number(id)
@@ -21,11 +35,8 @@ export default function PrivateChat() {
 
         setFriend(friend)
 
-        if (ws?.current && friend) {
-            ws.current.send(JSON.stringify({
-                "type": "getMessages",
-                "receiver_id": friend.id
-            }))
+        return () => {
+            if(setMessages) setMessages([])
         }
     }, [friends])
 
@@ -33,7 +44,6 @@ export default function PrivateChat() {
         if (sendMessage && setMessages) {
             setMessages(prev => [...prev ?? [], sendMessage])
         }
-
 
         return () => {
             if (setSendMessage) setSendMessage(undefined)
@@ -43,21 +53,30 @@ export default function PrivateChat() {
     useEffect(() => {
         chatBodyRef.current?.scrollTo({
             top: chatBodyRef.current.scrollHeight,
+            behavior: "smooth"
         })
     }, [messages])
+
+    const handleScroll = () => {
+        if (chatBodyRef.current) {
+            if (chatBodyRef.current.scrollTop === 0) {
+                if (messages) getMessages(messages[0].id)
+            }
+        }
+    }
 
     const displayMessages = () => {
         return messages?.map((message: Message) => {
             if (message.receiver_id === friend?.id) {
                 return (
-                    <div key={message.id} className="receiver">
+                    <div key={message.id} id={`${message.id}`} className="receiver">
                         <p>{message.message}</p>
                     </div>
                 )
             }
 
             return (
-                <div key={message.id} className="sender">
+                <div key={message.id} id={`${message.id}`} className="sender">
                     <p>{message.message}</p>
                 </div>
             )
@@ -81,7 +100,7 @@ export default function PrivateChat() {
                             <span></span> online
                         </p>
                     </div>
-                    <div ref={chatBodyRef} className="chatBody">{displayMessages()}</div>
+                    <div ref={chatBodyRef} onScroll={handleScroll} className="chatBody">{displayMessages()}</div>
                     <ChatFooter receiverId={friend.id} />
                 </>
             )}

@@ -72,17 +72,27 @@ func (h *ChatHandler) ChatMessagesHandler(w http.ResponseWriter, r *http.Request
 				continue
 			}
 
+			messageData := map[string]any{
+				"id":          lastMessageID,
+				"receiver_id": chat.ReceiverID,
+				"sender_id":   chat.SenderID,
+				"message":     chat.Message,
+			}
+
 			conn.WriteJSON(map[string]any{
-				"message": map[string]any{
-					"id": lastMessageID,
-					"receiver_id": chat.ReceiverID, 
-					"sender_id": chat.SenderID,
-					"message": chat.Message,
-				},
-				"type": "saveMessage",
+				"message": messageData,
+				"type":    "saveMessage",
 			})
+
+			if receiverConn, ok := h.service.GetClient(chat.ReceiverID); ok {
+				receiverConn.WriteJSON(map[string]any{
+					"message": messageData,
+					"type":    "saveMessage",
+				})
+			}
+
 		case "getMessages":
-			messages, err := h.service.GetMessages(chat.SenderID, chat.ReceiverID)
+			messages, err := h.service.GetMessages(chat.SenderID, chat.ReceiverID, chat.LastId)
 			if err != nil {
 				conn.WriteJSON(map[string]any{
 					"error": err.Error(),

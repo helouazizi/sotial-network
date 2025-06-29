@@ -23,12 +23,14 @@ func (r *ChatRepository) SaveMessage(chat *models.Chat) (int, error) {
 	return lastMessageID, err
 }
 
-func (r *ChatRepository) GetMessages(senderID, receiverID int) ([]*models.Chat, error) {
+func (r *ChatRepository) GetMessages(senderID, receiverID int, lastID int) ([]*models.Chat, error) {
 	query := `
 		SELECT * FROM chat_message
-		WHERE (sender_id = ? AND receiver_id = ?) OR (receiver_id = ? AND sender_id = ?)
+		WHERE ((sender_id = ? AND receiver_id = ?) OR (receiver_id = ? AND sender_id = ?)) AND id < ?
+		ORDER BY id DESC
+		LIMIT 10
 	`
-	rows, err := r.db.Query(query, senderID, receiverID, senderID, receiverID)
+	rows, err := r.db.Query(query, senderID, receiverID, senderID, receiverID, lastID)
 	if err != nil {
 		return nil, err
 	}

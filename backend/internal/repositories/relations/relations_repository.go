@@ -2,7 +2,7 @@ package relations
 
 import (
 	"database/sql"
-	"fmt"
+	"time"
 )
 
 type RelationsRepository struct {
@@ -14,20 +14,28 @@ func NewRelationsRepository(db *sql.DB) *RelationsRepository {
 }
 
 func (rlrepo *RelationsRepository) UpdateRelation(newStatus string, profileID, sessionID int, haveAccess bool) error {
-	fmt.Println(newStatus)
-	query := `SELECT id FROM followers WHERE follower_id=? and followed_id=?`
-	row, err := rlrepo.db.Exec(query, sessionID, profileID)
+	query := `SELECT id FROM followers WHERE follower_id=? AND followed_id=?`
+	var idRelation int
+	err := rlrepo.db.QueryRow(query, sessionID, profileID).Scan(&idRelation)
+	if err != nil && err != sql.ErrNoRows {
+		return err
+	}
+
+	if err == sql.ErrNoRows {
+		query = `INSERT INTO followers (followed_id, follower_id, status, followed_at) VALUES (?, ?, ?, ?)`
+		_, err = rlrepo.db.Exec(query, profileID, sessionID, newStatus, time.Now().Format("2006-01-02 15:04:05"))
+		if err != nil {
+			return err
+		}
+		return nil
+	}
+
+	query = `UPDATE followers SET status=? WHERE id=?`
+	_, err = rlrepo.db.Exec(query, newStatus, idRelation)
 	if err != nil {
 		return err
 	}
-	idRelation, err := row.LastInsertId()
-	if err != nil {
-		return err
-	}
-	if idRelation == 0 {
-		query=`INSERT INTO followers (followed_id,follower_id,followed_at) VALUES(?,?,?)`
-		
-	}
+
 	return nil
 }
 

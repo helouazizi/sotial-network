@@ -71,7 +71,6 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
 
       if (res.type === "getMessages") {
         let reverseData = res.data.reverse()
-        console.log(reverseData)
         setMessages(prev => [...reverseData,...prev])
       }
 

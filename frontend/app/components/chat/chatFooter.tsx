@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useContext, useRef } from "react"
+import React, { useContext, useEffect, useRef } from "react"
 import { SocketContext } from "../../context/socketContext"
 
 export default function ChatFooter({ receiverId }: { receiverId: number }) {
@@ -26,6 +26,12 @@ export default function ChatFooter({ receiverId }: { receiverId: number }) {
         }
 
     }
+
+    useEffect(() => {
+        if (textarea) {
+            textarea.current?.focus()
+        }
+    }) 
 
     const handleClick = () => {
         sendMessage()

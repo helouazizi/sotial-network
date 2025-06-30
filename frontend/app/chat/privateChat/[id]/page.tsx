@@ -46,7 +46,6 @@ export default function PrivateChat() {
             setMessages(prev => [...prev ?? [], sendMessage])
         }
 
-
         return () => {
             if (setSendMessage) setSendMessage(undefined)
         }
@@ -54,6 +53,7 @@ export default function PrivateChat() {
 
     useEffect(() => {
         if (chatBodyRef.current) {
+            console.log(previousScrollHeight.current)
             chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight - previousScrollHeight.current
             previousScrollHeight.current = 0
         }

@@ -3,7 +3,6 @@ package profile
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -47,7 +46,6 @@ func (h *ProfileHandler) ProfileHandler(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 	if err != nil {
-		fmt.Println(err)
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
 			"message": "Error, please try again.",
 			"status":  http.StatusInternalServerError,
@@ -117,7 +115,6 @@ func (h *ProfileHandler) UpdateProfile(w http.ResponseWriter, r *http.Request) {
 	file, fileHeader, err := r.FormFile("updateImage")
 	if err != nil {
 		if err != http.ErrMissingFile {
-			fmt.Println("Erreur inattendue :", err)
 			return
 		}
 		fileHeader = nil

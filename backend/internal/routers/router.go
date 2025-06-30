@@ -27,11 +27,12 @@ func SetupRoutes(app *app.Application) *http.ServeMux {
 	mux.Handle("/api/v1/posts/addComment", middleware.AuthMiddleware(http.HandlerFunc(app.PostHandler.CreatePostComment), app.DB))
 	mux.Handle("/api/v1/posts/folowers", middleware.AuthMiddleware(http.HandlerFunc(app.PostHandler.GetFolowers), app.DB))
 	mux.HandleFunc("/api/v1/posts/getComments", (app.PostHandler.GetPostComment))
-
+	//================= relations route ======================///
+	mux.HandleFunc("/api/v1/relations/realtions", middleware.AuthMiddleware(http.HandlerFunc(app.Relationshandler.RelationHandler), app.DB))
 	//================== chat routes =========================///
 	mux.HandleFunc("/ws", middleware.AuthMiddleware(http.HandlerFunc(app.ChatHandler.ChatMessagesHandler), app.DB))
 
-	// ================ static ==============================//
+	//================ static ==============================//
 
 	mux.Handle("/images/", app.StaticHandler)
 

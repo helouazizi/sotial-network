@@ -10,7 +10,7 @@ import Chat from "../page";
 
 export default function PrivateChat() {
     const { id } = useParams()
-    const { ws, friends, messages, setMessages, sendMessage, setSendMessage } = useContext(SocketContext) ?? {}
+    const { ws, friends, messages, setMessages, sendMessage, setSendMessage, scrollHeight } = useContext(SocketContext) ?? {}
     let [friend, setFriend] = useState<User | undefined>(undefined)
     const chatBodyRef = useRef<HTMLDivElement>(null)
     const previousScrollHeight = useRef<number>(0)
@@ -46,6 +46,11 @@ export default function PrivateChat() {
             setMessages(prev => [...prev ?? [], sendMessage])
         }
 
+        chatBodyRef.current?.scrollTo({
+            top: chatBodyRef.current.scrollHeight,
+            behavior: "smooth"
+        })
+
         return () => {
             if (setSendMessage) setSendMessage(undefined)
         }
@@ -53,11 +58,10 @@ export default function PrivateChat() {
 
     useEffect(() => {
         if (chatBodyRef.current) {
-            console.log(previousScrollHeight.current)
             chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight - previousScrollHeight.current
-            previousScrollHeight.current = 0
+            // previousScrollHeight.current = 0
         }
-    }, [messages])
+    }, [scrollHeight])
 
     const handleScroll = () => {
         if (chatBodyRef.current) {

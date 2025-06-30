@@ -1,6 +1,6 @@
 "use client"
 import { usePathname } from "next/navigation"
-import React, { createContext, useEffect, useRef, useState, ReactNode, RefObject } from "react"
+import React, { createContext, useEffect, useRef, useState, ReactNode, RefObject, use } from "react"
 import { Message, User } from "../types/chat";
 export interface SocketContextType {
   ws: RefObject<WebSocket | null>
@@ -12,6 +12,8 @@ export interface SocketContextType {
   setFriends: React.Dispatch<React.SetStateAction<User[] | null>>
   sendMessage: Message | undefined
   setSendMessage: React.Dispatch<React.SetStateAction<Message | undefined>>
+  scrollHeight: boolean
+  setScrollHeight: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export const SocketContext = createContext<SocketContextType | null>(null);
@@ -23,6 +25,7 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [friends, setFriends] = useState<User[] | null>(null)
   const [sendMessage, setSendMessage] = useState<Message | undefined>(undefined)
+  const [scrollHeight, setScrollHeight] = useState<boolean>(false)
 
   const excludedPaths = ["/login", "/register"];
   const shouldConnect = !excludedPaths.includes(pathname);
@@ -69,10 +72,14 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
       }
 
       if (res.type === "getMessages") {
-        if (res.data) {
+        if (res.data) { 
           let reverseData = res.data.reverse()
           setMessages(prev => [...reverseData, ...prev])
+        } else {
+          setMessages(prev => [...[], ...prev])
         }
+
+        setScrollHeight(prev => !prev)
       }
 
       if (res.type === "saveMessage") {
@@ -98,7 +105,9 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
       friends,
       setFriends,
       sendMessage,
-      setSendMessage
+      setSendMessage,
+      scrollHeight,
+      setScrollHeight
     }}>
       {children}
     </SocketContext.Provider>

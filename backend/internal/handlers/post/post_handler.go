@@ -1,3 +1,4 @@
+// backend/internal/handlers/post/post_handler.go
 package handlers
 
 import (
@@ -108,8 +109,8 @@ func (h *PostHandler) CreatePost(w http.ResponseWriter, r *http.Request) {
 		defer file.Close()
 	}
 	// Pass image as nil if not uploaded
-	err = h.service.SavePost(r.Context(), post, img)
-	if err != nil {
+	savedPost, err1 := h.service.SavePost(r.Context(), post, img)
+	if err1 != nil {
 		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
 			"message": "Bad request",
 			"status":  http.StatusBadRequest,
@@ -118,10 +119,7 @@ func (h *PostHandler) CreatePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	utils.ResponseJSON(w, http.StatusOK, map[string]any{
-		"message": "Successfully created post",
-		"status":  http.StatusCreated,
-	})
+	utils.ResponseJSON(w, http.StatusOK, savedPost)
 }
 
 func (h *PostHandler) HandlePostVote(w http.ResponseWriter, r *http.Request) {

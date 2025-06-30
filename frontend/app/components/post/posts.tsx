@@ -1,3 +1,4 @@
+// frontend/app/components/post/posts.tsx
 "use client";
 import { useState, useEffect, useRef, useCallback } from "react";
 import CreatePostForm from "./addPost";
@@ -5,9 +6,9 @@ import { Post } from "@/app/types/post";
 import PostCard from "./postCrad";
 import NoPostsYet from "./noPostsYet";
 import { FaPenToSquare } from "react-icons/fa6";
+import NoMorePosts from "./noMorePosts";
 
 const LIMIT = 10;
-//  bbbbbbbbbbbbbbbbbbbbbbbbbbe care full the posts duplacetesd
 
 /* ---- Throttle utility ---- */
 function throttle<T extends (...args: any[]) => void>(fn: T, delay = 500): T {
@@ -21,7 +22,6 @@ function throttle<T extends (...args: any[]) => void>(fn: T, delay = 500): T {
     }
   };
 }
-
 
 export default function Posts() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -52,11 +52,13 @@ export default function Posts() {
       const data = await res.json();
 
       if (Array.isArray(data)) {
-        // 👉 On first load (page.current === 0), replace; otherwise append
-        setPosts(prev =>
+        setPosts((prev) =>
           page.current === 0
             ? data
-            : [...prev, ...data.filter(p => !prev.some(post => post.id === p.id))]
+            : [
+              ...prev,
+              ...data.filter((p) => !prev.some((post) => post.id === p.id)),
+            ]
         );
         page.current += 1;
 
@@ -92,16 +94,11 @@ export default function Posts() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [fetchPosts, hasMore, isLoading]);
 
-  /* ---- Helpers ---- */
-  const addPost = (newPost: Post) => {
-    setPosts(prev => [{ ...newPost, id: prev.length + 1 }, ...prev]);
-    setShowForm(false)
-  };
 
-  const updatePost = (postId: number, updated: Partial<Post>) => {
-    setPosts(prev =>
-      prev.map(post => (post.id === postId ? { ...post, ...updated } : post))
-    );
+
+  const addPost = (newPost: Post) => {
+    setPosts((prev) => [newPost, ...prev]);
+    setShowForm(false);
   };
 
   const toggleForm = () => {
@@ -112,23 +109,23 @@ export default function Posts() {
   return (
     <>
       <section className="create-post">
-        <div className="add-post-holder"><button className="addPostBtn" onClick={toggleForm}><FaPenToSquare className="addPostIcon" /> Add-Post</button></div>
+        <div className="add-post-holder">
+          <button className="addPostBtn" onClick={toggleForm}>
+            <FaPenToSquare className="addPostIcon" /> Add-Post
+          </button>
+        </div>
         {showForm && <CreatePostForm onCreated={addPost} />}
       </section>
 
       <section className="posts-list ">
-        {posts.map(post => (
-          <PostCard key={post.id} post={post}  /*onPostUpdate={updatePost}*/ />
+        {posts.map((post) => (
+          <PostCard key={post.id} post={post} />
         ))}
 
         {isLoading && <p className="loading">Loading...</p>}
 
-        {!isLoading && loadedOnce && posts.length === 0 && (
-          <NoPostsYet />
-        )}
-        {!isLoading && !hasMore && posts.length > 0 && (
-          <p className="no-posts">No more posts.</p>
-        )}
+        {!isLoading && loadedOnce && posts.length === 0 && <NoPostsYet />}
+        {!isLoading && !hasMore && posts.length > 0 && <NoMorePosts />}
       </section>
     </>
   );

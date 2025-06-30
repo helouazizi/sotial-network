@@ -1,3 +1,4 @@
+// frontend/app/components/post/noPostsYet.tsx
 import React from 'react'
 
 const NoPostsYet = () => {

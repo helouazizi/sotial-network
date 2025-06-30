@@ -1,3 +1,4 @@
+// frontend/app/components/post/commentForm.tsx
 import { useState, useRef } from "react";
 import { BsFillSendFill } from "react-icons/bs";
 import { FaImage } from "react-icons/fa";
@@ -67,10 +68,12 @@ export default function CommentPostForm({ onSubmit }: CommentFormProps) {
           accept="image/*,image/gif"
           ref={fileInputRef}
           onChange={handleImageChange}
-          style={{ display: "none" }}
+          className="hidden-file-input"
+          title="Upload an image or GIF"
+          placeholder="Choose an image or GIF"
         />
       </div>
-      <button type="submit" className="vote-btn">
+      <button type="submit" className="vote-btn" aria-label="Send comment">
         <BsFillSendFill />
       </button>
     </form>

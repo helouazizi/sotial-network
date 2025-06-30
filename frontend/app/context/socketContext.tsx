@@ -1,6 +1,6 @@
 "use client"
 import { usePathname } from "next/navigation"
-import React, { createContext, useEffect, useRef, useState, ReactNode, RefObject, use } from "react"
+import React, { createContext, useEffect, useRef, useState, ReactNode, RefObject } from "react"
 import { Message, User } from "../types/chat";
 export interface SocketContextType {
   ws: RefObject<WebSocket | null>
@@ -72,7 +72,7 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
       }
 
       if (res.type === "getMessages") {
-        if (res.data) { 
+        if (res.data) {
           let reverseData = res.data.reverse()
           setMessages(prev => [...reverseData, ...prev])
         } else {

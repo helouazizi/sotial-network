@@ -4,7 +4,7 @@ import ChatFooter from "@/app/components/chat/chatFooter";
 import { SocketContext } from "@/app/context/socketContext";
 import { Message, User } from "@/app/types/chat";
 import { useParams } from "next/navigation";
-import { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { FaUser } from "react-icons/fa";
 import Chat from "../page";
 
@@ -46,21 +46,15 @@ export default function PrivateChat() {
             setMessages(prev => [...prev ?? [], sendMessage])
         }
 
-        setTimeout(() => {
-            if (messages && messages.length > 0 && chatBodyRef.current) {
-
-
-                const isAtBottom = chatBodyRef.current?.scrollTop + chatBodyRef.current?.clientHeight >= chatBodyRef.current?.scrollHeight - 100;
-
-                if (messages[messages?.length - 1].sender_id !== friend?.id || isAtBottom) {
-                    console.log(chatBodyRef.current.scrollTop, chatBodyRef.current.clientHeight, chatBodyRef.current.scrollHeight, isAtBottom)
-                    chatBodyRef.current?.scrollTo({
-                        top: chatBodyRef.current.scrollHeight,
-                        behavior: "smooth"
-                    })
-                }
+        if (messages && messages.length > 0 && chatBodyRef.current) {
+            const isAtBottom = chatBodyRef.current?.scrollTop + chatBodyRef.current?.clientHeight >= chatBodyRef.current?.scrollHeight - 100;
+            if (messages[messages?.length - 1].sender_id !== friend?.id || isAtBottom) {
+                chatBodyRef.current?.scrollTo({
+                    top: chatBodyRef.current.scrollHeight,
+                    behavior: "smooth"
+                })
             }
-        }, 2000);
+        }
 
         return () => {
             if (setSendMessage) setSendMessage(undefined)
@@ -85,26 +79,36 @@ export default function PrivateChat() {
 
     const displayMessages = () => {
         return messages?.map((message: Message) => {
+            const messageLines = message.message.split("\n").map((line, index) => (
+                <React.Fragment key={index}>
+                    {line}
+                    <br />
+                </React.Fragment>
+            ))
+
+
             if (message.receiver_id === friend?.id) {
                 return (
                     <div key={message.id} id={`${message.id}`} className="receiver">
-                        <p>{message.message}</p>
+                        <p>
+                            {messageLines}
+                        </p>
                     </div>
-                )
+                );
             }
 
             if (message.sender_id === friend?.id) {
                 return (
                     <div key={message.id} id={`${message.id}`} className="sender">
-                        <p>{message.message}</p>
+                        <p>
+                            {messageLines}
+                        </p>
                     </div>
-                )
+                );
             }
+        });
+    };
 
-        }
-
-        )
-    }
 
     return (
         <>

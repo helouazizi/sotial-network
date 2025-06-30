@@ -168,12 +168,31 @@ input:checked+.slider:before {
     transition: .5s ease-in-out;
 }
 
+.statique-Profile .accepted {
+    background-color: var(--accent-hover);
+    color: var(--btn-text);
+}
+
+.statique-Profile .accepted:hover {
+    color: var(--btn-text);
+    background-color: var(--btn-bg);
+}
+
 .statique-Profile .follow {
     color: var(--btn-text);
 }
 
 .statique-Profile .follow:hover {
     background-color: var(--accent-hover);
+}
+
+.statique-Profile .pending{
+    background-color: var(--text-muted);
+    color: var(--text-primary);
+}
+.statique-Profile .pending:hover{
+    background-color: var(--btn-bg);
+    color: var(--btn-text);
 }
 
 .profile-body {
@@ -367,4 +386,3 @@ input:checked+.slider:before {
         font-size: 16px;
     }
 }
-

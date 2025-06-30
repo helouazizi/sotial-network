@@ -2,6 +2,7 @@ package relations
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/ismailsayen/social-network/internal/models"
@@ -28,16 +29,16 @@ func (h *RelationsHandler) RelationHandler(w http.ResponseWriter, r *http.Reques
 	sessionID := r.Context().Value("userID").(int)
 	var data models.RealtionUpdate
 	err := json.NewDecoder(r.Body).Decode(&data)
-	if sessionID == data.ProfileID {
-		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
-			"message": "Invalid Request Data.",
+	if err != nil {
+		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+			"message": "Error, please try again.",
 			"status":  http.StatusInternalServerError,
 		})
 		return
 	}
-	if err != nil {
-		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
-			"message": "Error, please try again.",
+	if sessionID == data.ProfileID {
+		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
+			"message": "Invalid Request Data.",
 			"status":  http.StatusInternalServerError,
 		})
 		return
@@ -63,4 +64,24 @@ func (h *RelationsHandler) RelationHandler(w http.ResponseWriter, r *http.Reques
 		"NewRelation": NewRelation,
 		"status":      http.StatusOK,
 	})
+}
+
+func (h *RelationsHandler) GetRelations(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
+			"message": "Method not allowed",
+			"status":  http.StatusMethodNotAllowed,
+		})
+		return
+	}
+	var data models.RealtionUpdate
+	err := json.NewDecoder(r.Body).Decode(&data)
+	if err != nil {
+		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+			"message": "Error, please try again.",
+			"status":  http.StatusInternalServerError,
+		})
+		return
+	}
+	fmt.Println(data)
 }

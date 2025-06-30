@@ -29,6 +29,7 @@ func SetupRoutes(app *app.Application) *http.ServeMux {
 	mux.HandleFunc("/api/v1/posts/getComments", (app.PostHandler.GetPostComment))
 	//================= relations route ======================///
 	mux.HandleFunc("/api/v1/relations/realtions", middleware.AuthMiddleware(http.HandlerFunc(app.Relationshandler.RelationHandler), app.DB))
+	mux.HandleFunc("/api/v1/relations/getRealtions", middleware.AuthMiddleware(http.HandlerFunc(app.Relationshandler.GetRelations), app.DB))
 	//================== chat routes =========================///
 	mux.HandleFunc("/ws", middleware.AuthMiddleware(http.HandlerFunc(app.ChatHandler.ChatMessagesHandler), app.DB))
 

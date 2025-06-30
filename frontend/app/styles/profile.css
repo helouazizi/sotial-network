@@ -28,14 +28,13 @@
     height: 100%;
     padding: 30px 15px;
     border-radius: 10px;
-    border: 1px solid var(--text-secondary);
     margin: auto;
 }
 
 .profile-header {
-    width: 82%;
+    width: 100%;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-around;
     margin: auto;
 
 }

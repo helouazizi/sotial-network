@@ -46,10 +46,16 @@ export default function PrivateChat() {
             setMessages(prev => [...prev ?? [], sendMessage])
         }
 
-        chatBodyRef.current?.scrollTo({
-            top: chatBodyRef.current.scrollHeight,
-            behavior: "smooth"
-        })
+        if (messages && messages.length > 0) {
+            // console.log(messages[messages?.length - 1].sender_id, friend?.id)
+            console.log(previousScrollHeight.current, chatBodyRef.current?.scrollHeight)
+            if (messages[messages?.length - 1].sender_id !== friend?.id) {
+                chatBodyRef.current?.scrollTo({
+                    top: chatBodyRef.current.scrollHeight,
+                    behavior: "smooth"
+                })
+            }
+        }
 
         return () => {
             if (setSendMessage) setSendMessage(undefined)

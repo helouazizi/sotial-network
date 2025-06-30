@@ -40,6 +40,7 @@ func (rs *RelationsServices) CheckRelation(data *models.RealtionUpdate, sessionI
 		newStatus = "follow"
 		haveAccess = false
 	default:
+
 		return nil, errors.New("Invalid Request Data")
 	}
 	err = rs.relationrepo.UpdateRelation(newStatus, data.ProfileID, sessionID, haveAccess)

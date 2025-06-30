@@ -44,7 +44,7 @@ func (h *RelationsHandler) RelationHandler(w http.ResponseWriter, r *http.Reques
 	}
 
 	NewRelation, err := h.RelationsServices.CheckRelation(&data, sessionID)
-	if err.Error() == "Invalid Request Data" {
+	if err != nil && err.Error() == "Invalid Request Data" {
 		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
 			"message": "Invalid Request Data.",
 			"status":  http.StatusInternalServerError,

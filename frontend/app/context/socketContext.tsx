@@ -24,7 +24,6 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
   const [friends, setFriends] = useState<User[] | null>(null)
   const [sendMessage, setSendMessage] = useState<Message | undefined>(undefined)
 
-
   const excludedPaths = ["/login", "/register"];
   const shouldConnect = !excludedPaths.includes(pathname);
 
@@ -70,7 +69,10 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
       }
 
       if (res.type === "getMessages") {
-        setMessages(res.data)
+        if (res.data) {
+          let reverseData = res.data.reverse()
+          setMessages(prev => [...reverseData, ...prev])
+        }
       }
 
       if (res.type === "saveMessage") {

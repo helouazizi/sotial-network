@@ -38,18 +38,18 @@ func (s *ChatService) SaveMessage(chat *models.Chat) (int, error) {
 	return s.repo.SaveMessage(chat)
 }
 
-func (s *ChatService) GetMessages(senderID, receiverID int) ([]*models.Chat, error) {
+func (s *ChatService) GetMessages(senderID, receiverID int, lastID int) ([]*models.Chat, error) {
 	if senderID == receiverID {
 		return nil, errors.New("cannot get messages with yourself")
 	}
 
-	return s.repo.GetMessages(senderID, receiverID)
+	return s.repo.GetMessages(senderID, receiverID, lastID)
 }
 
 func (s *ChatService) SaveClient(userID int, conn *websocket.Conn) {
 	defer s.mu.Unlock()
 	s.mu.Lock()
-	s.clients[len(s.clients)+1] = conn
+	s.clients[userID] = conn
 }
 
 func (s *ChatService) RemoveClient(userID int) {
@@ -64,4 +64,15 @@ func (s *ChatService) GetUser(userID int) (*models.User, error) {
 
 func (s *ChatService) GetFriends(userID int) ([]*models.User, error) {
 	return s.repo.GetFriends(userID)
+}
+
+func (s *ChatService) GetClient(receiverID int) (*websocket.Conn, bool) {
+	defer s.mu.Unlock()
+	s.mu.Lock()
+	conn, ok := s.clients[receiverID]
+	return conn, ok
+}
+
+func (s *ChatService) GetLastMessageID() (int, error) {
+	return s.repo.GetLastMessageID()
 }

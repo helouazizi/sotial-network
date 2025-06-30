@@ -28,6 +28,13 @@ func (h *RelationsHandler) RelationHandler(w http.ResponseWriter, r *http.Reques
 	sessionID := r.Context().Value("userID").(int)
 	var data models.RealtionUpdate
 	err := json.NewDecoder(r.Body).Decode(&data)
+	if sessionID == data.ProfileID {
+		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
+			"message": "Invalid Request Data.",
+			"status":  http.StatusInternalServerError,
+		})
+		return
+	}
 	if err != nil {
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
 			"message": "Error, please try again.",
@@ -35,8 +42,25 @@ func (h *RelationsHandler) RelationHandler(w http.ResponseWriter, r *http.Reques
 		})
 		return
 	}
-	err = h.RelationsServices.CheckRelation(&data, sessionID)
-	if err != nil {
+
+	NewRelation, err := h.RelationsServices.CheckRelation(&data, sessionID)
+	if err.Error() == "Invalid Request Data" {
+		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
+			"message": "Invalid Request Data.",
+			"status":  http.StatusInternalServerError,
+		})
 		return
 	}
+	if err != nil {
+		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+			"message": "Error, please try again.",
+			"status":  http.StatusInternalServerError,
+		})
+		return
+	}
+	utils.ResponseJSON(w, http.StatusOK, map[string]any{
+		"message":     "Profile Updated successfully",
+		"NewRelation": NewRelation,
+		"status":      http.StatusOK,
+	})
 }

@@ -15,12 +15,12 @@ func NewRelationsServices(relationRepo *repositories.RelationsRepository) *Relat
 	return &RelationsServices{relationrepo: relationRepo}
 }
 
-func (rs *RelationsServices) CheckRelation(data *models.RealtionUpdate, sessionID int) error {
+func (rs *RelationsServices) CheckRelation(data *models.RealtionUpdate, sessionID int) (map[string]any, error) {
 	var newStatus string
 	var haveAccess bool
 	Visibility, err := rs.relationrepo.GetActuelStatus(data.ProfileID)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	switch data.ActuelStatus {
 	case "follow":
@@ -40,11 +40,15 @@ func (rs *RelationsServices) CheckRelation(data *models.RealtionUpdate, sessionI
 		newStatus = "follow"
 		haveAccess = false
 	default:
-		return errors.New("Invalid Reques Data")
+		return nil, errors.New("Invalid Request Data")
 	}
 	err = rs.relationrepo.UpdateRelation(newStatus, data.ProfileID, sessionID, haveAccess)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	NewRelation := map[string]any{
+		"newStatus":  newStatus,
+		"haveAccess": haveAccess,
+	}
+	return NewRelation, nil
 }

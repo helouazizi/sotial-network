@@ -93,7 +93,9 @@ export async function HandleRelations(status: string | undefined, visibility: nu
             visibility: visibility,
         })
     })
+    let data = await resp.json()
     if (resp.ok) {
+        console.log(data);
         alert('hda 3liya')
     }
 }

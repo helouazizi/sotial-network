@@ -14,6 +14,7 @@ export default function PrivateChat() {
     let [friend, setFriend] = useState<User | undefined>(undefined)
     const chatBodyRef = useRef<HTMLDivElement>(null)
     const previousScrollHeight = useRef<number>(0)
+    const [scrollToBottom, setScrollToBottom] = useState<boolean>(false)
 
     const getMessages = (lastID: number) => {
         if (ws?.current && friend) {
@@ -42,23 +43,18 @@ export default function PrivateChat() {
     }, [friends])
 
     useEffect(() => {
+        if (!sendMessage) return;
+
+
         if (sendMessage && setMessages) {
             setMessages(prev => [...prev ?? [], sendMessage])
         }
 
-        if (messages && messages.length > 0 && chatBodyRef.current) {
-            const isAtBottom = chatBodyRef.current?.scrollTop + chatBodyRef.current?.clientHeight >= chatBodyRef.current?.scrollHeight - 100;
-            if (messages[messages?.length - 1].sender_id !== friend?.id || isAtBottom) {
-                chatBodyRef.current?.scrollTo({
-                    top: chatBodyRef.current.scrollHeight,
-                    behavior: "smooth"
-                })
-            }
-        }
+        setScrollToBottom(prev => !prev)
 
-        return () => {
-            if (setSendMessage) setSendMessage(undefined)
-        }
+        // return () => {
+        //     if (setSendMessage) return setSendMessage(undefined)
+        // }
     }, [sendMessage])
 
     useEffect(() => {
@@ -67,6 +63,19 @@ export default function PrivateChat() {
             // previousScrollHeight.current = 0
         }
     }, [scrollHeight])
+
+    useEffect(() => {
+        if (messages && messages.length > 0 && chatBodyRef.current) {
+            const isAtBottom = chatBodyRef.current?.scrollTop + chatBodyRef.current?.clientHeight >= chatBodyRef.current?.scrollHeight - 100;
+            // console.log(isAtBottom, sendMessage?.sender_id , friend?.id)
+            if (sendMessage?.sender_id !== friend?.id || isAtBottom) {
+                chatBodyRef.current?.scrollTo({
+                    top: chatBodyRef.current.scrollHeight,
+                    behavior: "smooth"
+                })
+            }
+        }
+    }, [scrollToBottom])
 
     const handleScroll = () => {
         if (chatBodyRef.current) {

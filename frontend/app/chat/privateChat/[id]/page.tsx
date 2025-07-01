@@ -28,11 +28,14 @@ export default function PrivateChat() {
 
     useEffect(() => {
         getMessages(-1)
+        return () => {
+            if (setSendMessage) setSendMessage(undefined)
+        } 
     }, [friend])
 
     useEffect(() => {
         let friend: User | undefined = friends?.find((f: User) => {
-            return f.id === Number(id)
+            return f.id === Number(id)  
         })
 
         setFriend(friend)
@@ -44,31 +47,23 @@ export default function PrivateChat() {
 
     useEffect(() => {
         if (!sendMessage) return;
-
-
-        if (sendMessage && setMessages) {
-            setMessages(prev => [...prev ?? [], sendMessage])
-        }
-
+        if (setMessages) setMessages(prev => [...prev ?? [], sendMessage])
         setScrollToBottom(prev => !prev)
-
-        // return () => {
-        //     if (setSendMessage) return setSendMessage(undefined)
-        // }
+        if (setSendMessage) setSendMessage(undefined)
     }, [sendMessage])
 
     useEffect(() => {
         if (chatBodyRef.current) {
             chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight - previousScrollHeight.current
-            // previousScrollHeight.current = 0
         }
     }, [scrollHeight])
 
     useEffect(() => {
         if (messages && messages.length > 0 && chatBodyRef.current) {
             const isAtBottom = chatBodyRef.current?.scrollTop + chatBodyRef.current?.clientHeight >= chatBodyRef.current?.scrollHeight - 100;
-            // console.log(isAtBottom, sendMessage?.sender_id , friend?.id)
-            if (sendMessage?.sender_id !== friend?.id || isAtBottom) {
+            let lastMessage = messages[messages.length - 1]
+            // console.log(isAtBottom, lastMessage.sender_id, lastMessage.receiver_id, friend?.id)
+            if ((lastMessage.sender_id !== friend?.id || isAtBottom) && (lastMessage.sender_id === friend?.id || lastMessage.receiver_id === friend?.id)){
                 chatBodyRef.current?.scrollTo({
                     top: chatBodyRef.current.scrollHeight,
                     behavior: "smooth"

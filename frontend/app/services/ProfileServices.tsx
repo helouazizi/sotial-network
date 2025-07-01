@@ -156,7 +156,8 @@ export async function FetchUsersRl(id: number | undefined, type: string, limit: 
             })
         })
         if (resp.ok) {
-            alert('yees')
+            console.log("ssss");
+            
         }
 
     } catch (err) {

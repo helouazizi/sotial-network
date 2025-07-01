@@ -81,7 +81,7 @@ func (h *UserHandler) Register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Set auth cookie
-	cookie := &http.Cookie{Name: "Token", Value: token, HttpOnly: true, Path: "/", Secure: false}
+	cookie := &http.Cookie{Name: "Token", Value: token, HttpOnly: true, Path: "/", Secure: false, MaxAge: 3600*24*1000}
 	http.SetCookie(w, cookie)
 
 	// Respond success
@@ -118,7 +118,8 @@ func (h *UserHandler) Login(w http.ResponseWriter, r *http.Request) {
 		Value:    token,
 		HttpOnly: true,
 		Path:     "/",
-		Secure:   false, // Because no HTTPS on localhost
+		Secure:   false,
+		MaxAge: 3600*24*1000, 
 	}
 
 	http.SetCookie(w, cookie)

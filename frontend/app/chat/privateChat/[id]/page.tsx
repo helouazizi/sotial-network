@@ -28,11 +28,14 @@ export default function PrivateChat() {
 
     useEffect(() => {
         getMessages(-1)
+        return () => {
+            if (setSendMessage) setSendMessage(undefined)
+        } 
     }, [friend])
 
     useEffect(() => {
         let friend: User | undefined = friends?.find((f: User) => {
-            return f.id === Number(id)
+            return f.id === Number(id)  
         })
 
         setFriend(friend)
@@ -44,23 +47,14 @@ export default function PrivateChat() {
 
     useEffect(() => {
         if (!sendMessage) return;
-
-
-        if (sendMessage && setMessages) {
-            setMessages(prev => [...prev ?? [], sendMessage])
-        }
-
+        if (setMessages) setMessages(prev => [...prev ?? [], sendMessage])
         setScrollToBottom(prev => !prev)
-
-        // return () => {
-        //     if (setSendMessage) return setSendMessage(undefined)
-        // }
+        if (setSendMessage) setSendMessage(undefined)
     }, [sendMessage])
 
     useEffect(() => {
         if (chatBodyRef.current) {
             chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight - previousScrollHeight.current
-            // previousScrollHeight.current = 0
         }
     }, [scrollHeight])
 

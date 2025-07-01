@@ -4,16 +4,17 @@ import ChatFooter from "@/app/components/chat/chatFooter";
 import { SocketContext } from "@/app/context/socketContext";
 import { Message, User } from "@/app/types/chat";
 import { useParams } from "next/navigation";
-import { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { FaUser } from "react-icons/fa";
 import Chat from "../page";
 
 export default function PrivateChat() {
     const { id } = useParams()
-    const { ws, friends, messages, setMessages, sendMessage, setSendMessage } = useContext(SocketContext) ?? {}
+    const { ws, friends, messages, setMessages, sendMessage, setSendMessage, scrollHeight } = useContext(SocketContext) ?? {}
     let [friend, setFriend] = useState<User | undefined>(undefined)
     const chatBodyRef = useRef<HTMLDivElement>(null)
     const previousScrollHeight = useRef<number>(0)
+    const [scrollToBottom, setScrollToBottom] = useState<boolean>(false)
 
     const getMessages = (lastID: number) => {
         if (ws?.current && friend) {
@@ -42,22 +43,39 @@ export default function PrivateChat() {
     }, [friends])
 
     useEffect(() => {
+        if (!sendMessage) return;
+
+
         if (sendMessage && setMessages) {
             setMessages(prev => [...prev ?? [], sendMessage])
         }
 
-        return () => {
-            if (setSendMessage) setSendMessage(undefined)
-        }
+        setScrollToBottom(prev => !prev)
+
+        // return () => {
+        //     if (setSendMessage) return setSendMessage(undefined)
+        // }
     }, [sendMessage])
 
     useEffect(() => {
         if (chatBodyRef.current) {
-            console.log(previousScrollHeight.current)
             chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight - previousScrollHeight.current
-            previousScrollHeight.current = 0
+            // previousScrollHeight.current = 0
         }
-    }, [messages])
+    }, [scrollHeight])
+
+    useEffect(() => {
+        if (messages && messages.length > 0 && chatBodyRef.current) {
+            const isAtBottom = chatBodyRef.current?.scrollTop + chatBodyRef.current?.clientHeight >= chatBodyRef.current?.scrollHeight - 100;
+            // console.log(isAtBottom, sendMessage?.sender_id , friend?.id)
+            if (sendMessage?.sender_id !== friend?.id || isAtBottom) {
+                chatBodyRef.current?.scrollTo({
+                    top: chatBodyRef.current.scrollHeight,
+                    behavior: "smooth"
+                })
+            }
+        }
+    }, [scrollToBottom])
 
     const handleScroll = () => {
         if (chatBodyRef.current) {
@@ -70,26 +88,36 @@ export default function PrivateChat() {
 
     const displayMessages = () => {
         return messages?.map((message: Message) => {
+            const messageLines = message.message.split("\n").map((line, index) => (
+                <React.Fragment key={index}>
+                    {line}
+                    <br />
+                </React.Fragment>
+            ))
+
+
             if (message.receiver_id === friend?.id) {
                 return (
                     <div key={message.id} id={`${message.id}`} className="receiver">
-                        <p>{message.message}</p>
+                        <p>
+                            {messageLines}
+                        </p>
                     </div>
-                )
+                );
             }
 
             if (message.sender_id === friend?.id) {
                 return (
                     <div key={message.id} id={`${message.id}`} className="sender">
-                        <p>{message.message}</p>
+                        <p>
+                            {messageLines}
+                        </p>
                     </div>
-                )
+                );
             }
+        });
+    };
 
-        }
-
-        )
-    }
 
     return (
         <>

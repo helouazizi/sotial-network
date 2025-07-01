@@ -53,9 +53,9 @@ func (rlrepo *RelationsRepository) GetActuelStatus(profileID int) (int, error) {
 	return Visibility, nil
 }
 
-func (rlrepo *RelationsRepository) GetUserRelations(info *models.GetUsers, columun string) error {
+func (rlrepo *RelationsRepository) GetUserRelations(info *models.GetUsers, columun, userColumun string) error {
 	// id user,avatar user,fullName, nickname
-	query := (`SELECT u.id, u.avatar, u.last_name, u.first_name, u.nickname FROM users u INNER JOIN followers f on u.id=f.followed_id WHERE f.followed_id=$1 AND f.status='accepted' LIMIT $2 OFFSET $3;`)
+	query := fmt.Sprintf(`SELECT u.id, u.avatar, u.last_name, u.first_name, u.nickname FROM users u INNER JOIN followers f on u.id=%s WHERE %s=$1 AND f.status='accepted' LIMIT $2 OFFSET $3;`, userColumun, columun)
 	rows, err := rlrepo.db.Query(query, info.ProfileID, info.Limit, info.Ofsset)
 	if err != nil && err != sql.ErrNoRows {
 		return err

@@ -61,8 +61,9 @@ export default function PrivateChat() {
     useEffect(() => {
         if (messages && messages.length > 0 && chatBodyRef.current) {
             const isAtBottom = chatBodyRef.current?.scrollTop + chatBodyRef.current?.clientHeight >= chatBodyRef.current?.scrollHeight - 100;
-            // console.log(isAtBottom, sendMessage?.sender_id , friend?.id)
-            if (sendMessage?.sender_id !== friend?.id || isAtBottom) {
+            let lastMessage = messages[messages.length - 1]
+            // console.log(isAtBottom, lastMessage.sender_id, lastMessage.receiver_id, friend?.id)
+            if ((lastMessage.sender_id !== friend?.id || isAtBottom) && (lastMessage.sender_id === friend?.id || lastMessage.receiver_id === friend?.id)){
                 chatBodyRef.current?.scrollTo({
                     top: chatBodyRef.current.scrollHeight,
                     behavior: "smooth"

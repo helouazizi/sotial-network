@@ -142,3 +142,27 @@ export async function HandleRelations(status: string | undefined, profileUser: n
 
 
 
+export async function FetchUsersRl(id: number | undefined, type: string, limit: number, ofsset: number, setData: (callback: (prev: any) => any) => void, setLoadingRl: Function) {
+    try {
+        setLoadingRl(true)
+        const resp = await fetch(`${API_URL}api/v1/relations/getRealtions`, {
+            method: "POST",
+            credentials: 'include',
+            body: JSON.stringify({
+                profileID: id,
+                type: type,
+                limit: limit,
+                ofsset: ofsset,
+            })
+        })
+        if (resp.ok) {
+            alert('yees')
+        }
+
+    } catch (err) {
+        console.error(err)
+    } finally {
+        setLoadingRl(false)
+    }
+
+}

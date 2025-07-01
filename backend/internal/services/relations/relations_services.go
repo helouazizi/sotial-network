@@ -53,3 +53,13 @@ func (rs *RelationsServices) CheckRelation(data *models.RealtionUpdate, sessionI
 	}
 	return NewRelation, nil
 }
+
+func (rs *RelationsServices) GetRealtionsServives(info *models.GetUsers) error {
+	var columun string
+	if info.Type == "followers" {
+		columun = "f.followed_id"
+	} else if info.Type == "followed" {
+		columun = "f.follower_id"
+	}
+	return rs.relationrepo.GetUserRelations(info,columun)
+}

@@ -67,14 +67,14 @@ func (h *RelationsHandler) RelationHandler(w http.ResponseWriter, r *http.Reques
 }
 
 func (h *RelationsHandler) GetRelations(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
+	if r.Method != http.MethodPost {
 		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
 			"message": "Method not allowed",
 			"status":  http.StatusMethodNotAllowed,
 		})
 		return
 	}
-	var data models.RealtionUpdate
+	var data models.GetUsers
 	err := json.NewDecoder(r.Body).Decode(&data)
 	if err != nil {
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
@@ -83,5 +83,15 @@ func (h *RelationsHandler) GetRelations(w http.ResponseWriter, r *http.Request) 
 		})
 		return
 	}
-	fmt.Println(data)
+	if data.Type != "followers" && data.Type != "followed" {
+		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
+			"message": "Invalid Request Data.",
+			"status":  http.StatusInternalServerError,
+		})
+		return
+	}
+	err = h.RelationsServices.GetRealtionsServives(&data)
+	if err != nil {
+		fmt.Println(err)
+	}
 }

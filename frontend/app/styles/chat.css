@@ -218,10 +218,11 @@
 
 .chatBody .sender {
   display: flex;
-    word-break: break-all;
+  word-break: break-all;
+    justify-content: end;
 }
 
-.chatBody > div p {
+.chatBody > div {
   padding: 10px 20px;
   border-radius: 8px;
 }
@@ -232,8 +233,7 @@
 
 .chatBody .receiver {
   display: flex;
-  justify-content: end;
-    word-break: break-all;
+  word-break: break-all;
 }
 
 .chatBody .receiver p {

@@ -10,7 +10,7 @@ import Chat from "../page";
 
 export default function PrivateChat() {
     const { id } = useParams()
-    const { ws, friends, messages, setMessages, sendMessage, setSendMessage, scrollHeight } = useContext(SocketContext) ?? {}
+    const { ws, friends, messages, setMessages, sendMessage, setSendMessage, scrollHeight, user } = useContext(SocketContext) ?? {}
     let [friend, setFriend] = useState<User | undefined>(undefined)
     const chatBodyRef = useRef<HTMLDivElement>(null)
     const previousScrollHeight = useRef<number>(0)
@@ -90,23 +90,28 @@ export default function PrivateChat() {
                 </React.Fragment>
             ))
 
+            console.log(user)
 
             if (message.receiver_id === friend?.id) {
                 return (
-                    <div key={message.id} id={`${message.id}`} className="receiver">
-                        <p>
+                    <div key={message.id} id={`${message.id}`} className="sender">
+                        <div>
+                            <p>{user?.firstName} {user?.lastName}</p>
                             {messageLines}
-                        </p>
+                        </div>
                     </div>
                 );
             }
 
+
             if (message.sender_id === friend?.id) {
                 return (
-                    <div key={message.id} id={`${message.id}`} className="sender">
-                        <p>
+                    <div key={message.id} id={`${message.id}`} className="receiver">
+                        <div>
+                            {/* <p>{user?.firstName} {user?.lastName}</p> */}
+                            <br />
                             {messageLines}
-                        </p>
+                        </div>
                     </div>
                 );
             }

@@ -30,12 +30,12 @@ export default function PrivateChat() {
         getMessages(-1)
         return () => {
             if (setSendMessage) setSendMessage(undefined)
-        } 
+        }
     }, [friend])
 
     useEffect(() => {
         let friend: User | undefined = friends?.find((f: User) => {
-            return f.id === Number(id)  
+            return f.id === Number(id)
         })
 
         setFriend(friend)
@@ -63,7 +63,7 @@ export default function PrivateChat() {
             const isAtBottom = chatBodyRef.current?.scrollTop + chatBodyRef.current?.clientHeight >= chatBodyRef.current?.scrollHeight - 100;
             let lastMessage = messages[messages.length - 1]
             // console.log(isAtBottom, lastMessage.sender_id, lastMessage.receiver_id, friend?.id)
-            if ((lastMessage.sender_id !== friend?.id || isAtBottom) && (lastMessage.sender_id === friend?.id || lastMessage.receiver_id === friend?.id)){
+            if ((lastMessage.sender_id !== friend?.id || isAtBottom) && (lastMessage.sender_id === friend?.id || lastMessage.receiver_id === friend?.id)) {
                 chatBodyRef.current?.scrollTo({
                     top: chatBodyRef.current.scrollHeight,
                     behavior: "smooth"
@@ -83,41 +83,37 @@ export default function PrivateChat() {
 
     const displayMessages = () => {
         return messages?.map((message: Message) => {
+            const isSender = message.receiver_id === friend?.id;
+            const isReceiver = message.sender_id === friend?.id;
+
+            if (!isSender && !isReceiver) return null;
+
             const messageLines = message.message.split("\n").map((line, index) => (
                 <React.Fragment key={index}>
                     {line}
                     <br />
                 </React.Fragment>
-            ))
+            ));
 
-            console.log(user)
+            // const name = isSender
+            //     ? `${user?.firstName} ${user?.lastName}`
+            //     : `${friend?.firstName} ${friend?.lastName}`;
 
-            if (message.receiver_id === friend?.id) {
-                return (
-                    <div key={message.id} id={`${message.id}`} className="sender">
-                        <div>
-                            <p>{user?.firstName} {user?.lastName}</p>
-                            {messageLines}
-                        </div>
+            console.log(message.sent_at_str)
+            
+            const className = isSender ? "sender" : "receiver";
+            
+            return (
+                <div key={message.id} id={`${message.id}`} className={className}>
+                    <div className="msg">
+                        {/* <p>{name}</p> */}
+                        {messageLines}
+                        <span>{message.sent_at_str.slice(0, 16)}</span>
                     </div>
-                );
-            }
-
-
-            if (message.sender_id === friend?.id) {
-                return (
-                    <div key={message.id} id={`${message.id}`} className="receiver">
-                        <div>
-                            {/* <p>{user?.firstName} {user?.lastName}</p> */}
-                            <br />
-                            {messageLines}
-                        </div>
-                    </div>
-                );
-            }
+                </div>
+            );
         });
     };
-
 
     return (
         <>

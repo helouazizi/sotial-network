@@ -219,7 +219,7 @@
 .chatBody .sender {
   display: flex;
   word-break: break-all;
-    justify-content: end;
+  justify-content: end;
 }
 
 .chatBody > div {
@@ -227,7 +227,21 @@
   border-radius: 8px;
 }
 
-.chatBody .sender p {
+.chatBody .msg{
+  padding: 10px 20px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.chatBody .msg span{
+  font-size: 0.6em;
+  width: 100%;
+  color: var(--text-secondary);
+}
+
+.chatBody .sender .msg {
   background-color: var(--bg-color);
 }
 
@@ -236,7 +250,7 @@
   word-break: break-all;
 }
 
-.chatBody .receiver p {
+.chatBody .receiver .msg {
   background-color: var(--btn-bg);
 }
 

@@ -43,6 +43,8 @@ func (r *ChatRepository) GetMessages(senderID, receiverID int, lastID int) ([]*m
 			return nil, err
 		}
 
+		message.SentAtStr = message.SentAt.Format(time.DateTime)
+
 		messages = append(messages, &message)
 	}
 

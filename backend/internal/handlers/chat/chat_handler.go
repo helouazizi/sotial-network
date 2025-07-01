@@ -3,6 +3,7 @@ package handlers
 import (
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/gorilla/websocket"
 	"github.com/ismailsayen/social-network/internal/models"
@@ -77,6 +78,7 @@ func (h *ChatHandler) ChatMessagesHandler(w http.ResponseWriter, r *http.Request
 				"receiver_id": chat.ReceiverID,
 				"sender_id":   chat.SenderID,
 				"message":     chat.Message,
+				"sent_at_str":     time.Now().Format(time.DateTime),
 			}
 
 			conn.WriteJSON(map[string]any{

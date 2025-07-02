@@ -8,14 +8,21 @@ import { FaUser } from "react-icons/fa";
 import { usePathname } from "next/navigation";
 import { IoIosLogOut } from "react-icons/io";
 import { useRouter } from 'next/navigation';
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { SocketContext, SocketContextType } from "@/app/context/socketContext";
 export default function Header() {
   const router = useRouter();
   const pathname = usePathname()
   const { ws, user } = useContext(SocketContext) as SocketContextType
+  const [isLogged, setIsLogged] = useState<boolean>(false)
 
-  console.log(user);
+  useEffect(() => {
+    if (["/login", "/register"].includes(pathname)) {
+      setIsLogged(false)
+    } else {
+      setIsLogged(true)
+    }
+  }, [pathname])
 
   const handleClickLogout = async () => {
     try {
@@ -23,15 +30,12 @@ export default function Header() {
         method: 'GET',
         credentials: 'include',
       });
-      console.log(res);
 
       if (res.ok) {
         if (ws.current) {
           ws.current.close()
         }
         router.push('/login')
-        console.log("Iam heer");
-
       }
 
     } catch (error) {
@@ -44,33 +48,38 @@ export default function Header() {
   }
 
   return (
-    <header>
-      <nav>
-        <Link href={"/"} className="logo">
-          Social <span>Net</span>work
-        </Link>
-        <ul>
-          <li>
-            <Link href={"/"}><TiHome className={pathname === "/" ? "active" : " "} /></Link>
-          </li>
-          <li>
-            <Link href={"/chat/privateChat"}><LuMessageCircleMore className={pathname.startsWith("/chat/privateChat") ? "active" : ""} /></Link>
-          </li>
-          <li>
-            <Link href={"/chat/groups"}><MdGroups2 className={pathname === "/chat/groups" ? "active groupIconHeader" : "groupIconHeader"} /></Link>
-          </li>
-        </ul>
-        <div>
-          <button className="notification"><IoIosNotifications /></button>
-          <Link href={`/profile/${user?.id}`}>
-            <button className="profile"><FaUser /></button>
-          </Link>
+    <>
+      {isLogged && (
+        <header>
+          <nav>
+            <Link href={"/"} className="logo">
+              Social <span>Net</span>work
+            </Link>
+            <ul>
+              <li>
+                <Link href={"/"}><TiHome className={pathname === "/" ? "active" : " "} /></Link>
+              </li>
+              <li>
+                <Link href={"/chat/privateChat"}><LuMessageCircleMore className={pathname.startsWith("/chat/privateChat") ? "active" : ""} /></Link>
+              </li>
+              <li>
+                <Link href={"/chat/groups"}><MdGroups2 className={pathname === "/chat/groups" ? "active groupIconHeader" : "groupIconHeader"} /></Link>
+              </li>
+            </ul>
+            <div>
+              <button className="notification"><IoIosNotifications /></button>
+              <Link href={`/profile/${user?.id}`}>
+                <button className="profile"><FaUser /></button>
+              </Link>
 
-          <button className="user-logout" onClick={handleClickLogout}><IoIosLogOut /></button>
+              <button className="user-logout" onClick={handleClickLogout}><IoIosLogOut /></button>
 
-        </div>
+            </div>
 
-      </nav>
-    </header>
+          </nav>
+        </header>
+      )}
+    </>
+
   );
 }

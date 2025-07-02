@@ -240,6 +240,7 @@
   font-size: 0.6em;
   width: 100%;
   color: var(--text-secondary);
+  text-align: end;
 }
 
 .chatBody .sender .msg {

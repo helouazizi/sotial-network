@@ -3,10 +3,6 @@ import "./globals.css";
 import SocketProvider from "./context/socketContext";
 import Header from "./components/header/header";
 
-interface RootLayoutProps {
-  children: ReactNode;
-}
-
 export const metadata = {
   title: "Social Network",
   description: "Social Network is a web app to share and communicate with the world",

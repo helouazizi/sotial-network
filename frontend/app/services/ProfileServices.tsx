@@ -142,9 +142,8 @@ export async function HandleRelations(status: string | undefined, profileUser: n
 
 
 
-export async function FetchUsersRl(id: number | undefined, type: string, limit: number, ofsset: number, setData: (callback: (prev: any) => any) => void, setLoadingRl: Function) {
+export async function FetchUsersRl(id: number | undefined, type: string, limit: number, ofsset: number, setData: (callback: (prev: any) => any) => void) {
     try {
-        setLoadingRl(true)
         const resp = await fetch(`${API_URL}api/v1/relations/getRealtions`, {
             method: "POST",
             credentials: 'include',
@@ -156,14 +155,18 @@ export async function FetchUsersRl(id: number | undefined, type: string, limit: 
             })
         })
         if (resp.ok) {
-            console.log("ssss");
-            
+            const dataUsers = await resp.json()
+            console.log(dataUsers);
+
+            setData((prev) => {
+                if (!prev || !dataUsers.NewRelation) return []
+                return [...prev, ...dataUsers.NewRelation]
+            })
+
         }
 
     } catch (err) {
         console.error(err)
-    } finally {
-        setLoadingRl(false)
     }
 
 }

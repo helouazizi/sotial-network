@@ -2,7 +2,6 @@ package relations
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/ismailsayen/social-network/internal/models"
@@ -60,7 +59,7 @@ func (h *RelationsHandler) RelationHandler(w http.ResponseWriter, r *http.Reques
 		return
 	}
 	utils.ResponseJSON(w, http.StatusOK, map[string]any{
-		"message":     "Profile Updated successfully",
+		"message":     "Request sended successfully",
 		"NewRelation": NewRelation,
 		"status":      http.StatusOK,
 	})
@@ -90,8 +89,17 @@ func (h *RelationsHandler) GetRelations(w http.ResponseWriter, r *http.Request) 
 		})
 		return
 	}
-	err = h.RelationsServices.GetRealtionsServives(&data)
+	usersData, err := h.RelationsServices.GetRealtionsServives(&data)
 	if err != nil {
-		fmt.Println(err)
+		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+			"message": "Error, please try again.",
+			"status":  http.StatusInternalServerError,
+		})
+		return
 	}
+	utils.ResponseJSON(w, http.StatusOK, map[string]any{
+		"message":     "Profile Updated successfully",
+		"NewRelation": usersData,
+		"status":      http.StatusOK,
+	})
 }

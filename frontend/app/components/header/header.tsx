@@ -13,7 +13,7 @@ import { SocketContext, SocketContextType } from "@/app/context/socketContext";
 export default function Header() {
   const router = useRouter();
   const pathname = usePathname()
-  const { ws } = useContext(SocketContext) as SocketContextType
+  const { ws, user } = useContext(SocketContext) as SocketContextType
   const [isLogged, setIsLogged] = useState<boolean>(false)
 
   useEffect(() => {
@@ -68,7 +68,7 @@ export default function Header() {
             </ul>
             <div>
               <button className="notification"><IoIosNotifications /></button>
-              <Link href={"/profile/1"}>
+              <Link href={`/profile/${user?.id}`}>
                 <button className="profile"><FaUser /></button>
               </Link>
 

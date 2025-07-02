@@ -54,7 +54,7 @@ func (rs *RelationsServices) CheckRelation(data *models.RealtionUpdate, sessionI
 	return NewRelation, nil
 }
 
-func (rs *RelationsServices) GetRealtionsServives(info *models.GetUsers) error {
+func (rs *RelationsServices) GetRealtionsServives(info *models.GetUsers) ([]models.CommunInfoProfile, error) {
 	var columun string
 	var userColumun string
 	if info.Type == "followers" {
@@ -64,5 +64,5 @@ func (rs *RelationsServices) GetRealtionsServives(info *models.GetUsers) error {
 		columun = "f.follower_id"
 		userColumun = "f.followed_id"
 	}
-	return rs.relationrepo.GetUserRelations(info, columun,userColumun)
+	return rs.relationrepo.GetUserRelations(info, columun, userColumun)
 }

@@ -237,8 +237,10 @@ input:checked+.slider:before {
 .data-profile {
     width: 100%;
     min-height: 520px;
+    max-height: 600px;
     background-color: var(--card-bg);
-
+    box-sizing: border-box;
+    overflow-y: auto;
 }
 
 .data-profile .Forbiden {
@@ -413,4 +415,68 @@ input:checked+.slider:before {
     100% {
         transform: rotate(360deg);
     }
+}
+
+.relation-section {
+    flex-wrap: wrap;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    gap: 20px;
+    padding: 10px;
+    justify-content: space-evenly;
+    overflow-y: auto;
+
+    a {
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+        width: calc(85% / 3);
+        text-decoration-line: none;
+        color: var(--text-primary);
+        background-color: var(--btn-bg);
+        transition: .5s ease-in-out;
+    }
+
+    a:hover {
+        transform: translate(2px, -2px);
+        color: var(--accent-hover);
+
+    }
+
+}
+
+.relation-section .relation-card .card {
+    width: 60px;
+    height: 60px;
+    font-size: 14px;
+}
+
+.relation-section .relation-card .relation-card-data {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+
+    .info {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+        h3 {
+            font-size: 16px;
+        }
+
+        span {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+    }
+}
+
+.relation-section .relation-card svg {
+    width: 25px;
+    height: 25px;
 }

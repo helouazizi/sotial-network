@@ -178,6 +178,7 @@
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-bg);
+  position: relative;
 }
 
 .chatFooter {
@@ -271,4 +272,26 @@
 .noChat h3,
 .noChat p {
   color: var(--text-secondary);
+}
+
+.chatBody .showScrollButton{
+  position: sticky;
+  left: 0;
+  bottom: 0;
+  width: max-content;
+  background: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-size: 1.4em;
+  z-index: 99;
+}
+
+.chatBody .showScrollButton svg{
+  color: var(--accent-color);
+  transition: .3s;
+}
+
+.chatBody .showScrollButton svg:hover{
+  scale: 1.2;
 }

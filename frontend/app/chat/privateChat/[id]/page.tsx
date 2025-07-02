@@ -6,6 +6,7 @@ import { Message, User } from "@/app/types/chat";
 import { useParams } from "next/navigation";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { FaUser } from "react-icons/fa";
+import { FaArrowAltCircleDown } from "react-icons/fa";
 import Chat from "../page";
 
 export default function PrivateChat() {
@@ -15,6 +16,7 @@ export default function PrivateChat() {
     const chatBodyRef = useRef<HTMLDivElement>(null)
     const previousScrollHeight = useRef<number>(0)
     const [scrollToBottom, setScrollToBottom] = useState<boolean>(false)
+    const [showScrollButton, setShowScrollButton] = useState<boolean>(false)
 
     const getMessages = (lastID: number) => {
         if (ws?.current && friend) {
@@ -62,12 +64,18 @@ export default function PrivateChat() {
         if (messages && messages.length > 0 && chatBodyRef.current) {
             const isAtBottom = chatBodyRef.current?.scrollTop + chatBodyRef.current?.clientHeight >= chatBodyRef.current?.scrollHeight - 100;
             let lastMessage = messages[messages.length - 1]
+
+            if (!isAtBottom && lastMessage.sender_id === friend?.id) {
+                setShowScrollButton(true)
+            }
+
             // console.log(isAtBottom, lastMessage.sender_id, lastMessage.receiver_id, friend?.id)
             if ((lastMessage.sender_id !== friend?.id || isAtBottom) && (lastMessage.sender_id === friend?.id || lastMessage.receiver_id === friend?.id)) {
                 chatBodyRef.current?.scrollTo({
                     top: chatBodyRef.current.scrollHeight,
                     behavior: "smooth"
                 })
+                setShowScrollButton(false)
             }
         }
     }, [scrollToBottom])
@@ -77,6 +85,11 @@ export default function PrivateChat() {
             if (chatBodyRef.current.scrollTop === 0) {
                 previousScrollHeight.current = chatBodyRef.current.scrollHeight
                 if (messages) getMessages(messages[0].id)
+            } else {
+                const isAtBottom = chatBodyRef.current?.scrollTop + chatBodyRef.current?.clientHeight >= chatBodyRef.current?.scrollHeight - 100;
+                if (isAtBottom) {
+                    setShowScrollButton(false)
+                }
             }
         }
     }
@@ -99,10 +112,8 @@ export default function PrivateChat() {
             //     ? `${user?.firstName} ${user?.lastName}`
             //     : `${friend?.firstName} ${friend?.lastName}`;
 
-            console.log(message.sent_at_str)
-            
             const className = isSender ? "sender" : "receiver";
-            
+
             return (
                 <div key={message.id} id={`${message.id}`} className={className}>
                     <div className="msg">
@@ -132,7 +143,18 @@ export default function PrivateChat() {
                             <span></span> online
                         </p>
                     </div>
-                    <div ref={chatBodyRef} onScroll={handleScroll} className="chatBody">{displayMessages()}</div>
+                    <div ref={chatBodyRef} onScroll={handleScroll} className="chatBody">
+                        {displayMessages()}
+                        {showScrollButton && (
+                            <button onClick={() => {
+                                chatBodyRef.current?.scrollTo({
+                                    top: chatBodyRef.current.scrollHeight,
+                                    behavior: "smooth"
+                                })
+                                setShowScrollButton(false)
+                            }} className="showScrollButton"><FaArrowAltCircleDown /></button>
+                        )}
+                    </div>
                     <ChatFooter receiverId={friend.id} />
                 </>
             )}

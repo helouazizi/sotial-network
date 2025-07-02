@@ -6,19 +6,37 @@ import React, { useEffect, useState } from 'react'
 
 const UsersRl = (props: { type: string }) => {
     const { dataProfile, setDataProfile } = useProfile()
-    const [data, setData] = useState<ProfileInt[] | null>(null)
+    const [data, setData] = useState<ProfileInt[]>([])
     const [loadingRl, setLoadingRl] = useState(false)
     const { type } = props
+
     let limit = 15; let ofsset = 0
     useEffect(() => {
         const GetRelations = async () => {
-            await FetchUsersRl(dataProfile?.id, type, limit, ofsset, setData, setLoadingRl)
+
+            if (dataProfile?.id) {
+                console.log("ssss");
+                await FetchUsersRl(dataProfile.id, type, limit, ofsset, setData, setLoadingRl)
+            }
         }
         GetRelations()
-    }, [type])
+    }, [])
+
 
     return (
-        <div>UsersRl</div>
+        <>        {loadingRl && <div className="loader"></div>}
+            <div>
+                {
+                    data.map((ele, key) => {
+                        return (
+                            <div key={key}>
+                                <p>{ele?.first_name}</p>
+                            </div>
+                        )
+                    })
+                }
+            </div>
+        </>
     )
 }
 

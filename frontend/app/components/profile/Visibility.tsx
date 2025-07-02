@@ -23,16 +23,15 @@ const Visibility = () => {
           <label className="switch">
             <input
               type="checkbox"
-              checked={dataProfile?.is_private === 0}
+              checked={dataProfile?.is_private === 1}
               onChange={change}
             />
             <span className="slider"></span>
           </label>
-          To:
           {dataProfile?.is_private === 0 ? (
-            <p style={{ color: "#f87171" }}>PRIVATE</p>
-          ) : (
             <p style={{ color: "#5fdd54" }}>PUBLIC</p>
+          ) : (
+            <p style={{ color: "#f87171" }}>PRIVATE</p>
           )}
         </div>
       )}

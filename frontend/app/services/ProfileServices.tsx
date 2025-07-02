@@ -142,9 +142,8 @@ export async function HandleRelations(status: string | undefined, profileUser: n
 
 
 
-export async function FetchUsersRl(id: number | undefined, type: string, limit: number, ofsset: number, setData: (callback: (prev: any) => any) => void, setLoadingRl: React.Dispatch<React.SetStateAction<boolean>>) {
+export async function FetchUsersRl(id: number | undefined, type: string, limit: number, ofsset: number, setData: (callback: (prev: any) => any) => void) {
     try {
-        setLoadingRl(true)
         const resp = await fetch(`${API_URL}api/v1/relations/getRealtions`, {
             method: "POST",
             credentials: 'include',
@@ -168,8 +167,6 @@ export async function FetchUsersRl(id: number | undefined, type: string, limit: 
 
     } catch (err) {
         console.error(err)
-    } finally {
-        setLoadingRl(false)
     }
 
 }

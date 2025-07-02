@@ -13,7 +13,10 @@ import { SocketContext, SocketContextType } from "@/app/context/socketContext";
 export default function Header() {
   const router = useRouter();
   const pathname = usePathname()
-  const { ws } = useContext(SocketContext) as SocketContextType
+  const { ws, user } = useContext(SocketContext) as SocketContextType
+
+  console.log(user);
+
   const handleClickLogout = async () => {
     try {
       const res = await fetch("http://localhost:8080/app/v1/user/logout", {
@@ -59,7 +62,7 @@ export default function Header() {
         </ul>
         <div>
           <button className="notification"><IoIosNotifications /></button>
-          <Link href={"/profile/1"}>
+          <Link href={`/profile/${user?.id}`}>
             <button className="profile"><FaUser /></button>
           </Link>
 

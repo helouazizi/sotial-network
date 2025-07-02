@@ -142,7 +142,7 @@ export async function HandleRelations(status: string | undefined, profileUser: n
 
 
 
-export async function FetchUsersRl(id: number | undefined, type: string, limit: number, ofsset: number, setData: (callback: (prev: any) => any) => void) {
+export async function FetchUsersRl(id: number | undefined, type: string, limit: number, ofsset: number) {
     try {
         const resp = await fetch(`${API_URL}api/v1/relations/getRealtions`, {
             method: "POST",
@@ -156,17 +156,17 @@ export async function FetchUsersRl(id: number | undefined, type: string, limit: 
         })
         if (resp.ok) {
             const dataUsers = await resp.json()
-            console.log(dataUsers);
+            if (dataUsers.NewRelation) {
+                return dataUsers.NewRelation
+            }
 
-            setData((prev) => {
-                if (!prev || !dataUsers.NewRelation) return []
-                return [...prev, ...dataUsers.NewRelation]
-            })
+            return dataUsers.NewRelation
 
         }
 
     } catch (err) {
         console.error(err)
+        return []
     }
 
 }

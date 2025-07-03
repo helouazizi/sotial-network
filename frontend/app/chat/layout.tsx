@@ -23,6 +23,7 @@ export default function ChatLayout({ children } : {children : ReactNode}) {
             <ul><Friends /></ul>
           </div>
         </div>
+        
       </section>
       <section className="chatMessages">
         {children}

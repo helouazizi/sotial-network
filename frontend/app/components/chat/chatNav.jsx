@@ -14,8 +14,8 @@ export default function ChatNav() {
         Private
       </Link>
       <Link
-        href="/chat/groups"
-        className={pathname === "/chat/groups" ? "active" : ""}
+        href="/chat/groupsChat"
+        className={pathname === "/chat/groupsChat" ? "active" : ""}
       >
         Groups
       </Link>

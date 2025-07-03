@@ -60,10 +60,10 @@ export default function Header() {
                 <Link href={"/"}><TiHome className={pathname === "/" ? "active" : " "} /></Link>
               </li>
               <li>
-                <Link href={"/chat/privateChat"}><LuMessageCircleMore className={pathname.startsWith("/chat/privateChat") ? "active" : ""} /></Link>
+                <Link href={"/chat/privateChat"}><LuMessageCircleMore className={pathname.startsWith("/chat/") ? "active" : ""} /></Link>
               </li>
               <li>
-                <Link href={"/chat/groups"}><MdGroups2 className={pathname === "/chat/groups" ? "active groupIconHeader" : "groupIconHeader"} /></Link>
+                <Link href={"/groups"}><MdGroups2 className={pathname === "/groups" ? "active groupIconHeader" : "groupIconHeader"} /></Link>
               </li>
             </ul>
             <div>

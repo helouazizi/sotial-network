@@ -2,6 +2,10 @@
 
 import { API_URL } from "./apiUrls";
 
+export const obj = {
+    Ofsset: 0,
+    Limit: 20
+}
 export async function ChangeVisbiltiy(newVisibility: number, setDataProfile: (callback: (prev: any) => any) => void) {
     const req = await fetch(
         `${API_URL}api/v1/ChangeVisibilityProfile`,
@@ -140,9 +144,7 @@ export async function HandleRelations(status: string | undefined, profileUser: n
     }
 }
 
-
-
-export async function FetchUsersRl(id: number | undefined, type: string, limit: number, ofsset: number) {
+export async function FetchUsersRl(id: number | undefined, type: string,) {
     try {
         const resp = await fetch(`${API_URL}api/v1/relations/getRealtions`, {
             method: "POST",
@@ -150,18 +152,19 @@ export async function FetchUsersRl(id: number | undefined, type: string, limit: 
             body: JSON.stringify({
                 profileID: id,
                 type: type,
-                limit: limit,
-                ofsset: ofsset,
+                limit: obj.Limit,
+                ofsset: obj.Ofsset,
             })
         })
         if (resp.ok) {
             const dataUsers = await resp.json()
             if (dataUsers.NewRelation) {
+                obj.Limit += 20
+                obj.Ofsset += 20
+                console.log(dataUsers.NewRelation);
+                
                 return dataUsers.NewRelation
             }
-
-            return dataUsers.NewRelation
-
         }
 
     } catch (err) {

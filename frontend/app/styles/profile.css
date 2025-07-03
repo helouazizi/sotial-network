@@ -236,7 +236,8 @@ input:checked+.slider:before {
 
 .data-profile {
     width: 100%;
-
+    min-height: 500px;
+    max-height: 520px;
     background-color: var(--card-bg);
     box-sizing: border-box;
     overflow-y: auto;
@@ -420,13 +421,14 @@ input:checked+.slider:before {
 
 .relation-section {
     flex-wrap: wrap;
-    min-height: 200px;
-    max-height: 220px;
+    min-height: 500px;
+    max-height: 520px;
     display: flex;
     gap: 20px;
     padding: 30px 10px;
     justify-content: space-evenly;
     overflow-y: auto;
+
     a {
         border: 1px solid var(--border-color);
         border-radius: 8px;
@@ -439,6 +441,7 @@ input:checked+.slider:before {
         color: var(--text-primary);
         background-color: var(--btn-bg);
         transition: .5s ease-in-out;
+        height: 90px;
     }
 
     a:hover {
@@ -479,4 +482,19 @@ input:checked+.slider:before {
 .relation-section .relation-card svg {
     width: 25px;
     height: 25px;
+}
+
+.empty-data {
+    min-height: 500px;
+    max-height: 520px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: var(--accent-color);
+    svg {
+        width: 60px;
+        height: 60px;
+    }
 }

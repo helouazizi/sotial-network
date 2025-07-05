@@ -60,6 +60,7 @@ export default function Posts() {
               ...data.filter((p) => !prev.some((post) => post.id === p.id)),
             ]
         );
+
         page.current += 1;
 
         if (data.length < LIMIT) setHasMore(false);

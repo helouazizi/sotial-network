@@ -23,7 +23,7 @@
 
 header {
   background-color: var(--card-bg);
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -31,7 +31,7 @@ header {
   z-index: 9999;
 }
 
-header nav .active{
+header nav .active {
   color: var(--accent-color);
 }
 
@@ -53,7 +53,7 @@ li {
 }
 
 nav ul li a {
-  text-decoration: none;
+  text-decoration-line: none;
   color: var(--text-primary);
 }
 
@@ -93,7 +93,7 @@ nav ul li svg:hover {
   background-color: var(--accent-color);
 }
 
-nav > div {
+nav>div {
   display: flex;
   gap: 15px;
 }
@@ -110,12 +110,22 @@ nav > div {
   width: 50px;
   height: 50px;
   border-radius: 50%;
+  transition: 0.5s ease-in-out;
 }
 
 .notification svg {
   vertical-align: middle;
   font-size: 1.35em;
 }
+
+.active-not {
+  background-color: var(--accent-hover);
+}
+
+.notification:hover {
+  background-color: var(--accent-hover);
+}
+
 .user-logout {
   border: none;
   outline: none;
@@ -145,4 +155,15 @@ nav > div {
 
 .user-logout:hover svg {
   color: var(--accent-hover);
+}
+
+.header-icons a {
+  text-decoration: none;
+}
+
+header nav .header-icon {
+  width: 50px;
+  height: 50px;
+  border-color: var(--accent-color);
+  font-size: 14px;
 }

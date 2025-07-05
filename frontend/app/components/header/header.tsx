@@ -10,11 +10,14 @@ import { IoIosLogOut } from "react-icons/io";
 import { useRouter } from 'next/navigation';
 import { useContext, useEffect, useState } from "react";
 import { SocketContext, SocketContextType } from "@/app/context/socketContext";
+import { GenerateAvatar } from "../profile/ProfileHeader";
+import ToogleInitiale from "../request/ToogleInitiale";
 export default function Header() {
   const router = useRouter();
   const pathname = usePathname()
   const { ws, user } = useContext(SocketContext) as SocketContextType
   const [isLogged, setIsLogged] = useState<boolean>(false)
+  const [showToggle, setShowToggle] = useState(false)
 
   useEffect(() => {
     if (["/login", "/register"].includes(pathname)) {
@@ -46,6 +49,13 @@ export default function Header() {
     }
 
   }
+  const HandleToggle = () => {
+    console.log("dss");
+
+    setShowToggle(!showToggle)
+    console.log(showToggle);
+
+  }
 
   return (
     <>
@@ -66,19 +76,28 @@ export default function Header() {
                 <Link href={"/groups"}><MdGroups2 className={pathname === "/groups" ? "active groupIconHeader" : "groupIconHeader"} /></Link>
               </li>
             </ul>
-            <div>
-              <button className="notification"><IoIosNotifications /></button>
+            <div className="header-icons">
+              <button className={`notification ${showToggle ? "active-not" : ""}`} onClick={HandleToggle}><IoIosNotifications /></button>
               <Link href={`/profile/${user?.id}`}>
-                <button className="profile"><FaUser /></button>
+                {user?.avatar ? (
+                  <img
+                    src={`http://localhost:8080/images/user/${user?.avatar}`}
+                    alt={`${user?.avatar}`}
+                    className="avatar-profile header-icon"
+                  />
+                ) : (
+                  <div className="avatar-profile header-icon"><h2>{GenerateAvatar(user?.firstName, user?.lastName)}</h2></div>
+                )}
               </Link>
 
-              <button className="user-logout" onClick={handleClickLogout}><IoIosLogOut /></button>
+              <button className="user-logout" ><IoIosLogOut /></button>
 
             </div>
 
           </nav>
         </header>
       )}
+      <ToogleInitiale showToggle={showToggle} setShowToggle={setShowToggle} />
     </>
 
   );

@@ -9,7 +9,7 @@ import { usePathname } from "next/navigation";
 import { IoIosLogOut } from "react-icons/io";
 import { useRouter } from 'next/navigation';
 import { useContext, useEffect, useState } from "react";
-import { SocketContext, SocketContextType } from "@/app/context/socketContext";
+import { SocketContext, SocketContextType } from "@/context/socketContext";
 import { GenerateAvatar } from "../profile/ProfileHeader";
 import ToogleInitiale from "../request/ToogleInitiale";
 export default function Header() {

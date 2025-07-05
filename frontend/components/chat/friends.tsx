@@ -1,7 +1,7 @@
 "use client"
 
-import { SocketContext } from "@/app/context/socketContext";
-import { User } from "@/app/types/chat";
+import { SocketContext } from "@/context/socketContext";
+import { User } from "@/types/chat";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect } from "react";
 import { FaUser } from "react-icons/fa";

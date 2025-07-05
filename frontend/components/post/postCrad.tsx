@@ -3,10 +3,10 @@ import PostHeader from './postHeader';
 import PostBody from './postBody';
 import PostActions from './postActions';
 import CommentPostForm from './commentForm';
-import { getComments, addComment, votePost } from '@/app/services/postsServices';
-import { Post, Comment } from '@/app/types/post';
+import { getComments, addComment, votePost } from '@/services/postsServices';
+import { Post, Comment } from '@/types/post';
 import { useState } from 'react';
-import { BuildMediaLinkCAS } from '@/app/utils/posts';
+import { BuildMediaLinkCAS } from '@/utils/posts';
 
 
 type postProps = {

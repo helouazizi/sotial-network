@@ -1,8 +1,8 @@
 "use client";
 
-import ProfileBody from '@/app/components/profile/ProfileBody';
-import ProfileHeader from '@/app/components/profile/ProfileHeader';
-import { ProfileProvider, useProfile } from '@/app/context/ProfileContext';
+import ProfileBody from '@/components/profile/ProfileBody';
+import ProfileHeader from '@/components/profile/ProfileHeader';
+import { ProfileProvider, useProfile } from '@/context/ProfileContext';
 import { useParams } from 'next/navigation';
 import React, { ReactNode } from 'react';
 

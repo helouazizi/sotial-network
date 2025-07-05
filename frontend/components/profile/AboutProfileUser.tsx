@@ -1,10 +1,10 @@
 "use client"
-import { useProfile } from '@/app/context/ProfileContext'
+import { useProfile } from '@/context/ProfileContext'
 import React, { useCallback, useEffect, useState } from 'react'
 import { GenerateAvatar } from './ProfileHeader';
 import Toast from '../toast/Toast';
-import { Debounce } from '@/app/utils/Debounce';
-import { UpdateProfile } from '@/app/services/ProfileServices';
+import { Debounce } from '@/utils/Debounce';
+import { UpdateProfile } from '@/services/ProfileServices';
 
 const AboutProfileUser = () => {
     const { dataProfile, setDataProfile } = useProfile()

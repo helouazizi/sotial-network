@@ -1,12 +1,12 @@
 "use client"
-import { useProfile } from '@/app/context/ProfileContext'
-import { FetchUsersRl, obj } from '@/app/services/ProfileServices'
-import { ProfileInt } from '@/app/types/profiles'
+import { useProfile } from '@/context/ProfileContext'
+import { FetchUsersRl, obj } from '@/services/ProfileServices'
+import { ProfileInt } from '@/types/profiles'
 import Link from 'next/link'
 import React, { useCallback, useEffect, useState } from 'react'
 import { GenerateAvatar } from '../profile/ProfileHeader'
 import { IoIosArrowForward } from 'react-icons/io'
-import { Throttle } from '@/app/utils/Throttle'
+import { Throttle } from '@/utils/Throttle'
 import { FaSearchMinus } from 'react-icons/fa'
 
 const UsersRl = (props: { type: string }) => {

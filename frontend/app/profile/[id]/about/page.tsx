@@ -1,7 +1,7 @@
 "use client"
-import AboutProfileUser from '@/app/components/profile/AboutProfileUser'
-import Forbiden from '@/app/components/profile/Forbiden'
-import { useProfile } from '@/app/context/ProfileContext'
+import AboutProfileUser from '@/components/profile/AboutProfileUser'
+import Forbiden from '@/components/profile/Forbiden'
+import { useProfile } from '@/context/ProfileContext'
 import React from 'react'
 
 const page = () => {

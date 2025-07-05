@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import "./globals.css";
-import SocketProvider from "./context/socketContext";
-import Header from "./components/header/header";
+import SocketProvider from "../context/socketContext";
+import Header from "../components/header/header";
 
 export const metadata = {
   title: "Social Network",

@@ -1,4 +1,4 @@
-import { useProfile } from '@/app/context/ProfileContext'
+import { useProfile } from '@/context/ProfileContext'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React from 'react'

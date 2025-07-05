@@ -1,15 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
-@import url("./styles/post.css");
-@import url("./styles/footer.css");
-@import url("./styles/header.css");
-@import url("./styles/home.css");
-@import url("./styles/register.css");
-@import url("./styles/chat.css");
-@import url("./styles/login.css");
-@import url("./styles/profile.css");
-@import url("./styles/register.css");
-@import url("./styles/request.css");
-@import url("./styles/groups.css");
+@import url("../styles/post.css");
+@import url("../styles/footer.css");
+@import url("../styles/header.css");
+@import url("../styles/home.css");
+@import url("../styles/register.css");
+@import url("../styles/chat.css");
+@import url("../styles/login.css");
+@import url("../styles/profile.css");
+@import url("../styles/register.css");
+@import url("../styles/request.css");
+@import url("../styles/groups.css");
 
 :root {
   --bg-color: #12111a;

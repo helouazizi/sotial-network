@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import { Post, PostErrors, Follower } from "@/app/types/post";
-import { GetFolowers } from "@/app/services/postsServices";
+import { Post, PostErrors, Follower } from "@/types/post";
+import { GetFolowers } from "@/services/postsServices";
 import PostHeader from "./postHeader";
 import { FaImage } from "react-icons/fa";
 

@@ -1,8 +1,8 @@
 "use client"
 
-import ChatFooter from "@/app/components/chat/chatFooter";
-import { SocketContext } from "@/app/context/socketContext";
-import { Message, User } from "@/app/types/chat";
+import ChatFooter from "@/components/chat/chatFooter";
+import { SocketContext } from "@/context/socketContext";
+import { Message, User } from "@/types/chat";
 import { useParams } from "next/navigation";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { FaUser } from "react-icons/fa";

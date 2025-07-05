@@ -1,5 +1,5 @@
 "use client";
-import { useProfile } from '@/app/context/ProfileContext';
+import { useProfile } from '@/context/ProfileContext';
 import React from 'react';
 import Visibility from './Visibility';
 import { FaUnlock } from 'react-icons/fa';

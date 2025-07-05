@@ -1,4 +1,4 @@
-import { Comment } from "@/app/types/post";
+import { Comment } from "@/types/post";
 import { useState } from "react";
 import { AiFillLike, AiFillDislike } from "react-icons/ai";
 import { FaComment } from "react-icons/fa";

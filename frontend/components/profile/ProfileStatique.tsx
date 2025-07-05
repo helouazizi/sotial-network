@@ -1,6 +1,6 @@
-import { useProfile } from '@/app/context/ProfileContext'
-import { HandleRelations } from '@/app/services/ProfileServices'
-import { Debounce } from '@/app/utils/Debounce'
+import { useProfile } from '@/context/ProfileContext'
+import { HandleRelations } from '@/services/ProfileServices'
+import { Debounce } from '@/utils/Debounce'
 import React, { useCallback } from 'react'
 import { FaP } from 'react-icons/fa6'
 

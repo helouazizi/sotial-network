@@ -2,7 +2,7 @@
 "use client";
 import { useState, useEffect, useRef, useCallback } from "react";
 import CreatePostForm from "./addPost";
-import { Post } from "@/app/types/post";
+import { Post } from "@/types/post";
 import PostCard from "./postCrad";
 import NoPostsYet from "./noPostsYet";
 import { FaPenToSquare } from "react-icons/fa6";

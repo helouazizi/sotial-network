@@ -1,4 +1,4 @@
-import { Comment } from "@/app/types/post";
+import { Comment } from "@/types/post";
 import PostHeader from "./postHeader";
 import PostBody from "./postBody";
 interface CommentListProps {

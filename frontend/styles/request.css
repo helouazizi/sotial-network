@@ -1,13 +1,40 @@
+:root {
+    --bg-color: #12111a;
+    --card-bg: #1c1b23;
+    --input-bg: #1a1922;
+    --border-color: #2a2835;
+    --text-primary: #f4f4f8;
+    --text-secondary: #b0acc0;
+    --text-muted: #8e8a9d;
+    --input-text: #ddddee;
+    --accent-color: #a78bfa;
+    --accent-hover: #8b5cf6;
+    --danger-color: #f87171;
+    --warning-color: #fbbf24;
+    --info-color: #60a5fa;
+    --btn-bg: #2b2a35;
+    --btn-text: #e9d5ff;
+    --scrollbar-bg: #1e1e2a;
+    --scrollbar-thumb: #a78bfa;
+    --icon-color: #d8b4fe;
+    --link-color: #c084fc;
+    --shadow-color: rgba(0, 0, 0, 0.6);
+    --online-color: #22c55e;
+    --offline-color: #6b7280;
+}
+
 .ToogleInitiale {
-    background-color: red;
+    background-color: var(--btn-bg);
     width: 25%;
     height: 100%;
     position: fixed;
     top: 92px;
     right: 0;
     z-index: 9998;
-    padding: 30px 10px;
+    padding: 20px 10px;
     transition: .5s ease-in-out;
+
+    box-shadow: var(--accent-hover) 0px 1px 3px, var(--accent-hover) 0px 1px 2px;
 }
 
 .hide {
@@ -16,4 +43,49 @@
 
 .show {
     transform: translateX(0%);
+}
+
+.close-toogle {
+    width: 100%;
+
+    svg {
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+        transition: 0.3s ease-in-out;
+    }
+
+    svg:hover {
+        fill: var(--accent-hover);
+    }
+}
+
+.navigationToogle {
+    background-color: var(--card-bg);
+    border-radius: 50px;
+    justify-content: space-evenly;
+    gap: 20px;
+    width: 100%;
+    margin-top: 20px;
+    padding: 8px 5px;
+    display: flex;
+
+    button {
+        border: none;
+        padding: 14px 28px;
+        border-radius: 25px;
+        cursor: pointer;
+        background-color: transparent;
+        color: var(--text-primary);
+        transition: .5s ease-in-out;
+        width: 45%;
+    }
+
+    button:hover {
+        background-color: var(--btn-bg);
+    }
+
+    .active-request {
+        background-color: var(--btn-bg);
+    }
 }

@@ -7,6 +7,8 @@
 @import url("./styles/chat.css");
 @import url("./styles/login.css");
 @import url("./styles/profile.css");
+@import url("./styles/register.css");
+@import url("./styles/request.css");
 @import url("./styles/groups.css");
 
 :root {

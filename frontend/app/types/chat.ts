@@ -3,6 +3,7 @@ export interface User {
     nickname: string
     firstName: string
     lastName: string
+    avatar: string
 }
 
 export interface Message {

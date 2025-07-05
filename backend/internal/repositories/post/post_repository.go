@@ -77,7 +77,6 @@ func (r *PostRepository) SavePost(ctx context.Context, post *models.Post, img *m
 	}
 
 	return models.Post{ID: int(postID), MediaLink: fileName.String}, tx.Commit()
-
 }
 
 func (r *PostRepository) GetPosts(userId, start, limit int) ([]models.Post, error) {
@@ -95,7 +94,7 @@ func (r *PostRepository) GetPosts(userId, start, limit int) ([]models.Post, erro
 			pr.reaction AS user_vote
 		FROM posts p
 		LEFT JOIN post_reactions pr ON pr.post_id = p.id AND pr.user_id = ?  
-
+		
 		--  visibility filter
 		WHERE 
 		      p.type = 'public'

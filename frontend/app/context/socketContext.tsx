@@ -55,6 +55,7 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
           nickname: res.data.nickname,
           firstName: res.data.firstname,
           lastName: res.data.lastname,
+          avatar: res.data.avatar,
         }
         setUser(userInfos)
       }

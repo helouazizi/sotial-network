@@ -2,6 +2,13 @@
 
 export default function Groups() {
     return (
-        <h1>hello world</h1>
+        <main className="container groupPage">
+            <section className="left-side">
+                qsdqsdqsd
+            </section>
+            <section className="right-side">
+                qsdqsdqsd
+            </section>
+        </main>
     )
 }

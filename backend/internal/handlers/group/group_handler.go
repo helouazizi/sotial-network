@@ -15,5 +15,4 @@ func NewGroupHandler(service *services.GroupService) *GroupHandler {
 }
 
 func (h *GroupHandler) CreateGroupHandler(w http.ResponseWriter, r *http.Request) {
-	
 }

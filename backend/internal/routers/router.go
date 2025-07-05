@@ -34,8 +34,10 @@ func SetupRoutes(app *app.Application) *http.ServeMux {
 	mux.HandleFunc("/ws", middleware.AuthMiddleware(http.HandlerFunc(app.ChatHandler.ChatMessagesHandler), app.DB))
 
 	//================ static ==============================//
-
 	mux.Handle("/images/", app.StaticHandler)
+
+	//================ Group ==============================//
+	mux.HandleFunc("/api/v1/createGroup", app.GroupHandler.CreateGroupHandler)
 
 	return mux
 }

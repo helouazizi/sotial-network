@@ -13,6 +13,7 @@ import (
 	relationsH "github.com/ismailsayen/social-network/internal/handlers/relations"
 	relationsR "github.com/ismailsayen/social-network/internal/repositories/relations"
 	relationsS "github.com/ismailsayen/social-network/internal/services/relations"
+
 	// ===================== posts =================================//
 	chatHandlers "github.com/ismailsayen/social-network/internal/handlers/chat"
 	posthandlers "github.com/ismailsayen/social-network/internal/handlers/post"
@@ -25,6 +26,11 @@ import (
 	profileHandlers "github.com/ismailsayen/social-network/internal/handlers/profile"
 	profileRepo "github.com/ismailsayen/social-network/internal/repositories/profile"
 	profileServices "github.com/ismailsayen/social-network/internal/services/profile"
+
+	// ===================== Group ===============================//
+	groupHandlers "github.com/ismailsayen/social-network/internal/handlers/group"
+	groupRepo "github.com/ismailsayen/social-network/internal/repositories/group"
+	groupServices "github.com/ismailsayen/social-network/internal/services/group"
 )
 
 type Application struct {
@@ -35,6 +41,7 @@ type Application struct {
 	ProfileHandler   *profileHandlers.ProfileHandler
 	Relationshandler *relationsH.RelationsHandler
 	StaticHandler    *staticHandlers.ImageHandler
+	GroupHandler     *groupHandlers.GroupHandler
 }
 
 func NewApp(db *sql.DB) *Application {
@@ -61,6 +68,11 @@ func NewApp(db *sql.DB) *Application {
 	//================ static =========================//
 	staticHAndler := staticHandlers.NewImageHandler("pkg/db/images")
 
+	// ===================== Group ===============================//
+	GroupRepo := groupRepo.NewGroupRepo(db)
+	GroupService := groupServices.NewGroupService(GroupRepo)
+	GroupHandler := groupHandlers.NewGroupHandler(GroupService)
+
 	return &Application{
 		DB:               db,
 		AuthHundler:      AuthHandler,
@@ -69,5 +81,6 @@ func NewApp(db *sql.DB) *Application {
 		PostHandler:      PostHandler,
 		Relationshandler: Relationshand,
 		StaticHandler:    staticHAndler,
+		GroupHandler:     GroupHandler,
 	}
 }

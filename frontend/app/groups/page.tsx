@@ -1,13 +1,15 @@
 "use client"
 
+import CreateGroup from "@/components/groups/CreateGroup"
+
 export default function Groups() {
     return (
         <main className="container groupPage">
             <section className="left-side">
-                qsdqsdqsd
+
             </section>
             <section className="right-side">
-                qsdqsdqsd
+               <CreateGroup />
             </section>
         </main>
     )

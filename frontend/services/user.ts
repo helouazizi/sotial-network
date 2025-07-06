@@ -7,7 +7,7 @@ export async function getUserInfos() {
         })
         return await res.json()
     } catch (err) {
-        console.log(err)
+        console.error(err)
         return {}
     }
 }

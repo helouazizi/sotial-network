@@ -37,7 +37,9 @@ func (h *GroupHandler) CreateGroupHandler(w http.ResponseWriter, r *http.Request
 
 	err := h.service.SaveGroup(group)
 	if err != nil {
-		utils.ResponseJSON(w, err.Code, err)
+		utils.ResponseJSON(w, err.Code, map[string]any{
+			"error": err.Message,
+		})
 		return
 	}
 

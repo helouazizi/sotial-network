@@ -90,7 +90,7 @@ export default function Header() {
                 )}
               </Link>
 
-              <button className="user-logout" ><IoIosLogOut /></button>
+              <button className="user-logout" onClick={handleClickLogout} ><IoIosLogOut /></button>
 
             </div>
 

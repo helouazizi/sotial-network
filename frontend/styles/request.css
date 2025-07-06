@@ -63,12 +63,13 @@
 .navigationToogle {
     background-color: var(--card-bg);
     border-radius: 50px;
-    justify-content: space-evenly;
-    gap: 20px;
-    width: 100%;
-    margin-top: 20px;
-    padding: 8px 5px;
+    justify-content: space-between;
+    width: 83%;
+    padding: 5px;
     display: flex;
+    margin: 0 auto;
+    margin-top: 20px;
+    gap: 10px;
 
     button {
         border: none;
@@ -78,7 +79,7 @@
         background-color: transparent;
         color: var(--text-primary);
         transition: .5s ease-in-out;
-        width: 45%;
+        width: 50%;
     }
 
     button:hover {
@@ -88,4 +89,62 @@
     .active-request {
         background-color: var(--btn-bg);
     }
+}
+
+.followers-requsets-container {
+    width: 83%;
+    margin: 0 auto;
+    margin-top: 10px;
+    height: 100%;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.followers {
+    width: 50px;
+    height: 50px;
+    font-size: 12px;
+}
+
+.follower-request {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    transition: 0.5s ease-in-out;
+    border: 1px solid var(--border-color);
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 10px;
+    .header-card {
+        display: flex;
+        gap: 5px;
+
+        .request-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+    }
+
+    .action-request {
+        svg {
+            width: 30px;
+            height: 30px;
+            margin-left: 10px;
+            cursor: pointer;
+            transition: 0.5s ease-in-out;
+        }
+
+        .accept-request:hover {
+            fill: var(--online-color);
+        }
+
+        .declanche-request:hover {
+            fill: var(--danger-color);
+        }
+    }
+}
+
+.follower-request:hover {
+    background-color: var(--card-bg);
 }

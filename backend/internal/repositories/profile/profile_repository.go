@@ -63,13 +63,12 @@ func (repo *ProfileRepository) GetMyProfile(sessionID, userId int) (*models.Comm
 		return &profile, nil
 	}
 
-	// Cas : autre utilisateur
-	status, err := repo.getFollowStatus(sessionID, userId)
+	status, err := repo.getFollowStatus(sessionID, userId, profile.IsPrivate, &profile)
 	if err != nil {
 		return nil, err
 	}
 	if status == "" {
-		status = "follow" // Default (non-suivi)
+		status = "follow"
 	}
 
 	profile.Subscription = &models.Subscription{
@@ -138,13 +137,12 @@ func (repo *ProfileRepository) GetPosts(userId int) ([]models.Post, error) {
 	return posts, rows.Err()
 }
 
-func (repo *ProfileRepository) getFollowStatus(sessionID, userId int) (string, error) {
+func (repo *ProfileRepository) getFollowStatus(sessionID, userId, visibility int, profile *models.CommunInfoProfile) (string, error) {
 	var status string
 	query := `
 		SELECT status 
 		FROM followers 
 		WHERE follower_id=? AND followed_id=? AND (status='accepted' OR status='pending');
-
 	`
 	err := repo.db.QueryRow(query, sessionID, userId).Scan(&status)
 	if err == sql.ErrNoRows {
@@ -153,6 +151,15 @@ func (repo *ProfileRepository) getFollowStatus(sessionID, userId int) (string, e
 
 	if err != nil {
 		return "", err
+	}
+	if status == "pending" && visibility == 0 {
+		query = `UPDATE followers SET status='accepted' WHERE follower_id=? AND followed_id=?; `
+		_, err = repo.db.Exec(query, sessionID, userId)
+		if err != nil {
+			return "", err
+		}
+		status = "accepted"
+		profile.Followers += 1
 	}
 
 	return status, nil
@@ -167,11 +174,7 @@ func (repo *ProfileRepository) ChangeVisbility(sessionID, to int) error {
 	return nil
 }
 
-func (repp *ProfileRepository) UpdateProfile(
-	fileHeader *multipart.FileHeader,
-	nickname, about, oldAvatar string,
-	sessionId int,
-) (string, error) {
+func (repp *ProfileRepository) UpdateProfile(fileHeader *multipart.FileHeader, nickname, about, oldAvatar string, sessionId int) (string, error) {
 	var AvatarPath string
 
 	if fileHeader == nil {

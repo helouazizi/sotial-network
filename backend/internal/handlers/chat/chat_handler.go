@@ -78,7 +78,7 @@ func (h *ChatHandler) ChatMessagesHandler(w http.ResponseWriter, r *http.Request
 				"receiver_id": chat.ReceiverID,
 				"sender_id":   chat.SenderID,
 				"message":     chat.Message,
-				"sent_at_str":     time.Now().Format(time.DateTime),
+				"sent_at_str": time.Now().Format(time.DateTime),
 			}
 
 			conn.WriteJSON(map[string]any{
@@ -115,19 +115,6 @@ func (h *ChatHandler) ChatMessagesHandler(w http.ResponseWriter, r *http.Request
 			conn.WriteJSON(map[string]any{
 				"data": messages,
 				"type": "getMessages",
-			})
-		case "getUser":
-			user, err := h.service.GetUser(userID)
-			if err != nil {
-				conn.WriteJSON(map[string]any{
-					"error": err.Error(),
-				})
-				continue
-			}
-
-			conn.WriteJSON(map[string]any{
-				"data": user,
-				"type": "getUser",
 			})
 		case "getFriends":
 			users, err := h.service.GetFriends(userID)

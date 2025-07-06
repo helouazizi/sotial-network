@@ -2,6 +2,7 @@
 import { usePathname } from "next/navigation"
 import React, { createContext, useEffect, useRef, useState, ReactNode, RefObject } from "react"
 import { Message, User } from "../types/chat";
+import { getUserInfos } from "@/services/user";
 export interface SocketContextType {
   ws: RefObject<WebSocket | null>
   messages: Message[]
@@ -37,13 +38,18 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
 
     ws.current = new WebSocket("ws://localhost:8080/ws");
 
-    ws.current.onopen = () => {
+    ws.current.onopen = async () => {
       console.log("web socket open");
-      ws.current?.send(
-        JSON.stringify({
-          type: "getUser",
-        })
-      );
+      const userRes = await getUserInfos()
+      const userInfos: User = {
+        id: userRes.ID,
+        nickname: userRes.nickname,
+        firstName: userRes.firstname,
+        lastName: userRes.lastname,
+        avatar: userRes.avatar,
+      }
+
+      setUser(userInfos)
     };
 
     ws.current.onmessage = (event: MessageEvent) => {

@@ -81,7 +81,7 @@ func (h *UserHandler) Register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Set auth cookie
-	cookie := &http.Cookie{Name: "Token", Value: token, HttpOnly: true, Path: "/", Secure: false, MaxAge: 3600*24*1000}
+	cookie := &http.Cookie{Name: "Token", Value: token, HttpOnly: true, Path: "/", Secure: false, MaxAge: 3600 * 24 * 1000}
 	http.SetCookie(w, cookie)
 
 	// Respond success
@@ -119,7 +119,7 @@ func (h *UserHandler) Login(w http.ResponseWriter, r *http.Request) {
 		HttpOnly: true,
 		Path:     "/",
 		Secure:   false,
-		MaxAge: 3600*24*1000, 
+		MaxAge:   3600 * 24 * 1000,
 	}
 
 	http.SetCookie(w, cookie)
@@ -142,4 +142,24 @@ func (h *UserHandler) LogOut(w http.ResponseWriter, r *http.Request) {
 		"message": "User logout successfully",
 		"Code":    http.StatusOK,
 	})
+}
+
+func (h *UserHandler) GetUserHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
+			"error": "Method not allowed",
+		})
+		return
+	}
+
+	userID := r.Context().Value("userID").(int)
+
+	user, err := h.service.GetUser(userID)
+	if err != nil {
+		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any {
+			"error": err.Error(),
+		})
+	}
+
+	utils.ResponseJSON(w, http.StatusOK, user)
 }

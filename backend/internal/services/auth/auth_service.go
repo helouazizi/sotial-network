@@ -70,7 +70,6 @@ func (s *AuthService) SaveUser(user *models.User) (string, models.Error) {
 	// === Check for duplicate user ===
 	duplicate, err := s.repo.CheckIfExiste(user)
 	if err.Code != http.StatusOK {
-	
 		return "", err
 	}
 	if duplicate {
@@ -137,7 +136,6 @@ func (s *AuthService) SaveUser(user *models.User) (string, models.Error) {
 	return token, models.Error{Code: http.StatusOK}
 }
 
-
 func (s *AuthService) LogUser(user *models.User) (string, models.Error) {
 	if len(user.Email) == 0 {
 		return "", models.Error{
@@ -190,4 +188,8 @@ func (s *AuthService) HundleAvatar(user *models.User) (models.User, models.Error
 		Code:    http.StatusOK,
 		Message: "avatar ops went smouthly",
 	}
+}
+
+func (s *AuthService) GetUser(userID int) (*models.User, error) {
+	return s.repo.GetUser(userID)
 }

@@ -19,7 +19,7 @@ const AboutProfileUser = () => {
         if (dataProfile?.nickname) setNickname(dataProfile?.nickname)
         if (dataProfile?.about_me) setAbout(dataProfile?.about_me)
     }, [dataProfile?.avatar, dataProfile?.about_me, dataProfile?.nickname])
-    
+
 
     const updateAvatar = (e: React.ChangeEvent<HTMLInputElement>) => {
 
@@ -33,7 +33,11 @@ const AboutProfileUser = () => {
     }
     const removeUpdatedImage = (e: React.FormEvent) => {
         e.preventDefault()
-        setAvatar(`http://localhost:8080/images/user/${dataProfile?.avatar}`)
+        if (dataProfile?.avatar) {
+            setAvatar(`http://localhost:8080/images/user/${dataProfile?.avatar}`)
+        } else {
+            setAvatar(undefined)
+        }
     }
     const updateNickname = (e: React.FormEvent<HTMLInputElement>) => {
         const target = e.target as HTMLInputElement;
@@ -53,8 +57,7 @@ const AboutProfileUser = () => {
                 setShowError(true)
                 return
             }
-            console.log(selectedFile);
-
+            
             await UpdateProfile(selectedFile, nickname, about, dataProfile?.avatar, setDataProfile)
             setShowError(false)
 

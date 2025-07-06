@@ -34,4 +34,14 @@ func (h *GroupHandler) CreateGroupHandler(w http.ResponseWriter, r *http.Request
 	}
 
 	group.UserID = r.Context().Value("userID").(int)
+
+	err := h.service.SaveGroup(group)
+	if err != nil {
+		utils.ResponseJSON(w, err.Code, err)
+		return
+	}
+
+	utils.ResponseJSON(w, http.StatusOK, map[string]any{
+		"message": "Group created succefully!",
+	})
 }

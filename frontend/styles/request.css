@@ -114,7 +114,7 @@
     border: 1px solid var(--border-color);
     padding: 10px;
     border-radius: 8px;
-    margin-top: 10px;
+    margin-top: 5px;
     .header-card {
         display: flex;
         gap: 5px;
@@ -133,6 +133,7 @@
             margin-left: 10px;
             cursor: pointer;
             transition: 0.5s ease-in-out;
+            fill: var(--text-primary);
         }
 
         .accept-request:hover {

@@ -3,6 +3,7 @@ package app
 import (
 	"database/sql"
 
+	"github.com/ismailsayen/social-network/internal/handlers/requests"
 	staticHandlers "github.com/ismailsayen/social-network/internal/handlers/static"
 
 	handlers "github.com/ismailsayen/social-network/internal/handlers/auth"
@@ -27,6 +28,11 @@ import (
 	profileRepo "github.com/ismailsayen/social-network/internal/repositories/profile"
 	profileServices "github.com/ismailsayen/social-network/internal/services/profile"
 
+	//====================== Requests ==============================//
+	requestHandlers "github.com/ismailsayen/social-network/internal/handlers/requests"
+	requestRepo "github.com/ismailsayen/social-network/internal/repositories/requests"
+	requestServices "github.com/ismailsayen/social-network/internal/services/requests"
+
 	// ===================== Group ===============================//
 	groupHandlers "github.com/ismailsayen/social-network/internal/handlers/group"
 	groupRepo "github.com/ismailsayen/social-network/internal/repositories/group"
@@ -42,6 +48,7 @@ type Application struct {
 	Relationshandler *relationsH.RelationsHandler
 	StaticHandler    *staticHandlers.ImageHandler
 	GroupHandler     *groupHandlers.GroupHandler
+	RequestsHandler  *requests.RequestHandler
 }
 
 func NewApp(db *sql.DB) *Application {
@@ -65,6 +72,10 @@ func NewApp(db *sql.DB) *Application {
 	RelationsRepo := relationsR.NewRelationsRepository(db)
 	RelationsSer := relationsS.NewRelationsServices(RelationsRepo)
 	Relationshand := relationsH.NewRelationsHandler(RelationsSer)
+	//====================== Requests ==============================//
+	ReqsRepo := requestRepo.NewRequestRepos(db)
+	ReqsServ := requestServices.NewRequestsService(ReqsRepo)
+	ReqHand := requestHandlers.NewRequestHandler(ReqsServ)
 	//================ static =========================//
 	staticHAndler := staticHandlers.NewImageHandler("pkg/db/images")
 
@@ -82,5 +93,6 @@ func NewApp(db *sql.DB) *Application {
 		Relationshandler: Relationshand,
 		StaticHandler:    staticHAndler,
 		GroupHandler:     GroupHandler,
+		RequestsHandler:  ReqHand,
 	}
 }

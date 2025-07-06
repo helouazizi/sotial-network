@@ -1,9 +1,12 @@
 package group
 
 import (
+	"encoding/json"
 	"net/http"
 
+	"github.com/ismailsayen/social-network/internal/models"
 	services "github.com/ismailsayen/social-network/internal/services/group"
+	"github.com/ismailsayen/social-network/pkg/utils"
 )
 
 type GroupHandler struct {
@@ -15,4 +18,18 @@ func NewGroupHandler(service *services.GroupService) *GroupHandler {
 }
 
 func (h *GroupHandler) CreateGroupHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
+			"error": "Method not allowed",
+		})
+		return
+	}
+
+	var group *models.Group
+	if err := json.NewDecoder(r.Body).Decode(&group); err != nil {
+		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+			"error": err.Error(),
+		})
+		return
+	}
 }

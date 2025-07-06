@@ -37,7 +37,7 @@ func SetupRoutes(app *app.Application) *http.ServeMux {
 	mux.Handle("/images/", app.StaticHandler)
 
 	//================ Group ==============================//
-	mux.HandleFunc("/api/v1/createGroup", app.GroupHandler.CreateGroupHandler)
+	mux.HandleFunc("/api/v1/createGroup", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.CreateGroupHandler), app.DB))
 
 	return mux
 }

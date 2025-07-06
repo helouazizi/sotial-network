@@ -9,3 +9,7 @@ type RequestsService struct {
 func NewRequestsService(reqRepo *requests.RequestRepos) *RequestsService {
 	return &RequestsService{reqRepo: reqRepo}
 }
+
+func (reqSer *RequestsService) NumberOfRequests(sessionID int) (int, int, error) {
+	return reqSer.reqRepo.GetNumsofRequests(sessionID)
+}

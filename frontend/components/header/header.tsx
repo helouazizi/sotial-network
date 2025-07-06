@@ -11,9 +11,13 @@ import { useContext, useEffect, useState } from "react";
 import { SocketContext, SocketContextType } from "@/context/socketContext";
 import { GenerateAvatar } from "../profile/ProfileHeader";
 import ToogleInitiale from "../request/ToogleInitiale";
+import { useRequest } from "@/context/RequestContext";
 export default function Header() {
+  const { dataReqs, setDataReqs } = useRequest()
+
+
   const router = useRouter();
-  const pathname = usePathname()
+  const pathname = usePathname();
   const { ws, user } = useContext(SocketContext) as SocketContextType
   const [isLogged, setIsLogged] = useState<boolean>(false)
   const [showToggle, setShowToggle] = useState(false)
@@ -49,8 +53,6 @@ export default function Header() {
 
   }
   const HandleToggle = () => {
-    console.log("dss");
-
     setShowToggle(!showToggle)
     console.log(showToggle);
 
@@ -88,7 +90,7 @@ export default function Header() {
               </li>
             </ul>
             <div className="header-icons">
-              <button className={`notification ${showToggle ? "active-not" : ""}`} onClick={HandleToggle}><IoIosNotifications /></button>
+              <button className={`notification ${showToggle ? "active-not" : ""}`} onClick={HandleToggle}><IoIosNotifications />{Number(dataReqs?.total)}</button>
               <Link href={`/profile/${user?.id}`}>
                 {user?.avatar ? (
                   <img

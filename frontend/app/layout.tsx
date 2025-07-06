@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import "./globals.css";
 import SocketProvider from "../context/socketContext";
 import Header from "../components/header/header";
+import { RequetsProvider } from "@/context/RequestContext";
 
 export const metadata = {
   title: "Social Network",
@@ -9,14 +10,16 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
-  
+
   return (
     <html lang="en">
       <body>
-          <SocketProvider>
+        <SocketProvider>
+          <RequetsProvider>
             <Header />
-            {children}
-          </SocketProvider>
+          </RequetsProvider>
+          {children}
+        </SocketProvider>
       </body>
     </html>
   );

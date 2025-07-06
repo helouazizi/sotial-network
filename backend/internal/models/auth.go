@@ -5,14 +5,14 @@ import "mime/multipart"
 type User struct {
 	ID          int
 	Nickname    string `json:"nickname"`
-	Email       string `json:"email"`
-	PassWord    string `json:"password"`
+	Email       string `json:"email,omitempty"`
+	PassWord    string `json:"password,omitempty"`
 	FirstName   string `json:"firstname"`
 	Lastname    string `json:"lastname"`
 	DateofBirth string `json:"dateofbirth"`
-	AboutMe     string `json:"aboutme"`
+	AboutMe     string `json:"aboutme,omitempty"`
 	Avatar      string `json:"avatar"`
-	File        multipart.File
+	File        multipart.File 
 	Header      *multipart.FileHeader
 	FileErr     error
 	Token       string

@@ -82,7 +82,7 @@ func (h *PostHandler) CreatePost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	post := &models.Post{
-		UserId:  userId,
+		Author:  models.User{ID: userId},
 		Title:   r.FormValue("title"),
 		Content: r.FormValue("content"),
 		Type:    r.FormValue("privacy"),
@@ -157,7 +157,6 @@ func (h *PostHandler) CreatePostComment(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	var coment models.Comment
 	r.Body = http.MaxBytesReader(w, r.Body, maxUpload)
 	if err := r.ParseMultipartForm(maxUpload); err != nil {
 		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
@@ -177,11 +176,13 @@ func (h *PostHandler) CreatePostComment(w http.ResponseWriter, r *http.Request) 
 		})
 		return
 	}
-	coment.Comment = r.FormValue("comment")
-	coment.PostID = postId
-	userId := r.Context().Value("userID").(int)
-	coment.AuthorID = userId
-	coment.CreatedAt = time.Now().Format(time.RFC3339)
+
+	coment := models.Comment{
+		Comment:   r.FormValue("comment"),
+		PostID:    postId,
+		CreatedAt: time.Now().Format(time.RFC3339),
+		Author:    models.User{ID: r.Context().Value("userID").(int)},
+	}
 
 	//  extartct the image
 	file, header, err := r.FormFile("image")

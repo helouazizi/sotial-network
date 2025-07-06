@@ -1,6 +1,6 @@
 // frontend/app/components/post/posts.tsx
 "use client";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useContext } from "react";
 import CreatePostForm from "./addPost";
 import { Post } from "@/types/post";
 import PostCard from "./postCrad";
@@ -8,9 +8,11 @@ import NoPostsYet from "./noPostsYet";
 import { FaPenToSquare } from "react-icons/fa6";
 import NoMorePosts from "./noMorePosts";
 
+import { SocketContext } from "@/context/socketContext"; // Adjust path if different
+import { User } from "@/types/chat";
 const LIMIT = 10;
 
-/* ---- Throttle utility ---- */
+
 function throttle<T extends (...args: any[]) => void>(fn: T, delay = 500): T {
   let lastCall = 0;
   // @ts-ignore
@@ -24,6 +26,11 @@ function throttle<T extends (...args: any[]) => void>(fn: T, delay = 500): T {
 }
 
 export default function Posts() {
+  // console.log(useProfile,"profile");
+  const {user} = useContext(SocketContext) ?? {}
+  console.log(user , "user");
+  
+  
   const [posts, setPosts] = useState<Post[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -31,7 +38,7 @@ export default function Posts() {
   const [loadedOnce, setLoadedOnce] = useState(false);
   const page = useRef(0);
 
-  /* ---- Fetch Posts ---- */
+
   const fetchPosts = useCallback(async () => {
     if (isLoading || !hasMore) return;
     setIsLoading(true);
@@ -50,6 +57,8 @@ export default function Posts() {
       if (!res.ok) throw new Error(`HTTP error ${res.status}`);
 
       const data = await res.json();
+      console.log(data,"data posts");
+      
 
       if (Array.isArray(data)) {
         setPosts((prev) =>
@@ -75,12 +84,12 @@ export default function Posts() {
     }
   }, [isLoading, hasMore]);
 
-  /* ---- Initial Load ---- */
+  
   useEffect(() => {
     fetchPosts();
   }, []);
 
-  /* ---- Scroll Event with Throttle ---- */
+  
   useEffect(() => {
     const handleScroll = throttle(() => {
       const scrollBottom = window.innerHeight + window.scrollY;
@@ -97,16 +106,15 @@ export default function Posts() {
 
 
 
-  const addPost = (newPost: Post) => {
+  const addPost = (newPost: Post ) => {
     setPosts((prev) => [newPost, ...prev]);
     setShowForm(false);
   };
 
   const toggleForm = () => {
-    setShowForm((prev) => !prev); // Step 3
+    setShowForm((prev) => !prev); 
   };
 
-  /* ---- Render ---- */
   return (
     <>
       <section className="create-post">
@@ -115,15 +123,15 @@ export default function Posts() {
             <FaPenToSquare className="addPostIcon" /> Add-Post
           </button>
         </div>
-        {showForm && <CreatePostForm onCreated={addPost} />}
+        {showForm && <CreatePostForm onCreated={addPost}  />}
       </section>
 
       <section className="posts-list ">
         {posts.map((post) => (
-          <PostCard key={post.id} post={post} />
+          <PostCard key={post.id} post={post}  />
         ))}
 
-        {isLoading && <p className="loading">Loading...</p>}
+        {/* {isLoading && <p className="loading">Loading...</p>} */}
 
         {!isLoading && loadedOnce && posts.length === 0 && <NoPostsYet />}
         {!isLoading && !hasMore && posts.length > 0 && <NoMorePosts />}

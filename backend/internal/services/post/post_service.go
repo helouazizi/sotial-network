@@ -76,7 +76,7 @@ func (s *PostService) CreatePostComment(comment models.Comment, img *models.Imag
 		return errors.New("comment must be at least 1 characters long")
 	}
 	// Optional: Validate post ID and author ID
-	if comment.PostID <= 0 || comment.AuthorID <= 0 {
+	if comment.PostID <= 0 || comment.Author.ID <= 0 {
 		return errors.New("post ID and author ID must be provided")
 	}
 

@@ -4,12 +4,15 @@ import { Post, PostErrors, Follower } from "@/types/post";
 import { GetFolowers } from "@/services/postsServices";
 import PostHeader from "./postHeader";
 import { FaImage } from "react-icons/fa";
-
+import { SocketContext } from "@/context/socketContext"; // Adjust path if different
+import { useContext } from 'react';
 type Props = {
-  onCreated: (newPost: Post) => void;
+  onCreated: (newPost: Post) => void,
+  
 };
 
 export default function CreatePostForm({ onCreated }: Props) {
+   const { user } = useContext(SocketContext) ?? {}
   const [errors, setErrors] = useState<PostErrors>({});
   const [privacy, setPrivacy] = useState("public");
   const [followers, setFollowers] = useState<Follower[]>([]);
@@ -131,16 +134,20 @@ export default function CreatePostForm({ onCreated }: Props) {
 
     if (res.ok) {
       const savedPost = await res.json();
+      if (!user) {
+        alert("User information is missing. Cannot create post.");
+        return;
+      }
       let newPost: Post = {
         id: savedPost.id,
         title: title!,
         content: body!,
         media_link: savedPost.media_link ?? "",
-        author: "You",
+        author: user,
         likes: 0,
         dislikes: 0,
         total_comments: 0,
-        createdAt: savedPost.createdAt ?? new Date().toISOString(),
+        created_at: savedPost.createdAt ?? new Date().toISOString(),
         user_vote: null,
       };
       onCreated(newPost);
@@ -234,7 +241,7 @@ export default function CreatePostForm({ onCreated }: Props) {
                 <li key={f.id} className="user-checkbox-item">
                   <label id="follower-checkbox-label">
                     <PostHeader
-                      author={`${f.author.first_name} ${f.author.last_name}`}
+                      author={`${f.author.firstName} ${f.author.lastName}`}
                       createdAt=""
                       avatarUrl={f.author.avatar || "avatar.png"}
                     />
@@ -244,9 +251,9 @@ export default function CreatePostForm({ onCreated }: Props) {
                       onChange={(e) =>
                         handleToggleFollower(f.id, e.target.checked)
                       }
-                      title={`Share with ${f.author.first_name} ${f.author.last_name}`}
-                      placeholder={`Select follower ${f.author.first_name} ${f.author.last_name}`}
-                      aria-label={`Share with ${f.author.first_name} ${f.author.last_name}`}
+                      title={`Share with ${f.author.firstName} ${f.author.lastName}`}
+                      placeholder={`Select follower ${f.author.firstName} ${f.author.lastName}`}
+                      aria-label={`Share with ${f.author.firstName} ${f.author.lastName}`}
                     />
                   </label>
                 </li>

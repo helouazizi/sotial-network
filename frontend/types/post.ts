@@ -1,23 +1,25 @@
+import { User } from "./chat";
+
 export interface Comment {
-  author: Author;
+  author: User ;
   comment: string;
   created_at: string;
   media_link: string | undefined
 }
 
-export interface Author {
-  user_name: string;
-  first_name: string;
-  last_name: string;
-  avatar: string;
-}
+// export interface Author {
+//   user_name?: string | null;
+//   first_name?: string | null;
+//   last_name?: string | null;
+//   avatar?: string | null;
+// }
 
 export interface Post {
   id: number;
   content: string;
   title: string;
-  author: string;
-  createdAt: string;
+  author: User;
+  created_at: string;
   media_link: string;
   likes: number;
   dislikes: number;
@@ -33,7 +35,7 @@ export interface PostErrors {
 }
 
 export interface Follower  {
-  author : Author
+  author : User
   id: number;
 }
 

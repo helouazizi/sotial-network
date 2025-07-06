@@ -4,7 +4,6 @@ import { TiHome } from "react-icons/ti";
 import { MdGroups2 } from "react-icons/md";
 import { LuMessageCircleMore } from "react-icons/lu";
 import { IoIosNotifications } from "react-icons/io";
-import { FaUser } from "react-icons/fa";
 import { usePathname } from "next/navigation";
 import { IoIosLogOut } from "react-icons/io";
 import { useRouter } from 'next/navigation';
@@ -56,7 +55,19 @@ export default function Header() {
     console.log(showToggle);
 
   }
+  useEffect(() => {
+    const handleClick = () => {
+      if (showToggle) {
+        setShowToggle(false);
+      }
+    };
+    const main = document.querySelector('main');
+    main?.addEventListener('click', handleClick);
 
+    return () => {
+      main?.removeEventListener('click', handleClick);
+    };
+  }, [showToggle]);
   return (
     <>
       {isLogged && (

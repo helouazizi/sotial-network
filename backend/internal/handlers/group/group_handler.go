@@ -32,4 +32,6 @@ func (h *GroupHandler) CreateGroupHandler(w http.ResponseWriter, r *http.Request
 		})
 		return
 	}
+
+	group.UserID = r.Context().Value("userID").(int)
 }

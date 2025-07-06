@@ -2,7 +2,6 @@ package relations
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/ismailsayen/social-network/internal/models"
@@ -83,7 +82,6 @@ func (h *RelationsHandler) GetRelations(w http.ResponseWriter, r *http.Request) 
 		})
 		return
 	}
-	fmt.Println("=>", data.Limit, data.Ofsset)
 	if data.Type != "followers" && data.Type != "followed" {
 		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
 			"message": "Invalid Request Data.",

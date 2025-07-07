@@ -11,9 +11,7 @@ import { useContext, useEffect, useState } from "react";
 import { SocketContext, SocketContextType } from "@/context/socketContext";
 import { GenerateAvatar } from "../profile/ProfileHeader";
 import ToogleInitiale from "../request/ToogleInitiale";
-import { useRequest } from "@/context/RequestContext";
 export default function Header() {
-  const { dataReqs, setDataReqs } = useRequest()
 
 
   const router = useRouter();
@@ -90,7 +88,7 @@ export default function Header() {
               </li>
             </ul>
             <div className="header-icons">
-              <button className={`notification ${showToggle ? "active-not" : ""}`} onClick={HandleToggle}><IoIosNotifications />{Number(dataReqs?.total)}</button>
+              <button className={`notification ${showToggle ? "active-not" : ""}`} onClick={HandleToggle}><IoIosNotifications /> 0</button>
               <Link href={`/profile/${user?.id}`}>
                 {user?.avatar ? (
                   <img

@@ -72,3 +72,7 @@ func (s *ChatService) GetClient(receiverID int) (*websocket.Conn, bool) {
 func (s *ChatService) GetLastMessageID() (int, error) {
 	return s.repo.GetLastMessageID()
 }
+
+func (reqSer *ChatService) NumberNotifs(sessionID int) (int, int, error) {
+	return reqSer.repo.CountNotiif(sessionID)
+}

@@ -3,6 +3,8 @@ import { usePathname } from "next/navigation"
 import React, { createContext, useEffect, useRef, useState, ReactNode, RefObject } from "react"
 import { Message, User } from "../types/chat";
 import { getUserInfos } from "@/services/user";
+import { NumOfREquests } from "@/types/Request";
+import { type } from "os";
 export interface SocketContextType {
   ws: RefObject<WebSocket | null>
   messages: Message[]
@@ -15,6 +17,8 @@ export interface SocketContextType {
   setSendMessage: React.Dispatch<React.SetStateAction<Message | undefined>>
   scrollHeight: boolean
   setScrollHeight: React.Dispatch<React.SetStateAction<boolean>>
+  numsNotif: NumOfREquests | undefined
+  setNumNotif: React.Dispatch<React.SetStateAction<NumOfREquests | undefined>>
 }
 
 export const SocketContext = createContext<SocketContextType | null>(null);
@@ -27,6 +31,7 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
   const [friends, setFriends] = useState<User[] | null>(null)
   const [sendMessage, setSendMessage] = useState<Message | undefined>(undefined)
   const [scrollHeight, setScrollHeight] = useState<boolean>(false)
+  const [numsNotif, setNumNotif] = useState<NumOfREquests | undefined>(undefined)
 
   const excludedPaths = ["/login", "/register"];
   const shouldConnect = !excludedPaths.includes(pathname);
@@ -48,8 +53,10 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
         lastName: userRes.lastname,
         avatar: userRes.avatar,
       }
-
       setUser(userInfos)
+      ws.current?.send(JSON.stringify({
+        type: "GetNumNotif"
+      }))
     };
 
     ws.current.onmessage = (event: MessageEvent) => {
@@ -64,6 +71,11 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
           avatar: res.data.avatar,
         }
         setUser(userInfos)
+      }
+
+      if (res.type === "CountNotifs") {
+        console.log(res.data);
+
       }
 
       if (res.type === "getFriends") {
@@ -114,7 +126,9 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
       sendMessage,
       setSendMessage,
       scrollHeight,
-      setScrollHeight
+      setScrollHeight,
+      numsNotif,
+      setNumNotif
     }}>
       {children}
     </SocketContext.Provider>

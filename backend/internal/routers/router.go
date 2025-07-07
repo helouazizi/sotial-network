@@ -33,8 +33,6 @@ func SetupRoutes(app *app.Application) *http.ServeMux {
 	mux.HandleFunc("/api/v1/relations/getRealtions", middleware.AuthMiddleware(http.HandlerFunc(app.Relationshandler.GetRelations), app.DB))
 	//================== chat routes =========================///
 	mux.HandleFunc("/ws", middleware.AuthMiddleware(http.HandlerFunc(app.ChatHandler.ChatMessagesHandler), app.DB))
-	//================== Requests routes =====================///
-	mux.HandleFunc("/api/v1/requests/getNumReq", middleware.AuthMiddleware(http.HandlerFunc(app.RequestsHandler.GetNumOFReq), app.DB))
 	//================ static ==============================//
 	mux.Handle("/images/", app.StaticHandler)
 

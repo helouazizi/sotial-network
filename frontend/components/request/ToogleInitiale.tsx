@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { MdOutlineArrowRight } from 'react-icons/md'
 import FollowRequest from './FollowRequest'
 import GroupeRequest from './GroupeRequest'
+import { SocketContext, SocketContextType } from '@/context/socketContext'
 
 const ToogleInitiale = (props: { showToggle: boolean, setShowToggle: Function }) => {
+    const { numsNotif } = useContext(SocketContext) as SocketContextType
     const [activePage, SetActivePage] = useState('follow')
     const CloseToogle = () => {
         props.setShowToggle(false)
@@ -18,8 +20,8 @@ const ToogleInitiale = (props: { showToggle: boolean, setShowToggle: Function })
                 <MdOutlineArrowRight onClick={CloseToogle} />
             </div>
             <div className="navigationToogle">
-                <button className={`${activePage == "follow" ? 'active-request' : ""}`} onClick={() => ChangePage("follow")}>FOLLOWERS (0)</button>
-                <button className={`${activePage == "groupe" ? 'active-request' : ""}`} onClick={() => ChangePage("groupe")}>GROUPE (0)</button>
+                <button className={`${activePage == "follow" ? 'active-request' : ""}`} onClick={() => ChangePage("follow")}>FOLLOWERS ({numsNotif ? Number(numsNotif?.followersCount) : 0})</button>
+                <button className={`${activePage == "groupe" ? 'active-request' : ""}`} onClick={() => ChangePage("groupe")}>GROUPE ({numsNotif ? Number(numsNotif?.groupeReqCount) : 0})</button>
             </div>
 
             {activePage == 'follow' ? <FollowRequest /> : <GroupeRequest />}

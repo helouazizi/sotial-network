@@ -74,8 +74,12 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
       }
 
       if (res.type === "CountNotifs") {
-        console.log(res.data);
-
+        const countotifs: NumOfREquests = {
+          followersCount: res.data.followersCount,
+          groupeReqCount: res.data.groupeCount,
+          total: res.data.total
+        }
+        setNumNotif(countotifs)
       }
 
       if (res.type === "getFriends") {

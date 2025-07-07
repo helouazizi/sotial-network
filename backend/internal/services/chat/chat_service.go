@@ -87,3 +87,7 @@ func (s *ChatService) GetLastMessageID() (int, error) {
 func (reqSer *ChatService) NumberNotifs(sessionID int) (int, int, error) {
 	return reqSer.repo.CountNotiif(sessionID)
 }
+
+func (reqSer *ChatService) GetRequestFollowers(sessionID int) ([]models.CommunInfoProfile, error) {
+	return reqSer.repo.RequestFollowers(sessionID)
+}

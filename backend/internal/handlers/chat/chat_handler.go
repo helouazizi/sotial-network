@@ -154,7 +154,8 @@ func (h *ChatHandler) ChatMessagesHandler(w http.ResponseWriter, r *http.Request
 				"type": "CountNotifs",
 			})
 		case "GetFollowersRequest":
-			fmt.Println("salam")
+			followers, err := h.service.GetRequestFollowers(chat.ID)
+			fmt.Println(followers, err)
 		}
 	}
 }

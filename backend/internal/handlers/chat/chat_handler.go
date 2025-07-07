@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 	"time"
@@ -152,6 +153,8 @@ func (h *ChatHandler) ChatMessagesHandler(w http.ResponseWriter, r *http.Request
 				"data": CountNotis,
 				"type": "CountNotifs",
 			})
+		case "GetFollowersRequest":
+			fmt.Println("salam")
 		}
 	}
 }

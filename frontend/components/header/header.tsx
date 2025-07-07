@@ -16,7 +16,7 @@ export default function Header() {
 
   const router = useRouter();
   const pathname = usePathname();
-  const { ws, user } = useContext(SocketContext) as SocketContextType
+  const { ws, user, numsNotif } = useContext(SocketContext) as SocketContextType
   const [isLogged, setIsLogged] = useState<boolean>(false)
   const [showToggle, setShowToggle] = useState(false)
 
@@ -52,8 +52,6 @@ export default function Header() {
   }
   const HandleToggle = () => {
     setShowToggle(!showToggle)
-    console.log(showToggle);
-
   }
   useEffect(() => {
     const handleClick = () => {
@@ -88,7 +86,7 @@ export default function Header() {
               </li>
             </ul>
             <div className="header-icons">
-              <button className={`notification ${showToggle ? "active-not" : ""}`} onClick={HandleToggle}><IoIosNotifications /> 0</button>
+              <button className={`notification ${showToggle ? "active-not" : ""}`} onClick={HandleToggle}><IoIosNotifications /> {numsNotif ? Number(numsNotif?.total) : 0}</button>
               <Link href={`/profile/${user?.id}`}>
                 {user?.avatar ? (
                   <img

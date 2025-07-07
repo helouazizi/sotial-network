@@ -62,8 +62,6 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
     ws.current.onmessage = (event: MessageEvent) => {
       let res = JSON.parse(event.data)
 
-      console.log(res)
-
       if (res.type === "getUser") {
         const userInfos: User = {
           id: res.data.ID,

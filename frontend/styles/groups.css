@@ -89,3 +89,9 @@
     cursor: pointer;
     transition: background-color 0.2s ease;
 }
+
+.create-group span{
+    color: var(--danger-color);
+    margin-top: -12px;
+    margin-left: 3px;
+}

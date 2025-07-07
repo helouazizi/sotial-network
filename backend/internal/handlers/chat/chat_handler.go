@@ -39,7 +39,7 @@ func (h *ChatHandler) ChatMessagesHandler(w http.ResponseWriter, r *http.Request
 
 	defer func() {
 		conn.Close()
-		h.service.RemoveClient(userID)
+		h.service.RemoveClient(userID, conn)
 	}()
 
 	h.service.SaveClient(userID, conn)
@@ -81,16 +81,22 @@ func (h *ChatHandler) ChatMessagesHandler(w http.ResponseWriter, r *http.Request
 				"sent_at_str": time.Now().Format(time.DateTime),
 			}
 
-			conn.WriteJSON(map[string]any{
-				"message": messageData,
-				"type":    "saveMessage",
-			})
+			if senderConns, ok := h.service.GetClient(chat.SenderID); ok {
+				for _, c := range senderConns {
+					c.WriteJSON(map[string]any{
+						"message": messageData,
+						"type":    "saveMessage",
+					})
+				}
+			}
 
-			if receiverConn, ok := h.service.GetClient(chat.ReceiverID); ok {
-				receiverConn.WriteJSON(map[string]any{
-					"message": messageData,
-					"type":    "saveMessage",
-				})
+			if receiverConns, ok := h.service.GetClient(chat.ReceiverID); ok {
+				for _, c := range receiverConns {
+					c.WriteJSON(map[string]any{
+						"message": messageData,
+						"type":    "saveMessage",
+					})
+				}
 			}
 
 		case "getMessages":

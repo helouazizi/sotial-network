@@ -2,10 +2,8 @@ import React, { useState } from 'react'
 import { MdOutlineArrowRight } from 'react-icons/md'
 import FollowRequest from './FollowRequest'
 import GroupeRequest from './GroupeRequest'
-import { useRequest } from '@/context/RequestContext'
 
 const ToogleInitiale = (props: { showToggle: boolean, setShowToggle: Function }) => {
-    const { dataReqs } = useRequest()
     const [activePage, SetActivePage] = useState('follow')
     const CloseToogle = () => {
         props.setShowToggle(false)
@@ -20,8 +18,8 @@ const ToogleInitiale = (props: { showToggle: boolean, setShowToggle: Function })
                 <MdOutlineArrowRight onClick={CloseToogle} />
             </div>
             <div className="navigationToogle">
-                <button className={`${activePage == "follow" ? 'active-request' : ""}`} onClick={() => ChangePage("follow")}>FOLLOWERS ({Number(dataReqs?.followersCount)})</button>
-                <button className={`${activePage == "groupe" ? 'active-request' : ""}`} onClick={() => ChangePage("groupe")}>GROUPE ({Number(dataReqs?.groupeReqCount)})</button>
+                <button className={`${activePage == "follow" ? 'active-request' : ""}`} onClick={() => ChangePage("follow")}>FOLLOWERS (0)</button>
+                <button className={`${activePage == "groupe" ? 'active-request' : ""}`} onClick={() => ChangePage("groupe")}>GROUPE (0)</button>
             </div>
 
             {activePage == 'follow' ? <FollowRequest /> : <GroupeRequest />}

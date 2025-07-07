@@ -129,6 +129,23 @@ func (h *ChatHandler) ChatMessagesHandler(w http.ResponseWriter, r *http.Request
 				"data": users,
 				"type": "getFriends",
 			})
+		case "GetNumNotif":
+			groupeCount, followersCount, err := h.service.NumberNotifs(chat.SenderID)
+			if err != nil {
+				conn.WriteJSON(map[string]any{
+					"error": err.Error(),
+				})
+				continue
+			}
+			CountNotis := map[string]any{
+				"groupeCount":    groupeCount,
+				"followersCount": followersCount,
+				"total":          followersCount + groupeCount,
+			}
+			conn.WriteJSON(map[string]any{
+				"data": CountNotis,
+				"type": "CountNotifs",
+			})
 		}
 	}
 }

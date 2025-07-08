@@ -2,7 +2,6 @@ package repositories
 
 import (
 	"database/sql"
-	"fmt"
 	"time"
 
 	"github.com/ismailsayen/social-network/internal/models"
@@ -134,7 +133,6 @@ func (reqRepo *ChatRepository) RequestFollowers(sessionID int) ([]models.CommunI
 }
 
 func (reqRepo *ChatRepository) HandleReqFollowRepo(reqID, followedID, followerID int, newStatus string) error {
-	fmt.Println(reqID, newStatus)
 	query := `UPDATE followers SET status=? WHERE id=? AND follower_id=? AND followed_id=?`
 	_, err := reqRepo.db.Exec(query, newStatus, reqID, followerID, followedID)
 	if err != nil {

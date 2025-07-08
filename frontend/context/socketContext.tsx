@@ -87,9 +87,10 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
         setNumNotif(countotifs)
       }
       if (res.type === 'requestsFollowers') {
-        console.log(res.data);
-
-        setReqFollowers([...reqFollowers, ...res.data])
+        setReqFollowers((prev) => {
+          if (!prev || !res.data) return []
+          return [...res.data]
+        });
       }
 
       if (res.type === "getFriends") {
@@ -119,17 +120,19 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
         setSendMessage(res.message)
       }
       if (res.type === "ResponseRequestsFollowers") {
-        //res.ReqID
         setNumNotif((prev) => {
           if (!prev || typeof prev.followersCount !== 'number') return prev
           return {
             ...prev,
-            followersCount: prev.followersCount - 1,
-            total: +prev.total - 1,
+            followersCount: prev.followersCount > 0 ? +prev.followersCount - 1 : 0,
+            total: +prev.total > 0 ? +prev.total - 1 : 0,
           }
         })
+        setReqFollowers(prev => {
+          console.log("before filter:", prev);
+          return prev.filter(ele => ele.request_id !== res.ReqID);
+        });
       }
-
     };
 
     ws.current.onclose = () => {

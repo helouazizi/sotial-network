@@ -160,9 +160,7 @@ export async function FetchUsersRl(id: number | undefined, type: string,) {
             const dataUsers = await resp.json()
             if (dataUsers.NewRelation) {
                 obj.Limit += 20
-                obj.Ofsset += 20
-                console.log(dataUsers.NewRelation);
-                
+                obj.Ofsset += 20                
                 return dataUsers.NewRelation
             }
         }

@@ -111,6 +111,17 @@ nav>div {
   height: 50px;
   border-radius: 50%;
   transition: 0.5s ease-in-out;
+  position: relative;
+}
+
+.notification span {
+  background-color: var(--danger-color);
+  border-radius: 100%;
+  padding: 5px;
+  font-size: 10px;
+  position: absolute;
+  bottom: -4px;
+  right: -4px
 }
 
 .notification svg {

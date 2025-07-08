@@ -86,7 +86,7 @@ export default function Header() {
               </li>
             </ul>
             <div className="header-icons">
-              <button className={`notification ${showToggle ? "active-not" : ""}`} onClick={HandleToggle}><IoIosNotifications /> {numsNotif ? Number(numsNotif?.total) : 0}</button>
+              <button className={`notification ${showToggle ? "active-not" : ""}`} onClick={HandleToggle}><IoIosNotifications /> <span>{numsNotif ? +(numsNotif?.total) : 0}</span></button>
               <Link href={`/profile/${user?.id}`}>
                 {user?.avatar ? (
                   <img

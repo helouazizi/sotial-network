@@ -110,3 +110,33 @@ func (reqRepo *ChatRepository) CountNotiif(sessionID int) (int, int, error) {
 	}
 	return groupeReqCount, followersCount, nil
 }
+
+func (reqRepo *ChatRepository) RequestFollowers(sessionID int) ([]models.CommunInfoProfile, error) {
+	query := `SELECT u.id,u.avatar,u.nickname,u.last_name,u.first_name,f.id
+		FROM users u
+		INNER JOIN followers f ON u.id=f.follower_id
+		WHERE f.followed_id=? and f.status='pending';
+	`
+	rows, err := reqRepo.db.Query(query, sessionID)
+	if err != nil && err != sql.ErrNoRows {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var followers []models.CommunInfoProfile
+	for rows.Next() {
+		var follower models.CommunInfoProfile
+		rows.Scan(&follower.Id, &follower.Avatar, &follower.Nickname, &follower.LastName, &follower.FirstName, &follower.IdRequest)
+		followers = append(followers, follower)
+	}
+	return followers, nil
+}
+
+func (reqRepo *ChatRepository) HandleReqFollowRepo(reqID, followedID, followerID int, newStatus string) error {
+	query := `UPDATE followers SET status=? WHERE id=? AND follower_id=? AND followed_id=?`
+	_, err := reqRepo.db.Exec(query, newStatus, reqID, followerID, followedID)
+	if err != nil {
+		return err
+	}
+	return nil
+}

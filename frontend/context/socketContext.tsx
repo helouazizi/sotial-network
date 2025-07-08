@@ -5,6 +5,7 @@ import { Message, User } from "../types/chat";
 import { getUserInfos } from "@/services/user";
 import { NumOfREquests } from "@/types/Request";
 import { type } from "os";
+import { ProfileInt } from "@/types/profiles";
 export interface SocketContextType {
   ws: RefObject<WebSocket | null>
   messages: Message[]
@@ -19,6 +20,8 @@ export interface SocketContextType {
   setScrollHeight: React.Dispatch<React.SetStateAction<boolean>>
   numsNotif: NumOfREquests | undefined
   setNumNotif: React.Dispatch<React.SetStateAction<NumOfREquests | undefined>>
+  reqFollowers: ProfileInt[] | []
+  setReqFollowers: React.Dispatch<React.SetStateAction<ProfileInt[] | []>>
 }
 
 export const SocketContext = createContext<SocketContextType | null>(null);
@@ -32,6 +35,7 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
   const [sendMessage, setSendMessage] = useState<Message | undefined>(undefined)
   const [scrollHeight, setScrollHeight] = useState<boolean>(false)
   const [numsNotif, setNumNotif] = useState<NumOfREquests | undefined>(undefined)
+  const [reqFollowers, setReqFollowers] = useState<ProfileInt[] | []>([])
 
   const excludedPaths = ["/login", "/register"];
   const shouldConnect = !excludedPaths.includes(pathname);
@@ -57,6 +61,7 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
       ws.current?.send(JSON.stringify({
         type: "GetNumNotif"
       }))
+      ws.current?.send(JSON.stringify({ type: "GetFollowersRequest" }))
     };
 
     ws.current.onmessage = (event: MessageEvent) => {
@@ -80,6 +85,11 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
           total: res.data.total
         }
         setNumNotif(countotifs)
+      }
+      if (res.type === 'requestsFollowers') {
+        console.log(res.data);
+
+        setReqFollowers([...reqFollowers, ...res.data])
       }
 
       if (res.type === "getFriends") {
@@ -108,6 +118,17 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
       if (res.type === "saveMessage") {
         setSendMessage(res.message)
       }
+      if (res.type === "ResponseRequestsFollowers") {
+        //res.ReqID
+        setNumNotif((prev) => {
+          if (!prev || typeof prev.followersCount !== 'number') return prev
+          return {
+            ...prev,
+            followersCount: prev.followersCount - 1,
+            total: +prev.total - 1,
+          }
+        })
+      }
 
     };
 
@@ -132,7 +153,9 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
       scrollHeight,
       setScrollHeight,
       numsNotif,
-      setNumNotif
+      setNumNotif,
+      reqFollowers,
+      setReqFollowers
     }}>
       {children}
     </SocketContext.Provider>

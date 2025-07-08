@@ -17,6 +17,7 @@ export interface ProfileInt {
     posts: Post[];
     im_follower: boolean;
     subscription?: Subscription;
+    request_id: string
 }
 export interface Subscription {
     id: number;

@@ -129,7 +129,16 @@ func (reqRepo *ChatRepository) RequestFollowers(sessionID int) ([]models.CommunI
 		var follower models.CommunInfoProfile
 		rows.Scan(&follower.Id, &follower.Avatar, &follower.Nickname, &follower.LastName, &follower.FirstName, &follower.IdRequest)
 		followers = append(followers, follower)
-		fmt.Println(follower)
 	}
 	return followers, nil
+}
+
+func (reqRepo *ChatRepository) HandleReqFollowRepo(reqID, followedID, followerID int, newStatus string) error {
+	fmt.Println(reqID, newStatus)
+	query := `UPDATE followers SET status=? WHERE id=? AND follower_id=? AND followed_id=?`
+	_, err := reqRepo.db.Exec(query, newStatus, reqID, followerID, followedID)
+	if err != nil {
+		return err
+	}
+	return nil
 }

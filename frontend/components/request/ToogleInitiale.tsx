@@ -15,10 +15,11 @@ const ToogleInitiale = (props: { showToggle: boolean, setShowToggle: Function })
     }
     return (
         <div className={`ToogleInitiale ${props.showToggle ? "show" : "hide"}`} >
-
             <div className="close-toogle">
                 <MdOutlineArrowRight onClick={CloseToogle} />
             </div>
+
+            <h3>Notifications</h3>
             <div className="navigationToogle">
                 <button className={`${activePage == "follow" ? 'active-request' : ""}`} onClick={() => ChangePage("follow")}>FOLLOWERS ({numsNotif ? Number(numsNotif?.followersCount) : 0})</button>
                 <button className={`${activePage == "groupe" ? 'active-request' : ""}`} onClick={() => ChangePage("groupe")}>GROUPE ({numsNotif ? Number(numsNotif?.groupeReqCount) : 0})</button>

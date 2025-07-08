@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
 	"strings"
 	"time"
@@ -154,8 +153,33 @@ func (h *ChatHandler) ChatMessagesHandler(w http.ResponseWriter, r *http.Request
 				"type": "CountNotifs",
 			})
 		case "GetFollowersRequest":
-			followers, err := h.service.GetRequestFollowers(chat.ID)
-			fmt.Println(followers, err)
+			followers, err := h.service.GetRequestFollowers(chat.SenderID)
+			if err != nil {
+				conn.WriteJSON(map[string]any{
+					"error": err.Error(),
+				})
+				continue
+			}
+			conn.WriteJSON(map[string]any{
+				"data": followers,
+				"type": "requestsFollowers",
+			})
+		case "HandleRequest":
+			err = h.service.HandleFollowReq(chat.ID, chat.SenderID, chat.ReceiverID, chat.Action)
+			if err != nil {
+				conn.WriteJSON(map[string]any{
+					"error": err.Error(),
+				})
+				continue
+			}
+			if senderConns, ok := h.service.GetClient(chat.SenderID); ok {
+				for _, c := range senderConns {
+					c.WriteJSON(map[string]any{
+						"ReqID": chat.ID,
+						"type":  "ResponseRequestsFollowers",
+					})
+				}
+			}
 		}
 	}
 }

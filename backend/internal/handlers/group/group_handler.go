@@ -47,3 +47,14 @@ func (h *GroupHandler) CreateGroupHandler(w http.ResponseWriter, r *http.Request
 		"message": "Group created succefully!",
 	})
 }
+
+func (h *GroupHandler) GetGroupsHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any {
+			"error": "Method not allowed",
+		})
+		return 
+	}
+
+	
+}

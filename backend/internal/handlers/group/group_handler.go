@@ -48,13 +48,48 @@ func (h *GroupHandler) CreateGroupHandler(w http.ResponseWriter, r *http.Request
 	})
 }
 
-func (h *GroupHandler) GetGroupsHandler(w http.ResponseWriter, r *http.Request) {
+func (h *GroupHandler) GetJoinedGroupsHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
-		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any {
+		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
 			"error": "Method not allowed",
 		})
-		return 
+		return
 	}
 
-	
+	userID := r.Context().Value("userID").(int)
+
+	groups, err := h.service.GetJoinedGroups(userID)
+	if err != nil {
+		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	utils.ResponseJSON(w, http.StatusOK, map[string]any{
+		"data": groups,
+	})
+}
+
+func (h *GroupHandler) GetSuggestedGroupsHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
+			"error": "Method not allowed",
+		})
+		return
+	}
+
+	userID := r.Context().Value("userID").(int)
+
+	groups, err := h.service.GetSuggestedGroups(userID)
+	if err != nil {
+		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	utils.ResponseJSON(w, http.StatusOK, map[string]any{
+		"data": groups,
+	})
 }

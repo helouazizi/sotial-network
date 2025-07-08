@@ -50,3 +50,11 @@ func (s *GroupService) SaveGroup(group *models.Group) *models.GroupError {
 
 	return s.repo.SaveGroup(group)
 }
+
+func (s *GroupService) GetJoinedGroups(userID int) ([]*models.Group, error) {
+	return s.repo.GetJoinedGroups(userID)
+}
+
+func (s *GroupService) GetSuggestedGroups(userID int) ([]*models.Group, error) {
+	return s.repo.GetSuggestedGroups(userID)
+}

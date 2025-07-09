@@ -1,10 +1,15 @@
-import React from 'react'
-import SwitchButtons from './SwitchButtons'
+"use client"
+
+import React, { useEffect } from 'react'
 
 function Groups() {
+  useEffect(() => {
+
+  },)
+
   return (
     <>
-        <SwitchButtons />
+        fdgdf
     </>
   )
 }

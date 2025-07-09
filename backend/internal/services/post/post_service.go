@@ -47,7 +47,6 @@ func (s *PostService) SavePost(ctx context.Context, post *models.Post, img *mode
 }
 
 func (s *PostService) GetPosts(userId, offset, limit int) ([]models.Post, error) {
-	// Basic sanity checks
 	if limit <= 0 || offset < 0 {
 		return []models.Post{}, errors.New("Invalid limit and offset for pagination")
 	}

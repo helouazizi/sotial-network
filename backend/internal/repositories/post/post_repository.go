@@ -117,7 +117,6 @@ func (r *PostRepository) GetPosts(userId, start, limit int) ([]models.Post, erro
 	LIMIT  ? OFFSET ?                   -- pagination
 	`
 
-	// userId appears three times in the WHERE clause
 	rows, err := r.db.Query(q, userId, userId, userId, limit, start)
 	if err != nil {
 		return nil, err

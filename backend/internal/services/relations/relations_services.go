@@ -66,3 +66,7 @@ func (rs *RelationsServices) GetRealtionsServives(info *models.GetUsers) ([]mode
 	}
 	return rs.relationrepo.GetUserRelations(info, columun, userColumun)
 }
+
+func (rs *RelationsServices) GetFriendsService(sessionID int) ([]models.CommunInfoProfile, error) {
+	return rs.relationrepo.GetFriendsRepo(sessionID)
+}

@@ -103,3 +103,26 @@ func (h *RelationsHandler) GetRelations(w http.ResponseWriter, r *http.Request) 
 		"status":      http.StatusOK,
 	})
 }
+
+func (h *RelationsHandler) GetFriends(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
+			"message": "Method not allowed",
+			"status":  http.StatusMethodNotAllowed,
+		})
+		return
+	}
+	sessionID := r.Context().Value("userID").(int)
+	friends, err := h.RelationsServices.GetFriendsService(sessionID)
+	if err != nil {
+		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+			"message": "Error, please try again.",
+			"status":  http.StatusInternalServerError,
+		})
+		return
+	}
+	utils.ResponseJSON(w, http.StatusOK, map[string]any{
+		"friends": friends,
+		"status":  http.StatusOK,
+	})
+}

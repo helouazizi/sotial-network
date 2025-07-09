@@ -243,9 +243,9 @@ export default function CreatePostForm({ onCreated }: Props) {
                 <li key={f.id} className="user-checkbox-item">
                   <label id="follower-checkbox-label">
                     <PostHeader
-                      author={`${f.author.first_name} ${f.author.last_name}`}
+                      author={`${f.first_name} ${f.last_name}`}
                       createdAt=""
-                      avatarUrl={f.author.avatar}
+                      avatarUrl={f.avatar}
                     />
                     <input
                       type="checkbox"
@@ -253,9 +253,9 @@ export default function CreatePostForm({ onCreated }: Props) {
                       onChange={(e) =>
                         handleToggleFollower(f.id, e.target.checked)
                       }
-                      title={`Share with ${f.author.first_name} ${f.author.last_name}`}
-                      placeholder={`Select follower ${f.author.first_name} ${f.author.last_name}`}
-                      aria-label={`Share with ${f.author.first_name} ${f.author.last_name}`}
+                      title={`Share with ${f.first_name} ${f.last_name}`}
+                      placeholder={`Select follower ${f.first_name} ${f.last_name}`}
+                      aria-label={`Share with ${f.first_name} ${f.last_name}`}
                     />
                   </label>
                 </li>

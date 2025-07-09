@@ -1,7 +1,7 @@
 import { User } from "./chat";
 
 export interface Comment {
-  author: User ;
+  author: User;
   comment: string;
   created_at: string;
   media_link: string | undefined
@@ -34,16 +34,13 @@ export interface PostErrors {
   privacy_error?: string
 }
 
-export  interface FOlowereUser {
-  first_name : string,
-  last_name :string ,
-  nickname : string
-  avatar: string 
 
-}
 
-export interface Follower  {
-  author : FOlowereUser
+export interface Follower {
+  first_name: string,
+  last_name: string,
+  nickname: string
+  avatar: string
   id: number;
 }
 

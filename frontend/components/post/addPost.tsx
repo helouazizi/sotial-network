@@ -8,11 +8,11 @@ import { SocketContext } from "@/context/socketContext"; // Adjust path if diffe
 import { useContext } from 'react';
 type Props = {
   onCreated: (newPost: Post) => void,
-  
+
 };
 
 export default function CreatePostForm({ onCreated }: Props) {
-   const { user } = useContext(SocketContext) ?? {}
+  const { user } = useContext(SocketContext) ?? {}
   const [errors, setErrors] = useState<PostErrors>({});
   const [privacy, setPrivacy] = useState("public");
   const [followers, setFollowers] = useState<Follower[]>([]);
@@ -34,6 +34,8 @@ export default function CreatePostForm({ onCreated }: Props) {
     GetFolowers()
       .then((data) => setFollowers(data))
       .catch((err) => console.error("Failed to load followers", err));
+
+
   }, [privacy]);
 
   const handleToggleFollower = (id: number, checked: boolean) => {
@@ -243,7 +245,7 @@ export default function CreatePostForm({ onCreated }: Props) {
                     <PostHeader
                       author={`${f.author.firstName} ${f.author.lastName}`}
                       createdAt=""
-                      avatarUrl={f.author.avatar || "avatar.png"}
+                      avatarUrl={f.author.avatar}
                     />
                     <input
                       type="checkbox"

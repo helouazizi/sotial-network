@@ -26,10 +26,8 @@ function throttle<T extends (...args: any[]) => void>(fn: T, delay = 500): T {
 }
 
 export default function Posts() {
-  // console.log(useProfile,"profile");
   const {user} = useContext(SocketContext) ?? {}
   console.log(user , "user");
-  
   
   const [posts, setPosts] = useState<Post[]>([]);
   const [showForm, setShowForm] = useState(false);
@@ -42,7 +40,7 @@ export default function Posts() {
   const fetchPosts = useCallback(async () => {
     if (isLoading || !hasMore) return;
     setIsLoading(true);
-
+    
     try {
       const res = await fetch("http://localhost:8080/api/v1/posts", {
         method: "POST",
@@ -130,9 +128,6 @@ export default function Posts() {
         {posts.map((post) => (
           <PostCard key={post.id} post={post}  />
         ))}
-
-        {/* {isLoading && <p className="loading">Loading...</p>} */}
-
         {!isLoading && loadedOnce && posts.length === 0 && <NoPostsYet />}
         {!isLoading && !hasMore && posts.length > 0 && <NoMorePosts />}
       </section>

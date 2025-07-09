@@ -49,9 +49,9 @@ type Comment struct {
 }
 
 type PostUser struct {
-	UserName  string `json:"user_name"`
-	LastName  string `json:"first_name"`
-	FirstName string `json:"last_name"`
+	UserName  string `json:"nickname"`
+	LastName  string `json:"firstName"`
+	FirstName string `json:"lastName"`
 	Avatar    string `json:"avatar"`
 }
 

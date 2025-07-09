@@ -32,10 +32,10 @@ export default function PostCard({ post }: postProps) {
     await addComment(post.id, comment, img);
     const new_comment: Comment = {
       comment,
-      author: { 
-        firstName: user?.firstName ?? "", 
-        lastName: user?.lastName ?? "", 
-        avatar: user?.avatar ?? "", 
+      author: {
+        firstName: user?.firstName ?? "",
+        lastName: user?.lastName ?? "",
+        avatar: user?.avatar ?? "",
         nickname: user?.nickname ?? "",
         id: 0
       },
@@ -51,38 +51,40 @@ export default function PostCard({ post }: postProps) {
       if (action === "like") {
         if (userVote === "like") {
           await votePost(post.id, "unlike");
+          
           setLikes(likes - 1);
           setUserVote(null);
         } else {
           if (userVote === "dislike") {
-            setDislikes(dislikes - 1);
             await votePost(post.id, "undislike");
+            setDislikes(dislikes - 1);
           }
+           await votePost(post.id, "like");
           setLikes(likes + 1);
           setUserVote("like");
-          await votePost(post.id, "like");
         }
       }
 
       if (action === "dislike") {
         if (userVote === "dislike") {
-          await votePost(post.id, "undislike");
+         await votePost(post.id, "undislike");
           setDislikes(dislikes - 1);
           setUserVote(null);
         } else {
           if (userVote === "like") {
+             await votePost(post.id, "unlike");
             setLikes(likes - 1);
-            await votePost(post.id, "unlike");
           }
+          await votePost(post.id, "dislike");
           setDislikes(dislikes + 1);
           setUserVote("dislike");
-          await votePost(post.id, "dislike");
         }
       }
     } catch (err) {
       console.error("Vote failed", err);
     }
   };
+
 
   return (
     <div className="post-card">

@@ -8,7 +8,7 @@ import { Debounce } from '@/utils/Debounce'
 
 const FollowRequest = () => {
     const { ws, reqFollowers } = useContext(SocketContext) as SocketContextType
-
+    //s followers
     const HandleReq = useCallback(Debounce(async (requestID: number, followerID: number, action: string) => {
         ws.current?.send(JSON.stringify({
             type: "HandleRequest",

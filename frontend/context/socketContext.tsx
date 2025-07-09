@@ -87,6 +87,8 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
         setNumNotif(countotifs)
       }
       if (res.type === 'requestsFollowers') {
+        console.log("mcha");
+
         setReqFollowers((prev) => {
           if (!prev || !res.data) return []
           return [...res.data]

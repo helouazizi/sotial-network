@@ -180,6 +180,38 @@ func (h *ChatHandler) ChatMessagesHandler(w http.ResponseWriter, r *http.Request
 					})
 				}
 			}
+		case "RelationSended":
+			followers, err := h.service.GetRequestFollowers(chat.ReceiverID)
+			if err != nil {
+				conn.WriteJSON(map[string]any{
+					"error": err.Error(),
+				})
+				continue
+			}
+			groupeCount, followersCount, err := h.service.NumberNotifs(chat.ReceiverID)
+			if err != nil {
+				conn.WriteJSON(map[string]any{
+					"error": err.Error(),
+				})
+				continue
+			}
+			CountNotis := map[string]any{
+				"groupeCount":    groupeCount,
+				"followersCount": followersCount,
+				"total":          followersCount + groupeCount,
+			}
+			if senderConns, ok := h.service.GetClient(chat.ReceiverID); ok {
+				for _, c := range senderConns {
+					c.WriteJSON(map[string]any{
+						"data": followers,
+						"type": "requestsFollowers",
+					})
+					c.WriteJSON(map[string]any{
+						"data": CountNotis,
+						"type": "CountNotifs",
+					})
+				}
+			}
 		}
 	}
 }

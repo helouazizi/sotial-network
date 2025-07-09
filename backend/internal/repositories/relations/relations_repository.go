@@ -72,3 +72,24 @@ func (rlrepo *RelationsRepository) GetUserRelations(info *models.GetUsers, colum
 	}
 	return users, nil
 }
+
+func (rlrepo *RelationsRepository) GetFriendsRepo(sessionID int) ([]models.CommunInfoProfile, error) {
+	query := `
+	SELECt u.id, u.avatar, u.last_name, u.first_name, u.nickname 
+	FROM users u 
+	INNER JOIN followers f ON f.follower_id=u.id  
+	WHERE f.follower_id IN (SELECT followed_id FROM followers WHERE follower_id=?);
+	`
+	rows, err := rlrepo.db.Query(query, sessionID)
+	if err != nil && err != sql.ErrNoRows {
+		return nil, err
+	}
+	defer rows.Close()
+	var Friends []models.CommunInfoProfile
+	for rows.Next() {
+		var user models.CommunInfoProfile
+		rows.Scan(&user.Id, &user.Avatar, &user.LastName, &user.FirstName, &user.Nickname)
+		Friends = append(Friends, user)
+	}
+	return Friends, nil
+}

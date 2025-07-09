@@ -1,0 +1,500 @@
+:root {
+    --bg-color: #12111a;
+    --card-bg: #1c1b23;
+    --input-bg: #1a1922;
+    --border-color: #2a2835;
+    --text-primary: #f4f4f8;
+    --text-secondary: #b0acc0;
+    --text-muted: #8e8a9d;
+    --input-text: #ddddee;
+    --accent-color: #a78bfa;
+    --accent-hover: #8b5cf6;
+    --danger-color: #f87171;
+    --warning-color: #fbbf24;
+    --info-color: #60a5fa;
+    --btn-bg: #2b2a35;
+    --btn-text: #e9d5ff;
+    --scrollbar-bg: #1e1e2a;
+    --scrollbar-thumb: #a78bfa;
+    --icon-color: #d8b4fe;
+    --link-color: #c084fc;
+    --shadow-color: rgba(0, 0, 0, 0.6);
+    --online-color: #22c55e;
+    --offline-color: #6b7280;
+}
+
+.profile-container {
+    width: 70%;
+    height: 100%;
+    padding: 30px 15px;
+    border-radius: 10px;
+    margin: auto;
+}
+
+.profile-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    margin: auto;
+
+}
+
+.avatar-profile {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 1px solid var(--text-primary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--text-primary);
+
+    h2 {
+        color: var(--input-bg);
+    }
+
+}
+
+.full-name-profile {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+
+    h3 {
+        display: flex;
+        align-items: center;
+    }
+}
+
+/* The switch - the box around the slider */
+.switch {
+    font-size: 17px;
+    position: relative;
+    display: inline-block;
+    width: 45px;
+    height: 20px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+    opacity: 1;
+    width: 0;
+    height: 0;
+}
+
+/* The slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0px;
+    background: var(--online-color);
+    transition: .4s;
+    border-radius: 30px;
+    border: 1px solid #ccc;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 1em;
+    width: 1em;
+    border-radius: 16px;
+    left: 1.2px;
+    top: 0;
+    bottom: 0;
+    background-color: white;
+    box-shadow: 0 2px 5px #999999;
+    transition: .4s;
+}
+
+input:checked+.slider {
+    background-color: var(--danger-color);
+    border: 1px solid transparent;
+}
+
+input:checked+.slider:before {
+    transform: translateX(1.5em);
+}
+
+.switch-visibility {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.left-sec {
+    display: flex;
+    gap: 10px;
+}
+
+.statique-Profile {
+    width: 38%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.statique-Profile .numbers {
+    display: flex;
+    justify-content: space-between;
+}
+
+.statique-Profile .numbers div {
+    text-align: center;
+
+    p {
+        color: var(--text-secondary);
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    h1 {
+        color: var(--accent-color);
+    }
+}
+
+.statique-Profile button {
+    padding: 8px 4px;
+    margin-top: 10px;
+    border-radius: 8px;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    background-color: var(--btn-bg);
+    transition: .5s ease-in-out;
+}
+
+.statique-Profile .accepted {
+    background-color: var(--accent-hover);
+    color: var(--btn-text);
+}
+
+.statique-Profile .accepted:hover {
+    color: var(--btn-text);
+    background-color: var(--btn-bg);
+}
+
+.statique-Profile .follow {
+    color: var(--btn-text);
+}
+
+.statique-Profile .follow:hover {
+    background-color: var(--accent-hover);
+}
+
+.statique-Profile .pending {
+    background-color: var(--text-muted);
+    color: var(--text-primary);
+}
+
+.statique-Profile .pending:hover {
+    background-color: var(--btn-bg);
+    color: var(--btn-text);
+}
+
+.profile-body {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.navigation-profile {
+    display: flex;
+    width: 100%;
+
+    li {
+        width: 25%;
+        text-align: center;
+
+        a {
+            padding: 20px;
+            display: inline-block;
+            width: 100%;
+            height: 100%;
+            background-color: var(--btn-bg);
+            color: var(--btn-text);
+            text-decoration: none;
+            transition: .5s ease-in-out;
+        }
+
+        a:hover {
+            background-color: var(--card-bg);
+            color: var(--accent-hover);
+        }
+    }
+}
+
+.navigation-profile .active {
+
+
+    background-color: var(--card-bg);
+    color: var(--accent-hover);
+
+}
+
+.data-profile {
+    width: 100%;
+    min-height: 500px;
+    max-height: 520px;
+    background-color: var(--card-bg);
+    box-sizing: border-box;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-bg);
+}
+
+.data-profile .Forbiden {
+    width: 100%;
+    height: 520px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: var(--accent-color);
+    align-items: center;
+
+    svg {
+        width: 90px;
+        height: 90px;
+    }
+
+    h3 {
+        font-weight: lighter;
+    }
+}
+
+.data-profile form {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 60%;
+    padding: 20px 10px;
+    display: flex;
+    margin: auto;
+
+    .updateImage {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 7px;
+
+        div {
+            margin-bottom: 10px;
+            display: flex;
+            gap: 30px;
+            align-items: center;
+
+            label {
+                transition: .4s ease-in-out;
+                color: var(--icon-color);
+            }
+
+            label:hover {
+                color: var(--text-primary);
+                cursor: pointer;
+            }
+
+            button {
+                border: none;
+                padding: 8px;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: .5s ease-in-out;
+            }
+
+            button[disabled]:hover {
+                background-color: var(--icon-color);
+                color: white;
+            }
+
+            .submit {
+                transition: .5s ease-in-out;
+                background-color: var(--btn-bg);
+                color: var(--btn-text);
+            }
+
+            .submit:hover {
+                color: var(--btn-bg);
+                background-color: var(--btn-text)
+            }
+        }
+
+        input {
+            display: none;
+        }
+    }
+}
+
+.info-user {
+    width: 100%;
+    padding: 15px 7px;
+    display: flex;
+    justify-content: space-between;
+
+    .labels {
+        width: 50%;
+
+        div {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            font-weight: bold;
+
+            .editabel {
+                font-style: italic;
+                font-size: 14px;
+                font-weight: lighter;
+                color: var(--text-muted);
+            }
+        }
+    }
+
+    .inputs {
+        width: 50%;
+        padding: 0 10px;
+
+        div {
+            margin: 10px 0;
+
+            textarea {
+                border: none;
+                background-color: var(--btn-bg);
+                width: 200px;
+                height: 200px;
+                overflow-y: auto;
+                resize: none;
+                border-radius: 8px;
+                padding: 10px 7px;
+                color: var(--btn-text);
+            }
+
+            input {
+                border: none;
+                border-radius: 8px;
+                padding: 8px 4px;
+                width: 200px;
+                background-color: var(--btn-bg);
+                color: var(--btn-text);
+                outline: none;
+            }
+        }
+    }
+}
+
+.toast {
+    p {
+        color: var(--danger-color);
+        font-size: 16px;
+    }
+}
+
+.loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border: 4px solid var(--accent-hover);
+    border-left-color: transparent;
+    border-radius: 50%;
+}
+
+
+
+.loader {
+    border: 4px solid var(--accent-hover);
+    border-left-color: transparent;
+    width: 36px;
+    height: 36px;
+    animation: spin89345 1s linear infinite;
+}
+
+@keyframes spin89345 {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.relation-section {
+    flex-wrap: wrap;
+    min-height: 500px;
+    max-height: 520px;
+    display: flex;
+    gap: 20px;
+    padding: 30px 10px;
+    justify-content: space-evenly;
+    overflow-y: auto;
+
+    a {
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+        width: calc(85% / 3);
+        text-decoration-line: none;
+        color: var(--text-primary);
+        background-color: var(--btn-bg);
+        transition: .5s ease-in-out;
+        height: 90px;
+    }
+
+    a:hover {
+        transform: translate(2px, -2px);
+        color: var(--accent-hover);
+
+    }
+
+}
+
+.relation-section .relation-card .card {
+    width: 60px;
+    height: 60px;
+    font-size: 14px;
+}
+
+.relation-section .relation-card .relation-card-data {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+
+    .info {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+        h3 {
+            font-size: 16px;
+        }
+
+        span {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+    }
+}
+
+.relation-section .relation-card svg {
+    width: 25px;
+    height: 25px;
+}
+
+.empty-data {
+    min-height: 500px;
+    max-height: 520px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: var(--accent-color);
+    svg {
+        width: 60px;
+        height: 60px;
+    }
+}

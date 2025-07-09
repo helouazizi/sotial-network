@@ -1,0 +1,8 @@
+CREATE TABLE groups (
+    id INTEGER PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    title TEXT NOT NULL,
+    description TEXT NOT NULL, 
+    created_at DATETIME NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
+);

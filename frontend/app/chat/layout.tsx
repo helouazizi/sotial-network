@@ -1,10 +1,10 @@
 "use client"
 
 import { FaUser } from "react-icons/fa";
-import ChatNav from "../components/chat/chatNav";
+import ChatNav from "../../components/chat/chatNav";
 import { ReactNode, useContext } from "react";
-import { SocketContext } from "../context/socketContext";
-import Friends from "../components/chat/friends";
+import { SocketContext } from "../../context/socketContext";
+import Friends from "../../components/chat/friends";
 
 export default function ChatLayout({ children } : {children : ReactNode}) {
   const {user} = useContext(SocketContext) ?? {}
@@ -23,6 +23,7 @@ export default function ChatLayout({ children } : {children : ReactNode}) {
             <ul><Friends /></ul>
           </div>
         </div>
+        
       </section>
       <section className="chatMessages">
         {children}

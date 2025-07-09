@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Welcomingmessage from "../components/Auth/welcomingMessage";
+import Welcomingmessage from "../../components/Auth/welcomingMessage";
 
 export default function Login() {
   const [email, setEmail] = useState("");

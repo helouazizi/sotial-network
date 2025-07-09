@@ -1,11 +1,7 @@
 import { ReactNode } from "react";
 import "./globals.css";
-import SocketProvider from "./context/socketContext";
-import Header from "./components/header/header";
-
-interface RootLayoutProps {
-  children: ReactNode;
-}
+import SocketProvider from "../context/socketContext";
+import Header from "../components/header/header";
 
 export const metadata = {
   title: "Social Network",
@@ -13,13 +9,14 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
+
   return (
     <html lang="en">
       <body>
-          <SocketProvider>
-            <Header />
-            {children}
-          </SocketProvider>
+        <SocketProvider>
+          <Header />
+          {children}
+        </SocketProvider>
       </body>
     </html>
   );

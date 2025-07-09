@@ -1,0 +1,158 @@
+:root {
+    --bg-color: #12111a;
+    --card-bg: #1c1b23;
+    --input-bg: #1a1922;
+    --border-color: #2a2835;
+    --text-primary: #f4f4f8;
+    --text-secondary: #b0acc0;
+    --text-muted: #8e8a9d;
+    --input-text: #ddddee;
+    --accent-color: #a78bfa;
+    --accent-hover: #8b5cf6;
+    --danger-color: #f87171;
+    --warning-color: #fbbf24;
+    --info-color: #60a5fa;
+    --btn-bg: #2b2a35;
+    --btn-text: #e9d5ff;
+    --scrollbar-bg: #1e1e2a;
+    --scrollbar-thumb: #a78bfa;
+    --icon-color: #d8b4fe;
+    --link-color: #c084fc;
+    --shadow-color: rgba(0, 0, 0, 0.6);
+    --online-color: #22c55e;
+    --offline-color: #6b7280;
+}
+
+.ToogleInitiale {
+    background-color: var(--btn-bg);
+    width: 25%;
+    height: 100%;
+    position: fixed;
+    top: 92px;
+    right: 0;
+    z-index: 9998;
+    padding: 20px 10px;
+    transition: .5s ease-in-out;
+
+    box-shadow: var(--accent-hover) 0px 1px 3px, var(--accent-hover) 0px 1px 2px;
+}
+
+.hide {
+    transform: translateX(100%);
+}
+
+.show {
+    transform: translateX(0%);
+}
+
+.close-toogle {
+    width: 100%;
+
+    svg {
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+        transition: 0.3s ease-in-out;
+    }
+
+    svg:hover {
+        fill: var(--accent-hover);
+    }
+}
+
+.navigationToogle {
+    background-color: var(--card-bg);
+    border-radius: 50px;
+    justify-content: space-between;
+    width: 83%;
+    padding: 5px;
+    display: flex;
+    margin: 0 auto;
+    margin-top: 20px;
+    gap: 10px;
+
+    button {
+        border: none;
+        padding: 14px 28px;
+        border-radius: 25px;
+        cursor: pointer;
+        background-color: transparent;
+        color: var(--text-primary);
+        transition: .5s ease-in-out;
+        width: 50%;
+    }
+
+    button:hover {
+        background-color: var(--btn-bg);
+    }
+
+    .active-request {
+        background-color: var(--btn-bg);
+    }
+}
+
+.followers-requsets-container {
+    width: 83%;
+    margin: 0 auto;
+    margin-top: 10px;
+    height: 75%;
+    overflow-y: auto;
+    padding: 10px 0;
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-bg);
+}
+
+.followers {
+    width: 50px;
+    height: 50px;
+    font-size: 12px;
+}
+
+.follower-request {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: 0.5s ease-in-out;
+    border: 1px solid var(--border-color);
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 5px;
+
+    .header-card {
+        display: flex;
+        gap: 5px;
+
+        .request-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+    }
+
+    .action-request {
+        svg {
+            width: 30px;
+            height: 30px;
+            margin-left: 10px;
+            cursor: pointer;
+            transition: 0.5s ease-in-out;
+            fill: var(--text-primary);
+        }
+
+        .accept-request:hover {
+            fill: var(--online-color);
+        }
+
+        .declanche-request:hover {
+            fill: var(--danger-color);
+        }
+    }
+}
+
+.follower-request:hover {
+    background-color: var(--card-bg);
+}
+.noReq{
+    color: var(--text-muted);
+    text-align: center;
+}

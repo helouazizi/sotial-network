@@ -17,6 +17,7 @@ type CommunInfoProfile struct {
 	Posts        []Post        `json:"posts,omitempty"`
 	ImFollower   bool          `json:"im_follower"`
 	Subscription *Subscription `json:"subscription,omitempty"`
+	IdRequest    int           `json:"request_id,omitempty"`
 }
 type Subscription struct {
 	FollowerID int    `json:"follower_id"`

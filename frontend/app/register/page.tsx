@@ -3,7 +3,7 @@ import { useState, ChangeEvent } from 'react';
 import React from 'react'
 
 import { useRouter } from 'next/navigation';
-import Welcomingmessage from '../components/Auth/welcomingMessage';
+import Welcomingmessage from '../../components/Auth/welcomingMessage';
 
 export default function Register() {
     const [lastname, setLastName] = useState<string>('');

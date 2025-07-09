@@ -9,5 +9,7 @@ type Chat struct {
 	ReceiverID int       `json:"receiver_id"`
 	Type       string    `json:"type"`
 	SentAt     time.Time `json:"sent_at"`
+	SentAtStr  string    `json:"sent_at_str"`
 	LastId     int       `json:"last_id"`
+	Action     string    `json:"action"`
 }

@@ -142,3 +142,19 @@ func (r *AuthRepository) GetUserCredential(user *models.User) (models.Error, mod
 			Pass:  password,
 		}
 }
+
+func (r *AuthRepository) GetUser(userID int) (*models.User, error) {
+	query := `
+		SELECT id, nickname ,first_name, last_name, avatar
+		FROM users
+		WHERE id = ?
+	`
+
+	var user models.User
+	err := r.db.QueryRow(query, userID).Scan(&user.ID, &user.Nickname, &user.FirstName, &user.Lastname, &user.Avatar)
+	if err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+}

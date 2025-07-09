@@ -1,16 +1,9 @@
-"use client"
+import React from 'react'
 
-import FormCreateGroup from "@/components/groups/FormCreateGroup"
-
-export default function Groups() {
-    return (
-        <main className="container groupPage">
-            <section className="left-side">
-
-            </section>
-            <section className="right-side">
-               <FormCreateGroup />
-            </section>
-        </main>
-    )
+function GroupsContent() {
+  return (
+    <div>No posts available</div>
+  )
 }
+
+export default GroupsContent

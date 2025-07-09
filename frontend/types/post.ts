@@ -34,8 +34,16 @@ export interface PostErrors {
   privacy_error?: string
 }
 
+export  interface FOlowereUser {
+  first_name : string,
+  last_name :string ,
+  nickname : string
+  avatar: string 
+
+}
+
 export interface Follower  {
-  author : User
+  author : FOlowereUser
   id: number;
 }
 

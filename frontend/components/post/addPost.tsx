@@ -239,11 +239,11 @@ export default function CreatePostForm({ onCreated }: Props) {
               Share with specific followers
             </label>
             <ul className="user-checkbox-list">
-              {followers.map((f) => (
+              {followers.length > 0 && followers.map((f) => (
                 <li key={f.id} className="user-checkbox-item">
                   <label id="follower-checkbox-label">
                     <PostHeader
-                      author={`${f.author.firstName} ${f.author.lastName}`}
+                      author={`${f.author.first_name} ${f.author.last_name}`}
                       createdAt=""
                       avatarUrl={f.author.avatar}
                     />
@@ -253,9 +253,9 @@ export default function CreatePostForm({ onCreated }: Props) {
                       onChange={(e) =>
                         handleToggleFollower(f.id, e.target.checked)
                       }
-                      title={`Share with ${f.author.firstName} ${f.author.lastName}`}
-                      placeholder={`Select follower ${f.author.firstName} ${f.author.lastName}`}
-                      aria-label={`Share with ${f.author.firstName} ${f.author.lastName}`}
+                      title={`Share with ${f.author.first_name} ${f.author.last_name}`}
+                      placeholder={`Select follower ${f.author.first_name} ${f.author.last_name}`}
+                      aria-label={`Share with ${f.author.first_name} ${f.author.last_name}`}
                     />
                   </label>
                 </li>

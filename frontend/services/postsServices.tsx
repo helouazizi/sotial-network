@@ -54,7 +54,7 @@ export const votePost = async (post_id: number, action: "like" | "dislike" | "un
 
 
 export const GetFolowers = async (): Promise<Follower[]> => {
-    const res = await fetch(`${API_URL}/folowers`, {
+    const res = await fetch(`http://localhost:8080/api/v1/relations/getFriends`, {
         method: "GET",
         credentials: "include",
     });
@@ -67,5 +67,5 @@ export const GetFolowers = async (): Promise<Follower[]> => {
 
     console.log(folowers, "folowers")
 
-    return folowers
+    return folowers.friends
 };

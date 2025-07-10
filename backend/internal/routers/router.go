@@ -38,9 +38,9 @@ func SetupRoutes(app *app.Application) *http.ServeMux {
 	mux.Handle("/images/", app.StaticHandler)
 
 	//================ Group ==============================//
-	mux.HandleFunc("/api/v1/createGroup", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.CreateGroupHandler), app.DB))
-	mux.HandleFunc("/api/v1/getJoinedGroups", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.GetJoinedGroupsHandler), app.DB))
-	mux.HandleFunc("/api/v1/getSuggestedGroups", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.GetSuggestedGroupsHandler), app.DB))
+	mux.HandleFunc("/api/v1/groups/create", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.CreateGroupHandler), app.DB))
+	mux.HandleFunc("/api/v1/groups/getJoined", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.GetJoinedGroupsHandler), app.DB))
+	mux.HandleFunc("/api/v1/groups/getSuggested", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.GetSuggestedGroupsHandler), app.DB))
 
 	//================ Event ==============================//
 	mux.HandleFunc("/api/v1/groups/joined/{id}/events", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.GetGroupEventHandler), app.DB))

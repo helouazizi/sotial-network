@@ -1,15 +1,8 @@
 package models
 
 type CommunInfoProfile struct {
-	Id           int           `json:"id"`
-	Nickname     string        `json:"nickname"`
-	LastName     string        `json:"last_name"`
-	FirstName    string        `json:"first_name"`
-	Email        string        `json:"email,omitempty"`
-	Avatar       string        `json:"avatar,omitempty"`
-	DateOfBirth  string        `json:"date_of_birth,omitempty"`
+	User         User
 	IsPrivate    int           `json:"is_private"`
-	AboutMe      string        `json:"about_me,omitempty"`
 	Followers    int           `json:"followers"`
 	Followed     int           `json:"followed"`
 	NbPosts      int           `json:"nbPosts"`
@@ -27,3 +20,5 @@ type Subscription struct {
 type UpdateVsibility struct {
 	To int `json:"to"`
 }
+
+

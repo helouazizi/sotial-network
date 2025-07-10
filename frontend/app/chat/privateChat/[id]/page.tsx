@@ -2,12 +2,13 @@
 
 import ChatFooter from "@/components/chat/chatFooter";
 import { SocketContext } from "@/context/socketContext";
-import { Message, User } from "@/types/chat";
+import { Message } from "@/types/chat";
 import { useParams } from "next/navigation";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { FaUser } from "react-icons/fa";
 import { FaArrowAltCircleDown } from "react-icons/fa";
 import Chat from "../page";
+import { User } from "@/types/user";
 
 export default function PrivateChat() {
     const { id } = useParams()
@@ -108,16 +109,11 @@ export default function PrivateChat() {
                 </React.Fragment>
             ));
 
-            // const name = isSender
-            //     ? `${user?.firstName} ${user?.lastName}`
-            //     : `${friend?.firstName} ${friend?.lastName}`;
-
             const className = isSender ? "sender" : "receiver";
 
             return (
                 <div key={message.id} id={`${message.id}`} className={className}>
                     <div className="msg">
-                        {/* <p>{name}</p> */}
                         {messageLines}
                         <span>{message.sent_at_str.slice(0, 16)}</span>
                     </div>
@@ -136,7 +132,7 @@ export default function PrivateChat() {
                         <p className="userName">
                             <FaUser />
                             <span id={`${friend?.id}`}>
-                                {friend?.firstName} {friend?.lastName}
+                                {friend?.firstname} {friend?.lastname}
                             </span>
                         </p>
                         <p className="online">

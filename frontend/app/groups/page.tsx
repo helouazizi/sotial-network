@@ -1,16 +1,16 @@
 "use client"
 
-import FormCreateGroup from "@/components/groups/FormCreateGroup"
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react'
 
-export default function Groups() {
-    return (
-        <main className="container groupPage">
-            <section className="left-side">
-
-            </section>
-            <section className="right-side">
-               <FormCreateGroup />
-            </section>
-        </main>
-    )
+function GroupsContent() {
+     const router = useRouter()
+ 
+     useEffect(() => {
+         router.push("/groups/joined");
+     }, [router]);
+ 
+     return null
 }
+
+export default GroupsContent

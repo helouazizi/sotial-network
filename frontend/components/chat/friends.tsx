@@ -1,7 +1,7 @@
 "use client"
 
 import { SocketContext } from "@/context/socketContext";
-import { User } from "@/types/chat";
+import { User } from "@/types/user";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect } from "react";
 import { FaUser } from "react-icons/fa";
@@ -22,7 +22,7 @@ export default function Friends() {
             if (setFriends) setFriends(null)
         }
     }, [ws?.current])
-
+    
     const handleClickUser = (e: React.MouseEvent<HTMLElement>) => {
         router.push("/chat/privateChat/" + e.currentTarget.id)
     }
@@ -30,7 +30,7 @@ export default function Friends() {
     return (
         <>
             {friends?.map((friend: User) => {
-                return <li key={friend.id} id={`${friend.id}`} onClick={handleClickUser}><FaUser /> {friend.firstName} {friend.lastName}</li>
+                return <li key={friend.id} id={`${friend.id}`} onClick={handleClickUser}><FaUser /> {friend.firstname} {friend.lastname}</li>
             }) || <li>Loading friends...</li>}
         </>
     );

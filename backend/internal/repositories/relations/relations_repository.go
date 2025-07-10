@@ -63,9 +63,8 @@ func (rlrepo *RelationsRepository) GetUserRelations(info *models.GetUsers, colum
 	var users []models.CommunInfoProfile
 	for rows.Next() {
 		var user models.CommunInfoProfile
-		err = rows.Scan(&user.Id, &user.Avatar, &user.LastName, &user.FirstName, &user.Nickname)
+		err = rows.Scan(&user.User.ID, &user.User.Avatar, &user.User.Lastname, &user.User.FirstName, &user.User.Nickname)
 		if err != nil {
-			fmt.Println(err)
 			return nil, err
 		}
 		users = append(users, user)
@@ -88,7 +87,7 @@ func (rlrepo *RelationsRepository) GetFriendsRepo(sessionID int) ([]models.Commu
 	var Friends []models.CommunInfoProfile
 	for rows.Next() {
 		var user models.CommunInfoProfile
-		rows.Scan(&user.Id, &user.Avatar, &user.LastName, &user.FirstName, &user.Nickname)
+		rows.Scan(&user.User.ID, &user.User.Avatar, &user.User.Lastname, &user.User.FirstName, &user.User.Nickname)
 		Friends = append(Friends, user)
 	}
 	return Friends, nil

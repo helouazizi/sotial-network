@@ -11,7 +11,7 @@ import (
 	"github.com/ismailsayen/social-network/internal/models"
 )
 
-func HandleImage(img *models.Image, dir string) (sql.NullString, models.Error) {
+func HandleImage(img *models.Image, dir string) (sql.NullString, models.GroupError) {
 	var fileName sql.NullString // will be NULL if no image
 
 	if img != nil && img.ImgContent != nil && img.ImgHeader != nil {
@@ -23,7 +23,7 @@ func HandleImage(img *models.Image, dir string) (sql.NullString, models.Error) {
 		// Ensure directory exists
 
 		if err := os.MkdirAll(dir, 0o755); err != nil {
-			return fileName, models.Error{
+			return fileName, models.GroupError{
 				Code:    http.StatusInternalServerError,
 				Message: "unable to create or access the specified directory",
 			}
@@ -36,7 +36,7 @@ func HandleImage(img *models.Image, dir string) (sql.NullString, models.Error) {
 
 		dst, err := os.Create(path)
 		if err != nil {
-			return fileName, models.Error{
+			return fileName, models.GroupError{
 				Code:    http.StatusInternalServerError,
 				Message: "unable to create the specified file",
 			}
@@ -45,7 +45,7 @@ func HandleImage(img *models.Image, dir string) (sql.NullString, models.Error) {
 		_, err = io.Copy(dst, img.ImgContent)
 		dst.Close() // close file after copy
 		if err != nil {
-			return fileName, models.Error{
+			return fileName, models.GroupError{
 				Code:    http.StatusInternalServerError,
 				Message: "failed to write content to the file",
 			}
@@ -53,16 +53,16 @@ func HandleImage(img *models.Image, dir string) (sql.NullString, models.Error) {
 
 		fileName = sql.NullString{String: origName, Valid: true}
 	}
-	return fileName, models.Error{
+	return fileName, models.GroupError{
 		Code:    http.StatusOK,
 		Message: "operation completed successfully",
 	}
 }
 
-func CheckImage(img *models.Image) models.Error {
+func CheckImage(img *models.Image) models.GroupError {
 	if img != nil && (img.ImgHeader != nil || img.ImgContent != nil) {
 		if img.ImgHeader != nil && len(img.ImgHeader.Filename) < 3 {
-			return models.Error{
+			return models.GroupError{
 				Code:    http.StatusBadRequest,
 				Message: "invalid filename",
 			}
@@ -72,7 +72,7 @@ func CheckImage(img *models.Image) models.Error {
 			file := img.ImgContent
 			buf := make([]byte, 512)
 			if _, err := file.Read(buf); err != nil {
-				return models.Error{
+				return models.GroupError{
 					Code:    http.StatusInternalServerError,
 					Message: "failed to read image content",
 				}
@@ -88,7 +88,7 @@ func CheckImage(img *models.Image) models.Error {
 				"image/webp": true,
 			}
 			if ct := http.DetectContentType(buf); !allowed[ct] {
-				return models.Error{
+				return models.GroupError{
 					Code:    http.StatusBadRequest,
 					Message: "invalid image type",
 				}
@@ -96,7 +96,7 @@ func CheckImage(img *models.Image) models.Error {
 		}
 	}
 
-	return models.Error{
+	return models.GroupError{
 		Code:    http.StatusOK,
 		Message: "operation completed successfully",
 	}

@@ -30,7 +30,7 @@ export default function Header() {
 
   const handleClickLogout = async () => {
     try {
-      const res = await fetch("http://localhost:8080/app/v1/user/logout", {
+      const res = await fetch("http://localhost:8080/api/v1/user/logout", {
         method: 'GET',
         credentials: 'include',
       });

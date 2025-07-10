@@ -14,7 +14,7 @@ import (
 // Check if the password is valid
 func ValidPass(Password string) bool {
 	// Check if password length is between 8 and 15 characters
-	if len(Password) <= 8 || len(Password) >= 15 {
+	if len(Password) <= 8 {
 		return false
 	}
 

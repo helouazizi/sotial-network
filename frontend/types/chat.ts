@@ -1,11 +1,3 @@
-export interface User {
-    id: number
-    nickname: string
-    firstName: string
-    lastName: string
-    avatar: string
-}
-
 export interface Message {
     id: number
     sender_id: number

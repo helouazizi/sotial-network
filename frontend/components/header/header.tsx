@@ -17,6 +17,7 @@ export default function Header() {
   const router = useRouter();
   const pathname = usePathname();
   const { ws, user, numsNotif } = useContext(SocketContext) as SocketContextType
+
   const [isLogged, setIsLogged] = useState<boolean>(false)
   const [showToggle, setShowToggle] = useState(false)
 
@@ -30,7 +31,7 @@ export default function Header() {
 
   const handleClickLogout = async () => {
     try {
-      const res = await fetch("http://localhost:8080/app/v1/user/logout", {
+      const res = await fetch("http://localhost:8080/api/v1/user/logout", {
         method: 'GET',
         credentials: 'include',
       });
@@ -95,7 +96,7 @@ export default function Header() {
                     className="avatar-profile header-icon"
                   />
                 ) : (
-                  <div className="avatar-profile header-icon"><h2>{GenerateAvatar(user?.firstName, user?.lastName)}</h2></div>
+                  <div className="avatar-profile header-icon"><h2>{GenerateAvatar(user?.firstname, user?.lastname)}</h2></div>
                 )}
               </Link>
 

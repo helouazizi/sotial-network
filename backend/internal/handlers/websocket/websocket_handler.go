@@ -7,15 +7,15 @@ import (
 
 	"github.com/gorilla/websocket"
 	"github.com/ismailsayen/social-network/internal/models"
-	services "github.com/ismailsayen/social-network/internal/services/chat"
+	services "github.com/ismailsayen/social-network/internal/services/websocket"
 )
 
-type ChatHandler struct {
-	service *services.ChatService
+type WebsocketHandler struct {
+	service *services.WebsocketService
 }
 
-func NewChatHandler(ChatService *services.ChatService) *ChatHandler {
-	return &ChatHandler{service: ChatService}
+func NewWebsocketHandler(WebsocketService *services.WebsocketService) *WebsocketHandler {
+	return &WebsocketHandler{service: WebsocketService}
 }
 
 // Upgrader is used to upgrade HTTP connections to WebSocket connections.
@@ -25,7 +25,7 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
-func (h *ChatHandler) ChatMessagesHandler(w http.ResponseWriter, r *http.Request) {
+func (h *WebsocketHandler) WebsocketHandler(w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		conn.WriteJSON(map[string]any{
@@ -177,6 +177,38 @@ func (h *ChatHandler) ChatMessagesHandler(w http.ResponseWriter, r *http.Request
 					c.WriteJSON(map[string]any{
 						"ReqID": chat.ID,
 						"type":  "ResponseRequestsFollowers",
+					})
+				}
+			}
+		case "RelationSended":
+			followers, err := h.service.GetRequestFollowers(chat.ReceiverID)
+			if err != nil {
+				conn.WriteJSON(map[string]any{
+					"error": err.Error(),
+				})
+				continue
+			}
+			groupeCount, followersCount, err := h.service.NumberNotifs(chat.ReceiverID)
+			if err != nil {
+				conn.WriteJSON(map[string]any{
+					"error": err.Error(),
+				})
+				continue
+			}
+			CountNotis := map[string]any{
+				"groupeCount":    groupeCount,
+				"followersCount": followersCount,
+				"total":          followersCount + groupeCount,
+			}
+			if senderConns, ok := h.service.GetClient(chat.ReceiverID); ok {
+				for _, c := range senderConns {
+					c.WriteJSON(map[string]any{
+						"data": followers,
+						"type": "requestsFollowers",
+					})
+					c.WriteJSON(map[string]any{
+						"data": CountNotis,
+						"type": "CountNotifs",
 					})
 				}
 			}

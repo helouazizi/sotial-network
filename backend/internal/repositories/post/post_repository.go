@@ -45,7 +45,7 @@ func (r *PostRepository) SavePost(ctx context.Context, post *models.Post, img *m
 	}
 
 	res, err := tx.Exec(InsertPost,
-		post.UserId,
+		post.Author.ID,
 		post.Title,
 		post.Content,
 		post.Type,
@@ -81,37 +81,59 @@ func (r *PostRepository) SavePost(ctx context.Context, post *models.Post, img *m
 
 func (r *PostRepository) GetPosts(userId, start, limit int) ([]models.Post, error) {
 	const q = `
-		SELECT
-			p.id,
-			p.title,
-			p.content,
-			p.media,
-			p.type,
-			p.created_at,
-			p.likes,
-			p.dislikes,
-			p.comments,
-			pr.reaction AS user_vote
-		FROM posts p
-		LEFT JOIN post_reactions pr ON pr.post_id = p.id AND pr.user_id = ?  
-		
-		--  visibility filter
-		WHERE 
-		      p.type = 'public'
-		  OR ( p.type = 'private' AND (
-					p.user_id = ?                                             -- owner sees own post
-				OR	EXISTS ( SELECT 1 FROM post_allowed_users pau            -- shared-with rule
-							WHERE pau.post_id = p.id 
-							  AND pau.user_id = ?
+			SELECT
+				p.id,
+				p.title,
+				p.content,
+				p.media,
+				p.type,
+				p.created_at,
+				p.likes,
+				p.dislikes,
+				p.comments,
+				pr.reaction AS user_vote,
+
+				u.first_name,
+				u.last_name,
+				u.nickname,
+				u.avatar
+
+			FROM posts p
+			LEFT JOIN post_reactions pr ON pr.post_id = p.id AND pr.user_id = ?
+			INNER JOIN users u ON u.id = p.user_id
+
+			WHERE 
+				-- Public posts
+				p.type = 'public'
+
+				-- Author's own posts
+				OR (p.user_id = ?)
+
+				-- Posts visible to followers
+				OR (
+					p.type = 'almost_private'
+					AND EXISTS (
+						SELECT 1 FROM followers f
+						WHERE f.followed_id = ?
+						AND f.followed_id = p.user_id
+					)
 				)
-		  ))
 
-		ORDER BY p.created_at DESC
-		LIMIT  ? OFFSET ?               -- pagination
-	`
+				-- Posts shared specifically with the user
+				OR (
+					p.type = 'private'
+					AND EXISTS (
+						SELECT 1 FROM post_allowed_users pau
+						WHERE pau.post_id = p.id 
+						AND pau.user_id = ?
+					)
+				)
 
-	// userId is used three times in the query
-	rows, err := r.db.Query(q, userId, userId, userId, limit, start)
+			ORDER BY p.created_at DESC
+			LIMIT ? OFFSET ?
+    `
+
+	rows, err := r.db.Query(q, userId, userId, userId,userId, limit, start)
 	if err != nil {
 		return nil, err
 	}
@@ -134,9 +156,14 @@ func (r *PostRepository) GetPosts(userId, start, limit int) ([]models.Post, erro
 			&p.Dislikes,
 			&p.TotalComments,
 			&p.UserVote,
+			&p.Author.FirstName,
+			&p.Author.Lastname,
+			&p.Author.Nickname,
+			&p.Author.Avatar,
 		); err != nil {
 			return nil, err
 		}
+
 		if media.Valid {
 			p.MediaLink = media.String
 		}
@@ -192,15 +219,15 @@ func (r *PostRepository) GetPostComments(c models.ComentPaginationRequest) ([]mo
 		var cm models.Comment
 		var media sql.NullString
 		err := rows.Scan(
-			&cm.ID, &cm.PostID, &cm.AuthorID, &cm.Comment, &media, &cm.CreatedAt,
-			&cm.Author.UserName, &cm.Author.FirstName, &cm.Author.LastName, &cm.Author.Avatar,
+			&cm.ID, &cm.PostID, &cm.Author.ID, &cm.Comment, &media, &cm.CreatedAt,
+			&cm.Author.Nickname, &cm.Author.FirstName, &cm.Author.Lastname, &cm.Author.Avatar,
 		)
 		if err != nil {
 			return nil, err
 		}
-		if cm.Author.UserName != "" {
+		if cm.Author.Nickname != "" {
 			cm.Author.FirstName = ""
-			cm.Author.LastName = ""
+			cm.Author.Lastname = ""
 		}
 		if media.Valid {
 			cm.MediaLink = media.String
@@ -262,7 +289,7 @@ func (r *PostRepository) CreatePostComment(coment models.Comment, img *models.Im
 	defer stmt.Close()
 
 	_, err = stmt.Exec(
-		coment.PostID, coment.AuthorID, coment.Comment, fileName, coment.CreatedAt,
+		coment.PostID, coment.Author.ID, coment.Comment, fileName, coment.CreatedAt,
 	)
 
 	return err

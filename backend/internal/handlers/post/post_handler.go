@@ -22,9 +22,7 @@ func NewAuthHandler(postService *services.PostService) *PostHandler {
 	return &PostHandler{service: postService}
 }
 
-// handler/post_handler.go
 func (h *PostHandler) GetPosts(w http.ResponseWriter, r *http.Request) {
-	// Only allow POST now
 	if r.Method != http.MethodPost {
 		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
 			"message": "Method not allowed",
@@ -35,7 +33,6 @@ func (h *PostHandler) GetPosts(w http.ResponseWriter, r *http.Request) {
 
 	defer r.Body.Close()
 
-	// Decode JSON body
 	var req models.PaginationRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
@@ -46,7 +43,6 @@ func (h *PostHandler) GetPosts(w http.ResponseWriter, r *http.Request) {
 	}
 	userId := r.Context().Value("userID").(int)
 
-	// Fetch posts
 	posts, err := h.service.GetPosts(userId, req.Offset, req.Limit)
 	if err != nil {
 		fmt.Println(err, "postststss f")
@@ -82,7 +78,7 @@ func (h *PostHandler) CreatePost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	post := &models.Post{
-		UserId:  userId,
+		Author:  models.User{ID: userId},
 		Title:   r.FormValue("title"),
 		Content: r.FormValue("content"),
 		Type:    r.FormValue("privacy"),
@@ -140,7 +136,6 @@ func (h *PostHandler) HandlePostVote(w http.ResponseWriter, r *http.Request) {
 	}
 	userId := r.Context().Value("userID").(int)
 	vote.UserId = userId
-	// Update the vote in your database here
 	err := h.service.PostVote(vote)
 	if err != nil {
 		fmt.Println(err, "vote")
@@ -157,7 +152,6 @@ func (h *PostHandler) CreatePostComment(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	var coment models.Comment
 	r.Body = http.MaxBytesReader(w, r.Body, maxUpload)
 	if err := r.ParseMultipartForm(maxUpload); err != nil {
 		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
@@ -167,7 +161,6 @@ func (h *PostHandler) CreatePostComment(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	// Replace with actual user ID (e.g. from session or token)
 	postIdStr := r.FormValue("post_id")
 	postId, err := strconv.Atoi(postIdStr)
 	if err != nil {
@@ -177,13 +170,14 @@ func (h *PostHandler) CreatePostComment(w http.ResponseWriter, r *http.Request) 
 		})
 		return
 	}
-	coment.Comment = r.FormValue("comment")
-	coment.PostID = postId
-	userId := r.Context().Value("userID").(int)
-	coment.AuthorID = userId
-	coment.CreatedAt = time.Now().Format(time.RFC3339)
 
-	//  extartct the image
+	coment := models.Comment{
+		Comment:   r.FormValue("comment"),
+		PostID:    postId,
+		CreatedAt: time.Now().Format(time.RFC3339),
+		Author:    models.User{ID: r.Context().Value("userID").(int)},
+	}
+
 	file, header, err := r.FormFile("image")
 	var img *models.Image
 	if err == nil {

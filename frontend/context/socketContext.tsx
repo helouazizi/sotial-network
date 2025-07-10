@@ -1,11 +1,11 @@
 "use client"
 import { usePathname } from "next/navigation"
 import React, { createContext, useEffect, useRef, useState, ReactNode, RefObject } from "react"
-import { Message, User } from "../types/chat";
+import { Message } from "../types/chat";
 import { getUserInfos } from "@/services/user";
 import { NumOfREquests } from "@/types/Request";
-import { type } from "os";
 import { ProfileInt } from "@/types/profiles";
+import { User } from "@/types/user";
 export interface SocketContextType {
   ws: RefObject<WebSocket | null>
   messages: Message[]
@@ -50,14 +50,8 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
     ws.current.onopen = async () => {
       console.log("web socket open");
       const userRes = await getUserInfos()
-      const userInfos: User = {
-        id: userRes.ID,
-        nickname: userRes.nickname,
-        firstName: userRes.firstname,
-        lastName: userRes.lastname,
-        avatar: userRes.avatar,
-      }
-      setUser(userInfos)
+
+      setUser(userRes)
       ws.current?.send(JSON.stringify({
         type: "GetNumNotif"
       }))
@@ -66,18 +60,6 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
 
     ws.current.onmessage = (event: MessageEvent) => {
       let res = JSON.parse(event.data)
-
-      if (res.type === "getUser") {
-        const userInfos: User = {
-          id: res.data.ID,
-          nickname: res.data.nickname,
-          firstName: res.data.firstname,
-          lastName: res.data.lastname,
-          avatar: res.data.avatar,
-        }
-        setUser(userInfos)
-      }
-
       if (res.type === "CountNotifs") {
         const countotifs: NumOfREquests = {
           followersCount: res.data.followersCount,
@@ -87,6 +69,8 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
         setNumNotif(countotifs)
       }
       if (res.type === 'requestsFollowers') {
+        console.log("mcha");
+
         setReqFollowers((prev) => {
           if (!prev || !res.data) return []
           return [...res.data]
@@ -94,15 +78,8 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
       }
 
       if (res.type === "getFriends") {
-        const friendsList: User[] = res?.data?.map((friend: any) => {
-          return {
-            id: friend.ID,
-            nickname: friend.nickname,
-            firstName: friend.firstname,
-            lastName: friend.lastname
-          }
-        })
-        setFriends(friendsList)
+
+        setFriends(res.data)
       }
 
       if (res.type === "getMessages") {

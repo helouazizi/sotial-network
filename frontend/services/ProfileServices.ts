@@ -1,6 +1,6 @@
 "use client"
 
-import { API_URL } from "./apiUrls";
+import { API_URL } from ".";
 
 export const obj = {
     Ofsset: 0,
@@ -61,7 +61,7 @@ export async function UpdateProfile(file: File | undefined, nickname: string | u
                 if (!prev) return prev;
                 return {
                     ...prev,
-                    avatar: resp.newPath,
+                    avatar: resp.User?.newPath,
                 };
             })
         }
@@ -87,60 +87,66 @@ export async function UpdateProfile(file: File | undefined, nickname: string | u
 
 }
 
-export async function HandleRelations(status: string | undefined, profileUser: number | undefined, setDataProfile: (callback: (prev: any) => any) => void) {
-    const resp = await fetch(`${API_URL}api/v1/relations/realtions`, {
-        method: "POST",
-        credentials: 'include',
-        body: JSON.stringify({
-            profileID: profileUser,
-            status: status,
-
+export async function HandleRelations(status: string | undefined, profileUser: number | undefined, setDataProfile: (callback: (prev: any) => any) => void): Promise<{ ok: boolean; newStatus: string; haveAccess: boolean }> {
+    try {
+        const resp = await fetch(`${API_URL}api/v1/relations/realtions`, {
+            method: "POST",
+            credentials: 'include',
+            body: JSON.stringify({
+                profileID: profileUser,
+                status: status,
+            })
         })
-    })
-    if (resp.ok) {
-        let data = await resp.json()
-        const newStatus = data.NewRelation.newStatus
-        const haveAccess = data.NewRelation.haveAccess
-        if (newStatus == "accepted" && haveAccess) {
-            setDataProfile((prev) => {
-                if (!prev) return prev
-                return {
-                    ...prev,
-                    followers: prev.followers + 1,
-                    im_follower: haveAccess,
-                    subscription: {
-                        ...prev.subscription,
-                        status: newStatus,
+        if (resp.ok) {
+            let data = await resp.json()
+            const newStatus = data.NewRelation.newStatus
+            const haveAccess = data.NewRelation.haveAccess
+            if (newStatus == "accepted" && haveAccess) {
+                setDataProfile((prev) => {
+                    if (!prev) return prev
+                    return {
+                        ...prev,
+                        followers: prev.followers + 1,
+                        im_follower: haveAccess,
+                        subscription: {
+                            ...prev.subscription,
+                            status: newStatus,
+                        }
                     }
-                }
-            })
-        } else if (newStatus == "follow") {
-            setDataProfile((prev) => {
-                if (!prev) return prev
-                return {
-                    ...prev,
-                    followers: status != "pending" ? prev.followers - 1 : prev.followers,
-                    im_follower: haveAccess,
-                    subscription: {
-                        ...prev.subscription,
-                        status: newStatus,
+                })
+            } else if (newStatus == "follow") {
+                setDataProfile((prev) => {
+                    if (!prev) return prev
+                    return {
+                        ...prev,
+                        followers: status != "pending" ? prev.followers - 1 : prev.followers,
+                        im_follower: haveAccess,
+                        subscription: {
+                            ...prev.subscription,
+                            status: newStatus,
+                        }
                     }
-                }
-            })
-        } else if (newStatus == "pending") {
-            setDataProfile((prev) => {
-                if (!prev) return prev
-                return {
-                    ...prev,
-                    im_follower: haveAccess,
-                    subscription: {
-                        ...prev.subscription,
-                        status: newStatus,
+                })
+            } else if (newStatus == "pending") {
+                setDataProfile((prev) => {
+                    if (!prev) return prev
+                    return {
+                        ...prev,
+                        im_follower: haveAccess,
+                        subscription: {
+                            ...prev.subscription,
+                            status: newStatus,
+                        }
                     }
-                }
-            })
+                })
+            }
+            return { ok: true, newStatus, haveAccess }
+        } else {
+            return { ok: true, newStatus:"", haveAccess:false }
         }
-
+    } catch (err) {
+        console.error("Erreur dans HandleRelations :", err);
+        return { ok: true, newStatus:"", haveAccess:false }
     }
 }
 
@@ -160,7 +166,7 @@ export async function FetchUsersRl(id: number | undefined, type: string,) {
             const dataUsers = await resp.json()
             if (dataUsers.NewRelation) {
                 obj.Limit += 20
-                obj.Ofsset += 20                
+                obj.Ofsset += 20
                 return dataUsers.NewRelation
             }
         }

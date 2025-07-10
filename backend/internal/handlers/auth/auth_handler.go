@@ -156,10 +156,10 @@ func (h *UserHandler) GetUserHandler(w http.ResponseWriter, r *http.Request) {
 
 	user, err := h.service.GetUser(userID)
 	if err != nil {
-		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any {
+		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
 			"error": err.Error(),
 		})
 	}
-
+	fmt.Println("=====>", user)
 	utils.ResponseJSON(w, http.StatusOK, user)
 }

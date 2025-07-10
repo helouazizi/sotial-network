@@ -15,12 +15,12 @@ import (
 	relationsS "github.com/ismailsayen/social-network/internal/services/relations"
 
 	// ===================== posts =================================//
-	chatHandlers "github.com/ismailsayen/social-network/internal/handlers/chat"
 	posthandlers "github.com/ismailsayen/social-network/internal/handlers/post"
-	chatRepo "github.com/ismailsayen/social-network/internal/repositories/chat"
+	websocketHandlers "github.com/ismailsayen/social-network/internal/handlers/websocket"
 	postrepositories "github.com/ismailsayen/social-network/internal/repositories/post"
-	chatServices "github.com/ismailsayen/social-network/internal/services/chat"
+	websocketRepo "github.com/ismailsayen/social-network/internal/repositories/websocket"
 	postservices "github.com/ismailsayen/social-network/internal/services/post"
+	websocketServices "github.com/ismailsayen/social-network/internal/services/websocket"
 
 	// ===================== Profile ===============================//
 	profileHandlers "github.com/ismailsayen/social-network/internal/handlers/profile"
@@ -36,7 +36,7 @@ import (
 type Application struct {
 	DB               *sql.DB
 	AuthHundler      *handlers.UserHandler
-	ChatHandler      *chatHandlers.ChatHandler
+	WebsocketHandler *websocketHandlers.WebsocketHandler
 	PostHandler      *posthandlers.PostHandler
 	ProfileHandler   *profileHandlers.ProfileHandler
 	Relationshandler *relationsH.RelationsHandler
@@ -54,9 +54,9 @@ func NewApp(db *sql.DB) *Application {
 	PostService := postservices.NewAuthService(PostRepo)
 	PostHandler := posthandlers.NewAuthHandler(PostService)
 
-	ChatRepo := chatRepo.NewChatRepo(db)
-	ChatService := chatServices.NewChatService(ChatRepo)
-	ChatHandler := chatHandlers.NewChatHandler(ChatService)
+	websocketRepo := websocketRepo.NewWebsocketRepo(db)
+	websocketService := websocketServices.NewWebsocketService(websocketRepo)
+	websocketHandler := websocketHandlers.NewWebsocketHandler(websocketService)
 	//================= profile =================//
 	ProfileRepo := profileRepo.NewProfileRepository(db)
 	ProfileServices := profileServices.NewProfileService(ProfileRepo)
@@ -77,7 +77,7 @@ func NewApp(db *sql.DB) *Application {
 	return &Application{
 		DB:               db,
 		AuthHundler:      AuthHandler,
-		ChatHandler:      ChatHandler,
+		WebsocketHandler: websocketHandler,
 		ProfileHandler:   ProfileHandler,
 		PostHandler:      PostHandler,
 		Relationshandler: Relationshand,

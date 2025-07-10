@@ -1,14 +1,23 @@
+"use client"
 import { useProfile } from '@/context/ProfileContext'
+import { SocketContext, SocketContextType } from '@/context/socketContext'
 import { HandleRelations } from '@/services/ProfileServices'
 import { Debounce } from '@/utils/Debounce'
-import React, { useCallback } from 'react'
-import { FaP } from 'react-icons/fa6'
+import React, { useCallback, useContext } from 'react'
 
 const ProfileStatique = () => {
+  const { ws } = useContext(SocketContext) as SocketContextType
   const { dataProfile, setDataProfile } = useProfile()
   const Submit = useCallback(Debounce(async () => {
     const status = dataProfile?.subscription?.status
-    await HandleRelations(status, dataProfile?.id, setDataProfile)
+    const { ok, newStatus, haveAccess } = await HandleRelations(status, dataProfile?.id, setDataProfile)
+    if (ok && newStatus == "pending" && !haveAccess) {
+      console.log("hna");
+      ws.current?.send(JSON.stringify({
+        type: "RelationSended",
+        receiver_id: dataProfile?.id
+      }))
+    }
   }, 500), [dataProfile?.subscription?.status])
   const HandleRelation = (e: React.FormEvent) => {
     e.preventDefault()

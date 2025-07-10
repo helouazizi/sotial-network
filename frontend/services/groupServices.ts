@@ -30,7 +30,7 @@ export async function createGroup(title: string, description: string) {
 
 export async function GetJoinedGroups() {
     try {
-        const res = await fetch(API_URL+)
+        const res = await fetch(API_URL)
     } catch (err) {
         console.log(err)
     }

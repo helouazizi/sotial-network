@@ -81,43 +81,59 @@ func (r *PostRepository) SavePost(ctx context.Context, post *models.Post, img *m
 
 func (r *PostRepository) GetPosts(userId, start, limit int) ([]models.Post, error) {
 	const q = `
-	SELECT
-		p.id,
-		p.title,
-		p.content,
-		p.media,
-		p.type,
-		p.created_at,
-		p.likes,
-		p.dislikes,
-		p.comments,
-		pr.reaction AS user_vote,
+			SELECT
+				p.id,
+				p.title,
+				p.content,
+				p.media,
+				p.type,
+				p.created_at,
+				p.likes,
+				p.dislikes,
+				p.comments,
+				pr.reaction AS user_vote,
 
-		u.first_name,
-		u.last_name,
-		u.nickname,
-		u.avatar                -- ← no trailing comma here!
+				u.first_name,
+				u.last_name,
+				u.nickname,
+				u.avatar
 
-	FROM posts p
-	LEFT JOIN post_reactions pr        ON pr.post_id = p.id AND pr.user_id = ?  
-	INNER JOIN users u                 ON u.id = p.user_id
+			FROM posts p
+			LEFT JOIN post_reactions pr ON pr.post_id = p.id AND pr.user_id = ?
+			INNER JOIN users u ON u.id = p.user_id
 
-	WHERE 
-	      p.type = 'public'
-	  OR ( p.type = 'private' AND (
-				p.user_id = ?            -- owner sees own post
-			OR EXISTS (
-					SELECT 1 FROM post_allowed_users pau 
-					WHERE pau.post_id = p.id 
-					  AND pau.user_id = ?
-			)
-	  ))
+			WHERE 
+				-- Public posts
+				p.type = 'public'
 
-	ORDER BY p.created_at DESC
-	LIMIT  ? OFFSET ?                   -- pagination
-	`
+				-- Author's own posts
+				OR (p.user_id = ?)
 
-	rows, err := r.db.Query(q, userId, userId, userId, limit, start)
+				-- Posts visible to followers
+				OR (
+					p.type = 'almost_private'
+					AND EXISTS (
+						SELECT 1 FROM followers f
+						WHERE f.followed_id = ?
+						AND f.followed_id = p.user_id
+					)
+				)
+
+				-- Posts shared specifically with the user
+				OR (
+					p.type = 'private'
+					AND EXISTS (
+						SELECT 1 FROM post_allowed_users pau
+						WHERE pau.post_id = p.id 
+						AND pau.user_id = ?
+					)
+				)
+
+			ORDER BY p.created_at DESC
+			LIMIT ? OFFSET ?
+    `
+
+	rows, err := r.db.Query(q, userId, userId, userId,userId, limit, start)
 	if err != nil {
 		return nil, err
 	}

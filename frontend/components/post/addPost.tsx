@@ -6,6 +6,8 @@ import PostHeader from "./postHeader";
 import { FaImage } from "react-icons/fa";
 import { SocketContext } from "@/context/socketContext"; // Adjust path if different
 import { useContext } from 'react';
+
+
 type Props = {
   onCreated: (newPost: Post) => void,
 
@@ -153,8 +155,9 @@ export default function CreatePostForm({ onCreated }: Props) {
         user_vote: null,
       };
       onCreated(newPost);
-    } else {
-      alert("Failed to create post.");
+    }
+    if (res.status === 401){
+      window.location.href = "/login"
     }
   };
 
@@ -239,7 +242,7 @@ export default function CreatePostForm({ onCreated }: Props) {
               Share with specific followers
             </label>
             <ul className="user-checkbox-list">
-              {followers.length > 0 && followers.map((f) => (
+              {followers && followers.length > 0 && followers.map((f) => (
                 <li key={f.id} className="user-checkbox-item">
                   <label id="follower-checkbox-label">
                     <PostHeader

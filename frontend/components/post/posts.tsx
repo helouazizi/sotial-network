@@ -8,10 +8,7 @@ import NoPostsYet from "./noPostsYet";
 import { FaPenToSquare } from "react-icons/fa6";
 import NoMorePosts from "./noMorePosts";
 
-import { SocketContext } from "@/context/socketContext"; // Adjust path if different
-import { User } from "@/types/chat";
 const LIMIT = 10;
-
 
 function throttle<T extends (...args: any[]) => void>(fn: T, delay = 500): T {
   let lastCall = 0;
@@ -25,10 +22,7 @@ function throttle<T extends (...args: any[]) => void>(fn: T, delay = 500): T {
   };
 }
 
-export default function Posts() {
-  const {user} = useContext(SocketContext) ?? {}
-  console.log(user , "user");
-  
+export default function Posts() {  
   const [posts, setPosts] = useState<Post[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [isLoading, setIsLoading] = useState(false);

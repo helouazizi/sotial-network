@@ -30,6 +30,10 @@ export const addComment = async (post_id: number, comment: string, img: File | n
 
         }
     )
+    if (res.status === 401) {
+        window.location.href = "/login"
+        return null
+    }
     if (!res.ok) throw new Error(await res.text());
     return await res.json()
 }

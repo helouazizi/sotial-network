@@ -1,6 +1,7 @@
 "use client"
 
 import { GetJoinedGroups } from '@/services/groupServices'
+import Link from 'next/link';
 import React, { useEffect, useState } from 'react'
 import { MdGroups } from "react-icons/md";
 
@@ -22,7 +23,7 @@ function Groups() {
       
       return (
         <li key={index}>
-          <span><MdGroups /></span> <p>{title}</p>
+          <Link href={"/groups/joined/"+group.id}><span><MdGroups /></span> <p>{title}</p></Link>
         </li>
       )
     })

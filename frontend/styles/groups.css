@@ -121,3 +121,7 @@
     padding: 8px;
     border-radius: 50%;
 }
+
+.switch-buttons {
+    display: flex;
+}

@@ -69,7 +69,6 @@ export const GetFolowers = async (): Promise<Follower[]> => {
     }
     const folowers = await res.json();
 
-    console.log(folowers.friends, "folowers")
 
     return folowers.friends
 };

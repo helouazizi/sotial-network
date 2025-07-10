@@ -70,6 +70,7 @@ svg {
   vertical-align: middle;
 }
 
+
 /* Responsive container */
 @media (min-width: 576px) {
   .container {
@@ -94,9 +95,3 @@ svg {
     width: 1200px;
   }
 }
-
-/* @media (min-width: 1900px) {
-  .container {
-    max-width: 1900px;
-  }
-} */

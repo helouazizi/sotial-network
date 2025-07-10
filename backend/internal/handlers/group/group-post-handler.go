@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -31,12 +30,13 @@ func (h *GroupHandler) AddGroupPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	groupIdstr, groupErr := utils.GetGroupId(r, "creatpost")
+	groupIdstr, groupErr := utils.GetGroupId(r, "post")
 	if groupErr != nil {
 		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
 			"message": "Invalid URL",
 			"status":  http.StatusBadRequest,
 		})
+		return
 	}
 	groupId, err := strconv.Atoi(groupIdstr)
 	if err != nil {
@@ -44,12 +44,13 @@ func (h *GroupHandler) AddGroupPost(w http.ResponseWriter, r *http.Request) {
 			"message": "Internal Server Error",
 			"status":  http.StatusInternalServerError,
 		})
+		return
 	}
 
 	post := &models.GroupPost{
 		GroupId: groupId,
 		Post: models.Post{
-			UserId:  userId,
+			ID:      userId,
 			Title:   r.FormValue("title"),
 			Content: r.FormValue("content"),
 		},
@@ -71,7 +72,6 @@ func (h *GroupHandler) AddGroupPost(w http.ResponseWriter, r *http.Request) {
 		utils.ResponseJSON(w, ErrSavePost.Code, ErrSavePost)
 		return
 	}
-	fmt.Println(savepost, "save post")
 
 	utils.ResponseJSON(w, http.StatusOK, savepost)
 }

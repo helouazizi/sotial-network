@@ -43,7 +43,7 @@ func SetupRoutes(app *app.Application) *http.ServeMux {
 	mux.HandleFunc("/api/v1/groups/getSuggested", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.GetSuggestedGroupsHandler), app.DB))
 
 	//=============== group posts ==============================//
-	mux.HandleFunc("/api/v1/groups/joined/{id}/creatpost",middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.AddGroupPost), app.DB))
+	mux.HandleFunc("/api/v1/groups/joined/{id}/post/addpost",middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.AddGroupPost), app.DB))
 
 	return mux
 }

@@ -2,7 +2,6 @@ package repositories
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -31,11 +30,10 @@ func (r *GroupRepository) SaveGroupPostRepo(ctx context.Context, group *models.G
 	if ImageErr.Code != http.StatusOK {
 		return models.GroupPost{}, ImageErr
 	}
-	fmt.Println(fileName, "filename")
-	fmt.Println(group, "group")
+
 	res, err := tx.Exec(InsertPost,
 		group.GroupId,
-		group.Post.UserId,
+		group.Post.ID,
 		group.Post.Title,
 		group.Post.Content,
 		fileName,
@@ -54,6 +52,8 @@ func (r *GroupRepository) SaveGroupPostRepo(ctx context.Context, group *models.G
 			Post: models.Post{
 				ID:        int(postID),
 				MediaLink: fileName.String,
+				Title:     group.Post.Title,
+				Content:   group.Post.Content,
 			},
 		}, models.GroupError{
 			Code:    http.StatusOK,

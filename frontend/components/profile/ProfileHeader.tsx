@@ -14,23 +14,22 @@ export const GenerateAvatar = (firstName?: string, lastName?: string) => {
 };
 
 const ProfileHeader = () => {
-  const { dataProfile, setDataProfile } = useProfile()
-
+  const { dataProfile } = useProfile()
   return (
     <div className="profile-header">
       <div className="left-sec">
-        {dataProfile?.avatar ? (
+        {dataProfile?.User?.avatar ? (
           <img
-            src={`http://localhost:8080/images/user/${dataProfile?.avatar}`}
-            alt={`${dataProfile?.avatar}`}
+            src={`http://localhost:8080/images/user/${dataProfile?.User?.avatar}`}
+            alt={`${dataProfile?.User?.avatar}`}
             className="avatar-profile"
           />
         ) : (
-          <div className="avatar-profile"><h2>{GenerateAvatar(dataProfile?.first_name, dataProfile?.last_name)}</h2></div>
+          <div className="avatar-profile"><h2>{GenerateAvatar(dataProfile?.User?.firstname, dataProfile?.User?.lastname)}</h2></div>
         )}
         <div className="full-name-profile">
-          <h3>{dataProfile?.first_name?.toUpperCase()} {dataProfile?.last_name?.toUpperCase()}  {dataProfile?.is_private == 1 ? <FaLock /> : <FaUnlock />}</h3>
-          <span>@{dataProfile?.nickname}</span>
+          <h3>{dataProfile?.User?.firstname?.toUpperCase()} {dataProfile?.User?.lastname?.toUpperCase()}  {dataProfile?.is_private == 1 ? <FaLock /> : <FaUnlock />}</h3>
+          <span>@{dataProfile?.User?.nickname}</span>
           <Visibility />
         </div>
       </div>

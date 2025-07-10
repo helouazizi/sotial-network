@@ -50,6 +50,7 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
     ws.current.onopen = async () => {
       console.log("web socket open");
       const userRes = await getUserInfos()
+
       setUser(userRes)
       ws.current?.send(JSON.stringify({
         type: "GetNumNotif"
@@ -59,7 +60,6 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
 
     ws.current.onmessage = (event: MessageEvent) => {
       let res = JSON.parse(event.data)
-
       if (res.type === "CountNotifs") {
         const countotifs: NumOfREquests = {
           followersCount: res.data.followersCount,
@@ -78,6 +78,7 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
       }
 
       if (res.type === "getFriends") {
+
         setFriends(res.data)
       }
 

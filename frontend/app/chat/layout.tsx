@@ -14,7 +14,7 @@ export default function ChatLayout({ children } : {children : ReactNode}) {
       <section className="sidebar">
         <div className="myName">
           <p>
-            <FaUser /> {user?.firstName} {user?.lastName || `Loading my name...`}
+            <FaUser /> {user?.firstname} {user?.lastname || `Loading my name...`}
           </p>
         </div>
         <div className="friends">

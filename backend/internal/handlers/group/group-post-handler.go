@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"encoding/json"
 	"net/http"
 	"strconv"
 
@@ -74,4 +75,40 @@ func (h *GroupHandler) AddGroupPost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	utils.ResponseJSON(w, http.StatusOK, savepost)
+}
+
+func (h *GroupHandler) GetGroupPosts(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
+			"message": "Method not allowed",
+			"status":  http.StatusMethodNotAllowed,
+		})
+		return
+	}
+
+	defer r.Body.Close()
+
+	var req models.PaginationRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
+			"message": "Invalid JSON payload",
+			"status":  http.StatusBadRequest,
+		})
+		return
+	}
+	groupIdstr, groupErr := utils.GetGroupId(r, "post")
+	if groupErr != nil {
+		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
+			"message": "Invalid URL",
+			"status":  http.StatusBadRequest,
+		})
+		return
+	}
+	posts, postsErr := h.service.GetGroupsPost(req, groupIdstr)
+	if postsErr.Code != http.StatusOK {
+		utils.ResponseJSON(w, postsErr.Code, postsErr)
+		return
+	}
+	utils.ResponseJSON(w, postsErr.Code, posts)
+
 }

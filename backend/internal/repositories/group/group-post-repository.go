@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"context"
+	"database/sql"
 	"net/http"
 	"time"
 
@@ -59,4 +60,71 @@ func (r *GroupRepository) SaveGroupPostRepo(ctx context.Context, group *models.G
 			Code:    http.StatusOK,
 			Message: "The post was saved into the database successfully.",
 		}
+}
+
+func (r *GroupRepository) GetGroupPosts(reg models.PaginationRequest, groupid int) ([]models.GroupPost, models.GroupError) {
+	GetQuery := `
+	SELECT 
+		p.group_id,
+		p.member_id,
+		p.title,
+		p.content,
+		p.media,
+		p.comments,
+		p.created_at,
+		u.first_name,
+		u.last_name,
+		u.nickname,
+		u.avatar
+	FROM group_posts p
+	JOIN users u ON u.id = p.member_id
+	WHERE p.group_id = ?
+	ORDER BY p.created_at DESC
+	LIMIT ? OFFSET ?
+`
+
+	rows, rowsErr := r.db.Query(GetQuery, groupid, reg.Limit, reg.Offset)
+	if rowsErr != nil {
+		return []models.GroupPost{}, models.GroupError{
+			Code:    http.StatusInternalServerError,
+			Message: rowsErr.Error(),
+		}
+	}
+	var (
+		posts []models.GroupPost
+		media sql.NullString
+	)
+	for rows.Next() {
+		var post models.GroupPost
+		if err := rows.Scan(
+			&post.GroupId,
+			&post.Post.Author.ID,
+			&post.Post.Title,
+			&post.Post.Content,
+			&media,
+			&post.Post.TotalComments,
+			&post.Post.CreatedAt,
+			&post.Post.Author.FirstName,
+			&post.Post.Author.Lastname,
+			&post.Post.Author.Nickname,
+			&post.Post.Author.Avatar,
+		); err != nil {
+			return  []models.GroupPost{}, models.GroupError{
+			Code:    http.StatusInternalServerError,
+			Message: err.Error(),
+		}
+
+		
+		}
+		if media.Valid {
+			post.Post.MediaLink = media.String
+		}
+		posts = append(posts, post)
+
+	}
+
+	return posts, models.GroupError{
+		Code: http.StatusOK,
+		Message: "Posts fetched successfully",
+	}
 }

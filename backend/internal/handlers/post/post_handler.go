@@ -3,7 +3,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -45,12 +44,10 @@ func (h *PostHandler) GetPosts(w http.ResponseWriter, r *http.Request) {
 
 	posts, err := h.service.GetPosts(userId, req.Offset, req.Limit)
 	if err != nil {
-		fmt.Println(err, "postststss f")
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
 			"message": "Internal server error",
 			"status":  http.StatusInternalServerError,
 		})
-		fmt.Println(err, "jhjhhjh")
 		return
 	}
 
@@ -111,7 +108,6 @@ func (h *PostHandler) CreatePost(w http.ResponseWriter, r *http.Request) {
 			"message": "Bad request",
 			"status":  http.StatusBadRequest,
 		})
-		fmt.Println(err, "errt")
 		return
 	}
 
@@ -138,7 +134,6 @@ func (h *PostHandler) HandlePostVote(w http.ResponseWriter, r *http.Request) {
 	vote.UserId = userId
 	err := h.service.PostVote(vote)
 	if err != nil {
-		fmt.Println(err, "vote")
 		http.Error(w, "Failed to vote", http.StatusInternalServerError)
 		return
 	}
@@ -195,7 +190,6 @@ func (h *PostHandler) CreatePostComment(w http.ResponseWriter, r *http.Request) 
 			"message": "Bad request",
 			"status":  http.StatusBadRequest,
 		})
-		fmt.Println(err, "here")
 		return
 	}
 	utils.ResponseJSON(w, http.StatusOK, map[string]any{
@@ -216,7 +210,6 @@ func (h *PostHandler) GetPostComment(w http.ResponseWriter, r *http.Request) {
 			"message": "Bad request",
 			"status":  http.StatusBadRequest,
 		})
-		fmt.Println(err)
 		return
 	}
 
@@ -226,7 +219,6 @@ func (h *PostHandler) GetPostComment(w http.ResponseWriter, r *http.Request) {
 			"message": "Bad request",
 			"status":  http.StatusBadRequest,
 		})
-		fmt.Println(err, "errt")
 		return
 	}
 	utils.ResponseJSON(w, http.StatusOK, commnets)
@@ -245,7 +237,6 @@ func (h *PostHandler) GetFolowers(w http.ResponseWriter, r *http.Request) {
 			"message": "Bad request",
 			"status":  http.StatusBadRequest,
 		})
-		fmt.Println(err, "errt")
 		return
 	}
 	utils.ResponseJSON(w, http.StatusOK, folowers)

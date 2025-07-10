@@ -90,7 +90,7 @@ export default function Header() {
                 <Link href={"/chat/privateChat"}><LuMessageCircleMore className={pathname.startsWith("/chat/") ? "active" : ""} /></Link>
               </li>
               <li>
-                <Link href={"/groups"}><MdGroups2 className={pathname === "/groups" ? "active groupIconHeader" : "groupIconHeader"} /></Link>
+                <Link href={"/groups/joined"}><MdGroups2 className={pathname.startsWith("/groups/") ? "active groupIconHeader" : "groupIconHeader"} /></Link>
               </li>
             </ul>
             <div className="header-icons">

@@ -90,8 +90,34 @@
     transition: background-color 0.2s ease;
 }
 
-.create-group span{
+.create-group span {
     color: var(--danger-color);
     margin-top: -12px;
     margin-left: 3px;
+}
+
+.joinedGroups {
+    display: flex;
+    flex-direction: column;
+}
+
+.joinedGroups li a{
+    padding: 15px 30px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: var(--text-primary);
+    text-decoration: none;
+}
+
+.joinedGroups li:hover {
+    background-color: var(--btn-bg);
+    cursor: pointer;
+}
+
+.joinedGroups li svg{
+    font-size: 2.2em;
+    background-color: var(--bg-color);
+    padding: 8px;
+    border-radius: 50%;
 }

@@ -7,14 +7,16 @@ import { getComments, addComment, votePost } from '@/services/postsServices';
 import { Post, Comment } from '@/types/post';
 import { useState } from 'react';
 import { BuildMediaLinkCAS } from '@/utils/posts';
-
+import { SocketContext } from "@/context/socketContext"; // Adjust path if different
+import { useContext } from 'react';
 
 type postProps = {
   post: Post
+
 }
 
 export default function PostCard({ post }: postProps) {
-
+  const { user } = useContext(SocketContext) ?? {}
   const [comments, setComments] = useState<Comment[]>([]);
   const [likes, setLikes] = useState(post.likes);
   const [dislikes, setDislikes] = useState(post.dislikes);
@@ -28,9 +30,15 @@ export default function PostCard({ post }: postProps) {
 
   const newComment = async (comment: string, img: File | null) => {
     await addComment(post.id, comment, img);
-    const new_comment = {
+    const new_comment: Comment = {
       comment,
-      author: { user_name: "you", first_name: "You", last_name: "You", avatar: "avatar.png" },
+      author: {
+        firstName: user?.firstName ?? "",
+        lastName: user?.lastName ?? "",
+        avatar: user?.avatar ?? "",
+        nickname: user?.nickname ?? "",
+        id: 0
+      },
       created_at: new Date().toISOString(),
       media_link: img ? BuildMediaLinkCAS(img) : ""
     };
@@ -43,32 +51,33 @@ export default function PostCard({ post }: postProps) {
       if (action === "like") {
         if (userVote === "like") {
           await votePost(post.id, "unlike");
+          
           setLikes(likes - 1);
           setUserVote(null);
         } else {
           if (userVote === "dislike") {
-            setDislikes(dislikes - 1);
             await votePost(post.id, "undislike");
+            setDislikes(dislikes - 1);
           }
+           await votePost(post.id, "like");
           setLikes(likes + 1);
           setUserVote("like");
-          await votePost(post.id, "like");
         }
       }
 
       if (action === "dislike") {
         if (userVote === "dislike") {
-          await votePost(post.id, "undislike");
+         await votePost(post.id, "undislike");
           setDislikes(dislikes - 1);
           setUserVote(null);
         } else {
           if (userVote === "like") {
+             await votePost(post.id, "unlike");
             setLikes(likes - 1);
-            await votePost(post.id, "unlike");
           }
+          await votePost(post.id, "dislike");
           setDislikes(dislikes + 1);
           setUserVote("dislike");
-          await votePost(post.id, "dislike");
         }
       }
     } catch (err) {
@@ -76,9 +85,10 @@ export default function PostCard({ post }: postProps) {
     }
   };
 
+
   return (
     <div className="post-card">
-      <PostHeader author={`test-user`} createdAt="2025-06-11T13:45:00Z" avatarUrl="/avatar.png" />
+      <PostHeader author={post.author.nickname ? post.author.nickname : post.author.firstName + "-" + post.author.lastName} createdAt={post.created_at} avatarUrl={post.author.avatar} />
       <PostBody title={post.title} content={post.content} media={post.media_link} body_type='post' />
       <CommentPostForm onSubmit={newComment} />
       <PostActions

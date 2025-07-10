@@ -1,6 +1,6 @@
 "use client"
 
-import { API_URL } from "./apiUrls";
+import { API_URL } from ".";
 
 export const obj = {
     Ofsset: 0,

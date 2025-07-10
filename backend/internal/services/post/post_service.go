@@ -47,7 +47,6 @@ func (s *PostService) SavePost(ctx context.Context, post *models.Post, img *mode
 }
 
 func (s *PostService) GetPosts(userId, offset, limit int) ([]models.Post, error) {
-	// Basic sanity checks
 	if limit <= 0 || offset < 0 {
 		return []models.Post{}, errors.New("Invalid limit and offset for pagination")
 	}
@@ -76,7 +75,7 @@ func (s *PostService) CreatePostComment(comment models.Comment, img *models.Imag
 		return errors.New("comment must be at least 1 characters long")
 	}
 	// Optional: Validate post ID and author ID
-	if comment.PostID <= 0 || comment.AuthorID <= 0 {
+	if comment.PostID <= 0 || comment.Author.ID <= 0 {
 		return errors.New("post ID and author ID must be provided")
 	}
 

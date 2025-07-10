@@ -3,7 +3,6 @@ package models
 import "mime/multipart"
 
 type Post struct {
-	UserId        int
 	ID            int     `json:"id"`
 	Title         string  `json:"title"`
 	Content       string  `json:"content"`
@@ -14,7 +13,8 @@ type Post struct {
 	UserVote      *string `json:"user_vote"`
 	Type          string  `json:"privacy"`
 	CreatedAt     string  `json:"created_at"`
-	AllowedUsres  []int   // if the post is private
+	AllowedUsres  []int   `json:"omitempty"` // if the post is private
+	Author        User    `json:"author"`
 }
 
 type Image struct {
@@ -40,19 +40,18 @@ type VoteRequest struct {
 }
 
 type Comment struct {
-	ID        int `json:"id"`
-	PostID    int `json:"post_id"`
-	AuthorID  int
-	Comment   string   `json:"comment"`
-	CreatedAt string   `json:"created_at"`
-	MediaLink string   `json:"media_link,omitempty"`
-	Author    PostUser `json:"author"` // or `UserID`
+	ID        int    `json:"id"`
+	PostID    int    `json:"post_id"`
+	Comment   string `json:"comment"`
+	CreatedAt string `json:"created_at"`
+	MediaLink string `json:"media_link,omitempty"`
+	Author    User   `json:"author"` // or `UserID`
 }
 
 type PostUser struct {
-	UserName  string `json:"user_name"`
-	LastName  string `json:"first_name"`
-	FirstName string `json:"last_name"`
+	UserName  string `json:"nickname"`
+	LastName  string `json:"firstName"`
+	FirstName string `json:"lastName"`
 	Avatar    string `json:"avatar"`
 }
 

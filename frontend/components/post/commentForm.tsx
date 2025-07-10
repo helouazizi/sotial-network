@@ -38,7 +38,7 @@ export default function CommentPostForm({ onSubmit }: CommentFormProps) {
     e.preventDefault();
     if (!comment.trim() && !img) return;
     onSubmit(comment , img);
-    setComment(""); // Clear input after submission
+    setComment("");
     setImg(null);
   };
 

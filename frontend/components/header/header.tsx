@@ -11,12 +11,13 @@ import { useContext, useEffect, useState } from "react";
 import { SocketContext, SocketContextType } from "@/context/socketContext";
 import { GenerateAvatar } from "../profile/ProfileHeader";
 import ToogleInitiale from "../request/ToogleInitiale";
+import NotifToast from "@/utils/NotifToast";
 export default function Header() {
 
 
   const router = useRouter();
   const pathname = usePathname();
-  const { ws, user, numsNotif } = useContext(SocketContext) as SocketContextType
+  const { ws, user, numsNotif, showNotif, setShowNotif } = useContext(SocketContext) as SocketContextType
 
   const [isLogged, setIsLogged] = useState<boolean>(false)
   const [showToggle, setShowToggle] = useState(false)
@@ -28,7 +29,12 @@ export default function Header() {
       setIsLogged(true)
     }
   }, [pathname])
-
+  useEffect(() => {
+    let a = setInterval(() => {
+      setShowNotif(false)
+    }, 5000)
+    return () => (clearInterval(a))
+  }, [showNotif])
   const handleClickLogout = async () => {
     try {
       const res = await fetch("http://localhost:8080/api/v1/user/logout", {
@@ -39,6 +45,7 @@ export default function Header() {
       if (res.ok) {
         if (ws.current) {
           ws.current.close()
+          setShowToggle(false)
         }
         router.push('/login')
       }
@@ -108,6 +115,8 @@ export default function Header() {
         </header>
       )}
       <ToogleInitiale showToggle={showToggle} setShowToggle={setShowToggle} />
+      {showNotif && <NotifToast />}
+
     </>
 
   );

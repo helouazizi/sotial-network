@@ -60,7 +60,6 @@ export default function Register() {
             });
 
             const data = await res.json();
-            console.log(data, 'data');
 
 
             if (res.ok) {

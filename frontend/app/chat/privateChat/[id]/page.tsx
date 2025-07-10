@@ -70,7 +70,6 @@ export default function PrivateChat() {
                 setShowScrollButton(true)
             }
 
-            // console.log(isAtBottom, lastMessage.sender_id, lastMessage.receiver_id, friend?.id)
             if ((lastMessage.sender_id !== friend?.id || isAtBottom) && (lastMessage.sender_id === friend?.id || lastMessage.receiver_id === friend?.id)) {
                 chatBodyRef.current?.scrollTo({
                     top: chatBodyRef.current.scrollHeight,

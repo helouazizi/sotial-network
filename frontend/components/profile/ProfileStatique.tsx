@@ -6,16 +6,23 @@ import { Debounce } from '@/utils/Debounce'
 import React, { useCallback, useContext } from 'react'
 
 const ProfileStatique = () => {
-  const { ws } = useContext(SocketContext) as SocketContextType
+  const { ws, user } = useContext(SocketContext) as SocketContextType
   const { dataProfile, setDataProfile } = useProfile()
   const Submit = useCallback(Debounce(async () => {
     const status = dataProfile?.subscription?.status
-    const { ok, newStatus, haveAccess } = await HandleRelations(status, dataProfile?.id, setDataProfile)
+    const { ok, newStatus, haveAccess } = await HandleRelations(status, dataProfile?.User?.id, setDataProfile)
     if (ok && newStatus == "pending" && !haveAccess) {
-      console.log("hna");
       ws.current?.send(JSON.stringify({
         type: "RelationSended",
-        receiver_id: dataProfile?.id
+        receiver_id: dataProfile?.User?.id,
+        message: `${user?.firstname} ${user?.lastname} sended request follow.`,
+        action: "demandFollow"
+      }))
+    }
+    if (status == 'pending' && newStatus == 'follow') {
+      ws.current?.send(JSON.stringify({
+        type: "CancelRequest",
+        receiver_id: dataProfile?.User?.id
       }))
     }
   }, 500), [dataProfile?.subscription?.status])

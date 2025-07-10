@@ -180,7 +180,7 @@ func (h *WebsocketHandler) WebsocketHandler(w http.ResponseWriter, r *http.Reque
 					})
 				}
 			}
-		case "RelationSended":
+		case "RelationSended", "CancelRequest":
 			followers, err := h.service.GetRequestFollowers(chat.ReceiverID)
 			if err != nil {
 				conn.WriteJSON(map[string]any{
@@ -210,6 +210,16 @@ func (h *WebsocketHandler) WebsocketHandler(w http.ResponseWriter, r *http.Reque
 						"data": CountNotis,
 						"type": "CountNotifs",
 					})
+				}
+			}
+			if chat.Action == "demandFollow" {
+				if senderConns, ok := h.service.GetClient(chat.ReceiverID); ok {
+					for _, c := range senderConns {
+						c.WriteJSON(map[string]any{
+							"message": chat.Message,
+							"type":"showNotif",
+						})
+					}
 				}
 			}
 		}

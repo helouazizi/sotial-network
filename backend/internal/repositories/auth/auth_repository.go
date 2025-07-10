@@ -22,7 +22,6 @@ func NewAuthRepo(db *sql.DB) *AuthRepository {
 func (r *AuthRepository) SaveUser(user *models.User) models.Error {
 	hashedPassword, errHash := utils.HashPassWord(user.PassWord)
 	if errHash != nil {
-		fmt.Println("HashPassWord")
 		return models.Error{
 			Code:    http.StatusInternalServerError,
 			Message: "Internal Server Error while hashing password",
@@ -69,7 +68,6 @@ func (r *AuthRepository) SaveUser(user *models.User) models.Error {
 
 	if errExec != nil {
 		fmt.Println(errExec)
-		fmt.Println("db")
 		return models.Error{
 			Code:    http.StatusInternalServerError,
 			Message: "Internal Server Error while saving user",

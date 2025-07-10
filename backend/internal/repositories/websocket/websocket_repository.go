@@ -126,7 +126,7 @@ func (reqRepo *WebsocketRepository) RequestFollowers(sessionID int) ([]models.Co
 	var followers []models.CommunInfoProfile
 	for rows.Next() {
 		var follower models.CommunInfoProfile
-		rows.Scan(&follower.Id, &follower.Avatar, &follower.Nickname, &follower.LastName, &follower.FirstName, &follower.IdRequest)
+		rows.Scan(&follower.User.ID, &follower.User.Avatar, &follower.User.Nickname, &follower.User.Lastname, &follower.User.FirstName, &follower.IdRequest)
 		followers = append(followers, follower)
 	}
 	return followers, nil

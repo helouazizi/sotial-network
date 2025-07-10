@@ -43,7 +43,6 @@ export const ProfileProvider = ({
 
         fetchProfile();
     }, [profileId]);
-
     return (
         <ProfileContext.Provider value={{ dataProfile, setDataProfile, loading }}>
             {children}

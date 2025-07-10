@@ -2,7 +2,7 @@ import { Post } from "./post";
 import { User } from "./user"
 
 export interface ProfileInt {
-    user: User
+    User?: User;
     is_private: number;
     followers: number;
     followed: number;

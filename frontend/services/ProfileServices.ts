@@ -61,7 +61,7 @@ export async function UpdateProfile(file: File | undefined, nickname: string | u
                 if (!prev) return prev;
                 return {
                     ...prev,
-                    avatar: resp.newPath,
+                    avatar: resp.User?.newPath,
                 };
             })
         }

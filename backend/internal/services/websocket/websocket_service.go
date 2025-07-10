@@ -9,23 +9,23 @@ import (
 
 	"github.com/gorilla/websocket"
 	"github.com/ismailsayen/social-network/internal/models"
-	repositories "github.com/ismailsayen/social-network/internal/repositories/chat"
+	repositories "github.com/ismailsayen/social-network/internal/repositories/websocket"
 )
 
-type ChatService struct {
-	repo    *repositories.ChatRepository
+type WebsocketService struct {
+	repo    *repositories.WebsocketRepository
 	clients map[int][]*websocket.Conn
 	mu      sync.Mutex
 }
 
-func NewChatService(ChatRepo *repositories.ChatRepository) *ChatService {
-	return &ChatService{
-		repo:    ChatRepo,
+func NewWebsocketService(WebsocketRepo *repositories.WebsocketRepository) *WebsocketService {
+	return &WebsocketService{
+		repo:    WebsocketRepo,
 		clients: map[int][]*websocket.Conn{},
 	}
 }
 
-func (s *ChatService) SaveMessage(chat *models.Chat) (int, error) {
+func (s *WebsocketService) SaveMessage(chat *models.Chat) (int, error) {
 	chat.Message = html.EscapeString(strings.TrimSpace(chat.Message))
 
 	if chat.SenderID == chat.ReceiverID {
@@ -39,7 +39,7 @@ func (s *ChatService) SaveMessage(chat *models.Chat) (int, error) {
 	return s.repo.SaveMessage(chat)
 }
 
-func (s *ChatService) GetMessages(senderID, receiverID int, lastID int) ([]*models.Chat, error) {
+func (s *WebsocketService) GetMessages(senderID, receiverID int, lastID int) ([]*models.Chat, error) {
 	if senderID == receiverID {
 		return nil, errors.New("cannot get messages with yourself")
 	}
@@ -47,13 +47,13 @@ func (s *ChatService) GetMessages(senderID, receiverID int, lastID int) ([]*mode
 	return s.repo.GetMessages(senderID, receiverID, lastID)
 }
 
-func (s *ChatService) SaveClient(userID int, conn *websocket.Conn) {
+func (s *WebsocketService) SaveClient(userID int, conn *websocket.Conn) {
 	defer s.mu.Unlock()
 	s.mu.Lock()
 	s.clients[userID] = append(s.clients[userID], conn)
 }
 
-func (s *ChatService) RemoveClient(userID int, closedConn *websocket.Conn) {
+func (s *WebsocketService) RemoveClient(userID int, closedConn *websocket.Conn) {
 	defer s.mu.Unlock()
 	s.mu.Lock()
 
@@ -69,30 +69,30 @@ func (s *ChatService) RemoveClient(userID int, closedConn *websocket.Conn) {
 	}
 }
 
-func (s *ChatService) GetFriends(userID int) ([]*models.User, error) {
+func (s *WebsocketService) GetFriends(userID int) ([]*models.User, error) {
 	return s.repo.GetFriends(userID)
 }
 
-func (s *ChatService) GetClient(id int) ([]*websocket.Conn, bool) {
+func (s *WebsocketService) GetClient(id int) ([]*websocket.Conn, bool) {
 	defer s.mu.Unlock()
 	s.mu.Lock()
 	conn, ok := s.clients[id]
 	return conn, ok
 }
 
-func (s *ChatService) GetLastMessageID() (int, error) {
+func (s *WebsocketService) GetLastMessageID() (int, error) {
 	return s.repo.GetLastMessageID()
 }
 
-func (reqSer *ChatService) NumberNotifs(sessionID int) (int, int, error) {
+func (reqSer *WebsocketService) NumberNotifs(sessionID int) (int, int, error) {
 	return reqSer.repo.CountNotiif(sessionID)
 }
 
-func (reqSer *ChatService) GetRequestFollowers(sessionID int) ([]models.CommunInfoProfile, error) {
+func (reqSer *WebsocketService) GetRequestFollowers(sessionID int) ([]models.CommunInfoProfile, error) {
 	return reqSer.repo.RequestFollowers(sessionID)
 }
 
-func (reqSer *ChatService) HandleFollowReq(reqID, followedID, followerID int, action string) error {
+func (reqSer *WebsocketService) HandleFollowReq(reqID, followedID, followerID int, action string) error {
 	var newStatus string
 	switch action {
 	case "accept":

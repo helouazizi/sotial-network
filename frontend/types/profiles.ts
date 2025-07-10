@@ -1,15 +1,9 @@
 import { Post } from "./post";
+import { User } from "./user"
 
 export interface ProfileInt {
-    id: number;
-    nickname: string;
-    last_name: string;
-    first_name: string;
-    email: string;
-    avatar: string;
-    date_of_birth: string;
+    user: User
     is_private: number;
-    about_me: string;
     followers: number;
     followed: number;
     nbPosts: number;

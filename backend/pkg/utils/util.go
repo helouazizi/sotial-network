@@ -10,3 +10,5 @@ func ResponseJSON(w http.ResponseWriter, status int, message any) {
 	w.WriteHeader(status)
 	json.NewEncoder(w).Encode(&message)
 }
+
+

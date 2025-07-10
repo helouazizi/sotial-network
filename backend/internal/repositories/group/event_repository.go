@@ -27,7 +27,7 @@ func (r *GroupRepository) GetGroupEvents(GroupId int) ([]*models.Event, models.G
 	SELECT id, title, descreption, event_date, created_at
 	FROM group_events
 	WHERE group_id = ?
-`
+    `
 
 	rows, err := r.db.Query(query, GroupId)
 	if err != nil {
@@ -53,6 +53,26 @@ func (r *GroupRepository) GetGroupEvents(GroupId int) ([]*models.Event, models.G
 
 	return Events, models.GroupError{
 		Message: "Succesfuly fetched events",
+		Code:    http.StatusOK,
+	}
+}
+
+func (r *GroupRepository) VoteOnEvent(vote models.EventVote) models.GroupError {
+	query := `
+		INSERT INTO group_events_votes (event_id, member_id, status)
+		VALUES (?, ?, ?)
+	`
+
+	_, err := r.db.Exec(query, vote.ID, vote.UserID, vote.Vote)
+	if err != nil {
+		return models.GroupError{
+			Message: "Internal server error",
+			Code:    http.StatusInternalServerError,
+		}
+	}
+
+	return models.GroupError{
+		Message: "Successfully voted",
 		Code:    http.StatusOK,
 	}
 }

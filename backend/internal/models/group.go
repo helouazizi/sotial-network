@@ -20,3 +20,8 @@ type Event struct {
 	CreatedAt   time.Time `json:"created_at"`
 }
 
+type EventVote struct {
+	ID     int    `json:"id"`
+	UserID int    `json:"user_id"`
+	Vote   string `json:"vote"` // going or not going
+}

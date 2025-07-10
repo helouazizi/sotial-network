@@ -54,3 +54,14 @@ func (s *GroupService) GetGroupEvents(groupId string) ([]*models.Event, models.G
 
 	return s.repo.GetGroupEvents(GroupId)
 }
+
+func (s *GroupService) VoteOnEvent(vote models.EventVote) models.GroupError {
+	if vote.Vote != "going" && vote.Vote != "not going" {
+		return models.GroupError{
+			Message: "Bad Request",
+			Code:    http.StatusBadRequest,
+		}
+	}
+
+	return s.repo.VoteOnEvent(vote)
+}

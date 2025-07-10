@@ -45,9 +45,9 @@ func (repo *ProfileRepository) GetMyProfile(sessionID, userId int) (*models.Comm
 
 	var profile models.CommunInfoProfile
 	err := repo.db.QueryRow(query, userId).Scan(
-		&profile.Id, &profile.Nickname, &profile.LastName,
-		&profile.FirstName, &profile.Email, &profile.Avatar, &profile.DateOfBirth,
-		&profile.IsPrivate, &profile.AboutMe,
+		&profile.User.ID, &profile.User.Nickname, &profile.User.Lastname,
+		&profile.User.FirstName, &profile.User.Email, &profile.User.Avatar, &profile.User.DateofBirth,
+		&profile.IsPrivate, &profile.User.AboutMe,
 		&profile.Followers, &profile.Followed, &profile.NbPosts,
 	)
 	if err != nil {
@@ -78,9 +78,9 @@ func (repo *ProfileRepository) GetMyProfile(sessionID, userId int) (*models.Comm
 	}
 
 	if profile.IsPrivate == 1 && status != "accepted" {
-		profile.AboutMe = ""
-		profile.Email = ""
-		profile.DateOfBirth = ""
+		profile.User.AboutMe = ""
+		profile.User.Email = ""
+		profile.User.DateofBirth = ""
 		return &profile, nil
 	}
 

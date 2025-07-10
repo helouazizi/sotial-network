@@ -1,4 +1,5 @@
-import { json } from "stream/consumers"
+
+import { Follower } from "@/types/post";
 
 const API_URL = "http://localhost:8080/api/v1/posts"
 
@@ -29,6 +30,10 @@ export const addComment = async (post_id: number, comment: string, img: File | n
 
         }
     )
+    if (res.status === 401) {
+        window.location.href = "/login"
+        return null
+    }
     if (!res.ok) throw new Error(await res.text());
     return await res.json()
 }
@@ -41,20 +46,30 @@ export const votePost = async (post_id: number, action: "like" | "dislike" | "un
         credentials: "include",
         body: JSON.stringify({ post_id: post_id, action }),
     });
-    if (!res.ok) throw new Error(await res.text());
+    if (res.status === 401) {
+        window.location.href = "/login";
+        return null;
+    }
+    if (!res.ok) {
+        throw new Error("Vote action failed");
+    }
+    return res;
 };
 
 
-export const GetFolowers = async ()/*: Promise<PostFollower[]>*/ => {
-  const res = await fetch(`${API_URL}/folowers`, {
-    method: "GET",
-    credentials: "include",
-  });
+export const GetFolowers = async (): Promise<Follower[]> => {
+    const res = await fetch(`http://localhost:8080/api/v1/relations/getFriends`, {
+        method: "GET",
+        credentials: "include",
+    });
 
-  if (!res.ok) {
-    const errorText = await res.text();
-    throw new Error(`Failed to fetch followers: ${errorText}`);
-  }
+    if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(`Failed to fetch followers: ${errorText}`);
+    }
+    const folowers = await res.json();
 
-  return res.json();
+    console.log(folowers.friends, "folowers")
+
+    return folowers.friends
 };

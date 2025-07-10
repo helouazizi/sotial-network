@@ -15,10 +15,10 @@ const AboutProfileUser = () => {
     const [selectedFile, setSelectedFile] = useState<File | undefined>(undefined)
 
     useEffect(() => {
-        if (dataProfile?.avatar) setAvatar(`http://localhost:8080/images/user/${dataProfile?.avatar}`)
-        if (dataProfile?.nickname) setNickname(dataProfile?.nickname)
-        if (dataProfile?.about_me) setAbout(dataProfile?.about_me)
-    }, [dataProfile?.avatar, dataProfile?.about_me, dataProfile?.nickname])
+        if (dataProfile?.User?.avatar) setAvatar(`http://localhost:8080/images/user/${dataProfile?.User?.avatar}`)
+        if (dataProfile?.User?.nickname) setNickname(dataProfile?.User?.nickname)
+        if (dataProfile?.User?.aboutme) setAbout(dataProfile?.User?.aboutme)
+    }, [dataProfile?.User?.avatar, dataProfile?.User?.aboutme, dataProfile?.User?.nickname])
 
 
     const updateAvatar = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,8 +33,8 @@ const AboutProfileUser = () => {
     }
     const removeUpdatedImage = (e: React.FormEvent) => {
         e.preventDefault()
-        if (dataProfile?.avatar) {
-            setAvatar(`http://localhost:8080/images/user/${dataProfile?.avatar}`)
+        if (dataProfile?.User?.avatar) {
+            setAvatar(`http://localhost:8080/images/user/${dataProfile?.User?.avatar}`)
         } else {
             setAvatar(undefined)
         }
@@ -50,15 +50,15 @@ const AboutProfileUser = () => {
     const debouncedSubmit = useCallback(
         Debounce(async () => {
             if (
-                (avatar === `http://localhost:8080/images/user/${dataProfile?.avatar}` || !avatar) &&
-                (about === dataProfile?.about_me || !about) &&
-                (nickname === dataProfile?.nickname || !nickname)
+                (avatar === `http://localhost:8080/images/user/${dataProfile?.User?.avatar}` || !avatar) &&
+                (about === dataProfile?.User?.aboutme || !about) &&
+                (nickname === dataProfile?.User?.nickname || !nickname)
             ) {
                 setShowError(true)
                 return
             }
-            
-            await UpdateProfile(selectedFile, nickname, about, dataProfile?.avatar, setDataProfile)
+
+            await UpdateProfile(selectedFile, nickname, about, dataProfile?.User?.avatar, setDataProfile)
             setShowError(false)
 
 
@@ -83,13 +83,13 @@ const AboutProfileUser = () => {
                             className="avatar-profile About"
                         />
                     ) : (
-                        <div className="avatar-profile"><h2>{GenerateAvatar(dataProfile?.first_name, dataProfile?.last_name)}</h2></div>
+                        <div className="avatar-profile"><h2>{GenerateAvatar(dataProfile?.User?.firstname, dataProfile?.User?.lastname)}</h2></div>
                     )}
                     {
                         dataProfile?.myAccount ?
                             <div>
                                 <label htmlFor="updateImage">Update Avatar</label>
-                                <button disabled={avatar === `http://localhost:8080/images/user/${dataProfile?.avatar}` ? true : false} onClick={removeUpdatedImage}>Annuler</button>
+                                <button disabled={avatar === `http://localhost:8080/images/user/${dataProfile?.User?.avatar}` ? true : false} onClick={removeUpdatedImage}>Annuler</button>
                                 <button className='submit' type='submit'>Submit Changes</button>
                                 {showError ? <Toast type='fail' message='Do some changes before submitting.' /> : ""}
                                 <input type="file" name="updateImage" id="updateImage" accept='image/jpeg, image/png, image/jpg' onChange={updateAvatar} />
@@ -107,17 +107,17 @@ const AboutProfileUser = () => {
                         <div><span>About me {dataProfile?.myAccount ? <span className='editabel'>(editable)</span> : ""}</span><span>:</span> </div>
                     </div>
                     <div className="inputs">
-                        <div><p>{dataProfile?.first_name}</p></div>
-                        <div> <p>{dataProfile?.last_name}</p></div>
+                        <div><p>{dataProfile?.User?.firstname}</p></div>
+                        <div> <p>{dataProfile?.User?.lastname}</p></div>
                         <div> {dataProfile?.myAccount ?
                             <input type="text" placeholder={nickname ? nickname : "nickname..."} onChange={updateNickname} />
                             :
                             <p>{nickname ? nickname : "-----"}</p>
                         }</div>
                         <div>
-                            <p>{dataProfile?.email}</p>
+                            <p>{dataProfile?.User?.email}</p>
                         </div>
-                        <div> <textarea disabled={dataProfile?.myAccount ? false : true} defaultValue={dataProfile?.about_me ? dataProfile?.about_me : "-------"} onChange={updateAbout}></textarea></div>
+                        <div> <textarea disabled={dataProfile?.myAccount ? false : true} defaultValue={dataProfile?.User?.aboutme ? dataProfile?.User?.aboutme : "-------"} onChange={updateAbout}></textarea></div>
                     </div>
 
                 </div>

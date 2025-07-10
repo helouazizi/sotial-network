@@ -1,2 +1,2 @@
-? make sure to use user info for crating posts and comments   
 check if users have any relation between him before getting post and also check if yes check type of profile if the user can see him or not in case of private. 
+modify the query to handle post privacy

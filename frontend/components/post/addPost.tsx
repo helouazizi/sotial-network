@@ -4,12 +4,17 @@ import { Post, PostErrors, Follower } from "@/types/post";
 import { GetFolowers } from "@/services/postsServices";
 import PostHeader from "./postHeader";
 import { FaImage } from "react-icons/fa";
+import { SocketContext } from "@/context/socketContext"; // Adjust path if different
+import { useContext } from 'react';
+
 
 type Props = {
-  onCreated: (newPost: Post) => void;
+  onCreated: (newPost: Post) => void,
+
 };
 
 export default function CreatePostForm({ onCreated }: Props) {
+  const { user } = useContext(SocketContext) ?? {}
   const [errors, setErrors] = useState<PostErrors>({});
   const [privacy, setPrivacy] = useState("public");
   const [followers, setFollowers] = useState<Follower[]>([]);
@@ -31,6 +36,8 @@ export default function CreatePostForm({ onCreated }: Props) {
     GetFolowers()
       .then((data) => setFollowers(data))
       .catch((err) => console.error("Failed to load followers", err));
+
+
   }, [privacy]);
 
   const handleToggleFollower = (id: number, checked: boolean) => {
@@ -131,21 +138,26 @@ export default function CreatePostForm({ onCreated }: Props) {
 
     if (res.ok) {
       const savedPost = await res.json();
+      if (!user) {
+        alert("User information is missing. Cannot create post.");
+        return;
+      }
       let newPost: Post = {
         id: savedPost.id,
         title: title!,
         content: body!,
         media_link: savedPost.media_link ?? "",
-        author: "You",
+        author: user,
         likes: 0,
         dislikes: 0,
         total_comments: 0,
-        createdAt: savedPost.createdAt ?? new Date().toISOString(),
+        created_at: savedPost.createdAt ?? new Date().toISOString(),
         user_vote: null,
       };
       onCreated(newPost);
-    } else {
-      alert("Failed to create post.");
+    }
+    if (res.status === 401){
+      window.location.href = "/login"
     }
   };
 
@@ -230,13 +242,13 @@ export default function CreatePostForm({ onCreated }: Props) {
               Share with specific followers
             </label>
             <ul className="user-checkbox-list">
-              {followers.map((f) => (
+              {followers && followers.length > 0 && followers.map((f) => (
                 <li key={f.id} className="user-checkbox-item">
                   <label id="follower-checkbox-label">
                     <PostHeader
-                      author={`${f.author.first_name} ${f.author.last_name}`}
+                      author={`${f.first_name} ${f.last_name}`}
                       createdAt=""
-                      avatarUrl={f.author.avatar || "avatar.png"}
+                      avatarUrl={f.avatar}
                     />
                     <input
                       type="checkbox"
@@ -244,9 +256,9 @@ export default function CreatePostForm({ onCreated }: Props) {
                       onChange={(e) =>
                         handleToggleFollower(f.id, e.target.checked)
                       }
-                      title={`Share with ${f.author.first_name} ${f.author.last_name}`}
-                      placeholder={`Select follower ${f.author.first_name} ${f.author.last_name}`}
-                      aria-label={`Share with ${f.author.first_name} ${f.author.last_name}`}
+                      title={`Share with ${f.first_name} ${f.last_name}`}
+                      placeholder={`Select follower ${f.first_name} ${f.last_name}`}
+                      aria-label={`Share with ${f.first_name} ${f.last_name}`}
                     />
                   </label>
                 </li>

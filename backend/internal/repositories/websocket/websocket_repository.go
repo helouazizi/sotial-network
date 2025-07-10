@@ -7,15 +7,15 @@ import (
 	"github.com/ismailsayen/social-network/internal/models"
 )
 
-type ChatRepository struct {
+type WebsocketRepository struct {
 	db *sql.DB
 }
 
-func NewChatRepo(db *sql.DB) *ChatRepository {
-	return &ChatRepository{db: db}
+func NewWebsocketRepo(db *sql.DB) *WebsocketRepository {
+	return &WebsocketRepository{db: db}
 }
 
-func (r *ChatRepository) SaveMessage(chat *models.Chat) (int, error) {
+func (r *WebsocketRepository) SaveMessage(chat *models.Chat) (int, error) {
 	query := `INSERT INTO chat_message (sender_id, receiver_id, content, sent_at) VALUES (?,?,?,?) RETURNING id`
 
 	lastMessageID := 0
@@ -23,7 +23,7 @@ func (r *ChatRepository) SaveMessage(chat *models.Chat) (int, error) {
 	return lastMessageID, err
 }
 
-func (r *ChatRepository) GetMessages(senderID, receiverID int, lastID int) ([]*models.Chat, error) {
+func (r *WebsocketRepository) GetMessages(senderID, receiverID int, lastID int) ([]*models.Chat, error) {
 	query := `
 		SELECT * FROM chat_message
 		WHERE ((sender_id = ? AND receiver_id = ?) OR (receiver_id = ? AND sender_id = ?)) AND id < ?
@@ -51,7 +51,7 @@ func (r *ChatRepository) GetMessages(senderID, receiverID int, lastID int) ([]*m
 	return messages, nil
 }
 
-func (r *ChatRepository) GetFriends(userID int) ([]*models.User, error) {
+func (r *WebsocketRepository) GetFriends(userID int) ([]*models.User, error) {
 	query := `
 		SELECT id, nickname ,first_name, last_name
 		FROM users
@@ -77,7 +77,7 @@ func (r *ChatRepository) GetFriends(userID int) ([]*models.User, error) {
 	return users, nil
 }
 
-func (r *ChatRepository) GetLastMessageID() (int, error) {
+func (r *WebsocketRepository) GetLastMessageID() (int, error) {
 	query := `
 		SELECT id FROM chat_message
 		ORDER BY id desc
@@ -89,7 +89,7 @@ func (r *ChatRepository) GetLastMessageID() (int, error) {
 	return id + 1, err
 }
 
-func (reqRepo *ChatRepository) CountNotiif(sessionID int) (int, int, error) {
+func (reqRepo *WebsocketRepository) CountNotiif(sessionID int) (int, int, error) {
 	var groupeReqCount int
 	var followersCount int
 	query := `SELECT COUNT(id)
@@ -111,7 +111,7 @@ func (reqRepo *ChatRepository) CountNotiif(sessionID int) (int, int, error) {
 	return groupeReqCount, followersCount, nil
 }
 
-func (reqRepo *ChatRepository) RequestFollowers(sessionID int) ([]models.CommunInfoProfile, error) {
+func (reqRepo *WebsocketRepository) RequestFollowers(sessionID int) ([]models.CommunInfoProfile, error) {
 	query := `SELECT u.id,u.avatar,u.nickname,u.last_name,u.first_name,f.id
 		FROM users u
 		INNER JOIN followers f ON u.id=f.follower_id
@@ -126,13 +126,13 @@ func (reqRepo *ChatRepository) RequestFollowers(sessionID int) ([]models.CommunI
 	var followers []models.CommunInfoProfile
 	for rows.Next() {
 		var follower models.CommunInfoProfile
-		rows.Scan(&follower.Id, &follower.Avatar, &follower.Nickname, &follower.LastName, &follower.FirstName, &follower.IdRequest)
+		rows.Scan(&follower.User.ID, &follower.User.Avatar, &follower.User.Nickname, &follower.User.Lastname, &follower.User.FirstName, &follower.IdRequest)
 		followers = append(followers, follower)
 	}
 	return followers, nil
 }
 
-func (reqRepo *ChatRepository) HandleReqFollowRepo(reqID, followedID, followerID int, newStatus string) error {
+func (reqRepo *WebsocketRepository) HandleReqFollowRepo(reqID, followedID, followerID int, newStatus string) error {
 	query := `UPDATE followers SET status=? WHERE id=? AND follower_id=? AND followed_id=?`
 	_, err := reqRepo.db.Exec(query, newStatus, reqID, followerID, followedID)
 	if err != nil {

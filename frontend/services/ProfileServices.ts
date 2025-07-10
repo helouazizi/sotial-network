@@ -1,6 +1,6 @@
 "use client"
 
-import { API_URL } from "./apiUrls";
+import { API_URL } from ".";
 
 export const obj = {
     Ofsset: 0,
@@ -61,7 +61,7 @@ export async function UpdateProfile(file: File | undefined, nickname: string | u
                 if (!prev) return prev;
                 return {
                     ...prev,
-                    avatar: resp.newPath,
+                    avatar: resp.User?.newPath,
                 };
             })
         }

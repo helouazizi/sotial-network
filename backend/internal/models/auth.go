@@ -3,19 +3,19 @@ package models
 import "mime/multipart"
 
 type User struct {
-	ID          int
-	Nickname    string `json:"nickname"`
-	Email       string `json:"email"`
-	PassWord    string `json:"password"`
-	FirstName   string `json:"firstname"`
-	Lastname    string `json:"lastname"`
-	DateofBirth string `json:"dateofbirth"`
-	AboutMe     string `json:"aboutme"`
-	Avatar      string `json:"avatar"`
-	File        multipart.File
-	Header      *multipart.FileHeader
-	FileErr     error
-	Token       string
+	ID          int                   `json:"id,omitempty"`
+	Nickname    string                `json:"nickname,omitempty"`
+	Email       string                `json:"email,omitempty"`
+	PassWord    string                `json:"password,omitempty"`
+	FirstName   string                `json:"firstname,omitempty"`
+	Lastname    string                `json:"lastname,omitempty"`
+	DateofBirth string                `json:"dateofbirth,omitempty"`
+	AboutMe     string                `json:"aboutme,omitempty"`
+	Avatar      string                `json:"avatar,omitempty"`
+	File        multipart.File        `json:"file,omitempty"`
+	Header      *multipart.FileHeader `json:"header,omitempty"`
+	FileErr     error                 `json:"file_err,omitempty"`
+	Token       string                `json:"token,omitempty"`
 }
 
 type UserError struct {

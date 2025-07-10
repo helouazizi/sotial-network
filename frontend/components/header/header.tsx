@@ -17,6 +17,7 @@ export default function Header() {
   const router = useRouter();
   const pathname = usePathname();
   const { ws, user, numsNotif } = useContext(SocketContext) as SocketContextType
+
   const [isLogged, setIsLogged] = useState<boolean>(false)
   const [showToggle, setShowToggle] = useState(false)
 
@@ -82,7 +83,7 @@ export default function Header() {
                 <Link href={"/chat/privateChat"}><LuMessageCircleMore className={pathname.startsWith("/chat/") ? "active" : ""} /></Link>
               </li>
               <li>
-                <Link href={"/groups"}><MdGroups2 className={pathname === "/groups" ? "active groupIconHeader" : "groupIconHeader"} /></Link>
+                <Link href={"/groups/joined"}><MdGroups2 className={pathname.startsWith("/groups/") ? "active groupIconHeader" : "groupIconHeader"} /></Link>
               </li>
             </ul>
             <div className="header-icons">
@@ -95,7 +96,7 @@ export default function Header() {
                     className="avatar-profile header-icon"
                   />
                 ) : (
-                  <div className="avatar-profile header-icon"><h2>{GenerateAvatar(user?.firstName, user?.lastName)}</h2></div>
+                  <div className="avatar-profile header-icon"><h2>{GenerateAvatar(user?.firstname, user?.lastname)}</h2></div>
                 )}
               </Link>
 

@@ -10,32 +10,31 @@ import { Throttle } from '@/utils/Throttle'
 import { FaSearchMinus } from 'react-icons/fa'
 
 const UsersRl = (props: { type: string }) => {
-    const { dataProfile, setDataProfile } = useProfile()
+    const { dataProfile } = useProfile()
     const [data, setData] = useState<ProfileInt[]>([])
     const { type } = props
 
 
     useEffect(() => {
         const GetRelations = async () => {
-            if (dataProfile?.id) {
+            if (dataProfile?.User?.id) {
                 obj.Ofsset = 0
                 obj.Limit = 20
-                let result = await FetchUsersRl(dataProfile.id, type)
+                let result = await FetchUsersRl(dataProfile.User?.id, type)
                 setData(result)
             }
         }
         GetRelations()
-    }, [dataProfile?.id, type])
+    }, [dataProfile?.User?.id, type])
 
     const ScrollUser = useCallback(
         Throttle(async () => {
-            let result = await FetchUsersRl(dataProfile?.id, type)
-            console.log(result);
+            let result = await FetchUsersRl(dataProfile?.User?.id, type)
             if (result) {
                 setData((prev) => [...prev, ...result])
             }
         }, 1500)
-        , [dataProfile?.id, type])
+        , [dataProfile?.User?.id, type])
     return (
         <>
             {data?.length > 0 ?
@@ -43,22 +42,22 @@ const UsersRl = (props: { type: string }) => {
                     {
                         data?.map((ele, key) => {
                             return (
-                                <Link href={`/profile/${ele?.id}`} key={key} className='relation-card' >
+                                <Link href={`/profile/${ele?.User?.id}`} key={key} className='relation-card' >
                                     <div className='relation-card-data'>
-                                        {ele?.avatar ? (
+                                        {ele?.User?.avatar ? (
                                             <img
-                                                src={`http://localhost:8080/images/user/${ele?.avatar}`}
-                                                alt={`${ele?.avatar}`}
+                                                src={`http://localhost:8080/images/user/${ele?.User?.avatar}`}
+                                                alt={`${ele?.User?.avatar}`}
                                                 className="avatar-profile card"
                                             />
                                         ) : (
-                                            <div className="avatar-profile card"><h2>{GenerateAvatar(ele?.first_name, ele?.last_name)}</h2></div>
+                                            <div className="avatar-profile card"><h2>{GenerateAvatar(ele?.User?.firstname, ele?.User?.lastname)}</h2></div>
                                         )}
                                         <div className="info">
-                                            <h3>{ele.first_name} {ele.last_name}</h3>
+                                            <h3>{ele?.User?.firstname} {ele?.User?.lastname}</h3>
                                             {
-                                                ele?.nickname ?
-                                                    <span>@{ele?.nickname}</span>
+                                                ele?.User?.nickname ?
+                                                    <span>@{ele?.User?.nickname}</span>
                                                     : ""
                                             }
                                         </div>

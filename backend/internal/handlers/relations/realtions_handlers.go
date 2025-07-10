@@ -2,6 +2,7 @@ package relations
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/ismailsayen/social-network/internal/models"
@@ -121,6 +122,7 @@ func (h *RelationsHandler) GetFriends(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
+	fmt.Println(friends, "friends")
 	utils.ResponseJSON(w, http.StatusOK, map[string]any{
 		"friends": friends,
 		"status":  http.StatusOK,

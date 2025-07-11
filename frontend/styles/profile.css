@@ -29,6 +29,7 @@
     padding: 30px 15px;
     border-radius: 10px;
     margin: auto;
+    transition: .2s ease-in-out;
 }
 
 .profile-header {
@@ -60,9 +61,15 @@
     flex-direction: column;
     justify-content: space-evenly;
 
-    h3 {
+    div {
         display: flex;
         align-items: center;
+        gap: 10px;
+
+        svg {
+            width: 20px;
+            height: 20px;
+        }
     }
 }
 
@@ -251,7 +258,7 @@ input:checked+.slider:before {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    color: var(--accent-color);
+    color: var(--text-secondary);
     align-items: center;
 
     svg {
@@ -492,9 +499,85 @@ input:checked+.slider:before {
     align-items: center;
     justify-content: center;
     gap: 10px;
-    color: var(--accent-color);
+    color: var(--text-secondary);
+
     svg {
         width: 60px;
         height: 60px;
     }
+}
+
+@media screen and (max-width:1100px) {
+    .profile-container {
+        width: 80%;
+    }
+}
+
+@media screen and (max-width:850px) {
+    .profile-container {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width:650px) {
+
+    .profile-header {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .left-sec {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .full-name-profile {
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 5px;
+    }
+
+    .statique-Profile {
+        width: 70%;
+        margin-top: 10px;
+    }
+
+    .statique-Profile .numbers {
+        justify-content: space-around
+    }
+
+    .statique-Profile .numbers div {
+        p {
+            font-size: 10px;
+        }
+
+        h1 {
+            font-size: 25px;
+        }
+    }
+}
+
+@media screen and (max-width:500px) {
+    .avatar-profile {
+        width: 80px;
+        height: 80px;
+    }
+
+    .full-name-profile div h3 {
+        font-size: 16px;
+    }
+
+    .full-name-profile div p {
+        font-size: 14px;
+    }
+
+   
+}
+
+@media screen and (max-width:375px) {
+    .statique-Profile {
+        width: 90%;
+    }
+
+
 }

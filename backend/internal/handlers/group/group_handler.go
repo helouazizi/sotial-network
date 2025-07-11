@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
+	"time"
 
 	"github.com/ismailsayen/social-network/internal/models"
 	services "github.com/ismailsayen/social-network/internal/services/group"
@@ -35,7 +36,7 @@ func (h *GroupHandler) CreateGroupHandler(w http.ResponseWriter, r *http.Request
 
 	group.UserID = r.Context().Value("userID").(int)
 
-	err := h.service.SaveGroup(group)
+	id, err := h.service.SaveGroup(group)
 	if err != nil {
 		utils.ResponseJSON(w, err.Code, map[string]any{
 			"error": err.Message,
@@ -43,7 +44,16 @@ func (h *GroupHandler) CreateGroupHandler(w http.ResponseWriter, r *http.Request
 		return
 	}
 
+	data := *&models.Group{
+		ID:          id,
+		UserID:      group.UserID,
+		Title:       group.Title,
+		Description: group.Description,
+		CreatedAt:   time.Now(),
+	}
+
 	utils.ResponseJSON(w, http.StatusOK, map[string]any{
+		"data":    data,
 		"message": "Group created succefully!",
 	})
 }

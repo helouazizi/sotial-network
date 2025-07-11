@@ -1,7 +1,7 @@
 "use client"
 
 import Popup from "@/components/Popup";
-import { createContext, ReactNode, useContext, useState } from "react";
+import { createContext, ReactNode, useState } from "react";
 
 interface PopupContextType {
     showPopup: (type: popupType, message: string) => void

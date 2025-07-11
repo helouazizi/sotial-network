@@ -16,20 +16,33 @@ func NewGroupRepo(db *sql.DB) *GroupRepository {
 	return &GroupRepository{db: db}
 }
 
-func (r *GroupRepository) SaveGroup(group *models.Group) *models.GroupError {
+func (r *GroupRepository) SaveGroup(group *models.Group) (int, *models.GroupError) {
 	query := `
-		INSERT INTO groups(user_id, title, description, created_at) VALUES (?, ?, ?, ?)
+		INSERT INTO groups(user_id, title, description, created_at) VALUES (?, ?, ?, ?) RETURNING id
 	`
 
-	_, err := r.db.Exec(query, group.UserID, group.Title, group.Description, time.Now())
+	var groupID int
+	err := r.db.QueryRow(query, group.UserID, group.Title, group.Description, time.Now()).Scan(&groupID)
 	if err != nil {
-		return &models.GroupError{
+		return -1, &models.GroupError{
 			Message: err.Error(),
 			Code:    http.StatusInternalServerError,
 		}
 	}
 
-	return nil
+	queryGroupMember := `
+		INSERT INTO group_members(group_id, member_id) VALUES (?, ?)
+	`
+
+	_, err = r.db.Exec(queryGroupMember, groupID, group.UserID)
+	if err != nil {
+		return -1, &models.GroupError{
+			Message: err.Error(),
+			Code:    http.StatusInternalServerError,
+		}
+	}
+
+	return groupID, nil
 }
 
 func (r *GroupRepository) GetJoinedGroups(userID int) ([]*models.Group, error) {
@@ -37,6 +50,7 @@ func (r *GroupRepository) GetJoinedGroups(userID int) ([]*models.Group, error) {
 		SELECT g.* FROM groups g
 		INNER JOIN group_members mb ON g.id = mb.group_id
 		WHERE mb.member_id = ?
+		ORDER BY g.id desc
 	`
 
 	rows, err := r.db.Query(query, userID)

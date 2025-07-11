@@ -2,24 +2,25 @@
 
 import { GetJoinedGroups } from '@/services/groupServices'
 import Link from 'next/link';
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { MdGroups } from "react-icons/md";
 import SwitchButtons from './SwitchButtons';
+import { GroupsContext } from '@/context/GroupsContext';
 
 function Groups() {
-  const [joinedGroups, setJoinedGroups] = useState<Group[] | null>(null)
+  const context = useContext(GroupsContext)
 
   useEffect(() => {
     const fetchGroups = async () => {
       const data = await GetJoinedGroups()
-      setJoinedGroups(data)
+      context?.setJoinedGroups(data)
     }
 
     fetchGroups()
   }, [])
 
   const displayGroups = () => {
-    return joinedGroups?.map((group, index) => {
+    return context?.joinedGroups?.map((group, index) => {
       let title = group.title.length > 20 ? group.title.slice(0, 20).trim() + "..." : group.title
 
       return (

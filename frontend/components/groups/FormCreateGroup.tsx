@@ -1,5 +1,6 @@
 "use client"
 
+import { GroupsContext } from "@/context/GroupsContext"
 import { PopupContext } from "@/context/PopupContext"
 import { createGroup } from "@/services/groupServices"
 import React, { useCallback, useContext, useRef, useState } from "react"
@@ -22,6 +23,7 @@ function FormCreateGroup() {
     const [titleError, setTitleError] = useState<string>('')
     const [descriptionError, setDescriptionError] = useState<string>('')
     const context = useContext(PopupContext)
+    const groupsContext = useContext(GroupsContext)
 
     const throttledSubmit = useCallback(throttle(async () => {
         if (!title.current?.value.trim() || !description.current?.value.trim()) {
@@ -42,9 +44,11 @@ function FormCreateGroup() {
             return
         }
 
-        context?.showPopup("success", "group created succesfully!")
+        context?.showPopup("success", res.message)
         title.current.value = ""
         description.current.value = ""
+        
+        if (res.data) groupsContext?.setJoinedGroups(prev => prev ? [res.data,...prev] : [res.data])
     }, 5000), [])
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {

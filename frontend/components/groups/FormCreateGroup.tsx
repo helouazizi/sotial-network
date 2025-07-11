@@ -1,13 +1,15 @@
 "use client"
 
+import { PopupContext } from "@/context/PopupContext"
 import { createGroup } from "@/services/groupServices"
-import React, { useRef, useState } from "react"
+import React, {  useContext, useRef, useState } from "react"
 
 function FormCreateGroup() {
     const title = useRef<HTMLInputElement | null>(null)
     const description = useRef<HTMLTextAreaElement | null>(null)
     const [titleError, setTitleError] = useState<string>('')
     const [descriptionError, setDescriptionError] = useState<string>('')
+    const context = useContext(PopupContext)
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -21,11 +23,18 @@ function FormCreateGroup() {
         let res = await createGroup(title.current?.value, description.current?.value)
         if (res.error?.includes("title")) {
             setTitleError(res.error)
+            return
         }
 
         if (res.error?.includes("description")) {
             setDescriptionError(res.error)
+            return
         }
+
+        context?.showPopup("success", "group created succesfully!")
+        title.current.value = ""
+        description.current.value = ""
+
     }
 
     return (

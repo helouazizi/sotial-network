@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import "./globals.css";
 import SocketProvider from "../context/socketContext";
 import Header from "../components/header/header";
+import { PopupProvider } from "@/context/PopupContext";
 
 export const metadata = {
   title: "Social Network",
@@ -14,8 +15,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en">
       <body>
         <SocketProvider>
-          <Header />
-          {children}
+          <PopupProvider >
+            <Header />
+            {children}
+          </PopupProvider>
         </SocketProvider>
       </body>
     </html>

@@ -182,9 +182,84 @@
             margin-top: 5px;
             font-size: 14px;
         }
-        h3{
+
+        h3 {
             font-size: 14px;
             font-weight: 500;
         }
+    }
+}
+
+@media screen and (max-width:1637px) {
+    .ToogleInitiale {
+        width: 30%;
+    }
+
+    .followers-requsets-container,
+    .navigationToogle {
+        width: 90%;
+    }
+
+
+}
+
+@media screen and (max-width:1270px) {
+    .ToogleInitiale {
+        width: 35%;
+    }
+
+    .followers-requsets-container,
+    .navigationToogle {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width:943px) {
+    .ToogleInitiale {
+        width: 50%;
+
+    }
+}
+
+@media screen and (max-width:688px) {
+    .navigationToogle button {
+        font-size: 12px;
+        padding: 10px;
+
+    }
+
+    .follower-request {
+        padding: 5px;
+        margin-top: 0;
+        justify-content: space-around;
+
+        h3 {
+            font-size: 16px;
+        }
+
+        span {
+            font-size: 14px;
+        }
+    }
+
+    .follower-request .action-request svg {
+        width: 25px;
+        height: 25px;
+    }
+
+    .follower-request .header-card .request-info {
+        justify-content: space-around;
+    }
+
+}
+
+@media screen and (max-width:564px) {
+    .ToogleInitiale {
+        width: 70%;
+    }
+
+    .followers {
+        width: 40px;
+        height: 40px;
     }
 }

@@ -34,8 +34,8 @@ const ProfileStatique = () => {
     <div className='statique-Profile'>
       <div className='numbers'>
         <div><p>POSTS</p><h1>{dataProfile?.nbPosts}</h1></div>
-        <div><p>followers</p><h1>{dataProfile?.followers}</h1></div>
-        <div><p>followed</p><h1>{dataProfile?.followed}</h1></div>
+        <div><p>FOLLOWERS</p><h1>{dataProfile?.followers}</h1></div>
+        <div><p>FOLLOWED</p><h1>{dataProfile?.followed}</h1></div>
       </div>
       {
         !dataProfile?.myAccount ?

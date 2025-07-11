@@ -2,7 +2,7 @@
 import { useProfile } from '@/context/ProfileContext';
 import React from 'react';
 import Visibility from './Visibility';
-import { FaUnlock } from 'react-icons/fa';
+import { FaLockOpen } from 'react-icons/fa';
 import { FaLock } from 'react-icons/fa6';
 import ProfileStatique from './ProfileStatique';
 
@@ -28,8 +28,11 @@ const ProfileHeader = () => {
           <div className="avatar-profile"><h2>{GenerateAvatar(dataProfile?.User?.firstname, dataProfile?.User?.lastname)}</h2></div>
         )}
         <div className="full-name-profile">
-          <h3>{dataProfile?.User?.firstname?.toUpperCase()} {dataProfile?.User?.lastname?.toUpperCase()}  {dataProfile?.is_private == 1 ? <FaLock /> : <FaUnlock />}</h3>
-          <span>@{dataProfile?.User?.nickname}</span>
+          <div><h3>{dataProfile?.User?.firstname?.toUpperCase()} {dataProfile?.User?.lastname?.toUpperCase()}</h3> {dataProfile?.is_private == 1 ? <FaLock /> : <FaLockOpen />}</div>
+          {
+            dataProfile?.User?.nickname ?
+              <p>@{dataProfile?.User?.nickname}</p> : ""
+          }
           <Visibility />
         </div>
       </div>

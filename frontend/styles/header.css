@@ -116,12 +116,18 @@ nav>div {
 
 .notification span {
   background-color: var(--danger-color);
-  border-radius: 100%;
-  padding: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
   font-size: 10px;
+  font-weight: bold;
+  border: 1px solid var(--text-primary);
   position: absolute;
   bottom: -4px;
-  right: -4px
+  right: -4px;
 }
 
 .notification svg {

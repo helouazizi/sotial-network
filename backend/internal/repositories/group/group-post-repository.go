@@ -155,7 +155,68 @@ func (r *GroupRepository) AddGroupComment(comments models.GroupComment, img *mod
 		}
 	}
 	return models.GroupError{
-		Code: http.StatusOK,
+		Code:    http.StatusOK,
 		Message: "adding comment went smouthly ",
 	}
+}
+
+func (r *GroupRepository) GetGRoupComment( post_id  int) ([]models.GroupComment, models.GroupError) {
+	query := `
+  SELECT 
+	c.group_post_id, 
+	c.member_id, 
+	c.content, 
+	c.media, 
+	c.created_at,
+	u.first_name,
+	u.last_name,
+	u.nickname,
+	u.avatar
+FROM group_comments c
+JOIN users u ON u.id = c.member_id
+WHERE c.group_post_id = ?
+ORDER BY c.created_at DESC;
+
+	`
+	rows, rowsErr := r.db.Query(query,post_id )
+	if rowsErr != nil {
+		return []models.GroupComment{}, models.GroupError{
+			Code:    http.StatusInternalServerError,
+			Message: rowsErr.Error(),
+		}
+	}
+		var (
+		comments []models.GroupComment
+		media sql.NullString
+	)
+	for rows.Next() {
+		var comment models.GroupComment
+		if err := rows.Scan(
+			&comment.Comment.PostID,
+			&comment.Comment.Author.ID,
+			
+			&comment.Comment.Comment,
+			&media,
+		
+			&comment.Comment.CreatedAt,
+			&comment.Comment.Author.FirstName,
+			&comment.Comment.Author.Lastname,
+			&comment.Comment.Author.Nickname,
+			&comment.Comment.Author.Avatar,
+		);err != nil {
+			return []models.GroupComment{}, models.GroupError{
+				Code:    http.StatusInternalServerError,
+				Message: err.Error(),
+			}
+		}
+		if media.Valid {
+			comment.Comment.MediaLink = media.String
+		}
+		comments = append(comments, comment)
+	}
+
+			return comments , models.GroupError{
+				Code: 200,
+				Message: "Getting the comments went smouthly",
+			}
 }

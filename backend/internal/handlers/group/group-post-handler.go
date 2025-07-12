@@ -163,3 +163,28 @@ func (h *GroupHandler) AddGroupComment(w http.ResponseWriter, r *http.Request) {
 	SaveERR := h.service.SaveGroupeComment(groupcomments, img)
 	utils.ResponseJSON(w, SaveERR.Code, SaveERR)
 }
+
+func (h *GroupHandler) GetGRoupComment(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
+			"message": "Method not allowed",
+			"status":  http.StatusMethodNotAllowed,
+		})
+		return
+	}
+
+	var coment models.ComentPaginationRequest
+	if err := json.NewDecoder(r.Body).Decode(&coment); err != nil {
+		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
+			"message": "Bad request",
+			"status":  http.StatusBadRequest,
+		})
+		return
+	}
+
+	comments, err := h.service.GetGroupComment(coment.PostId)
+	if err.Code != http.StatusOK {
+		utils.ResponseJSON(w, err.Code, err)
+	}
+	utils.ResponseJSON(w, http.StatusOK, comments)
+}

@@ -75,7 +75,7 @@ const AboutProfileUser = () => {
     return (
         <>
 
-            <form onSubmit={submitForm} encType='multipart/form-data'>
+            <form onSubmit={submitForm} encType='multipart/form-data' className='profile-info-form'>
                 <div className="updateImage">
                     {avatar ? (
                         <img

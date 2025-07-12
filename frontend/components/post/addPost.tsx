@@ -156,7 +156,7 @@ export default function CreatePostForm({ onCreated }: Props) {
       };
       onCreated(newPost);
     }
-    if (res.status === 401){
+    if (res.status === 401) {
       window.location.href = "/login"
     }
   };
@@ -242,26 +242,30 @@ export default function CreatePostForm({ onCreated }: Props) {
               Share with specific followers
             </label>
             <ul className="user-checkbox-list">
-              {followers && followers.length > 0 && followers.map((f) => (
-                <li key={f.id} className="user-checkbox-item">
+              {followers && followers.length > 0 && followers.map((f, index) => (
+
+
+
+                <li key={index} className="user-checkbox-item">
                   <label id="follower-checkbox-label">
                     <PostHeader
-                      author={`${f.first_name} ${f.last_name}`}
-                      createdAt=""
-                      avatarUrl={f.avatar}
+                      author={`${f.User?.firstname} ${f.User?.lastname}`}
+                      firstname={f.User?.firstname} lastname={f.User?.lastname}
+                      createdAt="" avatarUrl={f.User?.avatar}
                     />
                     <input
                       type="checkbox"
-                      checked={sharedWith.includes(f.id)}
+                      checked={sharedWith.includes(f.User?.id)}
                       onChange={(e) =>
-                        handleToggleFollower(f.id, e.target.checked)
+                        handleToggleFollower(f.User?.id, e.target.checked)
                       }
-                      title={`Share with ${f.first_name} ${f.last_name}`}
-                      placeholder={`Select follower ${f.first_name} ${f.last_name}`}
-                      aria-label={`Share with ${f.first_name} ${f.last_name}`}
+                      title={`Share with ${f.User?.firstname} ${f.User?.lastname}`}
+                      placeholder={`Select follower ${f.User?.firstname} ${f.User?.lastname}`}
+                      aria-label={`Share with ${f.User?.firstname} ${f.User?.lastname}`}
                     />
                   </label>
                 </li>
+
               ))}
             </ul>
           </div>

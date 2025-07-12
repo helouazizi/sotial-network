@@ -1,11 +1,20 @@
+import { GenerateAvatar } from "../profile/ProfileHeader";
 
-export default function PostHeader({ author, createdAt, avatarUrl }: { author: string; createdAt: string, avatarUrl: string | undefined }) {
-  const baseUrl = avatarUrl ? `http://localhost:8080/images/user/${avatarUrl}` : "avatar.png"
+export default function PostHeader({ author, firstname, lastname, createdAt, avatarUrl }: { author: string; firstname: string, lastname: string, createdAt: string, avatarUrl: string | undefined }) {
+
   return (
     <div className="post-meta">
-      <img src={baseUrl} alt={`${author}'s avatar`} className="post-avatar" />
+      {avatarUrl ? (
+        <img
+          src={`http://localhost:8080/images/user/${avatarUrl}`}
+          alt={`${avatarUrl}`}
+          className="avatar-profile post-avatar"
+        />
+      ) : (
+        <div className="avatar-profile post-avatar"><h2>{GenerateAvatar(firstname, lastname)}</h2></div>
+      )}
       <span>
-      {author} • {createdAt ? new Date(createdAt).toLocaleTimeString():""}
+        {author} • {createdAt ? new Date(createdAt).toLocaleTimeString() : ""}
       </span>
     </div>
   );

@@ -94,6 +94,7 @@ func (r *GroupRepository) GetGroupPosts(reg models.PaginationRequest, groupid in
 		posts []models.GroupPost
 		media sql.NullString
 	)
+
 	for rows.Next() {
 		var post models.GroupPost
 		if err := rows.Scan(
@@ -109,12 +110,10 @@ func (r *GroupRepository) GetGroupPosts(reg models.PaginationRequest, groupid in
 			&post.Post.Author.Nickname,
 			&post.Post.Author.Avatar,
 		); err != nil {
-			return  []models.GroupPost{}, models.GroupError{
-			Code:    http.StatusInternalServerError,
-			Message: err.Error(),
-		}
-
-		
+			return []models.GroupPost{}, models.GroupError{
+				Code:    http.StatusInternalServerError,
+				Message: err.Error(),
+			}
 		}
 		if media.Valid {
 			post.Post.MediaLink = media.String
@@ -124,7 +123,39 @@ func (r *GroupRepository) GetGroupPosts(reg models.PaginationRequest, groupid in
 	}
 
 	return posts, models.GroupError{
-		Code: http.StatusOK,
+		Code:    http.StatusOK,
 		Message: "Posts fetched successfully",
+	}
+}
+
+func (r *GroupRepository) AddGroupComment(comments models.GroupComment, img *models.Image) models.GroupError {
+	query := `
+	INSERT INTO group_comments (group_post_id , member_id, content, media, created_at)
+	VAlUES (?, ?, ?, ?, ?)
+
+	`
+	fileName, ImageErr := utils.HandleImage(img, "pkg/db/images/groupeComment")
+	if ImageErr.Code != http.StatusOK {
+		return ImageErr
+	}
+	stmt, err := r.db.Prepare(query)
+	if err != nil {
+		return models.GroupError{
+			Code:    http.StatusInternalServerError,
+			Message: err.Error(),
+		}
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(comments.Comment.PostID, comments.Comment.Author.ID, comments.Comment.Comment, fileName, time.Now())
+	if err != nil {
+		return models.GroupError{
+			Code:    http.StatusInternalServerError,
+			Message: err.Error(),
+		}
+	}
+	return models.GroupError{
+		Code: http.StatusOK,
+		Message: "adding comment went smouthly ",
 	}
 }

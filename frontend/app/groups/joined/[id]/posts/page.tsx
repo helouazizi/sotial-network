@@ -1,8 +1,26 @@
+
+
 import React from 'react'
 
 function Posts() {
+
+  
   return (
-    <div>No posts yet</div>
+ <>
+      <section className="create-post">
+        <div className="add-post-holder">
+          <button className="addPostBtn" >
+
+          </button>
+        </div>
+   
+      </section>
+
+      <section className="posts-list ">
+      
+      </section>
+    </>
+    
   )
 }
 

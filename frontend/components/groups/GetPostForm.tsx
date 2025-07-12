@@ -1,0 +1,6 @@
+"use client";
+function GetPosts() {
+
+
+    
+}

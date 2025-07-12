@@ -44,3 +44,22 @@ export async function GetJoinedGroups() {
         console.log(err)
     }
 }
+
+export async function GetSuggestedGroups() {
+    try {
+        const res = await fetch(API_URL+"api/v1/groups/getSuggested", {
+            credentials: "include"
+        })
+
+        const data = await res.json()
+
+        if (!res.ok) {
+            
+        }
+
+        return data.data
+
+    } catch (err) { 
+        console.error(err)
+    }
+}

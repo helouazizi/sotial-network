@@ -2,16 +2,17 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import React from 'react'
+import React, { MouseEventHandler } from 'react'
 
 interface switchButtonsProps {
     firstButtonLink: string
     secondButtonLink: string
     firstButtonContent: string
     secondButtonContent: string
+    handleClick?: MouseEventHandler<HTMLAnchorElement>
 }
 
-function SwitchButtons({ firstButtonLink, secondButtonLink, firstButtonContent, secondButtonContent }: switchButtonsProps) {
+function SwitchButtons({ firstButtonLink, secondButtonLink, firstButtonContent, secondButtonContent, handleClick }: switchButtonsProps) {
     const pathname = usePathname()
 
     return (
@@ -19,16 +20,18 @@ function SwitchButtons({ firstButtonLink, secondButtonLink, firstButtonContent, 
             <Link
                 href={firstButtonLink || ""}
                 className={pathname.startsWith(firstButtonLink || "") ? "active" : ""}
+                onClick={handleClick}
             >
                 {firstButtonContent}
             </Link>
             <Link
                 href={secondButtonLink || ""}
                 className={pathname.startsWith(secondButtonLink || "") ? "active" : ""}
+                onClick={handleClick}
             >
                 {secondButtonContent}
             </Link>
-        </div>  
+        </div>
     )
 }
 

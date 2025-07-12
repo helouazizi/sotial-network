@@ -1,31 +1,45 @@
 "use client"
 
-import { GetJoinedGroups } from '@/services/groupServices'
+import { GetJoinedGroups, GetSuggestedGroups } from '@/services/groupServices'
 import Link from 'next/link';
-import React, { useContext, useEffect } from 'react'
+import React, { use, useContext, useEffect, useState } from 'react'
 import { MdGroups } from "react-icons/md";
 import SwitchButtons from './SwitchButtons';
 import { GroupsContext } from '@/context/GroupsContext';
+import { usePathname } from 'next/navigation';
 
 function Groups() {
   const context = useContext(GroupsContext)
+  const pathname = usePathname()
+  const [isFetch, setIsFetch] = useState<boolean>(false)
 
   useEffect(() => {
     const fetchGroups = async () => {
-      const data = await GetJoinedGroups()
-      context?.setJoinedGroups(data)
+      if (pathname === "/groups/joined") {
+        const data = await GetJoinedGroups()
+        context?.setGroups(data)
+      } else if (pathname === "/groups/suggested") {
+        const data = await GetSuggestedGroups()
+        context?.setGroups(data)
+      }
     }
 
     fetchGroups()
-  }, [])
+  }, [pathname])
+
+  const handleClick = () => {
+
+    setIsFetch(prev => !prev)
+  }
 
   const displayGroups = () => {
-    return context?.joinedGroups?.map((group, index) => {
+    return context?.Groups?.map((group, index) => {
       let title = group.title.length > 25 ? group.title.slice(0, 25).trim() + "..." : group.title
+      let path = pathname.startsWith("/groups/joined") ? "/groups/joined/" + group.id + "/posts" : ""
 
       return (
         <li key={index}>
-          <Link href={"/groups/joined/" + group.id+"/posts"}><span><MdGroups /></span> <p>{title}</p></Link>
+          <Link href={path}><span><MdGroups /></span> <p>{title}</p></Link>
         </li>
       )
     })
@@ -33,7 +47,7 @@ function Groups() {
 
   return (
     <>
-      <SwitchButtons firstButtonContent='joined' secondButtonContent='suggested' firstButtonLink='/groups/joined' secondButtonLink='/groups/suggested'/>
+      <SwitchButtons handleClick={handleClick} firstButtonContent='joined' secondButtonContent='suggested' firstButtonLink='/groups/joined' secondButtonLink='/groups/suggested' />
       <ul className='joinedGroups'>
         {displayGroups()}
       </ul>

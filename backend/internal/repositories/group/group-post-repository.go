@@ -50,6 +50,7 @@ func (r *GroupRepository) SaveGroupPostRepo(ctx context.Context, group *models.G
 	group.Post.ID = int(postID)
 	tx.Commit()
 	return models.GroupPost{
+		GroupId: group.GroupId,
 			Post: models.Post{
 				ID:        int(postID),
 				MediaLink: fileName.String,

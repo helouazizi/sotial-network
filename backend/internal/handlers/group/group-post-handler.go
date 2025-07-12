@@ -31,8 +31,24 @@ func (h *GroupHandler) AddGroupPost(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
-
+	groupIdstr, groupErr := utils.GetGroupId(r, "post")
+	if groupErr != nil {
+		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
+			"message": "Invalid URL",
+			"status":  http.StatusBadRequest,
+		})
+		return
+	}
+	groupId, err := strconv.Atoi(groupIdstr)
+	if err != nil || groupId <= 0 {
+		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
+			"message": "Invalid URL",
+			"status":  http.StatusBadRequest,
+		})
+		return
+	}
 	post := &models.GroupPost{
+		GroupId: groupId,
 		Post: models.Post{
 			ID:      userId,
 			Title:   r.FormValue("title"),

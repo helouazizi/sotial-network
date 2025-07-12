@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/ismailsayen/social-network/internal/models"
@@ -70,13 +69,11 @@ func (h *UserHandler) Register(w http.ResponseWriter, r *http.Request) {
 	updateUser, avatarErr := h.service.HundleAvatar(user)
 	if avatarErr.Code != http.StatusOK {
 		utils.ResponseJSON(w, avatarErr.Code, avatarErr.Message)
-		fmt.Println(avatarErr)
 		return
 	}
 	token, err := h.service.SaveUser(&updateUser)
 	if err.Code != http.StatusOK {
 		utils.ResponseJSON(w, err.Code, err)
-		fmt.Println(err)
 		return
 	}
 
@@ -160,6 +157,5 @@ func (h *UserHandler) GetUserHandler(w http.ResponseWriter, r *http.Request) {
 			"error": err.Error(),
 		})
 	}
-	fmt.Println("=====>", user)
 	utils.ResponseJSON(w, http.StatusOK, user)
 }

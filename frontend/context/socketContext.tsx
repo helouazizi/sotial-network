@@ -22,6 +22,10 @@ export interface SocketContextType {
   setNumNotif: React.Dispatch<React.SetStateAction<NumOfREquests | undefined>>
   reqFollowers: ProfileInt[] | []
   setReqFollowers: React.Dispatch<React.SetStateAction<ProfileInt[] | []>>
+  showNotif: boolean
+  setShowNotif: React.Dispatch<React.SetStateAction<boolean>>
+  messageNotif: string
+  setMessageNotif: React.Dispatch<React.SetStateAction<string>>
 }
 
 export const SocketContext = createContext<SocketContextType | null>(null);
@@ -36,7 +40,8 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
   const [scrollHeight, setScrollHeight] = useState<boolean>(false)
   const [numsNotif, setNumNotif] = useState<NumOfREquests | undefined>(undefined)
   const [reqFollowers, setReqFollowers] = useState<ProfileInt[] | []>([])
-
+  const [showNotif, setShowNotif] = useState(false)
+  const [messageNotif, setMessageNotif] = useState("")
   const excludedPaths = ["/login", "/register"];
   const shouldConnect = !excludedPaths.includes(pathname);
 
@@ -75,7 +80,10 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
           return [...res.data]
         });
       }
-
+      if (res.type == 'showNotif') {
+        setMessageNotif(res.message)
+        setShowNotif(true)
+      }
       if (res.type === "getFriends") {
 
         setFriends(res.data)
@@ -105,7 +113,6 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
           }
         })
         setReqFollowers(prev => {
-          console.log("before filter:", prev);
           return prev.filter(ele => ele.request_id !== res.ReqID);
         });
       }
@@ -134,7 +141,11 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
       numsNotif,
       setNumNotif,
       reqFollowers,
-      setReqFollowers
+      setReqFollowers,
+      messageNotif,
+      setMessageNotif,
+      showNotif,
+      setShowNotif
     }}>
       {children}
     </SocketContext.Provider>

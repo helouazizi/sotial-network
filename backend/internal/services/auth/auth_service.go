@@ -128,7 +128,6 @@ func (s *AuthService) SaveUser(user *models.User) (string, models.Error) {
 	// === Save user in DB ===
 	saveErr := s.repo.SaveUser(user)
 	if saveErr.Code != http.StatusOK {
-		fmt.Println(saveErr, "SaveUser")
 		return "", saveErr
 	}
 

@@ -61,7 +61,10 @@ export async function UpdateProfile(file: File | undefined, nickname: string | u
                 if (!prev) return prev;
                 return {
                     ...prev,
-                    avatar: resp.User?.newPath,
+                    User: {
+                        ...prev.User,
+                        avatar: resp.newPath,
+                    }
                 };
             })
         }
@@ -70,7 +73,11 @@ export async function UpdateProfile(file: File | undefined, nickname: string | u
                 if (!prev) return prev
                 return {
                     ...prev,
-                    nickname: nickname,
+                    User: {
+                        ...prev.User,
+                        nickname: nickname,
+                    }
+
                 }
             })
         }
@@ -79,7 +86,10 @@ export async function UpdateProfile(file: File | undefined, nickname: string | u
                 if (!prev) return prev
                 return {
                     ...prev,
-                    about_me: about,
+                    User: {
+                        ...prev.User,
+                        about_me: about,
+                    }
                 }
             })
         }
@@ -142,11 +152,11 @@ export async function HandleRelations(status: string | undefined, profileUser: n
             }
             return { ok: true, newStatus, haveAccess }
         } else {
-            return { ok: true, newStatus:"", haveAccess:false }
+            return { ok: true, newStatus: "", haveAccess: false }
         }
     } catch (err) {
         console.error("Erreur dans HandleRelations :", err);
-        return { ok: true, newStatus:"", haveAccess:false }
+        return { ok: true, newStatus: "", haveAccess: false }
     }
 }
 

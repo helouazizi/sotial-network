@@ -28,10 +28,6 @@ export interface PostErrors {
 }
 
 export interface Follower {
-  first_name: string,
-  last_name: string,
-  nickname: string
-  avatar: string
-  id: number;
+  User: User
 }
 

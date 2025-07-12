@@ -2,8 +2,8 @@
 
 import { useContext, useState } from 'react'
 import { API_URL } from "@/services/index"
-import { useParams } from 'next/navigation'
 import { PopupContext } from '@/context/PopupContext'
+import { Event } from '@/types/events'
 
 
 interface EventData {
@@ -11,18 +11,22 @@ interface EventData {
     description: string
     datetime: string
 }
+interface EventFromProps {
+    group_id: number,
+    onCreate: (newEvent: Event) => void;
+}
 
-export default function EventForm() {
+
+export default function EventForm({ group_id ,onCreate}: EventFromProps) {
     const [form, setForm] = useState<EventData>({
         title: '',
         description: '',
         datetime: '',
     })
-
     const [submitting, setSubmitting] = useState(false)
     const Popup = useContext(PopupContext)
 
-    const { id } = useParams<{ id: string }>();
+
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setForm({ ...form, [e.target.name]: e.target.value })
@@ -34,7 +38,7 @@ export default function EventForm() {
         setSubmitting(true)
 
         const body = {
-            group_id: id ? parseInt(id, 10) : 0,
+            group_id: group_id,
             title: form.title,
             description: form.description,
             event_date: new Date(form.datetime).toISOString(),

@@ -3,6 +3,8 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { GetEvents } from '@/services/eventsServices';
 import type { Event } from '@/types/events'; // Ensure you renamed the Event type to avoid conflict
+import EventForm from '@/components/events/EventForm'
+import { FaPenToSquare } from "react-icons/fa6";
 import EventCard from './eventCard';
 
 import { PopupContext } from '@/context/PopupContext';
@@ -11,22 +13,29 @@ interface EventsListProps {
   groupId: number;
 }
 
+
 const EventsList = ({ groupId }: EventsListProps) => {
 
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showForm, setShowForm] = useState(false)
   const Popup = useContext(PopupContext)
+
+  const AddEvent = (newEvent: Event) => {
+    setEvents((prev) => [newEvent, ...prev])
+    setShowForm(false)
+  }
+  const toggleForm = () => {
+    setShowForm((prev) => !prev);
+  };
+
   useEffect(() => {
     const fetchEvents = async () => {
       try {
         setLoading(true);
         const data = await GetEvents(groupId);
-        console.log(data, "events");
-
         setEvents(data);
       } catch (err: any) {
-        // setError(err.message || 'Failed to load events');
-        console.log(err);
         Popup?.showPopup("faild", 'Something went wrong. Try again.')
       } finally {
         setLoading(false);
@@ -36,16 +45,30 @@ const EventsList = ({ groupId }: EventsListProps) => {
     fetchEvents();
   }, [groupId]);
 
-  if (loading) return <p>Loading...</p>;
-  if (events && events.length === 0) return <div className='no-more-posts'>No events yet.</div>;
+
+  const displayEvents = () => {
+    return (
+      events.map((e) => (
+        <EventCard key={e.id} event={e} />
+      ))
+    )
+  }
+
 
   return (
     <div>
-      <div>
-        {events && events.length > 0 && events.map((e) => (
-          <EventCard key={e.id} event={e} />
-        ))}
-      </div>
+      <section className="create-post">
+        <div className="add-post-holder">
+          <button className="addPostBtn" onClick={toggleForm}>
+          <FaPenToSquare className="addPostIcon" style={{ background: 'var(--card-bg)' }} /> Add-Event
+          </button>
+        </div>
+        {showForm && <EventForm group_id={groupId} onCreate={AddEvent}/>}
+      </section>
+
+      <section className='events-list'>
+        {events ? displayEvents() : <div className='no-posts-yet'>No Events Yet</div>}
+      </section>
     </div>
   );
 };

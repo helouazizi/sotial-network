@@ -4,5 +4,5 @@ export interface Event {
     description : string,
     event_date : string,
     created_at : string,
-    vote : string
+    vote : string | null
 }

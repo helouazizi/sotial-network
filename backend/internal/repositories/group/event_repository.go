@@ -1,25 +1,43 @@
 package repositories
 
 import (
+	"context"
 	"net/http"
 	"time"
 
 	"github.com/ismailsayen/social-network/internal/models"
 )
 
-func (r *GroupRepository) SaveEvent(event *models.Event) *models.GroupError {
+func (r *GroupRepository) SaveEvent(c context.Context, event *models.Event) (models.Event, *models.GroupError) {
 	query := `
 		INSERT INTO group_events( group_id,  member_id, title, descreption, event_date, created_at) VALUES (?, ?, ?, ?, ?, ?)
 	`
-	_, err := r.db.Exec(query, event.GroupId, event.UserID, event.Title, event.Description, event.EventDate, time.Now())
+	tx, err := r.db.BeginTx(c, nil)
 	if err != nil {
-		return &models.GroupError{
+		return models.Event{}, &models.GroupError{
+			Message: "Internal server eroor",
+			Code:    http.StatusInternalServerError,
+		}
+	}
+	defer func() {
+		if err != nil {
+			_ = tx.Rollback()
+		}
+	}()
+
+	res, err := tx.Exec(query, event.GroupId, event.UserID, event.Title, event.Description, event.EventDate, time.Now())
+	if err != nil {
+		return models.Event{}, &models.GroupError{
 			Message: err.Error(),
 			Code:    http.StatusInternalServerError,
 		}
 	}
-
-	return nil
+	eventID, _ := res.LastInsertId()
+	tx.Commit()
+	return models.Event{ID: int(eventID)}, &models.GroupError{
+		Message: "succefully craetd event",
+		Code:    http.StatusOK,
+	}
 }
 
 func (r *GroupRepository) GetGroupEvents(GroupId int) ([]*models.Event, models.GroupError) {
@@ -27,6 +45,7 @@ func (r *GroupRepository) GetGroupEvents(GroupId int) ([]*models.Event, models.G
 	SELECT id, title, descreption, event_date, created_at
 	FROM group_events
 	WHERE group_id = ?
+	ORDER BY created_at DESC
     `
 
 	rows, err := r.db.Query(query, GroupId)

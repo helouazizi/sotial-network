@@ -4,6 +4,7 @@ import { useContext, useState } from 'react'
 import { API_URL } from "@/services/index"
 import { PopupContext } from '@/context/PopupContext'
 import { Event } from '@/types/events'
+import { title } from 'process'
 
 
 interface EventData {
@@ -17,7 +18,7 @@ interface EventFromProps {
 }
 
 
-export default function EventForm({ group_id ,onCreate}: EventFromProps) {
+export default function EventForm({ group_id, onCreate }: EventFromProps) {
     const [form, setForm] = useState<EventData>({
         title: '',
         description: '',
@@ -35,6 +36,9 @@ export default function EventForm({ group_id ,onCreate}: EventFromProps) {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
+        if (submitting) {
+            return
+        }
         setSubmitting(true)
 
         const body = {
@@ -52,6 +56,15 @@ export default function EventForm({ group_id ,onCreate}: EventFromProps) {
             })
             const data = await response.json()
             if (response.ok) {
+                const newEvent: Event = {
+                    id: data.data.id,
+                    title: form.title,
+                    description: form.description,
+                    event_date: form.datetime,
+                    vote: null,
+                    created_at: new Date().toISOString()
+                }
+                onCreate(newEvent)
                 setForm({ title: '', description: '', datetime: '' })
                 Popup?.showPopup("success", data.message)
                 return

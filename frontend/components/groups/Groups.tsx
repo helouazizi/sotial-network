@@ -25,7 +25,7 @@ function Groups() {
 
       return (
         <li key={index}>
-          <Link href={"/groups/joined/" + group.id}><span><MdGroups /></span> <p>{title}</p></Link>
+          <Link href={"/groups/joined/" + group.id+"/posts"}><span><MdGroups /></span> <p>{title}</p></Link>
         </li>
       )
     })

@@ -5,6 +5,7 @@ CREATE TABLE group_events (
     title TEXT NOT NULL, 
     descreption TEXT NOT NULL,
     event_date DATETIME NOT NULL,
+    created_at DATETIME NOT NULL,
     FOREIGN KEY (group_id) REFERENCES groups(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (member_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
 );

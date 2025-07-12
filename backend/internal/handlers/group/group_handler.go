@@ -44,7 +44,7 @@ func (h *GroupHandler) CreateGroupHandler(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	data := *&models.Group{
+	data := models.Group{
 		ID:          id,
 		UserID:      group.UserID,
 		Title:       group.Title,

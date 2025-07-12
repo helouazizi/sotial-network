@@ -95,14 +95,20 @@ func (repo *ProfileRepository) GetMyProfile(sessionID, userId int) (*models.Comm
 
 func (repo *ProfileRepository) GetPosts(userId int) ([]models.Post, error) {
 	const q = `
-	SELECT id, title, content, media, type, created_at, likes, dislikes, comments
-	FROM posts
-	WHERE user_id=?
-	ORDER BY created_at DESC
-	LIMIT 15 OFFSET 0;
+				SELECT 
+				p.id, p.title, p.content, p.media, p.type, p.created_at, 
+				p.likes, p.dislikes, p.comments, 
+				pr.reaction AS user_vote, 
+				u.first_name, u.last_name, u.nickname, u.avatar
+				FROM posts p
+				LEFT JOIN post_reactions pr ON pr.post_id = p.id AND pr.user_id = $1
+				INNER JOIN users u ON u.id = p.user_id
+				WHERE p.user_id = $1
+				ORDER BY p.created_at DESC
 `
 	rows, err := repo.db.Query(q, userId)
 	if err != nil {
+		fmt.Println("=>11", err)
 		return nil, err
 	}
 	defer rows.Close()
@@ -121,8 +127,15 @@ func (repo *ProfileRepository) GetPosts(userId int) ([]models.Post, error) {
 			&p.Likes,
 			&p.Dislikes,
 			&p.TotalComments,
+			&p.UserVote,
+			&p.Author.FirstName,
+			&p.Author.Lastname,
+			&p.Author.Nickname,
+			&p.Author.Avatar,
 		)
 		if err != nil {
+			fmt.Println("=>22", err)
+
 			return nil, err
 		}
 

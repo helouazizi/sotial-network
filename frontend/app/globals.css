@@ -71,6 +71,62 @@ svg {
   vertical-align: middle;
 }
 
+.popup {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  min-width: 250px;
+  max-width: 400px;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 1rem 1.5rem;
+  border-radius: 1rem;
+  backdrop-filter: blur(10px);
+  background: var(--card-bg);
+  box-shadow: 0 5px 30px var(--btn-bg);
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  z-index: 1000;
+  border-left: 4px solid;
+  animation: popupFade 5s ease-in-out;
+}
+
+.successPopup {
+  border-color: var(--online-color);
+}
+
+.faildPopup {
+  border-color: var(--danger-color);
+}
+
+.popup svg {
+  width: 1.4rem;
+  height: 1.4rem;
+  color: var(--icon-color);
+  flex-shrink: 0;
+}
+
+@keyframes popupFade {
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  10% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  90% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+}
+
+
 /* Responsive container */
 @media (min-width: 576px) {
   .container {
@@ -95,9 +151,3 @@ svg {
     width: 1200px;
   }
 }
-
-/* @media (min-width: 1900px) {
-  .container {
-    max-width: 1900px;
-  }
-} */

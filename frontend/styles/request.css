@@ -157,3 +157,109 @@
     color: var(--text-muted);
     text-align: center;
 }
+
+.NotifToast {
+    position: absolute;
+    bottom: 50px;
+    left: 30px;
+    width: max-content;
+    height: 80px;
+    background-color: var(--btn-bg);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    box-shadow: rgba(27, 31, 35, 0.04) 0px 1px 0px, rgba(255, 255, 255, 0.25) 0px 1px 0px inset;
+    padding: 16px;
+    display: flex;
+    gap: 15px;
+
+    svg {
+        height: 19px;
+    }
+
+    div {
+        p {
+            color: var(--text-muted);
+            margin-top: 5px;
+            font-size: 14px;
+        }
+
+        h3 {
+            font-size: 14px;
+            font-weight: 500;
+        }
+    }
+}
+
+@media screen and (max-width:1637px) {
+    .ToogleInitiale {
+        width: 30%;
+    }
+
+    .followers-requsets-container,
+    .navigationToogle {
+        width: 90%;
+    }
+
+
+}
+
+@media screen and (max-width:1270px) {
+    .ToogleInitiale {
+        width: 35%;
+    }
+
+    .followers-requsets-container,
+    .navigationToogle {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width:943px) {
+    .ToogleInitiale {
+        width: 50%;
+
+    }
+}
+
+@media screen and (max-width:688px) {
+    .navigationToogle button {
+        font-size: 12px;
+        padding: 10px;
+
+    }
+
+    .follower-request {
+        padding: 5px;
+        margin-top: 0;
+        justify-content: space-around;
+
+        h3 {
+            font-size: 16px;
+        }
+
+        span {
+            font-size: 14px;
+        }
+    }
+
+    .follower-request .action-request svg {
+        width: 25px;
+        height: 25px;
+    }
+
+    .follower-request .header-card .request-info {
+        justify-content: space-around;
+    }
+
+}
+
+@media screen and (max-width:564px) {
+    .ToogleInitiale {
+        width: 70%;
+    }
+
+    .followers {
+        width: 40px;
+        height: 40px;
+    }
+}

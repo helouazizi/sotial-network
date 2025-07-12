@@ -3,7 +3,6 @@ package profile
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -53,7 +52,6 @@ func (h *ProfileHandler) ProfileHandler(w http.ResponseWriter, r *http.Request) 
 		})
 		return
 	}
-	fmt.Println(profile)
 	utils.ResponseJSON(w, http.StatusOK, profile)
 }
 
@@ -145,7 +143,6 @@ func (h *ProfileHandler) UpdateProfile(w http.ResponseWriter, r *http.Request) {
 			"message": "Failed to update profile.",
 			"status":  http.StatusInternalServerError,
 		})
-		fmt.Println(err)
 		return
 	}
 	utils.ResponseJSON(w, http.StatusOK, map[string]any{

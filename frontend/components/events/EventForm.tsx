@@ -51,10 +51,8 @@ export default function EventForm() {
                 setForm({ title: '', description: '', datetime: '' })
                 Popup?.showPopup("success", data.message)
                 return
-            }else{
-                console.log(data,"dtat");
-                
-                 Popup?.showPopup("faild", data.error)
+            } else {
+                Popup?.showPopup("faild", data.error)
             }
         } catch (err) {
             Popup?.showPopup("faild", 'Something went wrong. Try again.')

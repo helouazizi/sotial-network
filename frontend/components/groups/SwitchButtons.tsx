@@ -5,8 +5,8 @@ import { usePathname } from 'next/navigation'
 import React from 'react'
 
 interface switchButtonsProps {
-    firstButtonLink?: string
-    secondButtonLink?: string
+    firstButtonLink: string
+    secondButtonLink: string
     firstButtonContent: string
     secondButtonContent: string
 }

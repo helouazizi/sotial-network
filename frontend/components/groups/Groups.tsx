@@ -33,7 +33,7 @@ function Groups() {
 
   return (
     <>
-      <SwitchButtons firstButtonContent='joined' secondButtonContent='suggested'/>
+      <SwitchButtons firstButtonContent='joined' secondButtonContent='suggested' firstButtonLink='/groups/joined' secondButtonLink='/groups/suggested'/>
       <ul className='joinedGroups'>
         {displayGroups()}
       </ul>

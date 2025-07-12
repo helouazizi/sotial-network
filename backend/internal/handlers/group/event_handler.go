@@ -82,14 +82,6 @@ func (h *GroupHandler) VoteEventHandler(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 	vote.UserID = r.Context().Value("userID").(int)
-
-	// groupIDStr, errId := utils.GetGroupId(r, "events")
-	// if errId != nil {
-	// 	utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
-	// 		"error": errId,
-	// 	})
-	// 	return
-	// }
 	err := h.service.VoteOnEvent(vote)
 	if err.Code != http.StatusOK {
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{

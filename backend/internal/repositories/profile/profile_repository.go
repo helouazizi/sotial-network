@@ -86,7 +86,7 @@ func (repo *ProfileRepository) GetMyProfile(sessionID, userId int) (*models.Comm
 
 	profile.ImFollower = (status == "accepted") || (profile.IsPrivate == 0)
 
-	profile.Posts, err = repo.GetPosts(userId)
+	profile.Posts, err = repo.GetFiltredPosts(sessionID, userId)
 	if err != nil {
 		return nil, err
 	}
@@ -108,7 +108,6 @@ func (repo *ProfileRepository) GetPosts(userId int) ([]models.Post, error) {
 `
 	rows, err := repo.db.Query(q, userId)
 	if err != nil {
-		fmt.Println("=>11", err)
 		return nil, err
 	}
 	defer rows.Close()
@@ -134,8 +133,6 @@ func (repo *ProfileRepository) GetPosts(userId int) ([]models.Post, error) {
 			&p.Author.Avatar,
 		)
 		if err != nil {
-			fmt.Println("=>22", err)
-
 			return nil, err
 		}
 
@@ -224,4 +221,93 @@ func (repp *ProfileRepository) UpdateProfile(fileHeader *multipart.FileHeader, n
 	}
 
 	return AvatarPath, nil
+}
+
+func (repo *ProfileRepository) GetFiltredPosts(sessionID, userId int) ([]models.Post, error) {
+	query := `
+			SELECT
+				p.id,
+				p.title,
+				p.content,
+				p.media,
+				p.type,
+				p.created_at,
+				p.likes,
+				p.dislikes,
+				p.comments,
+				pr.reaction AS user_vote,
+
+				u.first_name,
+				u.last_name,
+				u.nickname,
+				u.avatar
+
+			FROM posts p
+			LEFT JOIN post_reactions pr ON pr.post_id = p.id AND pr.user_id = $1
+			INNER JOIN users u ON u.id = p.user_id
+
+			WHERE p.user_id = $2 AND (
+				-- Public posts
+				p.type = 'public'
+				
+				-- Posts visible to followers
+				OR (
+					p.type = 'almost_private'
+					AND EXISTS (
+						SELECT 1 FROM followers f
+						WHERE f.followed_id = $1
+						AND f.follower_id = p.user_id
+					)
+				)
+
+				-- Posts shared specifically with the user
+				OR (
+					p.type = 'private'
+					AND EXISTS (
+						SELECT 1 FROM post_allowed_users pau
+						WHERE pau.post_id = p.id 
+						AND pau.user_id = $1
+					)
+					))
+				ORDER BY p.created_at DESC;
+				
+    `
+
+	rows, err := repo.db.Query(query, sessionID, userId)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var posts []models.Post
+	for rows.Next() {
+		var (
+			p     models.Post
+			media sql.NullString
+		)
+		if err := rows.Scan(
+			&p.ID,
+			&p.Title,
+			&p.Content,
+			&media,
+			&p.Type,
+			&p.CreatedAt,
+			&p.Likes,
+			&p.Dislikes,
+			&p.TotalComments,
+			&p.UserVote,
+			&p.Author.FirstName,
+			&p.Author.Lastname,
+			&p.Author.Nickname,
+			&p.Author.Avatar,
+		); err != nil {
+			return nil, err
+		}
+
+		if media.Valid {
+			p.MediaLink = media.String
+		}
+		posts = append(posts, p)
+	}
+	return posts, rows.Err()
 }

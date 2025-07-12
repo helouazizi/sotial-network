@@ -1,6 +1,7 @@
 import { Post } from '@/types/post'
 import React from 'react'
 import PostCard from '../post/postCrad'
+import { FaSearchMinus } from 'react-icons/fa'
 
 const PostsProfile = (props: { posts: Post[] | undefined }) => {
     let { posts } = props
@@ -13,7 +14,11 @@ const PostsProfile = (props: { posts: Post[] | undefined }) => {
                         <PostCard key={post.id} post={post} />
                     ))}
                 </section> :
-                "ssssss"
+                <div className='empty-data'>
+                    <FaSearchMinus />
+                    <h4>No data available</h4>
+                    <h4>Once data is added, it will appear here.</h4>
+                </div>
         }
 
         </>

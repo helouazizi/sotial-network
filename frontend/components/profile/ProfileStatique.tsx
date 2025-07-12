@@ -39,9 +39,7 @@ const ProfileStatique = () => {
       </div>
       {
         !dataProfile?.myAccount ?
-
           <button className={`${dataProfile?.subscription?.status}`} onClick={HandleRelation}>{dataProfile?.subscription?.status == "accepted" ? "unfollow" : dataProfile?.subscription?.status == "pending" ? "pending..." : "follow"}</button>
-
           : ""
       }
     </div>

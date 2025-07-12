@@ -26,6 +26,103 @@
 }
 .group-page{
     background-color: var(--card-bg);
-    height: 30dvh;
+    /* height: 30dvh; */
     margin-top: 1rem;
+}
+
+
+
+/* create-event-form.css */
+
+.event-form-container {
+  max-width: 600px;
+  margin: 2.5rem auto;
+  padding: 1.5rem;
+  background-color: var(--bg-color);
+  border-radius: 1rem;
+  box-shadow: 0 4px 8px var(--shadow-color);
+  color: var(--text-primary);
+}
+
+.event-form-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: var(--accent-hover);
+}
+
+.event-form-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.event-form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.event-form-input {
+  width: 100%;
+  padding: 0.625rem;
+  background-color: var(--input-bg);
+  color: var(--input-text);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  font-size: 1rem;
+}
+
+.event-options {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.event-badge {
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+.event-badge-going {
+  background-color: var(--online-color);
+  color: #fff;
+}
+
+.event-badge-notgoing {
+  background-color: var(--danger-color);
+  color: #fff;
+}
+
+.text-muted {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.event-submit-btn {
+  padding: 0.75rem;
+  background-color: var(--accent-color);
+  color: var(--btn-text);
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+.event-submit-btn:hover {
+  background-color: var(--accent-hover);
+}
+
+.event-form-message {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: var(--online-color);
 }

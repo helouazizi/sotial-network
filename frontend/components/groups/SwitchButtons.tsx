@@ -28,7 +28,7 @@ function SwitchButtons({ firstButtonLink, secondButtonLink, firstButtonContent, 
             >
                 {secondButtonContent}
             </Link>
-        </div>
+        </div>  
     )
 }
 

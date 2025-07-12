@@ -1,5 +1,7 @@
 import { API_URL } from "."
 
+export type groupType = "getJoined" | "getSuggested"
+
 export async function createGroup(title: string, description: string) {
     try {
         const res = await fetch(API_URL+"api/v1/groups/create", {
@@ -27,39 +29,21 @@ export async function createGroup(title: string, description: string) {
     }
 }
 
-export async function GetJoinedGroups() {
+export async function GetGroups(type: groupType) {
     try {
-        const res = await fetch(API_URL+"api/v1/groups/getJoined", {
+        const res = await fetch(API_URL+"api/v1/groups/"+type, {
             credentials: "include"
         })
 
         const data = await res.json()
         if (!res.ok) {
-            
+            console.error(data.error)
+            return data
         }
 
         return data.data
 
     } catch (err) {
-        console.log(err)
-    }
-}
-
-export async function GetSuggestedGroups() {
-    try {
-        const res = await fetch(API_URL+"api/v1/groups/getSuggested", {
-            credentials: "include"
-        })
-
-        const data = await res.json()
-
-        if (!res.ok) {
-            
-        }
-
-        return data.data
-
-    } catch (err) { 
         console.error(err)
     }
 }

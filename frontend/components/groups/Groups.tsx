@@ -1,36 +1,34 @@
 "use client"
 
-import { GetJoinedGroups, GetSuggestedGroups } from '@/services/groupServices'
+import { GetGroups, groupType } from '@/services/groupServices'
 import Link from 'next/link';
 import React, { use, useContext, useEffect, useState } from 'react'
 import { MdGroups } from "react-icons/md";
 import SwitchButtons from './SwitchButtons';
 import { GroupsContext } from '@/context/GroupsContext';
 import { usePathname } from 'next/navigation';
+import { PopupContext } from '@/context/PopupContext';
 
 function Groups() {
   const context = useContext(GroupsContext)
   const pathname = usePathname()
-  const [isFetch, setIsFetch] = useState<boolean>(false)
+  const popup = useContext(PopupContext)
 
   useEffect(() => {
     const fetchGroups = async () => {
-      if (pathname === "/groups/joined") {
-        const data = await GetJoinedGroups()
-        context?.setGroups(data)
-      } else if (pathname === "/groups/suggested") {
-        const data = await GetSuggestedGroups()
+      if ((pathname.startsWith("/groups/joined") && !context?.Groups) || pathname === "/groups/suggested") {
+        let type: groupType = pathname.startsWith("/groups/joined") ? "getJoined" : "getSuggested"
+        const data = await GetGroups(type)
+        if (data.error) {
+          popup?.showPopup("faild", "Ooops, something wrong!!")
+          return
+        }
         context?.setGroups(data)
       }
     }
 
     fetchGroups()
   }, [pathname])
-
-  const handleClick = () => {
-
-    setIsFetch(prev => !prev)
-  }
 
   const displayGroups = () => {
     return context?.Groups?.map((group, index) => {
@@ -47,7 +45,9 @@ function Groups() {
 
   return (
     <>
-      <SwitchButtons handleClick={handleClick} firstButtonContent='joined' secondButtonContent='suggested' firstButtonLink='/groups/joined' secondButtonLink='/groups/suggested' />
+      <SwitchButtons handleClick={(e) => {
+        if (!pathname.startsWith(e.currentTarget.pathname)) context?.setGroups(null)
+      }} firstButtonContent='joined' secondButtonContent='suggested' firstButtonLink='/groups/joined' secondButtonLink='/groups/suggested' />
       <ul className='joinedGroups'>
         {displayGroups()}
       </ul>

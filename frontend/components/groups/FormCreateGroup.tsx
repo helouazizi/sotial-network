@@ -48,7 +48,7 @@ function FormCreateGroup() {
         title.current.value = ""
         description.current.value = ""
         
-        if (res.data) groupsContext?.setJoinedGroups(prev => prev ? [res.data,...prev] : [res.data])
+        if (res.data && location.pathname.startsWith("/groups/joined")) groupsContext?.setGroups(prev => prev ? [res.data,...prev] : [res.data])
     }, 5000), [])
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {

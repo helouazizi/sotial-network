@@ -12,12 +12,13 @@ type Group struct {
 
 type Event struct {
 	ID          int       `json:"id"`
-	GroupId     int       `json:"group_id"`
-	UserID      int       `json:"user_id"`
+	GroupId     int       `json:"group_id,omitempty"`
+	UserID      int       `json:"user_id,omitempty"`
 	Title       string    `json:"title"`
 	Description string    `json:"description"`
 	EventDate   time.Time `json:"event_date"`
 	CreatedAt   time.Time `json:"created_at"`
+	UserVote    string    `json:"vote"`
 }
 
 type EventVote struct {

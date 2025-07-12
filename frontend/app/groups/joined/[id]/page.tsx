@@ -4,7 +4,12 @@ import React from 'react'
 
 function GroupPage() {
   return (
-    <div>Posts and events</div>
+    <div className='group-page'>
+      <div>buttons</div>
+      <div>
+        group content depend on the selected buttton
+      </div>
+    </div>
   )
 }
 

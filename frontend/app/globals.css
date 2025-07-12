@@ -10,6 +10,7 @@
 @import url("../styles/register.css");
 @import url("../styles/request.css");
 @import url("../styles/groups.css");
+@import url("../styles/events.css");
 
 :root {
   --bg-color: #12111a;

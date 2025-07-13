@@ -25,7 +25,7 @@ func NewWebsocketService(WebsocketRepo *repositories.WebsocketRepository) *Webso
 	}
 }
 
-func (s *WebsocketService) SaveMessage(chat *models.Chat) (int, error) {
+func (s *WebsocketService) SaveMessage(chat *models.WS) (int, error) {
 	chat.Message = html.EscapeString(strings.TrimSpace(chat.Message))
 
 	if chat.SenderID == chat.ReceiverID {
@@ -39,7 +39,7 @@ func (s *WebsocketService) SaveMessage(chat *models.Chat) (int, error) {
 	return s.repo.SaveMessage(chat)
 }
 
-func (s *WebsocketService) GetMessages(senderID, receiverID int, lastID int) ([]*models.Chat, error) {
+func (s *WebsocketService) GetMessages(senderID, receiverID int, lastID int) ([]*models.WS, error) {
 	if senderID == receiverID {
 		return nil, errors.New("cannot get messages with yourself")
 	}
@@ -102,3 +102,4 @@ func (reqSer *WebsocketService) HandleFollowReq(reqID, followedID, followerID in
 	}
 	return reqSer.repo.HandleReqFollowRepo(reqID, followedID, followerID, newStatus)
 }
+

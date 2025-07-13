@@ -2,17 +2,20 @@
 
 import { GetGroups, groupType } from '@/services/groupServices'
 import Link from 'next/link';
-import React, { use, useContext, useEffect, useState } from 'react'
+import React, { MouseEventHandler, useContext, useEffect } from 'react'
 import { MdGroups } from "react-icons/md";
 import SwitchButtons from './SwitchButtons';
 import { GroupsContext } from '@/context/GroupsContext';
 import { usePathname } from 'next/navigation';
 import { PopupContext } from '@/context/PopupContext';
+import { IoIosSend } from "react-icons/io";
+import { SocketContext } from '@/context/socketContext';
 
 function Groups() {
   const context = useContext(GroupsContext)
   const pathname = usePathname()
   const popup = useContext(PopupContext)
+  const {ws} = useContext(SocketContext) ?? {}
 
   useEffect(() => {
     const fetchGroups = async () => {
@@ -30,6 +33,15 @@ function Groups() {
     fetchGroups()
   }, [pathname])
 
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (ws) {
+      ws.current?.send(JSON.stringify({
+        "id": parseInt(e.currentTarget.id),
+        "type": "joinGroupReq"
+      }))
+    }
+  }
+ 
   const displayGroups = () => {
     let isSuggestedPath = pathname.startsWith("/groups/suggested")
     return context?.Groups?.map((group, index) => {
@@ -41,7 +53,7 @@ function Groups() {
           <Link href={path}><span><MdGroups /></span> <p>{title}</p></Link>
           {isSuggestedPath && (
             <div className="sugg-req">
-              <button className='send'>send</button>
+              <button id={`${group.id}`} className='send' onClick={handleClick}> <IoIosSend /></button>
             </div>
           )}
         </li>

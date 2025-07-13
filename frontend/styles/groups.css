@@ -111,6 +111,10 @@
     height: 100%;
 }
 
+.joinedGroups li {
+    position: relative;
+}
+
 .joinedGroups li a {
     padding: 15px 30px;
     display: flex;
@@ -186,18 +190,26 @@
     font-size: 0.9em;
 }
 
-.sugg-req{
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.sugg-req button{
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
 }
 
 .sugg-req button.send {
-    background-color: var(--btn-bg);
+    background: none;
+    color: var(--btn-text);
     border: none;
     outline: none;
-    padding: 7px 14px;
-    border-radius: 8px;
+}
+
+
+.sugg-req button svg{
+    font-size: 2.7em;
     cursor: pointer;
-    z-index: 88;
+}
+
+.sugg-req button svg:hover{
+    color: var(--accent-color);
 }

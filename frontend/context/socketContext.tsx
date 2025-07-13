@@ -65,6 +65,7 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
 
     ws.current.onmessage = (event: MessageEvent) => {
       let res = JSON.parse(event.data)
+      // console.log(res)
       if (res.type === "CountNotifs") {
         const countotifs: NumOfREquests = {
           followersCount: res.data.followersCount,

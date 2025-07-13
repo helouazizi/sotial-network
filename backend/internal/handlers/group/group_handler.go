@@ -103,3 +103,4 @@ func (h *GroupHandler) GetSuggestedGroupsHandler(w http.ResponseWriter, r *http.
 		"data": groups,
 	})
 }
+

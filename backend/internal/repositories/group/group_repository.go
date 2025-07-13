@@ -79,6 +79,7 @@ func (r *GroupRepository) GetSuggestedGroups(userID int) ([]*models.Group, error
 			SELECT gm.group_id FROM group_members gm
 			WHERE gm.member_id = ?
 		)
+		ORDER BY g.id desc
 	`
 
 	rows, err := r.db.Query(query, userID)

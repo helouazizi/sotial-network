@@ -45,8 +45,8 @@ func (h *WebsocketHandler) WebsocketHandler(w http.ResponseWriter, r *http.Reque
 	h.service.SaveClient(userID, conn)
 
 	for {
-		var chat models.Chat
-		err := conn.ReadJSON(&chat)
+		var ws models.WS
+		err := conn.ReadJSON(&ws)
 		if err != nil && !strings.Contains(err.Error(), "close") {
 			conn.WriteJSON(map[string]any{
 				"error": "Error reading message: " + err.Error(),
@@ -61,11 +61,11 @@ func (h *WebsocketHandler) WebsocketHandler(w http.ResponseWriter, r *http.Reque
 			return
 		}
 
-		chat.SenderID = userID
+		ws.SenderID = userID
 
-		switch chat.Type {
+		switch ws.Type {
 		case "saveMessage":
-			lastMessageID, err := h.service.SaveMessage(&chat)
+			lastMessageID, err := h.service.SaveMessage(&ws)
 			if err != nil {
 				conn.WriteJSON(map[string]any{
 					"error": err.Error(),
@@ -75,13 +75,13 @@ func (h *WebsocketHandler) WebsocketHandler(w http.ResponseWriter, r *http.Reque
 
 			messageData := map[string]any{
 				"id":          lastMessageID,
-				"receiver_id": chat.ReceiverID,
-				"sender_id":   chat.SenderID,
-				"message":     chat.Message,
+				"receiver_id": ws.ReceiverID,
+				"sender_id":   ws.SenderID,
+				"message":     ws.Message,
 				"sent_at_str": time.Now().Format(time.DateTime),
 			}
 
-			if senderConns, ok := h.service.GetClient(chat.SenderID); ok {
+			if senderConns, ok := h.service.GetClient(ws.SenderID); ok {
 				for _, c := range senderConns {
 					c.WriteJSON(map[string]any{
 						"message": messageData,
@@ -90,7 +90,7 @@ func (h *WebsocketHandler) WebsocketHandler(w http.ResponseWriter, r *http.Reque
 				}
 			}
 
-			if receiverConns, ok := h.service.GetClient(chat.ReceiverID); ok {
+			if receiverConns, ok := h.service.GetClient(ws.ReceiverID); ok {
 				for _, c := range receiverConns {
 					c.WriteJSON(map[string]any{
 						"message": messageData,
@@ -100,8 +100,8 @@ func (h *WebsocketHandler) WebsocketHandler(w http.ResponseWriter, r *http.Reque
 			}
 
 		case "getMessages":
-			if chat.LastId == -1 {
-				chat.LastId, err = h.service.GetLastMessageID()
+			if ws.LastId == -1 {
+				ws.LastId, err = h.service.GetLastMessageID()
 				if err != nil {
 					conn.WriteJSON(map[string]any{
 						"error": err.Error(),
@@ -110,7 +110,7 @@ func (h *WebsocketHandler) WebsocketHandler(w http.ResponseWriter, r *http.Reque
 				}
 			}
 
-			messages, err := h.service.GetMessages(chat.SenderID, chat.ReceiverID, chat.LastId)
+			messages, err := h.service.GetMessages(ws.SenderID, ws.ReceiverID, ws.LastId)
 			if err != nil {
 				conn.WriteJSON(map[string]any{
 					"error": err.Error(),
@@ -136,7 +136,7 @@ func (h *WebsocketHandler) WebsocketHandler(w http.ResponseWriter, r *http.Reque
 				"type": "getFriends",
 			})
 		case "GetNumNotif":
-			groupeCount, followersCount, err := h.service.NumberNotifs(chat.SenderID)
+			groupeCount, followersCount, err := h.service.NumberNotifs(ws.SenderID)
 			if err != nil {
 				conn.WriteJSON(map[string]any{
 					"error": err.Error(),
@@ -153,7 +153,7 @@ func (h *WebsocketHandler) WebsocketHandler(w http.ResponseWriter, r *http.Reque
 				"type": "CountNotifs",
 			})
 		case "GetFollowersRequest":
-			followers, err := h.service.GetRequestFollowers(chat.SenderID)
+			followers, err := h.service.GetRequestFollowers(ws.SenderID)
 			if err != nil {
 				conn.WriteJSON(map[string]any{
 					"error": err.Error(),
@@ -165,30 +165,30 @@ func (h *WebsocketHandler) WebsocketHandler(w http.ResponseWriter, r *http.Reque
 				"type": "requestsFollowers",
 			})
 		case "HandleRequest":
-			err = h.service.HandleFollowReq(chat.ID, chat.SenderID, chat.ReceiverID, chat.Action)
+			err = h.service.HandleFollowReq(ws.ID, ws.SenderID, ws.ReceiverID, ws.Action)
 			if err != nil {
 				conn.WriteJSON(map[string]any{
 					"error": err.Error(),
 				})
 				continue
 			}
-			if senderConns, ok := h.service.GetClient(chat.SenderID); ok {
+			if senderConns, ok := h.service.GetClient(ws.SenderID); ok {
 				for _, c := range senderConns {
 					c.WriteJSON(map[string]any{
-						"ReqID": chat.ID,
+						"ReqID": ws.ID,
 						"type":  "ResponseRequestsFollowers",
 					})
 				}
 			}
 		case "RelationSended", "CancelRequest":
-			followers, err := h.service.GetRequestFollowers(chat.ReceiverID)
+			followers, err := h.service.GetRequestFollowers(ws.ReceiverID)
 			if err != nil {
 				conn.WriteJSON(map[string]any{
 					"error": err.Error(),
 				})
 				continue
 			}
-			groupeCount, followersCount, err := h.service.NumberNotifs(chat.ReceiverID)
+			groupeCount, followersCount, err := h.service.NumberNotifs(ws.ReceiverID)
 			if err != nil {
 				conn.WriteJSON(map[string]any{
 					"error": err.Error(),
@@ -200,7 +200,7 @@ func (h *WebsocketHandler) WebsocketHandler(w http.ResponseWriter, r *http.Reque
 				"followersCount": followersCount,
 				"total":          followersCount + groupeCount,
 			}
-			if senderConns, ok := h.service.GetClient(chat.ReceiverID); ok {
+			if senderConns, ok := h.service.GetClient(ws.ReceiverID); ok {
 				for _, c := range senderConns {
 					c.WriteJSON(map[string]any{
 						"data": followers,
@@ -212,12 +212,12 @@ func (h *WebsocketHandler) WebsocketHandler(w http.ResponseWriter, r *http.Reque
 					})
 				}
 			}
-			if chat.Action == "demandFollow" {
-				if senderConns, ok := h.service.GetClient(chat.ReceiverID); ok {
+			if ws.Action == "demandFollow" {
+				if senderConns, ok := h.service.GetClient(ws.ReceiverID); ok {
 					for _, c := range senderConns {
 						c.WriteJSON(map[string]any{
-							"message": chat.Message,
-							"type":"showNotif",
+							"message": ws.Message,
+							"type":    "showNotif",
 						})
 					}
 				}

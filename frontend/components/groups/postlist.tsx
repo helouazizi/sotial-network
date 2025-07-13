@@ -19,7 +19,7 @@ export default function Postlist({ post }: postProps) {
         }
         firstname={post.author.firstname}
         lastname={post.author.lastname}
-        createdAt={post.created_at}
+        createdAt={new Date().toISOString()}
         avatarUrl={post.author.avatar}
       />
         <PostGroupBody title={post.title} content={post.content} media={post.media_link}  />

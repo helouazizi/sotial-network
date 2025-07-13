@@ -81,6 +81,7 @@ func (r *GroupRepository) SaveGroupPostRepo(ctx context.Context, group *models.G
 				MediaLink: fileName.String,
 				Title:     group.Post.Title,
 				Content:   group.Post.Content,
+				
 			},
 		}, models.GroupError{
 			Code:    http.StatusOK,

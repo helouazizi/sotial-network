@@ -61,30 +61,30 @@ export default function PostsContainer() {
         return;
 }
       const data = await res.json();
-      console.log(data, "--------------------------------------------------------------------->data");
-      
-      if (!data.Post){
-        return
-      }
+    console.log(Array.isArray(data.Post));
+    
+if (Array.isArray(data)) {
+  const postsArray = data
+    .map((item: any) => item.Post)
+    .filter((p: Post | null) => p != null);
 
-if (Array.isArray(data.Post)) {
   setPosts((prev) =>
     page.current === 0
-      ? data.Post
+      ? postsArray
       : [
           ...prev,
-          ...data.Post.filter((p:Post) => !prev.some((post) => post.id === p.id)),
+          ...postsArray.filter((p: Post) => !prev.some((post) => post.id === p.id)),
         ]
   );
 
   page.current += 1;
 
-  if (data.Post.length < LIMIT) setHasMore(false);
+  if (postsArray.length < LIMIT) setHasMore(false);
+} else {
+  setHasMore(false);
 }
-else {
-        setHasMore(false);
-      }
-    } catch (error) {
+
+} catch (error) {
       console.error("Failed to fetch posts:", error);
     } finally {
       setIsLoading(false);

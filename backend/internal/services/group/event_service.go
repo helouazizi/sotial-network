@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/ismailsayen/social-network/internal/models"
 )
@@ -15,28 +16,34 @@ func (s *GroupService) SaveEvent(c context.Context, event *models.Event) (models
 
 	if len([]rune(event.Title)) == 0 {
 		return models.Event{}, &models.GroupError{
-			Message: "group title is required",
+			Message: "event title is required",
 			Code:    http.StatusBadRequest,
 		}
 	}
 
 	if len([]rune(event.Description)) == 0 {
 		return models.Event{}, &models.GroupError{
-			Message: "group description is required",
+			Message: "event description is required",
 			Code:    http.StatusBadRequest,
 		}
 	}
 
 	if len([]rune(event.Title)) > 100 {
 		return models.Event{}, &models.GroupError{
-			Message: "group title must not exceed 100 characters",
+			Message: "event title must not exceed 100 characters",
 			Code:    http.StatusBadRequest,
 		}
 	}
 
 	if len([]rune(event.Description)) > 1000 {
 		return models.Event{}, &models.GroupError{
-			Message: "group description must not exceed 1000 characters",
+			Message: "event description must not exceed 1000 characters",
+			Code:    http.StatusBadRequest,
+		}
+	}
+	if event.EventDate.Before(time.Now()) {
+		return models.Event{}, &models.GroupError{
+			Message: "event date must be in future",
 			Code:    http.StatusBadRequest,
 		}
 	}

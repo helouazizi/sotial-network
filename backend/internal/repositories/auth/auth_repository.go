@@ -28,12 +28,7 @@ func (r *AuthRepository) SaveUser(user *models.User) models.Error {
 		}
 	}
 	user.Nickname = strings.TrimSpace(user.Nickname)
-	// var nickname *string
-	// if user.Nickname == "" {
-	// 	nickname = nil
-	// } else {
-	// 	nickname = &user.Nickname
-	// }
+
 	query := `
 	INSERT INTO users (
 		last_name,

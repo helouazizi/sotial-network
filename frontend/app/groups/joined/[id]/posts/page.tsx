@@ -1,6 +1,6 @@
 
 
-import CreatPost from '@/components/groups/FormCreatpost'
+import PostsContainer from '@/components/groups/post'
 import React from 'react'
 
 function Posts() {
@@ -8,8 +8,8 @@ function Posts() {
   
   return (
     <div>
-          <CreatPost/>
-      <div>No posts yet</div>
+        <PostsContainer/>
+   
   
     </div>
     

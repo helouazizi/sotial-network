@@ -3,6 +3,7 @@ package repositories
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -11,6 +12,12 @@ import (
 )
 
 func (r *GroupRepository) SaveGroupPostRepo(ctx context.Context, group *models.GroupPost, img *models.Image) (models.GroupPost, models.GroupError) {
+ var(
+	id int
+	last string 
+	first string
+	neckname string
+)
 	tx, err := r.db.BeginTx(ctx, nil)
 	if err != nil {
 		return models.GroupPost{}, models.GroupError{
@@ -34,7 +41,7 @@ func (r *GroupRepository) SaveGroupPostRepo(ctx context.Context, group *models.G
 
 	res, err := tx.Exec(InsertPost,
 		group.GroupId,
-		group.Post.ID,
+		group.Post.Author.ID,
 		group.Post.Title,
 		group.Post.Content,
 		fileName,
@@ -46,12 +53,30 @@ func (r *GroupRepository) SaveGroupPostRepo(ctx context.Context, group *models.G
 			Message: "Failed to insert post",
 		}
 	}
+	query := `SELECT id, last_name , first_name, nickname FROM users WHERE  id = ?`
+	ERR := tx.QueryRow(query,group.Post.Author.ID).Scan(&id,&last,&first, &neckname)
+	fmt.Println(ERR)
+	if ERR!= nil {
+		return models.GroupPost{}, models.GroupError{
+			Code:    http.StatusInternalServerError,
+			Message: "Failed to get the user info ",
+		}
+	}
+
 	postID, _ := res.LastInsertId()
 	group.Post.ID = int(postID)
 	tx.Commit()
 	return models.GroupPost{
 		GroupId: group.GroupId,
+
+
 			Post: models.Post{
+				Author: models.User{
+					ID: id,
+					Nickname: neckname,
+					FirstName: first,
+					Lastname: last,
+				},
 				ID:        int(postID),
 				MediaLink: fileName.String,
 				Title:     group.Post.Title,
@@ -67,6 +92,7 @@ func (r *GroupRepository) GetGroupPosts(reg models.PaginationRequest, groupid in
 	GetQuery := `
 	SELECT 
 		p.group_id,
+		p.id,
 		p.member_id,
 		p.title,
 		p.content,
@@ -100,6 +126,7 @@ func (r *GroupRepository) GetGroupPosts(reg models.PaginationRequest, groupid in
 		var post models.GroupPost
 		if err := rows.Scan(
 			&post.GroupId,
+			&post.Post.ID,
 			&post.Post.Author.ID,
 			&post.Post.Title,
 			&post.Post.Content,

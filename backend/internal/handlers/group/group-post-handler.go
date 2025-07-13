@@ -50,7 +50,9 @@ func (h *GroupHandler) AddGroupPost(w http.ResponseWriter, r *http.Request) {
 	post := &models.GroupPost{
 		GroupId: groupId,
 		Post: models.Post{
-			ID:      userId,
+			Author: models.User{
+				ID: userId,
+			},
 			Title:   r.FormValue("title"),
 			Content: r.FormValue("content"),
 		},
@@ -79,7 +81,7 @@ func (h *GroupHandler) AddGroupPost(w http.ResponseWriter, r *http.Request) {
 func (h *GroupHandler) GetGroupPosts(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
-			"message": "Method not allowed",
+			"message": "Method not allowed 21458521528",
 			"status":  http.StatusMethodNotAllowed,
 		})
 		return

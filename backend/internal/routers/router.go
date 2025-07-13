@@ -44,8 +44,8 @@ func SetupRoutes(app *app.Application) *http.ServeMux {
 //=============== group posts ==============================//
 	mux.HandleFunc("/api/v1/groups/joined/{id}/post/addpost",middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.AddGroupPost), app.DB))
 	mux.HandleFunc("/api/v1/groups/joined/{id}/post/getposts", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.GetGroupPosts),app.DB))
-	mux.HandleFunc("/api/v1/groups/joined/{id}/post/addcomment", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.AddGroupComment),app.DB))
-	mux.HandleFunc("/api/v1/groups/joined/{id}/post/getcomment", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.GetGRoupComment),app.DB))
+	mux.HandleFunc("/api/v1/groups/post/addcomment", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.AddGroupComment),app.DB))
+	mux.HandleFunc("/api/v1/groups/post/getcomment", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.GetGRoupComment),app.DB))
 
 
 	//================ Event ==============================//

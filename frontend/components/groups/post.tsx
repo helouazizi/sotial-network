@@ -1,21 +1,17 @@
 // frontend/app/components/post/posts.tsx
 "use client";
 import { useState, useEffect, useRef, useCallback, useContext } from "react";
-
 import { Post } from "@/types/post";
 
-
 import { FaPenToSquare } from "react-icons/fa6";
-import { API_URL } from "@/services";
-import { useParams } from "next/navigation";
-
 import NoPostsYet from "../post/noPostsYet";
-import { PopupContext } from "@/context/PopupContext";
-
-import Postlist from "./postlist";
-import CreatePostForm from "../post/addPost";
 import CreatPost from "./FormCreatpost";
 
+import { API_URL } from "@/services";
+import { useParams } from "next/navigation";
+import { PopupContext } from "@/context/PopupContext";
+
+import PostGroupCard from "./groupPostCard";
 
 const LIMIT = 10;
 
@@ -31,7 +27,7 @@ function throttle<T extends (...args: any[]) => void>(fn: T, delay = 500): T {
   };
 }
 
-export default function PostsContainer() {  
+export default function Posts() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -39,52 +35,52 @@ export default function PostsContainer() {
   const [loadedOnce, setLoadedOnce] = useState(false);
   const page = useRef(0);
   const params = useParams();
-    const popup = useContext(PopupContext);
+  const context = useContext(PopupContext);
 
   const fetchPosts = useCallback(async () => {
     if (isLoading || !hasMore) return;
     setIsLoading(true);
-    
+
     try {
-      const res = await fetch( `${API_URL}api/v1/groups/joined/${params.id}/post/getposts`, {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          offset: page.current * LIMIT,
-          limit: LIMIT,
-        }),
-      });
+      const res = await fetch(
+        `${API_URL}api/v1/groups/joined/${params.id}/post/getposts`,
+        {
+          method: "POST",
+          credentials: "include",
+       
+          body: JSON.stringify({
+            offset: page.current * LIMIT,
+            limit: LIMIT,
+          }),
+        }
+      );
 
-      if (!res.ok){
-        popup?.showPopup("faild", "Sommething went wrong");
-        return;
-}
+      if (!res.ok) {
+      
+         context?.showPopup("faild", res.statusText)
+      }
+
       const data = await res.json();
-    console.log(Array.isArray(data.Post));
-    
-if (Array.isArray(data)) {
-  const postsArray = data
-    .map((item: any) => item.Post)
-    .filter((p: Post | null) => p != null);
 
-  setPosts((prev) =>
-    page.current === 0
-      ? postsArray
-      : [
-          ...prev,
-          ...postsArray.filter((p: Post) => !prev.some((post) => post.id === p.id)),
-        ]
-  );
+      console.log(data, "--------------------------------------------------->");
 
-  page.current += 1;
+      if (Array.isArray(data)) {
+        setPosts((prev) =>
+          page.current === 0
+            ? data
+            : [
+                ...prev,
+                ...data.filter((p) => !prev.some((post) => post.id === p.id)),
+              ]
+        );
 
-  if (postsArray.length < LIMIT) setHasMore(false);
-} else {
-  setHasMore(false);
-}
+        page.current += 1;
 
-} catch (error) {
+        if (data.length < LIMIT) setHasMore(false);
+      } else {
+        setHasMore(false);
+      }
+    } catch (error) {
       console.error("Failed to fetch posts:", error);
     } finally {
       setIsLoading(false);
@@ -92,12 +88,10 @@ if (Array.isArray(data)) {
     }
   }, [isLoading, hasMore]);
 
-  
   useEffect(() => {
     fetchPosts();
   }, []);
 
-  
   useEffect(() => {
     const handleScroll = throttle(() => {
       const scrollBottom = window.innerHeight + window.scrollY;
@@ -112,15 +106,13 @@ if (Array.isArray(data)) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [fetchPosts, hasMore, isLoading]);
 
-
-
-  const addPost = (newPost: Post ) => {
+  const addPost = (newPost: Post) => {
     setPosts((prev) => [newPost, ...prev]);
     setShowForm(false);
   };
 
   const toggleForm = () => {
-    setShowForm((prev) => !prev); 
+    setShowForm((prev) => !prev);
   };
 
   return (
@@ -131,14 +123,17 @@ if (Array.isArray(data)) {
             <FaPenToSquare className="addPostIcon" /> Add-Post
           </button>
         </div>
-           {showForm && <CreatPost  onPostCreated={addPost }/>}
+        {showForm && <CreatPost onPostCreated={addPost} />}
       </section>
 
       <section className="posts-list ">
         {posts.map((post) => (
-      <Postlist key={post.id} post={post}/>
+  <PostGroupCard key={post.id} post={post}  />
         ))}
         {!isLoading && loadedOnce && posts.length === 0 && <NoPostsYet />}
+        {!isLoading && !hasMore && posts.length > 0 && (
+          <div className="no-more-posts">No More Posts</div>
+        )}
       </section>
     </>
   );

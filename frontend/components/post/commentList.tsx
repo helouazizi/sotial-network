@@ -11,7 +11,9 @@ export default function CommentList({ comments }: CommentListProps) {
             {comments && comments.map((c, idx) => (
                 <div key={idx} className="comment">
                     <PostHeader
-                        author={c.author.nickname || `${c.author.firstName}-${c.author.lastName}`}
+                        author={c.author.nickname}
+                        firstname= {c.author.firstname}
+                        lastname= {c.author.lastname}
                         createdAt={c.created_at}
                         avatarUrl={c.author.avatar ? c.author.avatar : "avatar.png"}
                     />

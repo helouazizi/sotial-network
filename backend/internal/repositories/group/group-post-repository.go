@@ -11,7 +11,7 @@ import (
 	"github.com/ismailsayen/social-network/pkg/utils"
 )
 
-func (r *GroupRepository) SaveGroupPostRepo(ctx context.Context, group *models.GroupPost, img *models.Image) (models.GroupPost, models.GroupError) {
+func (r *GroupRepository) SaveGroupPostRepo(ctx context.Context, group *models.GroupPost, img *models.Image) (models.Post, models.GroupError) {
  var(
 	id int
 	last string 
@@ -20,7 +20,7 @@ func (r *GroupRepository) SaveGroupPostRepo(ctx context.Context, group *models.G
 )
 	tx, err := r.db.BeginTx(ctx, nil)
 	if err != nil {
-		return models.GroupPost{}, models.GroupError{
+		return  models.Post{}, models.GroupError{
 			Code:    http.StatusInternalServerError,
 			Message: "failed to begin database transaction",
 		}
@@ -36,7 +36,7 @@ func (r *GroupRepository) SaveGroupPostRepo(ctx context.Context, group *models.G
 	 `
 	fileName, ImageErr := utils.HandleImage(img, "pkg/db/images/groupePost")
 	if ImageErr.Code != http.StatusOK {
-		return models.GroupPost{}, ImageErr
+		return  models.Post{}, ImageErr
 	}
 
 	res, err := tx.Exec(InsertPost,
@@ -48,7 +48,7 @@ func (r *GroupRepository) SaveGroupPostRepo(ctx context.Context, group *models.G
 		time.Now(),
 	)
 	if err != nil {
-		return models.GroupPost{}, models.GroupError{
+		return  models.Post{}, models.GroupError{
 			Code:    http.StatusInternalServerError,
 			Message: "Failed to insert post",
 		}
@@ -57,7 +57,7 @@ func (r *GroupRepository) SaveGroupPostRepo(ctx context.Context, group *models.G
 	ERR := tx.QueryRow(query,group.Post.Author.ID).Scan(&id,&last,&first, &neckname)
 	fmt.Println(ERR)
 	if ERR!= nil {
-		return models.GroupPost{}, models.GroupError{
+		return models.Post{}, models.GroupError{
 			Code:    http.StatusInternalServerError,
 			Message: "Failed to get the user info ",
 		}
@@ -66,11 +66,10 @@ func (r *GroupRepository) SaveGroupPostRepo(ctx context.Context, group *models.G
 	postID, _ := res.LastInsertId()
 	group.Post.ID = int(postID)
 	tx.Commit()
-	return models.GroupPost{
-		GroupId: group.GroupId,
+	return  models.Post{
+		
 
-
-			Post: models.Post{
+			
 				Author: models.User{
 					ID: id,
 					Nickname: neckname,
@@ -82,17 +81,16 @@ func (r *GroupRepository) SaveGroupPostRepo(ctx context.Context, group *models.G
 				Title:     group.Post.Title,
 				Content:   group.Post.Content,
 				
-			},
+		
 		}, models.GroupError{
 			Code:    http.StatusOK,
 			Message: "The post was saved into the database successfully.",
 		}
 }
 
-func (r *GroupRepository) GetGroupPosts(reg models.PaginationRequest, groupid int) ([]models.GroupPost, models.GroupError) {
+func (r *GroupRepository) GetGroupPosts(reg models.PaginationRequest, groupid int) ([]models.Post, models.GroupError) {
 	GetQuery := `
 	SELECT 
-		p.group_id,
 		p.id,
 		p.member_id,
 		p.title,
@@ -113,39 +111,39 @@ func (r *GroupRepository) GetGroupPosts(reg models.PaginationRequest, groupid in
 
 	rows, rowsErr := r.db.Query(GetQuery, groupid, reg.Limit, reg.Offset)
 	if rowsErr != nil {
-		return []models.GroupPost{}, models.GroupError{
+		return []models.Post{}, models.GroupError{
 			Code:    http.StatusInternalServerError,
 			Message: rowsErr.Error(),
 		}
 	}
 	var (
-		posts []models.GroupPost
+		posts []models.Post
 		media sql.NullString
 	)
 
 	for rows.Next() {
-		var post models.GroupPost
+		var post models.Post
 		if err := rows.Scan(
-			&post.GroupId,
-			&post.Post.ID,
-			&post.Post.Author.ID,
-			&post.Post.Title,
-			&post.Post.Content,
+			
+			&post.ID,
+			&post.Author.ID,
+			&post.Title,
+			&post.Content,
 			&media,
-			&post.Post.TotalComments,
-			&post.Post.CreatedAt,
-			&post.Post.Author.FirstName,
-			&post.Post.Author.Lastname,
-			&post.Post.Author.Nickname,
-			&post.Post.Author.Avatar,
+			&post.TotalComments,
+			&post.CreatedAt,
+			&post.Author.FirstName,
+			&post.Author.Lastname,
+			&post.Author.Nickname,
+			&post.Author.Avatar,
 		); err != nil {
-			return []models.GroupPost{}, models.GroupError{
+			return []models.Post{}, models.GroupError{
 				Code:    http.StatusInternalServerError,
 				Message: err.Error(),
 			}
 		}
 		if media.Valid {
-			post.Post.MediaLink = media.String
+			post.MediaLink = media.String
 		}
 		posts = append(posts, post)
 
@@ -157,7 +155,7 @@ func (r *GroupRepository) GetGroupPosts(reg models.PaginationRequest, groupid in
 	}
 }
 
-func (r *GroupRepository) AddGroupComment(comments models.GroupComment, img *models.Image) models.GroupError {
+func (r *GroupRepository) AddGroupComment(comments models.Comment, img *models.Image) models.GroupError {
 	query := `
 	INSERT INTO group_comments (group_post_id , member_id, content, media, created_at)
 	VAlUES (?, ?, ?, ?, ?)
@@ -176,7 +174,7 @@ func (r *GroupRepository) AddGroupComment(comments models.GroupComment, img *mod
 	}
 	defer stmt.Close()
 
-	_, err = stmt.Exec(comments.Comment.PostID, comments.Comment.Author.ID, comments.Comment.Comment, fileName, time.Now())
+	_, err = stmt.Exec(comments.PostID, comments.Author.ID, comments.Comment, fileName, time.Now())
 	if err != nil {
 		return models.GroupError{
 			Code:    http.StatusInternalServerError,
@@ -189,7 +187,7 @@ func (r *GroupRepository) AddGroupComment(comments models.GroupComment, img *mod
 	}
 }
 
-func (r *GroupRepository) GetGRoupComment( post_id  int) ([]models.GroupComment, models.GroupError) {
+func (r *GroupRepository) GetGRoupComment( post_id  int) ([]models.Comment, models.GroupError) {
 	query := `
   SELECT 
 	c.group_post_id, 
@@ -209,37 +207,37 @@ ORDER BY c.created_at DESC;
 	`
 	rows, rowsErr := r.db.Query(query,post_id )
 	if rowsErr != nil {
-		return []models.GroupComment{}, models.GroupError{
+		return []models.Comment{}, models.GroupError{
 			Code:    http.StatusInternalServerError,
 			Message: rowsErr.Error(),
 		}
 	}
 		var (
-		comments []models.GroupComment
+		comments []models.Comment
 		media sql.NullString
 	)
 	for rows.Next() {
-		var comment models.GroupComment
+		var comment models.Comment
 		if err := rows.Scan(
-			&comment.Comment.PostID,
-			&comment.Comment.Author.ID,
+			&comment.PostID,
+			&comment.Author.ID,
 			
-			&comment.Comment.Comment,
+			&comment.Comment,
 			&media,
 		
-			&comment.Comment.CreatedAt,
-			&comment.Comment.Author.FirstName,
-			&comment.Comment.Author.Lastname,
-			&comment.Comment.Author.Nickname,
-			&comment.Comment.Author.Avatar,
+			&comment.CreatedAt,
+			&comment.Author.FirstName,
+			&comment.Author.Lastname,
+			&comment.Author.Nickname,
+			&comment.Author.Avatar,
 		);err != nil {
-			return []models.GroupComment{}, models.GroupError{
+			return []models.Comment{}, models.GroupError{
 				Code:    http.StatusInternalServerError,
 				Message: err.Error(),
 			}
 		}
 		if media.Valid {
-			comment.Comment.MediaLink = media.String
+			comment.MediaLink = media.String
 		}
 		comments = append(comments, comment)
 	}

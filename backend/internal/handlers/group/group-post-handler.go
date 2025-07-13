@@ -81,7 +81,7 @@ func (h *GroupHandler) AddGroupPost(w http.ResponseWriter, r *http.Request) {
 func (h *GroupHandler) GetGroupPosts(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
-			"message": "Method not allowed 21458521528",
+			"message": "Method not allowed ",
 			"status":  http.StatusMethodNotAllowed,
 		})
 		return
@@ -132,22 +132,8 @@ func (h *GroupHandler) AddGroupComment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	groupIdstr, groupErr := utils.GetGroupId(r, "post")
-	if groupErr != nil {
-		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
-			"message": "Invalid URL",
-			"status":  http.StatusBadRequest,
-		})
-		return
-	}
-	groupId, err := strconv.Atoi(groupIdstr)
-	if err != nil {
-		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
-			"message": "Internal Server Error",
-			"status":  http.StatusInternalServerError,
-		})
-		return
-	}
+	
+
 	postIdStr := r.FormValue("post_id")
 	postId, err := strconv.Atoi(postIdStr)
 	if err != nil {
@@ -157,16 +143,13 @@ func (h *GroupHandler) AddGroupComment(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
-	groupcomments := models.GroupComment{
-		GroupId: groupId,
-
-		Comment: models.Comment{
+	groupcomments := models.Comment{
 			Comment:   r.FormValue("comment"),
 			PostID:    postId,
 			CreatedAt: time.Now().Format(time.RFC3339),
 			Author:    models.User{ID: r.Context().Value("userID").(int)},
-		},
-	}
+		}
+	
 	file, header, err := r.FormFile("image")
 
 	var img *models.Image // nil unless file is provided

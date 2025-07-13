@@ -99,3 +99,18 @@ func (r *GroupRepository) GetSuggestedGroups(userID int) ([]*models.Group, error
 
 	return groups, nil
 }
+
+func (r *GroupRepository) GetInfoGroupeRepo(GrpID string) (*models.Group, error) {
+	query := `SELECT g.id, g.title, COUNT(gr.member_id) AS members
+				FROM groups g 
+				INNER JOIN group_members gr ON g.id = gr.group_id
+				WHERE gr.group_id= ?
+				GROUP BY gr.group_id;
+	`
+	var groupInfo models.Group
+	err := r.db.QueryRow(query, GrpID).Scan(&groupInfo.ID, &groupInfo.Title, &groupInfo.Members)
+	if err != nil && err != sql.ErrNoRows {
+		return nil, err
+	}
+	return &groupInfo, nil
+}

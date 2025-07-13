@@ -8,6 +8,7 @@ type Group struct {
 	Title       string    `json:"title"`
 	Description string    `json:"description"`
 	CreatedAt   time.Time `json:"created_at"`
+	Members     int       `json:"count_members,omitempty"`
 }
 
 type Event struct {

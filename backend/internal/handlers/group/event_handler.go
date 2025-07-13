@@ -19,14 +19,14 @@ func (h *GroupHandler) CreateEventHandler(w http.ResponseWriter, r *http.Request
 	var event *models.Event
 	if err := json.NewDecoder(r.Body).Decode(&event); err != nil {
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
-			"error": err.Error(),
+			"error": "Bad Request",
 		})
 		return
 	}
 
 	event.UserID = r.Context().Value("userID").(int)
-	err := h.service.SaveEvent(event)
-	if err != nil {
+	newevent, err := h.service.SaveEvent(r.Context(), event)
+	if err.Code != http.StatusOK {
 		utils.ResponseJSON(w, err.Code, map[string]any{
 			"error": err.Message,
 		})
@@ -35,6 +35,7 @@ func (h *GroupHandler) CreateEventHandler(w http.ResponseWriter, r *http.Request
 
 	utils.ResponseJSON(w, http.StatusOK, map[string]any{
 		"message": "Event created succefully!",
+		"data":    newevent,
 	})
 }
 
@@ -53,7 +54,8 @@ func (h *GroupHandler) GetGroupEventHandler(w http.ResponseWriter, r *http.Reque
 		})
 		return
 	}
-	events, err := h.service.GetGroupEvents(groupIDStr)
+	UserID := r.Context().Value("userID").(int)
+	events, err := h.service.GetGroupEvents(UserID, groupIDStr)
 	if err.Code != http.StatusOK {
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
 			"error": err.Message,
@@ -77,12 +79,12 @@ func (h *GroupHandler) VoteEventHandler(w http.ResponseWriter, r *http.Request) 
 	var vote models.EventVote
 	if err := json.NewDecoder(r.Body).Decode(&vote); err != nil {
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
-			"error": err.Error(),
+			"error": "Bad Reauest",
 		})
 		return
 	}
 	vote.UserID = r.Context().Value("userID").(int)
-	err := h.service.VoteOnEvent(vote)
+	err := h.service.VoteOnEvent(r.Context(), vote)
 	if err.Code != http.StatusOK {
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
 			"error": err.Message,

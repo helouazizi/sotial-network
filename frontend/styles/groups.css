@@ -168,7 +168,7 @@
     background-color: var(--border-color);
 }
 
-.suggestedGroupsReq{
+.exploreGroups {
     display: flex;
     flex-direction: column;
     gap: 15px;
@@ -178,10 +178,17 @@
     color: var(--text-secondary);
 }
 
-.suggestedGroupsReq svg{
+.exploreGroups svg {
     font-size: 6.5em;
 }
 
-.suggestedGroupsReq p{
+.exploreGroups p {
     font-size: 0.9em;
+}
+
+.chat-grp-header {
+    border-bottom: 2px solid var(--border-color);
+    justify-content: space-between;
+    padding: 20px 40px;
+    display: flex;
 }

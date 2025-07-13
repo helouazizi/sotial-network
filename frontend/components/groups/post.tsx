@@ -47,7 +47,7 @@ export default function Posts() {
         {
           method: "POST",
           credentials: "include",
-       
+
           body: JSON.stringify({
             offset: page.current * LIMIT,
             limit: LIMIT,
@@ -56,13 +56,11 @@ export default function Posts() {
       );
 
       if (!res.ok) {
-      
-         context?.showPopup("faild", res.statusText)
+        context?.showPopup("faild", res.statusText);
       }
 
       const data = await res.json();
 
-      console.log(data, "--------------------------------------------------->");
 
       if (Array.isArray(data)) {
         setPosts((prev) =>
@@ -128,7 +126,7 @@ export default function Posts() {
 
       <section className="posts-list ">
         {posts.map((post) => (
-  <PostGroupCard key={post.id} post={post}  />
+          <PostGroupCard key={post.id} post={post} />
         ))}
         {!isLoading && loadedOnce && posts.length === 0 && <NoPostsYet />}
         {!isLoading && !hasMore && posts.length > 0 && (

@@ -11,7 +11,7 @@ function GroupPageLayout({ children }: { children: ReactNode }) {
   
   return (
     <div className='group-page'>
-      <SwitchButtons firstButtonContent='Posts' secondButtonContent='Events' firstButtonLink={`${url}`} secondButtonLink={`/groups/joined/${id}/events`} />
+      <SwitchButtons firstButtonContent='Posts' secondButtonContent='Events' firstButtonLink={`/groups/joined/${id}/posts`} secondButtonLink={`/groups/joined/${id}/events`} />
       <div>
         {children}
       </div>

@@ -21,7 +21,7 @@ export default function CreatPost({ onPostCreated }: Props) {
     formdata.append("title", Title);
     formdata.append("content", Content);
     if (File) {
-      formdata.append("file", File);
+      formdata.append("image", File);
     }
 
     try {
@@ -39,9 +39,8 @@ export default function CreatPost({ onPostCreated }: Props) {
         return;
       }
       const data = await res.json();
-console.log(data.Post);
 
-      onPostCreated(data.Post);
+      onPostCreated(data);
     } catch (error) {
       popup?.showPopup("faild", "Sommething went wrong");
     }

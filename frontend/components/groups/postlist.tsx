@@ -22,7 +22,7 @@ export default function Postlist({ post }: postProps) {
         createdAt={new Date().toISOString()}
         avatarUrl={post.author.avatar}
       />
-        <PostGroupBody title={post.title} content={post.content} media={post.media_link}  />
+        <PostGroupBody title={post.title} content={post.content} media={post.media_link}  body_type="post"/>
     </div>
   
   );

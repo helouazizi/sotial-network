@@ -8,7 +8,6 @@ import { SocketContext } from "@/context/socketContext"; // Adjust path if diffe
 import { useContext } from 'react';
 import { addGroupComment, getGroupComments } from '@/services/groupcommentservices';
 import CommentPostForm from '../post/commentForm';
-import PostBody from '../post/postBody';
 import PostHeader from '../post/postHeader';
 import PostGroupActions from './Postaction';
 import PostGroupBody from './PostGroupBody';
@@ -53,7 +52,7 @@ export default function PostGroupCard({ post }: postProps) {
 return (
     <div className="post-card">
       <PostHeader author={post.author.nickname} firstname={post.author.firstname} lastname={post.author.lastname} createdAt={post.created_at} avatarUrl={post.author.avatar} />
-      <PostGroupBody title={post.title} content={post.content} media={post.media_link} />
+      <PostGroupBody title={post.title} content={post.content} media={post.media_link} body_type='post'/>
       <CommentPostForm onSubmit={newComment} />
       <PostGroupActions
         total_comments={total_comments}

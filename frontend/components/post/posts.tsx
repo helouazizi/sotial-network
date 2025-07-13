@@ -1,6 +1,6 @@
 // frontend/app/components/post/posts.tsx
 "use client";
-import { useState, useEffect, useRef, useCallback, useContext } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import CreatePostForm from "./addPost";
 import { Post } from "@/types/post";
 import PostCard from "./postCrad";

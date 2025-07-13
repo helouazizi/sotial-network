@@ -1,7 +1,10 @@
-import Chat from "../privateChat/page";
+import React from 'react'
+import Chat from '../privateChat/page'
 
-export default function GroupsChat() {
+const page = () => {
   return (
-    <Chat />
-  );
+    <><Chat /></>
+  )
 }
+
+export default page

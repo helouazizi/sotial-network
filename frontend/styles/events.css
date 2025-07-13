@@ -149,10 +149,6 @@
   color: var(--text-primary);
 }
 
-.event-event-card p {
-  margin: 4px 0;
-  color: var(--text-secondary);
-}
 
 
 .event-vote-buttons {
@@ -186,8 +182,9 @@
 
 
 
-.event-event-card p strong {
-  color: var(--accent-color);
+.event-date{
+  margin-top: 1rem;
+  color: var(--accent-hover);
 }
 
 @media (max-width: 600px) {

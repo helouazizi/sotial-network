@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -42,14 +43,26 @@ func (r *GroupRepository) SaveEvent(c context.Context, event *models.Event) (mod
 
 func (r *GroupRepository) GetGroupEvents(GroupId int) ([]*models.Event, models.GroupError) {
 	query := `
-	SELECT id, title, descreption, event_date, created_at
-	FROM group_events
-	WHERE group_id = ?
-	ORDER BY created_at DESC
+		SELECT 
+			e.id, 
+			e.title, 
+			e.descreption, 
+			e.event_date, 
+			e.created_at, 
+			e.member_id,
+			u.first_name,
+			u.last_name,
+			u.nickname,
+			u.avatar
+			FROM group_events AS e
+			LEFT JOIN users AS u ON u.id = e.member_id
+			WHERE e.group_id = ?
+			ORDER BY e.created_at DESC;
     `
 
 	rows, err := r.db.Query(query, GroupId)
 	if err != nil {
+		fmt.Println(err, "1")
 		return nil, models.GroupError{
 			Message: "Internal Server Error",
 			Code:    http.StatusInternalServerError,
@@ -59,8 +72,21 @@ func (r *GroupRepository) GetGroupEvents(GroupId int) ([]*models.Event, models.G
 	var Events []*models.Event
 	for rows.Next() {
 		var event models.Event
-		err := rows.Scan(&event.ID, &event.Title, &event.Description, &event.EventDate, &event.CreatedAt)
+		var unused int
+		err := rows.Scan(
+			&event.ID,
+			&event.Title,
+			&event.Description,
+			&event.EventDate,
+			&event.CreatedAt,
+			&unused,
+			&event.Author.FirstName,
+			&event.Author.Lastname,
+			&event.Author.Nickname,
+			&event.Author.Avatar,
+		)
 		if err != nil {
+			fmt.Println(err, "12")
 			return nil, models.GroupError{
 				Message: "Internal Server Error",
 				Code:    http.StatusInternalServerError,

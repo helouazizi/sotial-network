@@ -4,7 +4,8 @@ import { useContext, useState } from 'react'
 import { API_URL } from "@/services/index"
 import { PopupContext } from '@/context/PopupContext'
 import { Event } from '@/types/events'
-import { title } from 'process'
+import { SocketContext } from "@/context/socketContext"; // Adjust path if different
+
 
 
 interface EventData {
@@ -24,22 +25,39 @@ export default function EventForm({ group_id, onCreate }: EventFromProps) {
         description: '',
         datetime: '',
     })
-    const [submitting, setSubmitting] = useState(false)
     const Popup = useContext(PopupContext)
+    const { user } = useContext(SocketContext) ?? {}
+
 
 
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setForm({ ...form, [e.target.name]: e.target.value })
+        setForm({ ...form, [e.target.name]: e.target.value.trim() })
     }
 
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        if (submitting) {
-            return
+      
+
+        // Validate form data
+        if (!form.title?.trim() || form.title.trim().length > 300) {
+            Popup?.showPopup("faild", "Title can't be empty or longer than 300 characters.");
+            return;
         }
-        setSubmitting(true)
+
+        if (!form.description?.trim() || form.description.trim().length > 500) {
+            Popup?.showPopup("faild", "Description can't be empty or longer than 500 characters.");
+            return;
+        }
+
+        if (!form.datetime || new Date(form.datetime) <= new Date()) {
+            Popup?.showPopup("faild", "Please select a future date and time for the event.");
+            return;
+        }
+
+
+
 
         const body = {
             group_id: group_id,
@@ -62,7 +80,17 @@ export default function EventForm({ group_id, onCreate }: EventFromProps) {
                     description: form.description,
                     event_date: form.datetime,
                     vote: null,
-                    created_at: new Date().toISOString()
+                    created_at: new Date().toISOString(),
+                    author: {
+                        nickname: user?.nickname ?? "You",
+                        firstname: user?.firstname ?? "",
+                        lastname: user?.lastname ?? "",
+                        avatar: user?.avatar ?? "",
+                        aboutme: user?.aboutme ?? "",
+                        dateofbirth: user?.dateofbirth ?? "",
+                        email: user?.email ?? "",
+                        id: user?.id ?? 0
+                    }
                 }
                 onCreate(newEvent)
                 setForm({ title: '', description: '', datetime: '' })
@@ -73,9 +101,7 @@ export default function EventForm({ group_id, onCreate }: EventFromProps) {
             }
         } catch (err) {
             Popup?.showPopup("faild", 'Something went wrong. Try again.')
-        } finally {
-            setSubmitting(false)
-        }
+        } 
     }
 
     return (
@@ -130,8 +156,8 @@ export default function EventForm({ group_id, onCreate }: EventFromProps) {
                     <p className="text-muted">Users will be able to choose after event is created.</p>
                 </div>
 
-                <button type="submit" disabled={submitting} className="event-submit-btn">
-                    {submitting ? 'Creating...' : 'Create Event'}
+                <button type="submit" className="event-submit-btn">
+                  Create Event
                 </button>
             </form>
         </div>

@@ -1,3 +1,5 @@
+import { User } from "./user"
+
 export interface Event {
     id : number,
     title : string ,
@@ -5,4 +7,5 @@ export interface Event {
     event_date : string,
     created_at : string,
     vote : string | null
+    author : User
 }

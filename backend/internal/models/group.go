@@ -19,6 +19,7 @@ type Event struct {
 	EventDate   time.Time `json:"event_date"`
 	CreatedAt   time.Time `json:"created_at"`
 	UserVote    string    `json:"vote"`
+	Author      User      `json:"author"`
 }
 
 type EventVote struct {

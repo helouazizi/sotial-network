@@ -31,6 +31,7 @@ function Groups() {
   }, [pathname])
 
   const displayGroups = () => {
+    let isSuggestedPath = pathname.startsWith("/groups/suggested")
     return context?.Groups?.map((group, index) => {
       let title = group.title.length > 25 ? group.title.slice(0, 25).trim() + "..." : group.title
       let path = pathname.startsWith("/groups/joined") ? "/groups/joined/" + group.id + "/posts" : ""
@@ -38,6 +39,11 @@ function Groups() {
       return (
         <li key={index}>
           <Link href={path}><span><MdGroups /></span> <p>{title}</p></Link>
+          {isSuggestedPath && (
+            <div className="sugg-req">
+              <button className='send'>send</button>
+            </div>
+          )}
         </li>
       )
     })

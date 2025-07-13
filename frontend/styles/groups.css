@@ -185,3 +185,19 @@
 .exploreGroups p{
     font-size: 0.9em;
 }
+
+.sugg-req{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.sugg-req button.send {
+    background-color: var(--btn-bg);
+    border: none;
+    outline: none;
+    padding: 7px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    z-index: 88;
+}

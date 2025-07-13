@@ -19,7 +19,7 @@ function Groups() {
       if ((pathname.startsWith("/groups/joined") && !context?.Groups) || pathname === "/groups/suggested") {
         let type: groupType = pathname.startsWith("/groups/joined") ? "getJoined" : "getSuggested"
         const data = await GetGroups(type)
-        if (data.error) {
+        if (data && data.error) {
           popup?.showPopup("faild", "Ooops, something wrong!!")
           return
         }

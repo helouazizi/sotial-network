@@ -15,7 +15,7 @@ export default function CommentList({ comments }: CommentListProps) {
                         firstname= {c.author.firstname}
                         lastname= {c.author.lastname}
                         createdAt={c.created_at}
-                        avatarUrl={c.author.avatar ? c.author.avatar : "avatar.png"}
+                        avatarUrl={c.author.avatar ? c.author.avatar: undefined}
                     />
                     <PostBody content={c.comment} title="" media={c.media_link || ""} body_type="comment" />
                 </div>

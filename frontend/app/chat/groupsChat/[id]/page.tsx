@@ -1,4 +1,6 @@
 "use client"
+import GroupChatBody from '@/components/groups/GroupChatBody'
+import GroupChatFooter from '@/components/groups/GroupChatFooter'
 import GroupChatHeader from '@/components/groups/GroupChatHeader'
 import { GetInfoGrp } from '@/services/groupServices'
 import { Group } from '@/types/groups'
@@ -23,6 +25,8 @@ const page = () => {
     return (
         <>
             <GroupChatHeader idGrp={chatInfo?.id} title={chatInfo?.title} members={chatInfo?.count_members} />
+            <GroupChatBody/>
+            <GroupChatFooter/>
         </>
     )
 }

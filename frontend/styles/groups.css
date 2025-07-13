@@ -40,6 +40,8 @@
 
 .groupPage .right-side {
     flex: 3;
+    display: flex;
+    flex-direction: column;
 }
 
 .create-group {
@@ -164,4 +166,22 @@
 
 .switch-buttons a:hover {
     background-color: var(--border-color);
+}
+
+.suggestedGroupsReq{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    color: var(--text-secondary);
+}
+
+.suggestedGroupsReq svg{
+    font-size: 6.5em;
+}
+
+.suggestedGroupsReq p{
+    font-size: 0.9em;
 }

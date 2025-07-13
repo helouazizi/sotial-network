@@ -8,7 +8,6 @@ import { useParams, usePathname } from 'next/navigation';
 function GroupPageLayout({ children }: { children: ReactNode }) {
   const url = usePathname()
   const {id} = useParams()
-  console.log(url ,"url");
   
   return (
     <div className='group-page'>

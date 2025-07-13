@@ -115,7 +115,7 @@ func (r *PostRepository) GetPosts(userId, start, limit int) ([]models.Post, erro
 					AND EXISTS (
 						SELECT 1 FROM followers f
 						WHERE f.followed_id = ?
-						AND f.followed_id = p.user_id
+						AND f.follower_id = p.user_id
 					)
 				)
 

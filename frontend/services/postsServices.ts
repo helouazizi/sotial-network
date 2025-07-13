@@ -68,7 +68,5 @@ export const GetFolowers = async (): Promise<Follower[]> => {
         throw new Error(`Failed to fetch followers: ${errorText}`);
     }
     const folowers = await res.json();
-
-
     return folowers.friends
 };

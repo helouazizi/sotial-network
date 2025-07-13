@@ -1,31 +1,43 @@
 "use client"
 
-import { GetJoinedGroups } from '@/services/groupServices'
+import { GetGroups, groupType } from '@/services/groupServices'
 import Link from 'next/link';
-import React, { useContext, useEffect, useState } from 'react'
+import React, { use, useContext, useEffect, useState } from 'react'
 import { MdGroups } from "react-icons/md";
 import SwitchButtons from './SwitchButtons';
 import { GroupsContext } from '@/context/GroupsContext';
+import { usePathname } from 'next/navigation';
+import { PopupContext } from '@/context/PopupContext';
 
 function Groups() {
   const context = useContext(GroupsContext)
+  const pathname = usePathname()
+  const popup = useContext(PopupContext)
 
   useEffect(() => {
     const fetchGroups = async () => {
-      const data = await GetJoinedGroups()
-      context?.setJoinedGroups(data)
+      if ((pathname.startsWith("/groups/joined") && !context?.Groups) || pathname === "/groups/suggested") {
+        let type: groupType = pathname.startsWith("/groups/joined") ? "getJoined" : "getSuggested"
+        const data = await GetGroups(type)
+        if (data && data.error) {
+          popup?.showPopup("faild", "Ooops, something wrong!!")
+          return
+        }
+        context?.setGroups(data)
+      }
     }
 
     fetchGroups()
-  }, [])
+  }, [pathname])
 
   const displayGroups = () => {
-    return context?.joinedGroups?.map((group, index) => {
-      let title = group.title.length > 20 ? group.title.slice(0, 20).trim() + "..." : group.title
+    return context?.Groups?.map((group, index) => {
+      let title = group.title.length > 25 ? group.title.slice(0, 25).trim() + "..." : group.title
+      let path = pathname.startsWith("/groups/joined") ? "/groups/joined/" + group.id + "/posts" : ""
 
       return (
         <li key={index}>
-          <Link href={"/groups/joined/" + group.id+"/posts"}><span><MdGroups /></span> <p>{title}</p></Link>
+          <Link href={path}><span><MdGroups /></span> <p>{title}</p></Link>
         </li>
       )
     })
@@ -33,7 +45,9 @@ function Groups() {
 
   return (
     <>
-      <SwitchButtons firstButtonContent='joined' secondButtonContent='suggested' firstButtonLink='/groups/joined' secondButtonLink='/groups/suggested'/>
+      <SwitchButtons handleClick={(e) => {
+        if (!pathname.startsWith(e.currentTarget.pathname)) context?.setGroups(null)
+      }} firstButtonContent='joined' secondButtonContent='suggested' firstButtonLink='/groups/joined' secondButtonLink='/groups/suggested' />
       <ul className='joinedGroups'>
         {displayGroups()}
       </ul>

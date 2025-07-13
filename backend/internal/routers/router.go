@@ -45,5 +45,6 @@ func SetupRoutes(app *app.Application) *http.ServeMux {
 	//================ Event ==============================//
 	mux.HandleFunc("/api/v1/groups/joined/{id}/events", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.GetGroupEventHandler), app.DB))
 	mux.HandleFunc("/api/v1/groups/events/create", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.CreateEventHandler), app.DB))
+	mux.HandleFunc("/api/v1/groups/events/vote", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.VoteEventHandler), app.DB))
 	return mux
 }

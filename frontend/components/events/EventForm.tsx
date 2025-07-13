@@ -25,6 +25,7 @@ export default function EventForm({ group_id, onCreate }: EventFromProps) {
         description: '',
         datetime: '',
     })
+    
     const Popup = useContext(PopupContext)
     const { user } = useContext(SocketContext) ?? {}
 

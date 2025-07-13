@@ -78,7 +78,7 @@ func (h *GroupHandler) VoteEventHandler(w http.ResponseWriter, r *http.Request) 
 	var vote models.EventVote
 	if err := json.NewDecoder(r.Body).Decode(&vote); err != nil {
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
-			"error": err.Error(),
+			"error": "Bad Reauest",
 		})
 		return
 	}

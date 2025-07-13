@@ -28,14 +28,14 @@ func (s *GroupService) SaveEvent(c context.Context, event *models.Event) (models
 		}
 	}
 
-	if len([]rune(event.Title)) > 100 {
+	if len([]rune(event.Title)) > 300 {
 		return models.Event{}, &models.GroupError{
 			Message: "event title must not exceed 100 characters",
 			Code:    http.StatusBadRequest,
 		}
 	}
 
-	if len([]rune(event.Description)) > 1000 {
+	if len([]rune(event.Description)) > 500 {
 		return models.Event{}, &models.GroupError{
 			Message: "event description must not exceed 1000 characters",
 			Code:    http.StatusBadRequest,

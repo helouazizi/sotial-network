@@ -47,3 +47,24 @@ export async function GetGroups(type: groupType) {
         console.error(err)
     }
 }
+
+export async function GetGroup(id: number) {
+    try {
+        const res = await fetch(API_URL+"api/v1/groups/joined/"+id, {
+            credentials: "include"
+        })
+
+        const data = await res.json()
+        if (!res.ok) {
+            console.error(data.error)
+            return data
+        }
+
+        return data.data
+
+    } catch (err) {
+        console.error(err)
+    }
+}
+
+

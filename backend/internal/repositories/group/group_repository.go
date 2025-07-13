@@ -99,3 +99,32 @@ func (r *GroupRepository) GetSuggestedGroups(userID int) ([]*models.Group, error
 
 	return groups, nil
 }
+
+func (r *GroupRepository) GetGroup(groupID int) (*models.Group, *models.GroupError) {
+	query := `
+		SELECT 
+			g.id, g.user_id, g.title, g.description, g.created_at,
+			u.id, u.nickname, u.first_name, u.last_name,  u.avatar,
+			(
+               SELECT COUNT(*) FROM group_members gm WHERE gm.group_id = g.id
+            ) AS total_members
+		FROM groups g
+		JOIN users u ON g.user_id = u.id
+		WHERE g.id = ?
+	`
+	group := &models.Group{}
+	var gid int
+	var uid int
+	err := r.db.QueryRow(query, groupID).Scan(
+		&gid, &uid, &group.Title, &group.Description, &group.CreatedAt,
+		&uid, &group.Author.Nickname, &group.Author.FirstName, &group.Author.Lastname, &group.Author.Avatar, &group.TotalMembers,
+	)
+	if err != nil {
+		return nil, &models.GroupError{
+			Message: "Internal Server Error",
+			Code:    http.StatusInternalServerError,
+		}
+	}
+
+	return group, nil
+}

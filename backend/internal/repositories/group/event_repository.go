@@ -2,7 +2,6 @@ package repositories
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -41,44 +40,54 @@ func (r *GroupRepository) SaveEvent(c context.Context, event *models.Event) (mod
 	}
 }
 
-func (r *GroupRepository) GetGroupEvents(GroupId int) ([]*models.Event, models.GroupError) {
+func (r *GroupRepository) GetGroupEvents(userID, groupID int) ([]*models.Event, models.GroupError) {
 	query := `
 		SELECT 
 			e.id, 
 			e.title, 
 			e.descreption, 
 			e.event_date, 
-			e.created_at, 
-			e.member_id,
+			e.created_at,
+			e.total_going,
+			e.total_not_going, 
+			ev.status,
+			u.id,
 			u.first_name,
 			u.last_name,
 			u.nickname,
 			u.avatar
-			FROM group_events AS e
-			LEFT JOIN users AS u ON u.id = e.member_id
-			WHERE e.group_id = ?
-			ORDER BY e.created_at DESC;
-    `
+		FROM group_events AS e
+		LEFT JOIN group_events_votes ev 
+			ON ev.event_id = e.id AND ev.member_id = $1
+		INNER JOIN users AS u 
+			ON u.id = e.member_id
+		WHERE e.group_id = $2
+		ORDER BY e.created_at DESC;
+	`
 
-	rows, err := r.db.Query(query, GroupId)
+	rows, err := r.db.Query(query, userID, groupID)
 	if err != nil {
-		fmt.Println(err, "1")
 		return nil, models.GroupError{
 			Message: "Internal Server Error",
 			Code:    http.StatusInternalServerError,
 		}
 	}
+	defer rows.Close()
 
-	var Events []*models.Event
+	var events []*models.Event
+	var unused int
+
 	for rows.Next() {
 		var event models.Event
-		var unused int
 		err := rows.Scan(
 			&event.ID,
 			&event.Title,
 			&event.Description,
 			&event.EventDate,
 			&event.CreatedAt,
+			&event.TotalGoing,
+			&event.TotalNotGoing,
+			&event.UserVote,
 			&unused,
 			&event.Author.FirstName,
 			&event.Author.Lastname,
@@ -86,38 +95,44 @@ func (r *GroupRepository) GetGroupEvents(GroupId int) ([]*models.Event, models.G
 			&event.Author.Avatar,
 		)
 		if err != nil {
-			fmt.Println(err, "12")
 			return nil, models.GroupError{
 				Message: "Internal Server Error",
 				Code:    http.StatusInternalServerError,
 			}
 		}
 
-		Events = append(Events, &event)
+		events = append(events, &event)
 	}
 
-	return Events, models.GroupError{
-		Message: "Succesfuly fetched events",
+	if err := rows.Err(); err != nil {
+		return nil, models.GroupError{
+			Message: "Internal Server Error",
+			Code:    http.StatusInternalServerError,
+		}
+	}
+
+	return events, models.GroupError{
+		Message: "Successfully fetched events",
 		Code:    http.StatusOK,
 	}
 }
 
-func (r *GroupRepository) VoteOnEvent(vote models.EventVote) models.GroupError {
+func (r *GroupRepository) VoteOnEvent(ctx context.Context, vote models.EventVote) models.GroupError {
 	query := `
 		INSERT INTO group_events_votes (event_id, member_id, status)
 		VALUES (?, ?, ?)
 	`
 
-	_, err := r.db.Exec(query, vote.ID, vote.UserID, vote.Vote)
+	_, err := r.db.ExecContext(ctx, query, vote.ID, vote.UserID, vote.Vote)
 	if err != nil {
 		return models.GroupError{
-			Message: "Internal server error",
+			Message: "Failed to cast vote",
 			Code:    http.StatusInternalServerError,
 		}
 	}
 
 	return models.GroupError{
-		Message: "Successfully voted",
+		Message: "Vote registered successfully",
 		Code:    http.StatusOK,
 	}
 }

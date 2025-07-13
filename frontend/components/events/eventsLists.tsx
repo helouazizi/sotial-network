@@ -22,9 +22,10 @@ const EventsList = ({ groupId }: EventsListProps) => {
   const Popup = useContext(PopupContext)
 
   const AddEvent = (newEvent: Event) => {
-    setEvents((prev) => [newEvent, ...prev])
-    setShowForm(false)
-  }
+    setEvents(prev => Array.isArray(prev) ? [newEvent, ...prev] : [newEvent]);
+    setShowForm(false);
+  };
+
   const toggleForm = () => {
     setShowForm((prev) => !prev);
   };
@@ -34,7 +35,9 @@ const EventsList = ({ groupId }: EventsListProps) => {
       try {
         setLoading(true);
         const data = await GetEvents(groupId);
-        setEvents(data);        
+        setEvents(data);
+        console.log(data, "events");
+        
       } catch (err: any) {
         Popup?.showPopup("faild", 'Something went wrong. Try again.')
       } finally {
@@ -60,10 +63,10 @@ const EventsList = ({ groupId }: EventsListProps) => {
       <section className="create-post">
         <div className="add-post-holder">
           <button className="addPostBtn" onClick={toggleForm}>
-          <FaPenToSquare className="addPostIcon" style={{ background: 'var(--card-bg)' }} /> Add-Event
+            <FaPenToSquare className="addPostIcon" style={{ background: 'var(--card-bg)' }} /> Add-Event
           </button>
         </div>
-        {showForm && <EventForm group_id={groupId} onCreate={AddEvent}/>}
+        {showForm && <EventForm group_id={groupId} onCreate={AddEvent} />}
       </section>
 
       <section className='events-list'>

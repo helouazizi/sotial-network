@@ -16,9 +16,7 @@ export const GetEvents = async (group_id: number):Promise<Event[]> => {
 
 
 
-export const VoteEvent = async ({id, vote } : {id : number , vote : string}) => {
-    console.log(id , vote ,"pylod");
-    
+export const VoteEvent = async ({id, vote } : {id : number , vote : string}) => {    
   const res = await fetch(`${API_URL}api/v1/groups/events/vote`, {
     method: "POST",
     credentials: "include",

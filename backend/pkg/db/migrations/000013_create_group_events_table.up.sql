@@ -7,6 +7,8 @@ CREATE TABLE
         descreption TEXT NOT NULL,
         event_date DATETIME NOT NULL,
         created_at DATETIME NOT NULL,
+        total_going INTEGER CHECK (total_going >= 0),
+        total_not_going INTEGER CHECK (total_not_going >= 0),
         FOREIGN KEY (group_id) REFERENCES groups (id) ON DELETE CASCADE ON UPDATE CASCADE,
         FOREIGN KEY (member_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE
     );
@@ -21,28 +23,62 @@ CREATE TABLE
         FOREIGN KEY (member_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE
     );
 
--- CREATE TRIGGER log_event_vote AFTER INSERT ON group_events_votes FOR EACH ROW BEGIN
--- INSERT INTO
---     group_events_votes_log (event_id, member_id, status)
--- VALUES
---     (NEW.event_id, NEW.member_id, NEW.status);
+CREATE TRIGGER IF NOT EXISTS upsert_vote BEFORE INSERT ON group_events_votes FOR EACH ROW BEGIN
+DELETE FROM group_events_votes
+WHERE
+    event_id = NEW.event_id
+    AND member_id = NEW.member_id;
 
--- END;
+END;
 
--- CREATE TABLE IF NOT EXISTS group_event_stats (
---     event_id INTEGER PRIMARY KEY,
---     going_count INTEGER DEFAULT 0,
---     not_going_count INTEGER DEFAULT 0
--- );
--- CREATE TRIGGER update_event_vote_stats
--- AFTER INSERT ON group_events_votes
--- FOR EACH ROW
--- BEGIN
---   INSERT INTO group_event_stats (event_id, going_count, not_going_count)
---   VALUES (NEW.event_id,
---           CASE WHEN NEW.status = 'going' THEN 1 ELSE 0 END,
---           CASE WHEN NEW.status = 'not going' THEN 1 ELSE 0 END)
---   ON CONFLICT(event_id) DO UPDATE SET
---     going_count = going_count + CASE WHEN NEW.status = 'going' THEN 1 ELSE 0 END,
---     not_going_count = not_going_count + CASE WHEN NEW.status = 'not going' THEN 1 ELSE 0 END;
--- END;
+CREATE TRIGGER IF NOT EXISTS update_vote_counts_after_insert AFTER INSERT ON group_events_votes FOR EACH ROW BEGIN
+UPDATE group_events
+SET
+    total_going = (
+        SELECT
+            COUNT(*)
+        FROM
+            group_events_votes
+        WHERE
+            event_id = NEW.event_id
+            AND status = 'going'
+    ),
+    total_not_going = (
+        SELECT
+            COUNT(*)
+        FROM
+            group_events_votes
+        WHERE
+            event_id = NEW.event_id
+            AND status = 'not going'
+    )
+WHERE
+    id = NEW.event_id;
+
+END;
+
+CREATE TRIGGER IF NOT EXISTS update_vote_counts_after_delete AFTER DELETE ON group_events_votes FOR EACH ROW BEGIN
+UPDATE group_events
+SET
+    total_going = (
+        SELECT
+            COUNT(*)
+        FROM
+            group_events_votes
+        WHERE
+            event_id = OLD.event_id
+            AND status = 'going'
+    ),
+    total_not_going = (
+        SELECT
+            COUNT(*)
+        FROM
+            group_events_votes
+        WHERE
+            event_id = OLD.event_id
+            AND status = 'not going'
+    )
+WHERE
+    id = OLD.event_id;
+
+END;

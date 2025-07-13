@@ -80,6 +80,8 @@ export default function EventForm({ group_id, onCreate }: EventFromProps) {
                     title: form.title,
                     description: form.description,
                     event_date: form.datetime,
+                    total_going : 0,
+                    total_not_going : 0,
                     vote: null,
                     created_at: new Date().toISOString(),
                     author: {

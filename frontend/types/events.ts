@@ -6,6 +6,8 @@ export interface Event {
     description : string,
     event_date : string,
     created_at : string,
-    vote : string | null
+    vote : string | null,
+    total_going : number,
+    total_not_going : number,
     author : User
 }

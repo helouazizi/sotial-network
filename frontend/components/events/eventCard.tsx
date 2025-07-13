@@ -18,12 +18,15 @@ const EventCard = ({ event }: EventCardProps) => {
   );
   const [totalGoing, setTotalGoing] = useState(event.total_going);
   const [totalNotGoing, setTotalNotGoing] = useState(event.total_not_going);
-  const [loadingVote, setLoadingVote] = useState<VoteType | null>(null);
+  // const [loadingVote, setLoadingVote] = useState<VoteType | null>(null);
 
   const Popup = useContext(PopupContext);
 
   const handleVote = async (event_id: number, type: VoteType) => {
-    setLoadingVote(type);
+    // alredy voted on the same button
+    if (vote === type) {
+      return
+    }
     try {
       const res = await VoteEvent({ id: event_id, vote: type });
 
@@ -42,8 +45,6 @@ const EventCard = ({ event }: EventCardProps) => {
       }
     } catch (err: any) {
       Popup?.showPopup('faild', err.message || 'Request failed');
-    } finally {
-      setLoadingVote(null);
     }
   };
 
@@ -87,22 +88,18 @@ const EventCard = ({ event }: EventCardProps) => {
       <div className="vote-buttons">
         <button
           onClick={() => handleVote(event.id, 'going')}
-          disabled={loadingVote !== null}
-          className={`vote-btn going-btn ${vote === 'going' ? 'active' : ''} ${
-            loadingVote === 'going' ? 'loading' : ''
-          }`}
+
+          className={`vote-btn going-btn ${vote === "going" ? "voted" : ""}`}
         >
-          {loadingVote === 'going' ? 'Voting...' : '✅ Going'}
+          ✅ Going
         </button>
 
         <button
           onClick={() => handleVote(event.id, 'not going')}
-          disabled={loadingVote !== null}
-          className={`vote-btn not-going-btn ${vote === 'not going' ? 'active' : ''} ${
-            loadingVote === 'not going' ? 'loading' : ''
-          }`}
+          className={`vote-btn not-going-btn ${vote === "not going" ? "voted" : ""}`}
+
         >
-          {loadingVote === 'not going' ? 'Voting...' : '❌ Not Going'}
+          ❌ Not Going
         </button>
       </div>
 

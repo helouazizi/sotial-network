@@ -140,6 +140,8 @@
   flex-direction: column;
   gap: 16px;
   color: var(--text-primary);
+  max-width: 600px;
+  margin: 1rem auto;
 }
 
 .event-date {
@@ -184,6 +186,15 @@
   display: flex;
   gap: 16px;
   margin-top: 12px;
+}
+.vote-btn.going-btn.voted {
+  background-color: var(--accent-color);
+  color: var(--text-primary);
+}
+
+.vote-btn.not-going-btn.voted {
+  background-color: var(--accent-color);
+  color: var(--text-primary);
 }
 
 .vote-btn.loading {

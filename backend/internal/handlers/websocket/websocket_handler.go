@@ -217,7 +217,7 @@ func (h *WebsocketHandler) WebsocketHandler(w http.ResponseWriter, r *http.Reque
 					for _, c := range senderConns {
 						c.WriteJSON(map[string]any{
 							"message": chat.Message,
-							"type":"showNotif",
+							"type":    "showNotif",
 						})
 					}
 				}

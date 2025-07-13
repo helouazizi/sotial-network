@@ -16,7 +16,7 @@ func NewGroupService(repo *repositories.GroupRepository) *GroupService {
 	return &GroupService{repo: repo}
 }
 
-func (s *GroupService) SaveGroup(group *models.Group) (int,*models.GroupError) {
+func (s *GroupService) SaveGroup(group *models.Group) (int, *models.GroupError) {
 	group.Title = strings.TrimSpace(group.Title)
 	group.Description = strings.TrimSpace(group.Description)
 
@@ -57,4 +57,8 @@ func (s *GroupService) GetJoinedGroups(userID int) ([]*models.Group, error) {
 
 func (s *GroupService) GetSuggestedGroups(userID int) ([]*models.Group, error) {
 	return s.repo.GetSuggestedGroups(userID)
+}
+
+func (s *GroupService) GetInfoGroupeService(grpId string) (*models.Group, error) {
+	return s.repo.GetInfoGroupeRepo(grpId)
 }

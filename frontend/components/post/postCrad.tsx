@@ -33,10 +33,13 @@ export default function PostCard({ post }: postProps) {
     const new_comment: Comment = {
       comment,
       author: {
-        firstName: user?.firstName ?? "",
-        lastName: user?.lastName ?? "",
+        firstname: user?.firstname ?? "",
+        lastname: user?.lastname ?? "",
         avatar: user?.avatar ?? "",
         nickname: user?.nickname ?? "",
+        aboutme: "",
+        email: "",
+        dateofbirth: "",
         id: 0
       },
       created_at: new Date().toISOString(),
@@ -51,7 +54,7 @@ export default function PostCard({ post }: postProps) {
       if (action === "like") {
         if (userVote === "like") {
           await votePost(post.id, "unlike");
-          
+
           setLikes(likes - 1);
           setUserVote(null);
         } else {
@@ -59,7 +62,7 @@ export default function PostCard({ post }: postProps) {
             await votePost(post.id, "undislike");
             setDislikes(dislikes - 1);
           }
-           await votePost(post.id, "like");
+          await votePost(post.id, "like");
           setLikes(likes + 1);
           setUserVote("like");
         }
@@ -67,12 +70,12 @@ export default function PostCard({ post }: postProps) {
 
       if (action === "dislike") {
         if (userVote === "dislike") {
-         await votePost(post.id, "undislike");
+          await votePost(post.id, "undislike");
           setDislikes(dislikes - 1);
           setUserVote(null);
         } else {
           if (userVote === "like") {
-             await votePost(post.id, "unlike");
+            await votePost(post.id, "unlike");
             setLikes(likes - 1);
           }
           await votePost(post.id, "dislike");
@@ -88,7 +91,7 @@ export default function PostCard({ post }: postProps) {
 
   return (
     <div className="post-card">
-      <PostHeader author={post.author.nickname ? post.author.nickname : post.author.firstName + "-" + post.author.lastName} createdAt={post.created_at} avatarUrl={post.author.avatar} />
+      <PostHeader author={post.author.nickname ? post.author.nickname : post.author.firstname + "-" + post.author.lastname} firstname={post.author.firstname} lastname={post.author.lastname} createdAt={post.created_at} avatarUrl={post.author.avatar} />
       <PostBody title={post.title} content={post.content} media={post.media_link} body_type='post' />
       <CommentPostForm onSubmit={newComment} />
       <PostActions

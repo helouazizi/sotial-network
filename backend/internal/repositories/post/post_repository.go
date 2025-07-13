@@ -115,7 +115,7 @@ func (r *PostRepository) GetPosts(userId, start, limit int) ([]models.Post, erro
 					AND EXISTS (
 						SELECT 1 FROM followers f
 						WHERE f.followed_id = ?
-						AND f.followed_id = p.user_id
+						AND f.follower_id = p.user_id
 					)
 				)
 
@@ -133,7 +133,7 @@ func (r *PostRepository) GetPosts(userId, start, limit int) ([]models.Post, erro
 			LIMIT ? OFFSET ?
     `
 
-	rows, err := r.db.Query(q, userId, userId, userId,userId, limit, start)
+	rows, err := r.db.Query(q, userId, userId, userId, userId, limit, start)
 	if err != nil {
 		return nil, err
 	}

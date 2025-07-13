@@ -77,7 +77,7 @@ func (rlrepo *RelationsRepository) GetFriendsRepo(sessionID int) ([]models.Commu
 	SELECt u.id, u.avatar, u.last_name, u.first_name, u.nickname 
 	FROM users u 
 	INNER JOIN followers f ON f.follower_id=u.id  
-	WHERE f.follower_id IN (SELECT followed_id FROM followers WHERE follower_id=?);
+	WHERE f.followed_id=?;
 	`
 	rows, err := rlrepo.db.Query(query, sessionID)
 	if err != nil && err != sql.ErrNoRows {

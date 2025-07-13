@@ -271,7 +271,7 @@ input:checked+.slider:before {
     }
 }
 
-.data-profile form {
+.data-profile .profile-info-form {
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -507,6 +507,18 @@ input:checked+.slider:before {
     }
 }
 
+.post-profile {
+    width: 100%;
+    min-height: 500px;
+    max-height: 520px;
+    padding: 20px 10px;
+
+}
+
+.post-card-profile {
+    background-color: var(--btn-bg);
+}
+
 @media screen and (max-width:1100px) {
     .profile-container {
         width: 80%;
@@ -571,7 +583,7 @@ input:checked+.slider:before {
         font-size: 14px;
     }
 
-   
+
 }
 
 @media screen and (max-width:375px) {

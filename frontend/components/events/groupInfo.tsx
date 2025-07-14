@@ -7,6 +7,8 @@ import { GroupInfo, GroupMembers } from "@/types/events";
 import FormatDate from "@/utils/date";
 import { GetGroupMembers } from "@/services/eventsServices";
 import PostHeader from "../post/postHeader";
+import { Follower } from "@/types/post";
+import { GetFolowers } from "@/services/postsServices";
 
 function GroupHeader({ id }: { id: string }) {
     const [groupInfo, setGroupInfo] = useState<GroupInfo | null>(null);
@@ -14,21 +16,62 @@ function GroupHeader({ id }: { id: string }) {
     const [error, setError] = useState<string | null>(null);
     const [groupMembers, setGroupMembers] = useState<GroupMembers | null>(null);
     const [showMembers, setShowMembers] = useState(false);
+    const [showFolowers, setShowFolowers] = useState(false);
+    const [followers, setFollowers] = useState<Follower[]>([]);
+    const [invited, setInvited] = useState<number[]>([]);
+
+    const handleToggleFollower = (id: number, checked: boolean) => {
+        setInvited((prev) =>
+            checked ? [...prev, id] : prev.filter((uid) => uid !== id)
+        );
+    };
 
     const displayMembers = () => {
-            return (
-                <div className="share-with-users">
-                    {groupMembers && groupMembers.members.map(( member,indx) => (
-                        <div key={indx}>
+        return (
+            <div className="share-with-users">
+                {groupMembers && groupMembers.members.map((member, indx) => (
+                    <div key={indx}>
                         <PostHeader author={member.nickname} avatarUrl={member.avatar} firstname={member.firstname} lastname={member.lastname} createdAt="" />
 
-                        </div>
-                    ))
-                    }
-                </div>
+                    </div>
+                ))
+                }
+            </div>
+        )
+    }
 
-            )
-  
+    const displayFolowers = () => {
+        return (
+            <div className="share-with-users">
+                <label className="share-with-label">
+                    Invite specific followers
+                </label>
+                <ul className="user-checkbox-list">
+                    {followers && followers.length > 0 && followers.map((f, index) => (
+                        <li key={index} className="user-checkbox-item">
+                            <label id="follower-checkbox-label">
+                                <PostHeader
+                                    author={`${f.User?.firstname} ${f.User?.lastname}`}
+                                    firstname={f.User?.firstname} lastname={f.User?.lastname}
+                                    createdAt="" avatarUrl={f.User?.avatar}
+                                />
+                                <input
+                                    type="checkbox"
+                                    checked={invited.includes(f.User?.id)}
+                                    onChange={(e) =>
+                                        handleToggleFollower(f.User?.id, e.target.checked)
+                                    }
+                                    title={`Invite ${f.User?.firstname} ${f.User?.lastname}`}
+                                    placeholder={`Select follower ${f.User?.firstname} ${f.User?.lastname}`}
+                                    aria-label={`Invite ${f.User?.firstname} ${f.User?.lastname}`}
+                                />
+                            </label>
+                        </li>
+
+                    ))}
+                </ul>
+            </div>
+        )
     }
     useEffect(() => {
         const fetchGroup = async () => {
@@ -63,6 +106,26 @@ function GroupHeader({ id }: { id: string }) {
         fetchMembers();
     }, [id]);
 
+    useEffect(() => {
+        const fetchFolowers = async () => {
+            try {
+                const data = await GetFolowers();
+                console.log(data,"folowers");
+                
+                setFollowers(data)
+
+            } catch (err) {
+                console.error("Failed to fetch group info", err);
+                setError("Failed to load group info");
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchFolowers();
+    }, []);
+
+
+
     if (loading) return <p className="group-loading">Loading group...</p>;
     if (error) return <p className="group-error">{error}</p>;
     if (!groupInfo) return null;
@@ -95,11 +158,27 @@ function GroupHeader({ id }: { id: string }) {
                 <div className="group-action-buttons">
                     <button
                         className="group-btn see-members"
-                        onClick={() => setShowMembers((prev) => !prev)}
+                        onClick={() => {
+                            setShowMembers((prev) => {
+                                if (!prev) setShowFolowers(false); // close followers if opening members
+                                return !prev;
+                            });
+                        }}
                     >
                         {showMembers ? "Hide Members" : "See Members"}
                     </button>
-                    <button className="group-btn invite-users">Invite Users</button>
+
+                    <button
+                        className="group-btn invite-users"
+                        onClick={() => {
+                            setShowFolowers((prev) => {
+                                if (!prev) setShowMembers(false); // close members if opening followers
+                                return !prev;
+                            });
+                        }}
+                    >
+                        {showFolowers ? "Back" : "Invite Users"}
+                    </button>
                 </div>
                 {showMembers && groupMembers && (
                     <div className="group-members-list">
@@ -110,6 +189,16 @@ function GroupHeader({ id }: { id: string }) {
                         )}
                     </div>
                 )}
+                {showFolowers && followers && (
+                    <div className="group-members-list">
+                        {followers.length === 0 ? (
+                            <p>No Users To Invite.</p>
+                        ) : (
+                            displayFolowers()
+                        )}
+                    </div>
+                )}
+
 
             </div>
         </div>

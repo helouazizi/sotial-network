@@ -1,6 +1,6 @@
 "use client"
 
-import { GetGroups, groupType } from '@/services/groupServices'
+import { GetGroups, groupType, SendJoinGroupRequest } from '@/services/groupServices'
 import Link from 'next/link';
 import React, { useContext, useEffect } from 'react'
 import { MdGroups } from "react-icons/md";
@@ -8,7 +8,7 @@ import SwitchButtons from './SwitchButtons';
 import { GroupsContext } from '@/context/GroupsContext';
 import { usePathname } from 'next/navigation';
 import { PopupContext } from '@/context/PopupContext';
-import { IoIosSend } from "react-icons/io";
+import { IoIosSend } from "react-icons/io"; 
 import { SocketContext } from '@/context/socketContext';
 
 function Groups() {
@@ -33,18 +33,30 @@ function Groups() {
     fetchGroups()
   }, [pathname])
 
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    let grpInfos = e.currentTarget.dataset
+
+    if (!grpInfos.group_id || !grpInfos.user_id) {
+      return 
+    }
+
+    const data = await SendJoinGroupRequest(parseInt(grpInfos.group_id), parseInt(grpInfos.user_id))
+
+    console.log(data)
+
     if (ws) {
-      ws.current?.send(JSON.stringify({
-        "id": parseInt(e.currentTarget.id),
-        "type": "joinGroupReq"
-      }))
+      // ws.current?.send(JSON.stringify({
+      //   "id": parseInt(e.currentTarget.id),
+      //   "type": "joinGroupReq"
+      // }))
     }
   }
  
   const displayGroups = () => {
     let isSuggestedPath = pathname.startsWith("/groups/suggested")
     return context?.Groups?.map((group, index) => {
+      
+      // group
       let title = group.title.length > 25 ? group.title.slice(0, 25).trim() + "..." : group.title
       let path = pathname.startsWith("/groups/joined") ? "/groups/joined/" + group.id + "/posts" : ""
 
@@ -53,7 +65,7 @@ function Groups() {
           <Link href={path}><span><MdGroups /></span> <p>{title}</p></Link>
           {isSuggestedPath && (
             <div className="sugg-req">
-              <button id={`${group.id}`} className='send' onClick={handleClick}> <IoIosSend /></button>
+              <button data-user_id={`${group.user_id}`} data-group_id={`${group.id}`} className='send' onClick={handleClick}> <IoIosSend /></button>
             </div>
           )}
         </li>

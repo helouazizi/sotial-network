@@ -123,3 +123,33 @@ func (h *GroupHandler) GetInfoGroupe(w http.ResponseWriter, r *http.Request) {
 		"data": infoGrp,
 	})
 }
+
+func (h *GroupHandler) JoinGroupRequestHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
+			"error": "Method not allowed",
+		})
+		return
+	}
+
+	var groupRequest *models.GroupRequest
+	if err := json.NewDecoder(r.Body).Decode(&groupRequest); err != nil {
+		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+			"error": err.Error(),
+		})
+	}
+
+	groupRequest.SenderID = r.Context().Value("userID").(int)
+
+	err := h.service.SaveJoinGroupRequest(groupRequest)
+	if err != nil {
+		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	utils.ResponseJSON(w, http.StatusOK, map[string]any{
+		"message": "Request saved succesfully!",
+	})
+}

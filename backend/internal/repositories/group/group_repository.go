@@ -115,3 +115,15 @@ func (r *GroupRepository) GetInfoGroupeRepo(GrpID string) (*models.Group, error)
 	}
 	return &groupInfo, nil
 }
+
+func (r *GroupRepository) SaveJoinGroupRequest(groupReq *models.GroupRequest) error {
+	query := `
+		INSERT INTO group_requests (group_id, requested_id, sender_id, type) VALUES (?,?,?,?)
+	`
+	_, err := r.db.Exec(query, groupReq.GroupID, groupReq.RequestedID, groupReq.SenderID, "demand")
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

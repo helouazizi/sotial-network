@@ -62,3 +62,7 @@ func (s *GroupService) GetSuggestedGroups(userID int) ([]*models.Group, error) {
 func (s *GroupService) GetInfoGroupeService(grpId string) (*models.Group, error) {
 	return s.repo.GetInfoGroupeRepo(grpId)
 }
+
+func (s *GroupService) SaveJoinGroupRequest(groupReq *models.GroupRequest) error {
+	return s.repo.SaveJoinGroupRequest(groupReq)
+}

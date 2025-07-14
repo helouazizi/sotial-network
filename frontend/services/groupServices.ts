@@ -59,9 +59,35 @@ export async function GetInfoGrp(idGrp: ParamValue) {
         if (resp.ok) {
             return data.data
         }
-        return
     } catch (error) {
         console.error(error)
+        return
+    }
+}
+
+export async function SendJoinGroupRequest(groupID: number, requestedID: number) {
+    try {
+        const res = await fetch(API_URL+"api/v1/groups/joinGroupRequest", {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                "group_id": groupID,
+                "requested_id": requestedID
+            })
+        })
+
+        const data = await res.json()
+        if (!res.ok) {
+            console.error(data.error)
+            return null
+        }
+
+        return data
+    } catch (err) {
+        console.error(err)
         return
     }
 }

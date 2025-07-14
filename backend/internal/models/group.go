@@ -12,7 +12,7 @@ type Group struct {
 }
 type GroupPost struct {
 	GroupId int `json:"group_id"`
-	Post Post 
+	Post    Post
 }
 
 type GroupComment struct {
@@ -37,4 +37,12 @@ type EventVote struct {
 	ID     int    `json:"id"`
 	UserID int    `json:"user_id"`
 	Vote   string `json:"vote"` // going or not going
+}
+
+type GroupRequest struct {
+	ID        int    `json:"id,omitempty"`
+	GroupID   int    `json:"group_id,omitempty"`
+	SenderID  int    `json:"sender_id,omitempty"`
+	RequestedID int    `json:"requested_id,omitempty"`
+	Type      string `json:"type,omitempty"`
 }

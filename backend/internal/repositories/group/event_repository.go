@@ -3,7 +3,6 @@ package repositories
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -69,7 +68,6 @@ func (r *GroupRepository) GetGroupEvents(userID, groupID int) ([]*models.Event, 
 
 	rows, err := r.db.Query(query, userID, groupID)
 	if err != nil {
-		fmt.Println(err, "err")
 		return nil, models.GroupError{
 			Message: "Internal Server Error",
 			Code:    http.StatusInternalServerError,
@@ -99,7 +97,6 @@ func (r *GroupRepository) GetGroupEvents(userID, groupID int) ([]*models.Event, 
 			&event.Author.Avatar,
 		)
 		if err != nil {
-			fmt.Println(err, "err1")
 			return nil, models.GroupError{
 				Message: "Internal Server Error",
 				Code:    http.StatusInternalServerError,

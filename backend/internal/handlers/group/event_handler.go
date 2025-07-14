@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/ismailsayen/social-network/internal/models"
@@ -49,7 +48,6 @@ func (h *GroupHandler) GetGroupEventHandler(w http.ResponseWriter, r *http.Reque
 	}
 
 	groupIDStr, errId := utils.GetGroupId(r, "events")
-	fmt.Println(groupIDStr, "id")
 	if errId != nil {
 		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
 			"error": errId,

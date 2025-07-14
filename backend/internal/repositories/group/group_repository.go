@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"database/sql"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -100,32 +101,42 @@ func (r *GroupRepository) GetSuggestedGroups(userID int) ([]*models.Group, error
 	return groups, nil
 }
 
-func (r *GroupRepository) GetGroup(groupID int) (*models.GroupIfo, *models.GroupError) {
+func (r *GroupRepository) GetGroup(groupID int) (models.GroupIfo, *models.GroupError) {
+	fmt.Println(groupID, "============================================")
 	query := `
 		SELECT 
-			g.id, g.user_id, g.title, g.description, g.created_at,
-			u.id, u.nickname, u.first_name, u.last_name,  u.avatar,
+			g.id, g.title, g.description, g.created_at,
+			u.id, u.nickname, u.first_name, u.last_name, u.avatar,
 			(
-               SELECT COUNT(*) FROM group_members gm WHERE gm.group_id = g.id
-            ) AS total_members
+				SELECT COUNT(*) FROM group_members gm WHERE gm.group_id = g.id
+			) AS total_members
 		FROM groups g
 		JOIN users u ON g.user_id = u.id
 		WHERE g.id = ?
 	`
-	groupInfo := &models.GroupIfo{}
+
+	groupInfo := models.GroupIfo{}
+	var nickname sql.NullString
 
 	err := r.db.QueryRow(query, groupID).Scan(
-		&groupInfo.Group.ID, &groupInfo.Author.ID, &groupInfo.Group.Title, &groupInfo.Group.Description, &groupInfo.Group.CreatedAt,
-		&groupInfo.Author.ID, &groupInfo.Author.Nickname, &groupInfo.Author.FirstName, &groupInfo.Author.Lastname, &groupInfo.Author.Avatar, &groupInfo.TotalMembers,
+		&groupInfo.Group.ID,
+		&groupInfo.Group.Title,
+		&groupInfo.Group.Description,
+		&groupInfo.Group.CreatedAt,
+		&groupInfo.Author.ID,
+		&nickname,
+		&groupInfo.Author.FirstName,
+		&groupInfo.Author.Lastname,
+		&groupInfo.Author.Avatar,
+		&groupInfo.TotalMembers,
 	)
 	if err != nil {
-		return nil, &models.GroupError{
+		return models.GroupIfo{}, &models.GroupError{
 			Message: "Internal Server Error",
 			Code:    http.StatusInternalServerError,
 		}
 	}
-	groupInfo.Group.ID = 0
-	groupInfo.Author.ID = 0
+	groupInfo.Author.Nickname = nickname.String
 
 	return groupInfo, nil
 }

@@ -9,7 +9,6 @@ import (
 func GetGroupId(r *http.Request, endpoint string) (string, error) {
 	path := r.URL.Path
 	parts := strings.Split(path, "/")
-	fmt.Println(parts, "paths ")
 
 	if len(parts) < 5 || parts[1] != "api" || parts[2] != "v1" || parts[3] != "groups" || parts[4] != "joined" {
 		return "", fmt.Errorf("Invalid URL")

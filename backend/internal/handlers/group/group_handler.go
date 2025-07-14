@@ -119,15 +119,17 @@ func (h *GroupHandler) GetGroupHandler(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
-	groups, errr := h.service.GetGroup(GroupID)
-	if errr.Code != http.StatusOK {
-		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+
+	groupinfo, errr := h.service.GetGroup(GroupID)
+
+	if errr != nil {
+		utils.ResponseJSON(w, errr.Code, map[string]any{
 			"error": errr.Message,
 		})
 		return
 	}
 
 	utils.ResponseJSON(w, http.StatusOK, map[string]any{
-		"data": groups,
+		"data": groupinfo,
 	})
 }

@@ -48,7 +48,7 @@ export async function GetGroups(type: groupType) {
     }
 }
 
-export async function GetGroup(id: number) {
+export async function GetGroup(id: string) {
     try {
         const res = await fetch(API_URL+"api/v1/groups/joined/"+id, {
             credentials: "include"
@@ -59,6 +59,8 @@ export async function GetGroup(id: number) {
             console.error(data.error)
             return data
         }
+        console.log(data , "GROUP INFO");
+        
 
         return data.data
 

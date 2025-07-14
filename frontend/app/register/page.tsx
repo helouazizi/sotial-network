@@ -15,7 +15,6 @@ export default function Register() {
     const [DOB, setDOB] = useState<string>('');
     const [about, setAboutme] = useState<string>('');
     const [message, setMessage] = useState<string>('');
-    const [step, setStep] = useState<number>(1);
     const router = useRouter();
 
     // Error states

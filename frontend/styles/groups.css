@@ -172,7 +172,7 @@
     background-color: var(--border-color);
 }
 
-.exploreGroups{
+.exploreGroups {
     display: flex;
     flex-direction: column;
     gap: 15px;
@@ -182,34 +182,105 @@
     color: var(--text-secondary);
 }
 
-.exploreGroups svg{
+.exploreGroups svg {
     font-size: 6.5em;
 }
 
-.exploreGroups p{
+.exploreGroups p {
     font-size: 0.9em;
 }
 
-.sugg-req button{
-    position: absolute;
-    top: 50%;
-    right: 20px;
-    transform: translateY(-50%);
+.chat-grp-header {
+    border-bottom: 2px solid var(--border-color);
+    justify-content: space-between;
+    padding: 20px 40px;
+    display: flex;
+
+    svg {
+        background-color: var(--bg-color);
+        color: var(--text-primary);
+        border-radius: 50%;
+        padding: 9px;
+        font-size: 2em;
+    }
+
+    a {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+
+        p {
+            color: var(--text-primary);
+            transition: .5s ease-in-out;
+        }
+
+        p:hover {
+            color: var(--accent-hover);
+        }
+    }
+
+    .members {
+        display: flex;
+        align-items: center;
+        color: var(--text-muted);
+        gap: 5px;
+
+        span {
+            color: var(--text-primary);
+        }
+
+        /* svg{
+            height: 10px;
+            width: 10px;
+        } */
+    }
 }
 
-.sugg-req button.send {
-    background: none;
-    color: var(--btn-text);
-    border: none;
-    outline: none;
+.chat-grp-body {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-bg);
+    flex-direction: column;
+    flex: 1 1 0%;
+    gap: 20px;
+    padding: 20px 40px;
+    display: flex;
+    position: relative;
+    overflow-y: auto;
 }
 
+.chat-grp-footer {
+    border-top: 2px solid var(--border-color);
+    align-items: center;
+    gap: 10px;
+    padding: 20px 40px;
+    display: flex;
 
-.sugg-req button svg{
-    font-size: 2.7em;
-    cursor: pointer;
-}
+    textarea {
+        resize: none;
+        background-color: var(--input-bg);
+        color: var(--input-text);
+        border: 1px solid var(--border-color);
+        scrollbar-width: thin;
+        scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-bg);
+        border-radius: 8px;
+        outline: none;
+        flex: 1;
+        height: 50px;
+        padding: 12px 24px;
+        font-size: 1rem;
+        line-height: 1.5;
+        overflow-y: auto;
+    }
 
-.sugg-req button svg:hover{
-    color: var(--accent-color);
+    button {
+        background-color: var(--btn-bg);
+        cursor: pointer;
+        color: var(--btn-text);
+        border: none;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        outline: none;
+        padding: 12px 24px;
+    }
 }

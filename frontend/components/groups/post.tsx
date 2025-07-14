@@ -1,12 +1,17 @@
 // frontend/app/components/post/posts.tsx
 "use client";
-import { useState, useEffect, useRef, useCallback } from "react";
-import CreatePostForm from "./addPost";
+import { useState, useEffect, useRef, useCallback, useContext } from "react";
 import { Post } from "@/types/post";
-import PostCard from "./postCrad";
-import NoPostsYet from "./noPostsYet";
+
 import { FaPenToSquare } from "react-icons/fa6";
-import NoMorePosts from "./noMorePosts";
+import NoPostsYet from "../post/noPostsYet";
+import CreatPost from "./FormCreatpost";
+
+import { API_URL } from "@/services";
+import { useParams } from "next/navigation";
+import { PopupContext } from "@/context/PopupContext";
+
+import PostGroupCard from "./groupPostCard";
 
 const LIMIT = 10;
 
@@ -22,43 +27,49 @@ function throttle<T extends (...args: any[]) => void>(fn: T, delay = 500): T {
   };
 }
 
-export default function Posts() {  
+export default function Posts() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [loadedOnce, setLoadedOnce] = useState(false);
   const page = useRef(0);
-
+  const params = useParams();
+  const context = useContext(PopupContext);
 
   const fetchPosts = useCallback(async () => {
     if (isLoading || !hasMore) return;
     setIsLoading(true);
-    
-    try {
-      const res = await fetch("http://localhost:8080/api/v1/posts", {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          offset: page.current * LIMIT,
-          limit: LIMIT,
-        }),
-      });
 
-      if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+    try {
+      const res = await fetch(
+        `${API_URL}api/v1/groups/joined/${params.id}/post/getposts`,
+        {
+          method: "POST",
+          credentials: "include",
+
+          body: JSON.stringify({
+            offset: page.current * LIMIT,
+            limit: LIMIT,
+          }),
+        }
+      );
+
+      if (!res.ok) {
+        context?.showPopup("faild", res.statusText);
+      }
 
       const data = await res.json();
-      
+
 
       if (Array.isArray(data)) {
         setPosts((prev) =>
           page.current === 0
             ? data
             : [
-              ...prev,
-              ...data.filter((p) => !prev.some((post) => post.id === p.id)),
-            ]
+                ...prev,
+                ...data.filter((p) => !prev.some((post) => post.id === p.id)),
+              ]
         );
 
         page.current += 1;
@@ -75,12 +86,10 @@ export default function Posts() {
     }
   }, [isLoading, hasMore]);
 
-  
   useEffect(() => {
     fetchPosts();
   }, []);
 
-  
   useEffect(() => {
     const handleScroll = throttle(() => {
       const scrollBottom = window.innerHeight + window.scrollY;
@@ -95,15 +104,13 @@ export default function Posts() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [fetchPosts, hasMore, isLoading]);
 
-
-
-  const addPost = (newPost: Post ) => {
+  const addPost = (newPost: Post) => {
     setPosts((prev) => [newPost, ...prev]);
     setShowForm(false);
   };
 
   const toggleForm = () => {
-    setShowForm((prev) => !prev); 
+    setShowForm((prev) => !prev);
   };
 
   return (
@@ -114,15 +121,17 @@ export default function Posts() {
             <FaPenToSquare className="addPostIcon" /> Add-Post
           </button>
         </div>
-        {showForm && <CreatePostForm onCreated={addPost}  />}
+        {showForm && <CreatPost onPostCreated={addPost} />}
       </section>
 
       <section className="posts-list ">
         {posts.map((post) => (
-          <PostCard key={post.id} post={post}  />
+          <PostGroupCard key={post.id} post={post} />
         ))}
         {!isLoading && loadedOnce && posts.length === 0 && <NoPostsYet />}
-        {!isLoading && !hasMore && posts.length > 0 && <NoMorePosts />}
+        {!isLoading && !hasMore && posts.length > 0 && (
+          <div className="no-more-posts">No More Posts</div>
+        )}
       </section>
     </>
   );

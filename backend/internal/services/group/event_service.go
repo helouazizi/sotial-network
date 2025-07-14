@@ -1,49 +1,57 @@
 package services
 
 import (
+	"context"
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/ismailsayen/social-network/internal/models"
 )
 
-func (s *GroupService) SaveEvent(event *models.Event) *models.GroupError {
+func (s *GroupService) SaveEvent(c context.Context, event *models.Event) (models.Event, *models.GroupError) {
 	event.Title = strings.TrimSpace(event.Title)
 	event.Description = strings.TrimSpace(event.Description)
 
 	if len([]rune(event.Title)) == 0 {
-		return &models.GroupError{
-			Message: "group title is required",
+		return models.Event{}, &models.GroupError{
+			Message: "event title is required",
 			Code:    http.StatusBadRequest,
 		}
 	}
 
 	if len([]rune(event.Description)) == 0 {
-		return &models.GroupError{
-			Message: "group description is required",
+		return models.Event{}, &models.GroupError{
+			Message: "event description is required",
 			Code:    http.StatusBadRequest,
 		}
 	}
 
-	if len([]rune(event.Title)) > 100 {
-		return &models.GroupError{
-			Message: "group title must not exceed 100 characters",
+	if len([]rune(event.Title)) > 300 {
+		return models.Event{}, &models.GroupError{
+			Message: "event title must not exceed 100 characters",
 			Code:    http.StatusBadRequest,
 		}
 	}
 
-	if len([]rune(event.Description)) > 1000 {
-		return &models.GroupError{
-			Message: "group description must not exceed 1000 characters",
+	if len([]rune(event.Description)) > 500 {
+		return models.Event{}, &models.GroupError{
+			Message: "event description must not exceed 1000 characters",
+			Code:    http.StatusBadRequest,
+		}
+	}
+	if event.EventDate.Before(time.Now()) {
+		return models.Event{}, &models.GroupError{
+			Message: "event date must be in future",
 			Code:    http.StatusBadRequest,
 		}
 	}
 
-	return s.repo.SaveEvent(event)
+	return s.repo.SaveEvent(c, event)
 }
 
-func (s *GroupService) GetGroupEvents(groupId string) ([]*models.Event, models.GroupError) {
+func (s *GroupService) GetGroupEvents(UserId int, groupId string) ([]*models.Event, models.GroupError) {
 	GroupId, err := strconv.Atoi(groupId)
 	if err != nil {
 		return []*models.Event{}, models.GroupError{
@@ -52,10 +60,10 @@ func (s *GroupService) GetGroupEvents(groupId string) ([]*models.Event, models.G
 		}
 	}
 
-	return s.repo.GetGroupEvents(GroupId)
+	return s.repo.GetGroupEvents(UserId, GroupId)
 }
 
-func (s *GroupService) VoteOnEvent(vote models.EventVote) models.GroupError {
+func (s *GroupService) VoteOnEvent(ctx context.Context, vote models.EventVote) models.GroupError {
 	if vote.Vote != "going" && vote.Vote != "not going" {
 		return models.GroupError{
 			Message: "Bad Request",
@@ -63,5 +71,5 @@ func (s *GroupService) VoteOnEvent(vote models.EventVote) models.GroupError {
 		}
 	}
 
-	return s.repo.VoteOnEvent(vote)
+	return s.repo.VoteOnEvent(ctx, vote)
 }

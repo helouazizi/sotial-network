@@ -41,9 +41,17 @@ func SetupRoutes(app *app.Application) *http.ServeMux {
 	mux.HandleFunc("/api/v1/groups/create", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.CreateGroupHandler), app.DB))
 	mux.HandleFunc("/api/v1/groups/getJoined", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.GetJoinedGroupsHandler), app.DB))
 	mux.HandleFunc("/api/v1/groups/getSuggested", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.GetSuggestedGroupsHandler), app.DB))
+//=============== group posts ==============================//
+	mux.HandleFunc("/api/v1/groups/joined/{id}/post/addpost",middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.AddGroupPost), app.DB))
+	mux.HandleFunc("/api/v1/groups/joined/{id}/post/getposts", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.GetGroupPosts),app.DB))
+	mux.HandleFunc("/api/v1/groups/post/addcomment", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.AddGroupComment),app.DB))
+	mux.HandleFunc("/api/v1/groups/post/getcomment", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.GetGRoupComment),app.DB))
 
+
+	mux.HandleFunc("/api/v1/groups/getInfoGroup", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.GetInfoGroupe), app.DB))
 	//================ Event ==============================//
 	mux.HandleFunc("/api/v1/groups/joined/{id}/events", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.GetGroupEventHandler), app.DB))
 	mux.HandleFunc("/api/v1/groups/events/create", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.CreateEventHandler), app.DB))
+	mux.HandleFunc("/api/v1/groups/events/vote", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.VoteEventHandler), app.DB))
 	return mux
 }

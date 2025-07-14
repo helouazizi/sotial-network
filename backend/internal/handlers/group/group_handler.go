@@ -104,3 +104,22 @@ func (h *GroupHandler) GetSuggestedGroupsHandler(w http.ResponseWriter, r *http.
 	})
 }
 
+func (h *GroupHandler) GetInfoGroupe(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
+			"error": "Method not allowed",
+		})
+		return
+	}
+	groupId := r.URL.Query().Get("group_id")
+	infoGrp, err := h.service.GetInfoGroupeService(groupId)
+	if err != nil {
+		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+			"error": err.Error(),
+		})
+		return
+	}
+	utils.ResponseJSON(w, http.StatusOK, map[string]any{
+		"data": infoGrp,
+	})
+}

@@ -2,7 +2,7 @@
 
 import { GetGroups, groupType } from '@/services/groupServices'
 import Link from 'next/link';
-import React, { MouseEventHandler, useContext, useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { MdGroups } from "react-icons/md";
 import SwitchButtons from './SwitchButtons';
 import { GroupsContext } from '@/context/GroupsContext';

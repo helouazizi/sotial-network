@@ -1,8 +1,18 @@
+
+
+import PostsContainer from '@/components/groups/post'
 import React from 'react'
 
 function Posts() {
+
+  
   return (
-    <div>No posts yet</div>
+    <div>
+        <PostsContainer/>
+   
+  
+    </div>
+    
   )
 }
 

@@ -1,13 +1,17 @@
 "use client"
-
 import { FaUser } from "react-icons/fa";
 import ChatNav from "../../components/chat/chatNav";
 import { ReactNode, useContext } from "react";
 import { SocketContext } from "../../context/socketContext";
 import Friends from "../../components/chat/friends";
+import { usePathname } from "next/navigation";
+import GroupsChat from "@/components/groups/GroupsChat";
 
-export default function ChatLayout({ children } : {children : ReactNode}) {
-  const {user} = useContext(SocketContext) ?? {}
+export default function ChatLayout({ children }: { children: ReactNode }) {
+  const { user } = useContext(SocketContext) ?? {}
+  let pathName = usePathname()
+  let isPrivateChat = pathName.startsWith("/chat/privateChat")
+  console.log(isPrivateChat);
 
   return (
     <main className="container chatPage">
@@ -20,10 +24,12 @@ export default function ChatLayout({ children } : {children : ReactNode}) {
         <div className="friends">
           <ChatNav />
           <div className="friends-list">
-            <ul><Friends /></ul>
+
+            <ul>{isPrivateChat ? <Friends /> : <GroupsChat />}</ul>
+
           </div>
         </div>
-        
+
       </section>
       <section className="chatMessages">
         {children}

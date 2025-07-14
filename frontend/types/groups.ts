@@ -4,4 +4,5 @@ export interface Group {
     title: string
     description: string
     created_at: string
+    count_members: number
 }

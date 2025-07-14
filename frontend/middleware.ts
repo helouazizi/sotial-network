@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 
 export default async function middleware(request: NextRequest) {
   try {
+    console.log("inside middlware.")
     let response = await fetch('http://localhost:8080/api/v1/user/Auth', {
       headers: {
         Cookie: request.headers.get('cookie') || ""

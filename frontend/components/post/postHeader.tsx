@@ -1,6 +1,7 @@
 import { GenerateAvatar } from "../profile/ProfileHeader";
 
 export default function PostHeader({ author, firstname, lastname, createdAt, avatarUrl }: { author: string; firstname: string, lastname: string, createdAt: string, avatarUrl: string | undefined }) {
+console.log(avatarUrl,  firstname,lastname, '---------------------------------------------------------------------------------------------->');
 
   return (
     <div className="post-meta">

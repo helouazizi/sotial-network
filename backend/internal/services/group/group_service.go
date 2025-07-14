@@ -18,6 +18,7 @@ func NewGroupService(repo *repositories.GroupRepository) *GroupService {
 }
 
 func (s *GroupService) SaveGroup(group *models.Group) (int, *models.GroupError) {
+func (s *GroupService) SaveGroup(group *models.Group) (int, *models.GroupError) {
 	group.Title = strings.TrimSpace(group.Title)
 	group.Description = strings.TrimSpace(group.Description)
 

@@ -12,7 +12,7 @@ import { User } from "@/types/user";
 
 export default function PrivateChat() {
     const { id } = useParams()
-    const { ws, friends, messages, setMessages, sendMessage, setSendMessage, scrollHeight, user } = useContext(SocketContext) ?? {}
+    const { ws, friends, messages, setMessages, sendMessage, setSendMessage, scrollHeight } = useContext(SocketContext) ?? {}
     let [friend, setFriend] = useState<User | undefined>(undefined)
     const chatBodyRef = useRef<HTMLDivElement>(null)
     const previousScrollHeight = useRef<number>(0)

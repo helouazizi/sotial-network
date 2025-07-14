@@ -71,3 +71,22 @@ export async function GetGroup(id: string) {
 }
 
 
+
+export async function GetInfoGrp(idGrp: ParamValue) {
+    try {
+        const resp = await fetch(`${API_URL}api/v1/groups/getInfoGroup?group_id=${idGrp}`, {
+            method: 'GET',
+            credentials: 'include',
+        })
+        const data = await resp.json()
+        if (resp.ok) {
+            return data.data
+        }
+        return
+    } catch (error) {
+        console.error(error)
+        return
+    }
+}
+
+

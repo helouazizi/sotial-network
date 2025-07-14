@@ -38,3 +38,13 @@ type EventVote struct {
 	UserID int    `json:"user_id"`
 	Vote   string `json:"vote"` // going or not going
 }
+
+type GroupIfo struct {
+	Group        Group `json:"group"`
+	Author       User  `json:"author"`
+	TotalMembers int   `json:"total_members"`
+}
+
+type GroupMembers struct {
+	Members []User `json:"members"`
+}

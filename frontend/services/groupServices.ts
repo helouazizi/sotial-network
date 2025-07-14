@@ -49,6 +49,29 @@ export async function GetGroups(type: groupType) {
     }
 }
 
+export async function GetGroup(id: string) {
+    try {
+        const res = await fetch(API_URL+"api/v1/groups/joined/"+id, {
+            credentials: "include"
+        })
+
+        const data = await res.json()
+        if (!res.ok) {
+            console.error(data.error)
+            return data
+        }
+        console.log(data , "GROUP INFO");
+        
+
+        return data.data
+
+    } catch (err) {
+        console.error(err)
+    }
+}
+
+
+
 export async function GetInfoGrp(idGrp: ParamValue) {
     try {
         const resp = await fetch(`${API_URL}api/v1/groups/getInfoGroup?group_id=${idGrp}`, {
@@ -65,3 +88,5 @@ export async function GetInfoGrp(idGrp: ParamValue) {
         return
     }
 }
+
+

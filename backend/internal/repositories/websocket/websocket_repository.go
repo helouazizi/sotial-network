@@ -158,3 +158,27 @@ func (reqRepo *WebsocketRepository) SaveMessagesGrpRepo(idGrp, senderId int, mes
 
 	return lastMessage, nil
 }
+
+func (r *WebsocketRepository) HandleGroupRequest(request *models.WS) error {
+	if request.Action == "accept" {
+		insertQuery := `
+			INSERT INTO group_members (group_id, member_id) VALUES (?, ?)
+		`
+
+		_, err := r.db.Exec(insertQuery, request.GroupID, request.ReceiverID)
+		if err != nil {
+			return err
+		}
+	}
+
+	deleteQuery := `
+		DELETE FROM group_requests WHERE id = ?;
+	`
+
+	_, err := r.db.Exec(deleteQuery, request.ID)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

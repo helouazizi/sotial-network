@@ -104,6 +104,10 @@ func (reqSer *WebsocketService) HandleFollowReq(reqID, followedID, followerID in
 	return reqSer.repo.HandleReqFollowRepo(reqID, followedID, followerID, newStatus)
 }
 
-func (reqSer *WebsocketService) SaveMessagesGrp(idGrp, senderId int, message string, sentAt *time.Time) (map[string]any,error) {
+func (reqSer *WebsocketService) SaveMessagesGrp(idGrp, senderId int, message string, sentAt *time.Time) (map[string]any, error) {
 	return reqSer.repo.SaveMessagesGrpRepo(idGrp, senderId, message, sentAt)
+}
+
+func (s *WebsocketService) HandleGroupRequest(request *models.WS) error {
+	return s.repo.HandleGroupRequest(request)
 }

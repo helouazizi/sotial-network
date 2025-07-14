@@ -42,8 +42,6 @@ function Groups() {
 
     const data = await SendJoinGroupRequest(parseInt(grpInfos.group_id), parseInt(grpInfos.user_id))
 
-    console.log(data)
-
     if (ws) {
       ws.current?.send(JSON.stringify({
         "type": "RelationSended"

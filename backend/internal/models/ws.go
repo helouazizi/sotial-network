@@ -12,5 +12,6 @@ type WS struct {
 	SentAtStr  string    `json:"sent_at_str"`
 	LastId     int       `json:"last_id"`
 	Action     string    `json:"action"`
+	GroupID    int       `json:"group_id"`
 	Members    []int     `json:"members"`
 }

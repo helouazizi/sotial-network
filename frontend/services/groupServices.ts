@@ -128,7 +128,7 @@ export async function GetDemandeGroupNotifs() {
             return null
         }
 
-        return data
+        return data.data
     } catch (err) {
         console.error(err);
     }

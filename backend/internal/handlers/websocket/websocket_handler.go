@@ -233,6 +233,14 @@ func (h *WebsocketHandler) WebsocketHandler(w http.ResponseWriter, r *http.Reque
 				continue
 			}
 			fmt.Println(lastMessage)
+		case "handleGroupReq":
+			err := h.service.HandleGroupRequest(&ws)
+			if err != nil {
+				conn.WriteJSON(map[string]any{
+					"error": err.Error(),
+				})
+				continue
+			}
 		}
 	}
 }

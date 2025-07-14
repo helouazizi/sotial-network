@@ -187,9 +187,10 @@ func (r *GroupRepository) GetInfoGroupeRepo(GrpID string, sessionID int) (*model
 
 func (r *GroupRepository) GetDemandeGroupNotifs(requestedID int) ([]*models.GroupRequest, error) {
 	query := `
-		select u.id, u.first_name, u.last_name, u.avatar, rq.id, rq.group_id, rq.type from users u 
+		select u.id, u.first_name, u.last_name, u.avatar, rq.id, rq.group_id, rq.type, rq.sender_id from users u 
 		inner join group_requests rq ON u.id = rq.sender_id 
-		where rq.type = 'demande' and rq.requested_id = ?; 
+		where rq.type = 'demande' and rq.requested_id = ?
+		ORDER BY rq.id DESC;
 	`
 
 	rows, err := r.db.Query(query, requestedID)
@@ -203,7 +204,7 @@ func (r *GroupRepository) GetDemandeGroupNotifs(requestedID int) ([]*models.Grou
 		var groupNotif models.GroupRequest
 		var user models.User
 		err = rows.Scan(&user.ID, &user.FirstName, &user.Lastname,
-			&user.Avatar, &groupNotif.ID, &groupNotif.GroupID, &groupNotif.Type)
+			&user.Avatar, &groupNotif.ID, &groupNotif.GroupID, &groupNotif.Type, &groupNotif.SenderID)
 		if err != nil {
 			return nil, err
 		}

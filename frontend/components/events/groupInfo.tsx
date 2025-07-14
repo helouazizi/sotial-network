@@ -52,13 +52,13 @@ function GroupHeader({ id }: { id: string }) {
                 </div>
 
                 <div className="group-details">
-                    <p><span className="event-label">Group Name:</span> {groupInfo.group.title}</p>
+                    <p> {groupInfo.group.title}</p>
                     <div className="event-group-description">{groupInfo.group.description}</div>
                 </div>
 
                 <div className="group-action-buttons">
-                    <button className="group-btn btn-see-members">See All Members</button>
-                    <button className="group-btn btn-invite-users">Invite Users</button>
+                    <button className="group-btn see-members">See All Members</button>
+                    <button className="group-btn invite-users">Invite Users</button>
                 </div>
             </div>
         </div>

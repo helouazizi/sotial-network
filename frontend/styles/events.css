@@ -315,22 +315,22 @@
   user-select: none;
 }
 
-.group-btn-see-members {
-  /* background-color: var(--btn-bg);
-  color: var(--btn-text); */
+.see-members {
+   background-color: var(--btn-bg);
+  color: var(--btn-text); 
 }
 
-.group-btn-see-members:hover {
+.see-members:hover {
   background-color: var(--accent-hover);
   color: var(--bg-color);
 }
 
-.group-btn-invite-users {
-  /* background-color: var(--info-color);
-  color: var(--bg-color); */
+.invite-users {
+  background-color: var(--info-color);
+  color: var(--bg-color);
 }
 
-.group-btn-invite-users:hover {
+.invite-users:hover {
   background-color: var(--accent-hover);
   color: var(--bg-color);
 }

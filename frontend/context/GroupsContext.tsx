@@ -1,8 +1,7 @@
 "use client"
 
 import { Group } from "@/types/groups";
-import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useState } from "react";
-import { SocketContext } from "./socketContext";
+import { createContext, Dispatch, ReactNode, SetStateAction, useState } from "react";
 
 interface GroupsContextType {
     Groups: Group[] | null

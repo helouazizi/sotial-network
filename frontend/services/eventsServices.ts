@@ -8,8 +8,12 @@ export const GetEvents = async (group_id: number):Promise<Event[]> => {
             credentials: "include",
         }
     )
+
+        console.log(res,"res");
     if (!res.ok) throw new Error(await res.text());
     const events = await res.json()
+
+    
     return  events.data
 }
 

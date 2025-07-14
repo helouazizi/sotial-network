@@ -1,4 +1,5 @@
 import { User } from "./user"
+import { Group } from "./groups"
 
 export interface Event {
     id : number,
@@ -10,4 +11,10 @@ export interface Event {
     total_going : number,
     total_not_going : number,
     author : User
+}
+
+export interface GroupInfo {
+    group : Group
+    author : User
+    total_members : number
 }

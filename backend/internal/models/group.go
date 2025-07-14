@@ -3,13 +3,11 @@ package models
 import "time"
 
 type Group struct {
-	ID           int       `json:"id"`
-	UserID       int       `json:"user_id"`
-	Title        string    `json:"title"`
-	Description  string    `json:"description"`
-	CreatedAt    time.Time `json:"created_at"`
-	Author       User      `json:"author"`
-	TotalMembers int       `json:"total_members"`
+	ID          int       `json:"id"`
+	UserID      int       `json:"user_id"`
+	Title       string    `json:"title"`
+	Description string    `json:"description"`
+	CreatedAt   time.Time `json:"created_at"`
 }
 
 type Event struct {
@@ -30,4 +28,14 @@ type EventVote struct {
 	ID     int    `json:"id"`
 	UserID int    `json:"user_id"`
 	Vote   string `json:"vote"` // going or not going
+}
+
+type GroupIfo struct {
+	Group        Group `json:"group"`
+	Author       User  `json:"author"`
+	TotalMembers int   `json:"total_members"`
+}
+
+type GroupMembers struct {
+	Members []User `json:"members"`
 }

@@ -60,7 +60,7 @@ func (s *GroupService) GetSuggestedGroups(userID int) ([]*models.Group, error) {
 	return s.repo.GetSuggestedGroups(userID)
 }
 
-func (s *GroupService) GetGroup(GroupId string) (*models.Group, *models.GroupError) {
+func (s *GroupService) GetGroup(GroupId string) (*models.GroupIfo, *models.GroupError) {
 	id, err := strconv.Atoi(GroupId)
 	if err != nil {
 		return nil, &models.GroupError{

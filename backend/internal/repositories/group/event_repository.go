@@ -2,6 +2,8 @@ package repositories
 
 import (
 	"context"
+	"database/sql"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -10,7 +12,7 @@ import (
 
 func (r *GroupRepository) SaveEvent(c context.Context, event *models.Event) (models.Event, *models.GroupError) {
 	query := `
-		INSERT INTO group_events( group_id,  member_id, title, descreption, event_date, created_at) VALUES (?, ?, ?, ?, ?, ?)
+		INSERT INTO group_events( group_id,  member_id, title, descreption, event_date, created_at,total_going, total_not_going) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
 	`
 	tx, err := r.db.BeginTx(c, nil)
 	if err != nil {
@@ -25,7 +27,7 @@ func (r *GroupRepository) SaveEvent(c context.Context, event *models.Event) (mod
 		}
 	}()
 
-	res, err := tx.Exec(query, event.GroupId, event.UserID, event.Title, event.Description, event.EventDate, time.Now())
+	res, err := tx.Exec(query, event.GroupId, event.UserID, event.Title, event.Description, event.EventDate, time.Now(), 0, 0)
 	if err != nil {
 		return models.Event{}, &models.GroupError{
 			Message: err.Error(),
@@ -67,6 +69,7 @@ func (r *GroupRepository) GetGroupEvents(userID, groupID int) ([]*models.Event, 
 
 	rows, err := r.db.Query(query, userID, groupID)
 	if err != nil {
+		fmt.Println(err, "err")
 		return nil, models.GroupError{
 			Message: "Internal Server Error",
 			Code:    http.StatusInternalServerError,
@@ -79,6 +82,7 @@ func (r *GroupRepository) GetGroupEvents(userID, groupID int) ([]*models.Event, 
 
 	for rows.Next() {
 		var event models.Event
+		var vote sql.NullString
 		err := rows.Scan(
 			&event.ID,
 			&event.Title,
@@ -87,7 +91,7 @@ func (r *GroupRepository) GetGroupEvents(userID, groupID int) ([]*models.Event, 
 			&event.CreatedAt,
 			&event.TotalGoing,
 			&event.TotalNotGoing,
-			&event.UserVote,
+			&vote,
 			&unused,
 			&event.Author.FirstName,
 			&event.Author.Lastname,
@@ -95,11 +99,13 @@ func (r *GroupRepository) GetGroupEvents(userID, groupID int) ([]*models.Event, 
 			&event.Author.Avatar,
 		)
 		if err != nil {
+			fmt.Println(err, "err1")
 			return nil, models.GroupError{
 				Message: "Internal Server Error",
 				Code:    http.StatusInternalServerError,
 			}
 		}
+		event.UserVote = vote.String
 
 		events = append(events, &event)
 	}

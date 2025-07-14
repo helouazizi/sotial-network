@@ -100,7 +100,7 @@ func (r *GroupRepository) GetSuggestedGroups(userID int) ([]*models.Group, error
 	return groups, nil
 }
 
-func (r *GroupRepository) GetGroup(groupID int) (*models.Group, *models.GroupError) {
+func (r *GroupRepository) GetGroup(groupID int) (*models.GroupIfo, *models.GroupError) {
 	query := `
 		SELECT 
 			g.id, g.user_id, g.title, g.description, g.created_at,
@@ -112,12 +112,11 @@ func (r *GroupRepository) GetGroup(groupID int) (*models.Group, *models.GroupErr
 		JOIN users u ON g.user_id = u.id
 		WHERE g.id = ?
 	`
-	group := &models.Group{}
-	var gid int
-	var uid int
+	groupInfo := &models.GroupIfo{}
+
 	err := r.db.QueryRow(query, groupID).Scan(
-		&gid, &uid, &group.Title, &group.Description, &group.CreatedAt,
-		&uid, &group.Author.Nickname, &group.Author.FirstName, &group.Author.Lastname, &group.Author.Avatar, &group.TotalMembers,
+		&groupInfo.Group.ID, &groupInfo.Author.ID, &groupInfo.Group.Title, &groupInfo.Group.Description, &groupInfo.Group.CreatedAt,
+		&groupInfo.Author.ID, &groupInfo.Author.Nickname, &groupInfo.Author.FirstName, &groupInfo.Author.Lastname, &groupInfo.Author.Avatar, &groupInfo.TotalMembers,
 	)
 	if err != nil {
 		return nil, &models.GroupError{
@@ -125,6 +124,8 @@ func (r *GroupRepository) GetGroup(groupID int) (*models.Group, *models.GroupErr
 			Code:    http.StatusInternalServerError,
 		}
 	}
+	groupInfo.Group.ID = 0
+	groupInfo.Author.ID = 0
 
-	return group, nil
+	return groupInfo, nil
 }

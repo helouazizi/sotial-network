@@ -64,7 +64,7 @@ func (s *GroupService) GetGroupEvents(UserId int, groupId string) ([]*models.Eve
 }
 
 func (s *GroupService) VoteOnEvent(ctx context.Context, vote models.EventVote) models.GroupError {
-	if vote.Vote != "going" && vote.Vote != "not going" {
+	if vote.Vote != "going" && vote.Vote != "not going" && vote.Vote != "remove" {
 		return models.GroupError{
 			Message: "Bad Request",
 			Code:    http.StatusBadRequest,

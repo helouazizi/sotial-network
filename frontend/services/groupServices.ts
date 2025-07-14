@@ -60,9 +60,6 @@ export async function GetGroup(id: string) {
             console.error(data.error)
             return data
         }
-        console.log(data , "GROUP INFO");
-        
-
         return data.data
 
     } catch (err) {

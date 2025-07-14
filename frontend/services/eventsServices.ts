@@ -20,13 +20,12 @@ export const GetEvents = async (group_id: number):Promise<Event[]> => {
 
 
 
-export const VoteEvent = async ({id, vote } : {id : number , vote : string}) => {    
+export const VoteEvent = async ({id, vote } : {id : number , vote : string|null}) => {    
   const res = await fetch(`${API_URL}api/v1/groups/events/vote`, {
     method: "POST",
     credentials: "include",
     body: JSON.stringify({ id, vote }),
   });
-
 
   const response  = await res.json();
   

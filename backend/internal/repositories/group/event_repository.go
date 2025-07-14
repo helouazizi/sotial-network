@@ -121,21 +121,38 @@ func (r *GroupRepository) GetGroupEvents(userID, groupID int) ([]*models.Event, 
 }
 
 func (r *GroupRepository) VoteOnEvent(ctx context.Context, vote models.EventVote) models.GroupError {
-	query := `
-		INSERT INTO group_events_votes (event_id, member_id, status)
-		VALUES (?, ?, ?)
-	`
+	var (
+		query string
+		args  []any
+		msg   string
+	)
 
-	_, err := r.db.ExecContext(ctx, query, vote.ID, vote.UserID, vote.Vote)
+	if vote.Vote == "remove" {
+		query = `
+			DELETE FROM group_events_votes
+			WHERE event_id = ? AND member_id = ?
+		`
+		args = []any{vote.ID, vote.UserID}
+		msg = "Vote removed successfully"
+	} else {
+		query = `
+			INSERT INTO group_events_votes (event_id, member_id, status)
+			VALUES (?, ?, ?)
+		`
+		args = []any{vote.ID, vote.UserID, vote.Vote}
+		msg = "Vote registered successfully"
+	}
+
+	_, err := r.db.ExecContext(ctx, query, args...)
 	if err != nil {
 		return models.GroupError{
-			Message: "Failed to cast vote",
+			Message: "Failed to process vote",
 			Code:    http.StatusInternalServerError,
 		}
 	}
 
 	return models.GroupError{
-		Message: "Vote registered successfully",
+		Message: msg,
 		Code:    http.StatusOK,
 	}
 }

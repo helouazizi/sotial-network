@@ -1,5 +1,6 @@
 "use client"
 
+import { Group } from "@/types/groups";
 import { createContext, Dispatch, ReactNode, SetStateAction, useState } from "react";
 
 interface GroupsContextType {

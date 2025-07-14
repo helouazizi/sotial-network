@@ -78,3 +78,7 @@ func (s *GroupService) SaveJoinGroupRequest(groupReq *models.GroupRequest) error
 func (s *GroupService) GetInfoGroupeService(grpId string, sessionID int) (*models.Group, error) {
 	return s.repo.GetInfoGroupeRepo(grpId, sessionID)
 }
+
+func (s *GroupService) GetDemandeGroupNotifs(requestedID int) ([]*models.GroupRequest, error) {
+	return s.repo.GetDemandeGroupNotifs(requestedID)
+}

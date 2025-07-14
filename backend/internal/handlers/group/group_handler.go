@@ -184,3 +184,26 @@ func (h *GroupHandler) GetInfoGroupe(w http.ResponseWriter, r *http.Request) {
 		"data": infoGrp,
 	})
 }
+
+func (h *GroupHandler) GetDemandeGroupNotifsHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
+			"error": "Method not allowed",
+		})
+		return
+	}
+
+	requestedID := r.Context().Value("userID").(int)
+
+	groupNotifs, err := h.service.GetDemandeGroupNotifs(requestedID)
+	if err != nil {
+		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	utils.ResponseJSON(w, http.StatusOK, map[string]any{
+		"data": groupNotifs,
+	})
+}

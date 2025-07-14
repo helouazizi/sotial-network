@@ -147,7 +147,7 @@ func (r *GroupRepository) SaveJoinGroupRequest(groupReq *models.GroupRequest) er
 	query := `
 		INSERT INTO group_requests (group_id, requested_id, sender_id, type) VALUES (?,?,?,?)
 	`
-	_, err := r.db.Exec(query, groupReq.GroupID, groupReq.RequestedID, groupReq.SenderID, "demand")
+	_, err := r.db.Exec(query, groupReq.GroupID, groupReq.RequestedID, groupReq.SenderID, "demande")
 	if err != nil {
 		return err
 	}
@@ -179,4 +179,35 @@ func (r *GroupRepository) GetInfoGroupeRepo(GrpID string, sessionID int) (*model
 	}
 	groupInfo.Members = strings.Split(ids, ",")
 	return &groupInfo, nil
+}
+
+func (r *GroupRepository) GetDemandeGroupNotifs(requestedID int) ([]*models.GroupRequest, error) {
+	query := `
+		select u.id, u.first_name, u.last_name, u.avatar, rq.id, rq.group_id, rq.type from users u 
+		inner join group_requests rq ON u.id = rq.sender_id 
+		where rq.type = 'demande' and rq.requested_id = ?; 
+	`
+
+	rows, err := r.db.Query(query, requestedID)
+	if err != nil {
+		return nil, err
+	}
+
+	var groupNotifs []*models.GroupRequest
+	for rows.Next() {
+
+		var groupNotif models.GroupRequest
+		var user models.User
+		err = rows.Scan(&user.ID, &user.FirstName, &user.Lastname,
+			&user.Avatar, &groupNotif.ID, &groupNotif.GroupID, &groupNotif.Type)
+		if err != nil {
+			return nil, err
+		}
+
+		groupNotif.UserInfos = &user
+
+		groupNotifs = append(groupNotifs, &groupNotif)
+	}
+
+	return groupNotifs, nil
 }

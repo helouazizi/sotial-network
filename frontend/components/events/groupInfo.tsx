@@ -3,14 +3,33 @@
 import { MdGroups, MdVerifiedUser } from "react-icons/md";
 import { GetGroup } from "@/services/groupServices";
 import { useEffect, useState } from "react";
-import { GroupInfo } from "@/types/events";
+import { GroupInfo, GroupMembers } from "@/types/events";
 import FormatDate from "@/utils/date";
+import { GetGroupMembers } from "@/services/eventsServices";
+import PostHeader from "../post/postHeader";
 
 function GroupHeader({ id }: { id: string }) {
     const [groupInfo, setGroupInfo] = useState<GroupInfo | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [groupMembers, setGroupMembers] = useState<GroupMembers | null>(null);
+    const [showMembers, setShowMembers] = useState(false);
 
+    const displayMembers = () => {
+            return (
+                <div className="share-with-users">
+                    {groupMembers && groupMembers.members.map(( member,indx) => (
+                        <div key={indx}>
+                        <PostHeader author={member.nickname} avatarUrl={member.avatar} firstname={member.firstname} lastname={member.lastname} createdAt="" />
+
+                        </div>
+                    ))
+                    }
+                </div>
+
+            )
+  
+    }
     useEffect(() => {
         const fetchGroup = async () => {
             try {
@@ -25,6 +44,23 @@ function GroupHeader({ id }: { id: string }) {
         };
 
         fetchGroup();
+    }, [id]);
+
+    useEffect(() => {
+        const fetchMembers = async () => {
+            try {
+                const data = await GetGroupMembers(id);
+                setGroupMembers(data);
+
+            } catch (err) {
+                console.error("Failed to fetch group info", err);
+                setError("Failed to load group info");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchMembers();
     }, [id]);
 
     if (loading) return <p className="group-loading">Loading group...</p>;
@@ -57,9 +93,24 @@ function GroupHeader({ id }: { id: string }) {
                 </div>
 
                 <div className="group-action-buttons">
-                    <button className="group-btn see-members">See All Members</button>
+                    <button
+                        className="group-btn see-members"
+                        onClick={() => setShowMembers((prev) => !prev)}
+                    >
+                        {showMembers ? "Hide Members" : "See Members"}
+                    </button>
                     <button className="group-btn invite-users">Invite Users</button>
                 </div>
+                {showMembers && groupMembers && (
+                    <div className="group-members-list">
+                        {groupMembers.members.length === 0 ? (
+                            <p>No members in this group.</p>
+                        ) : (
+                            displayMembers()
+                        )}
+                    </div>
+                )}
+
             </div>
         </div>
     );

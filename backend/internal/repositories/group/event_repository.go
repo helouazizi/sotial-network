@@ -120,6 +120,72 @@ func (r *GroupRepository) GetGroupEvents(userID, groupID int) ([]*models.Event, 
 	}
 }
 
+func (r *GroupRepository) GetGroupMembers(groupID int) (*models.GroupMembers, models.GroupError) {
+	query := `
+		SELECT 
+			gm.member_id,
+			gm.group_id,
+			u.id,
+			u.first_name,
+			u.last_name,
+			u.nickname,
+			u.avatar
+		FROM group_members AS gm
+		LEFT JOIN users AS u 
+			ON u.id = gm.member_id
+		WHERE gm.group_id = ? ;
+	`
+
+	rows, err := r.db.Query(query, groupID)
+	if err != nil {
+		return nil, models.GroupError{
+			Code:    http.StatusInternalServerError,
+			Message: "Internal server errror",
+		}
+	}
+	defer rows.Close()
+
+	members := &models.GroupMembers{Members: []models.User{}}
+
+	for rows.Next() {
+		var member models.User
+		var unused1, unused2 int
+		var nickname sql.NullString
+
+		err := rows.Scan(
+			&member.ID,
+			&unused1,
+			&unused2,
+			&member.FirstName,
+			&member.Lastname,
+			&nickname,
+			&member.Avatar,
+		)
+		if err != nil {
+			return nil, models.GroupError{
+				Code:    http.StatusInternalServerError,
+				Message: "Internal server errror",
+			}
+		}
+		if nickname.Valid {
+			member.Nickname = nickname.String
+		}
+		members.Members = append(members.Members, member)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, models.GroupError{
+			Code:    http.StatusInternalServerError,
+			Message: "Internal server errror",
+		}
+	}
+
+	return members, models.GroupError{
+		Code:    http.StatusOK,
+		Message: "succefully fetchd members",
+	}
+}
+
 func (r *GroupRepository) VoteOnEvent(ctx context.Context, vote models.EventVote) models.GroupError {
 	var (
 		query string

@@ -24,9 +24,8 @@
 }
 
 .group-page {
-  background-color: var(--card-bg);
-  /* height: 30dvh; */
-  margin-top: 1rem;
+  background-color: var(--bg-color);
+  margin-top: 0.5rem;
 }
 
 
@@ -206,4 +205,139 @@
   font-size: 14px;
   margin-top: 8px;
   color: var(--text-secondary);
+}
+
+
+/* ======================================== */
+
+.event-group-header {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  border-radius: 12px;
+  max-width: 800px;
+  margin: 2rem auto;
+}
+
+.total-members {
+  color: var(--text-muted);
+}
+
+.group-info-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px var(--shadow-color);
+}
+
+.group-header-title {
+  margin-bottom: 1rem;
+}
+.group-creation-date {
+  font-size: small;
+  color: var(--btn-text);
+}
+
+.group-icon {
+  font-size: 2rem;
+  color: var(--icon-color);
+}
+
+
+.group-details p {
+  margin: 0.5rem 0;
+  font-size: 1rem;
+  color: var(--accent-hover);
+}
+
+
+
+.event-group-description {
+  margin: 1rem 0;
+  padding: 1rem;
+  background-color: var(--input-bg);
+  border-left: 4px solid var(--accent-color);
+  border-radius: 6px;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+.group-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.group-admin-card {
+  border-radius: 12px;
+}
+.group-admin-icon {
+  color: var(--info-color);
+  font-size: 1.1rem;
+}
+
+.group-admin-card h3 {
+  margin: 0 0 0.5rem;
+  color: var(--accent-color);
+  font-size: 1.2rem;
+}
+
+.admin-name {
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+}
+
+.admin-nickname {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+
+.group-action-buttons {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+
+.group-btn {
+  cursor: pointer;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+  user-select: none;
+}
+
+.see-members {
+   background-color: var(--btn-bg);
+  color: var(--btn-text); 
+}
+
+.see-members:hover {
+  background-color: var(--accent-hover);
+  color: var(--bg-color);
+}
+
+.invite-users {
+  background-color: var(--info-color);
+  color: var(--bg-color);
+}
+
+.invite-users:hover {
+  background-color: var(--accent-hover);
+  color: var(--bg-color);
+}
+.group-loading,
+.group-error {
+  text-align: center;
+  font-size: 1rem;
+  padding: 1rem;
+  color: var(--text-muted);
 }

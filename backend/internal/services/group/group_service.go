@@ -2,6 +2,7 @@ package services
 
 import (
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/ismailsayen/social-network/internal/models"
@@ -57,6 +58,21 @@ func (s *GroupService) GetJoinedGroups(userID int) ([]*models.Group, error) {
 
 func (s *GroupService) GetSuggestedGroups(userID int) ([]*models.Group, error) {
 	return s.repo.GetSuggestedGroups(userID)
+}
+
+func (s *GroupService) GetGroup(GroupId string) (models.GroupIfo, *models.GroupError) {
+	id, err := strconv.Atoi(GroupId)
+	if err != nil {
+		return models.GroupIfo{}, &models.GroupError{
+			Message: "group id is required",
+			Code:    http.StatusBadRequest,
+		}
+	}
+	return s.repo.GetGroup(id)
+}
+
+func (s *GroupService) SaveJoinGroupRequest(groupReq *models.GroupRequest) error {
+	return s.repo.SaveJoinGroupRequest(groupReq)
 }
 
 func (s *GroupService) GetInfoGroupeService(grpId string, sessionID int) (*models.Group, error) {

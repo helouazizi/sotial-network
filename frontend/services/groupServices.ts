@@ -49,6 +49,29 @@ export async function GetGroups(type: groupType) {
     }
 }
 
+export async function GetGroup(id: string) {
+    try {
+        const res = await fetch(API_URL+"api/v1/groups/joined/"+id, {
+            credentials: "include"
+        })
+
+        const data = await res.json()
+        if (!res.ok) {
+            console.error(data.error)
+            return data
+        }
+        console.log(data , "GROUP INFO");
+        
+
+        return data.data
+
+    } catch (err) {
+        console.error(err)
+    }
+}
+
+
+
 export async function GetInfoGrp(idGrp: ParamValue) {
     try {
         const resp = await fetch(`${API_URL}api/v1/groups/getInfoGroup?group_id=${idGrp}`, {
@@ -59,9 +82,35 @@ export async function GetInfoGrp(idGrp: ParamValue) {
         if (resp.ok) {
             return data.data
         }
-        return
     } catch (error) {
         console.error(error)
+        return
+    }
+}
+
+export async function SendJoinGroupRequest(groupID: number, requestedID: number) {
+    try {
+        const res = await fetch(API_URL+"api/v1/groups/joinGroupRequest", {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                "group_id": groupID,
+                "requested_id": requestedID
+            })
+        })
+
+        const data = await res.json()
+        if (!res.ok) {
+            console.error(data.error)
+            return null
+        }
+
+        return data
+    } catch (err) {
+        console.error(err)
         return
     }
 }

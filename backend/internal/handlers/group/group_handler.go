@@ -104,6 +104,66 @@ func (h *GroupHandler) GetSuggestedGroupsHandler(w http.ResponseWriter, r *http.
 	})
 }
 
+func (h *GroupHandler) GetGroupHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
+			"error": "Method not allowed",
+		})
+		return
+	}
+
+	GroupID, err := utils.GetGroupId(r, "events")
+	if err != nil {
+		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+			"error": "Bad Request",
+		})
+		return
+	}
+
+	groupinfo, errr := h.service.GetGroup(GroupID)
+
+	if errr != nil {
+		utils.ResponseJSON(w, errr.Code, map[string]any{
+			"error": errr.Message,
+		})
+		return
+	}
+
+	utils.ResponseJSON(w, http.StatusOK, map[string]any{
+		"data": groupinfo,
+	})
+}
+
+func (h *GroupHandler) JoinGroupRequestHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
+			"error": "Method not allowed",
+		})
+		return
+	}
+
+	var groupRequest *models.GroupRequest
+	if err := json.NewDecoder(r.Body).Decode(&groupRequest); err != nil {
+		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+			"error": err.Error(),
+		})
+	}
+
+	groupRequest.SenderID = r.Context().Value("userID").(int)
+
+	err := h.service.SaveJoinGroupRequest(groupRequest)
+	if err != nil {
+		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	utils.ResponseJSON(w, http.StatusOK, map[string]any{
+		"message": "Request saved succesfully!",
+	})
+}
+
 func (h *GroupHandler) GetInfoGroupe(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
@@ -113,8 +173,7 @@ func (h *GroupHandler) GetInfoGroupe(w http.ResponseWriter, r *http.Request) {
 	}
 	groupId := r.URL.Query().Get("group_id")
 	sessionID := r.Context().Value("userID").(int)
-
-	infoGrp, err := h.service.GetInfoGroupeService(groupId,sessionID)
+	infoGrp, err := h.service.GetInfoGroupeService(groupId, sessionID)
 	if err != nil {
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
 			"error": err.Error(),

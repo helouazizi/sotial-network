@@ -15,7 +15,7 @@ func NewWebsocketRepo(db *sql.DB) *WebsocketRepository {
 	return &WebsocketRepository{db: db}
 }
 
-func (r *WebsocketRepository) SaveMessage(chat *models.Chat) (int, error) {
+func (r *WebsocketRepository) SaveMessage(chat *models.WS) (int, error) {
 	query := `INSERT INTO chat_message (sender_id, receiver_id, content, sent_at) VALUES (?,?,?,?) RETURNING id`
 
 	lastMessageID := 0
@@ -23,7 +23,7 @@ func (r *WebsocketRepository) SaveMessage(chat *models.Chat) (int, error) {
 	return lastMessageID, err
 }
 
-func (r *WebsocketRepository) GetMessages(senderID, receiverID int, lastID int) ([]*models.Chat, error) {
+func (r *WebsocketRepository) GetMessages(senderID, receiverID int, lastID int) ([]*models.WS, error) {
 	query := `
 		SELECT * FROM chat_message
 		WHERE ((sender_id = ? AND receiver_id = ?) OR (receiver_id = ? AND sender_id = ?)) AND id < ?
@@ -35,9 +35,9 @@ func (r *WebsocketRepository) GetMessages(senderID, receiverID int, lastID int) 
 		return nil, err
 	}
 
-	var messages []*models.Chat
+	var messages []*models.WS
 	for rows.Next() {
-		var message models.Chat
+		var message models.WS
 		err = rows.Scan(&message.ID, &message.SenderID, &message.ReceiverID, &message.Message, &message.SentAt)
 		if err != nil {
 			return nil, err

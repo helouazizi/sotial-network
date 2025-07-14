@@ -143,6 +143,20 @@
   margin: 1rem auto;
 }
 
+.event-card  .post-body h2 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+  overflow-wrap: break-word;
+}
+
+.event-card  .post-body p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+   overflow-wrap: break-word;
+}
+
 .event-date {
   font-size: 14px;
   color: var(--text-muted);
@@ -232,6 +246,8 @@
   padding: 1.5rem;
   box-shadow: 0 2px 8px var(--shadow-color);
 }
+
+
 
 .group-header-title {
   margin-bottom: 1rem;

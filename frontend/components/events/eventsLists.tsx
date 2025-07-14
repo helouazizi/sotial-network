@@ -36,7 +36,6 @@ const EventsList = ({ groupId }: EventsListProps) => {
         setLoading(true);
         const data = await GetEvents(groupId);
         setEvents(data);
-        console.log(data, "events");
         
       } catch (err: any) {
         Popup?.showPopup("faild", 'Something went wrong. Try again.')

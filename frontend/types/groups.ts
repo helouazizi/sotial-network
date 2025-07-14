@@ -5,4 +5,5 @@ export interface Group {
     description: string
     created_at: string
     count_members: number
+    members: string[]
 }

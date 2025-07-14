@@ -24,7 +24,6 @@ export default function ChatFooter({ receiverId }: { receiverId: number }) {
         if (textarea.current) {
             textarea.current.value = ""
         }
-
     }
 
     useEffect(() => {
@@ -46,7 +45,7 @@ export default function ChatFooter({ receiverId }: { receiverId: number }) {
 
     return (
         <div className="chatFooter">
-            <textarea maxLength={3000} ref={textarea} onKeyDown={handleKeyDown} placeholder="Type a message..."></textarea>
+            <textarea maxLength={3000} ref={textarea} onKeyDown={handleKeyDown} placeholder="Type a message..." ></textarea>
             <button onClick={handleClick}>Send</button>
         </div>
     )

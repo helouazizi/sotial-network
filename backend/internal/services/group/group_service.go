@@ -59,6 +59,6 @@ func (s *GroupService) GetSuggestedGroups(userID int) ([]*models.Group, error) {
 	return s.repo.GetSuggestedGroups(userID)
 }
 
-func (s *GroupService) GetInfoGroupeService(grpId string) (*models.Group, error) {
-	return s.repo.GetInfoGroupeRepo(grpId)
+func (s *GroupService) GetInfoGroupeService(grpId string, sessionID int) (*models.Group, error) {
+	return s.repo.GetInfoGroupeRepo(grpId, sessionID)
 }

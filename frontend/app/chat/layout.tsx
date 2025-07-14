@@ -11,7 +11,6 @@ export default function ChatLayout({ children }: { children: ReactNode }) {
   const { user } = useContext(SocketContext) ?? {}
   let pathName = usePathname()
   let isPrivateChat = pathName.startsWith("/chat/privateChat")
-  console.log(isPrivateChat);
 
   return (
     <main className="container chatPage">

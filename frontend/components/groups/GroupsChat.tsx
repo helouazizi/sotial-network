@@ -22,7 +22,6 @@ export default function GroupsChat() {
     }
     fetchGroups()
   }, [])
-  console.log(pathName);
 
   const displayGroups = () => {
     return joinedGrpChat?.map((group, index) => {

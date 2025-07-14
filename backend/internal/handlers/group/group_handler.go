@@ -112,7 +112,9 @@ func (h *GroupHandler) GetInfoGroupe(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	groupId := r.URL.Query().Get("group_id")
-	infoGrp, err := h.service.GetInfoGroupeService(groupId)
+	sessionID := r.Context().Value("userID").(int)
+
+	infoGrp, err := h.service.GetInfoGroupeService(groupId,sessionID)
 	if err != nil {
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
 			"error": err.Error(),

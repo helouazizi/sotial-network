@@ -19,14 +19,11 @@ const page = () => {
 
     }, [id])
 
-   
-
-
     return (
         <>
             <GroupChatHeader idGrp={chatInfo?.id} title={chatInfo?.title} members={chatInfo?.count_members} />
-            <GroupChatBody/>
-            <GroupChatFooter/>
+            <GroupChatBody />
+            <GroupChatFooter idGrp={chatInfo?.id} members={chatInfo?.members} />
         </>
     )
 }

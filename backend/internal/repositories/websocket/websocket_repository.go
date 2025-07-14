@@ -140,3 +140,21 @@ func (reqRepo *WebsocketRepository) HandleReqFollowRepo(reqID, followedID, follo
 	}
 	return nil
 }
+
+func (reqRepo *WebsocketRepository) SaveMessagesGrpRepo(idGrp, senderId int, message string, sentAt *time.Time) (map[string]any, error) {
+	query := `INSERT INTO group_messages(sender_id, group_id, content, sent_at) VALUES (?, ?, ?, ?) RETURNING id`
+	var idMsg int
+	err := reqRepo.db.QueryRow(query, senderId, idGrp, message, sentAt).Scan(&idMsg)
+	if err != nil {
+		return nil, err
+	}
+	lastMessage := map[string]any{
+		"id":       idMsg,
+		"groupID":  idGrp,
+		"senderID": senderId,
+		"message":  message,
+		"sentAt":   sentAt.Format(time.DateTime),
+	}
+
+	return lastMessage, nil
+}

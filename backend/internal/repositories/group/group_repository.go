@@ -163,7 +163,7 @@ func (r *GroupRepository) GetInfoGroupeRepo(GrpID string, sessionID int) (*model
 				(
 					SELECT GROUP_CONCAT(CAST(gm.member_id AS TEXT), ',')
 					FROM group_members gm
-					WHERE gm.group_id = $1 AND gm.member_id <> $2
+					WHERE gm.group_id = $1
 				) AS members
 			FROM groups g 
 			INNER JOIN group_members gr ON g.id = gr.group_id
@@ -172,12 +172,16 @@ func (r *GroupRepository) GetInfoGroupeRepo(GrpID string, sessionID int) (*model
 
 	`
 	var groupInfo models.Group
-	var ids string
-	err := r.db.QueryRow(query, GrpID, sessionID).Scan(&groupInfo.ID, &groupInfo.Title, &groupInfo.Count_Members, &ids)
+	var ids sql.NullString
+	err := r.db.QueryRow(query, GrpID).Scan(&groupInfo.ID, &groupInfo.Title, &groupInfo.Count_Members, &ids)
 	if err != nil && err != sql.ErrNoRows {
 		return nil, err
 	}
-	groupInfo.Members = strings.Split(ids, ",")
+	if ids.Valid {
+		groupInfo.Members = strings.Split(ids.String, ",")
+	} else {
+		groupInfo.Members = []string{}
+	}
 	return &groupInfo, nil
 }
 

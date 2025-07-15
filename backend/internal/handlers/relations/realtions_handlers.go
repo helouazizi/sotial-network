@@ -2,6 +2,7 @@ package relations
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/ismailsayen/social-network/internal/models"
@@ -115,6 +116,39 @@ func (h *RelationsHandler) GetFriends(w http.ResponseWriter, r *http.Request) {
 	sessionID := r.Context().Value("userID").(int)
 	friends, err := h.RelationsServices.GetFriendsService(sessionID)
 	if err != nil {
+		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+			"message": "Error, please try again.",
+			"status":  http.StatusInternalServerError,
+		})
+		return
+	}
+	utils.ResponseJSON(w, http.StatusOK, map[string]any{
+		"friends": friends,
+		"status":  http.StatusOK,
+	})
+}
+
+func (h *RelationsHandler) GetUnrequestedFriends(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
+			"message": "Method not allowed",
+			"status":  http.StatusMethodNotAllowed,
+		})
+		return
+	}
+	groupId, err := utils.GetGroupId(r, "events")
+	if err != nil {
+		fmt.Println(err, "====11=============")
+		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
+			"error":  err,
+			"status": http.StatusBadRequest,
+		})
+		return
+	}
+	sessionID := r.Context().Value("userID").(int)
+	friends, err := h.RelationsServices.GetUnrequestedFriendsService(sessionID, groupId)
+	if err != nil {
+		fmt.Println(err, "=================")
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
 			"message": "Error, please try again.",
 			"status":  http.StatusInternalServerError,

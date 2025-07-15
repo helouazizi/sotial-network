@@ -1,0 +1,93 @@
+.Searching {
+  position: relative;
+  width: 100%;
+  max-width: 320px; /* Optional: control max size */
+}
+
+/* Input field styling */
+.Searching input[type="text"] {
+  width: 100%;
+  padding: 10px 16px;
+  border: 1px solid var(--border-color);
+  background-color: var(--input-bg);
+  color: var(--input-text);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.Searching input[type="text"]::placeholder {
+  color: var(--text-muted);
+}
+
+.Searching input[type="text"]:focus {
+  border-color: var(--accent-color);
+  background-color: var(--bg-color);
+  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.2);
+}
+
+/* Dropdown container */
+.Searching .search-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%; /* Matches input width */
+  max-height: 300px;
+  overflow-y: auto;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  margin-top: 4px;
+  z-index: 1000;
+  box-shadow: 0 8px 16px var(--shadow-color);
+  padding: 8px 0;
+}
+
+/* Scrollbar styling (optional) */
+.Searching .search-results::-webkit-scrollbar {
+  width: 6px;
+}
+
+.Searching .search-results::-webkit-scrollbar-track {
+  background: var(--scrollbar-bg);
+}
+
+.Searching .search-results::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 3px;
+}
+
+/* Each user result item */
+.Searching .block {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  text-decoration: none;
+  color: var(--text-primary);
+  transition: background-color 0.2s ease;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.Searching .block:last-child {
+  border-bottom: none;
+}
+
+.Searching .block:hover {
+  background-color: var(--btn-bg);
+}
+
+/* Avatar in search results */
+.Searching .avatar-profile {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--accent-color);
+  transition: border-color 0.3s ease;
+}
+
+.Searching .avatar-profile:hover {
+  border-color: var(--accent-hover);
+}

@@ -2,18 +2,18 @@
 
 import { MdGroups, MdVerifiedUser } from "react-icons/md";
 import { GetGroup } from "@/services/groupServices";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { GroupInfo, GroupMembers } from "@/types/events";
 import FormatDate from "@/utils/date";
 import { GetGroupMembers } from "@/services/eventsServices";
 import PostHeader from "../post/postHeader";
 import { Follower } from "@/types/post";
 import { GetFolowers } from "@/services/postsServices";
+import { PopupContext } from "@/context/PopupContext";
 
 function GroupHeader({ id }: { id: string }) {
     const [groupInfo, setGroupInfo] = useState<GroupInfo | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    const poopUp = useContext(PopupContext)
     const [groupMembers, setGroupMembers] = useState<GroupMembers | null>(null);
     const [showMembers, setShowMembers] = useState(false);
     const [showFolowers, setShowFolowers] = useState(false);
@@ -79,16 +79,14 @@ function GroupHeader({ id }: { id: string }) {
             </div>
         )
     }
+
     useEffect(() => {
         const fetchGroup = async () => {
             try {
                 const data = await GetGroup(id);
                 setGroupInfo(data);
             } catch (err) {
-                console.error("Failed to fetch group info", err);
-                setError("Failed to load group info");
-            } finally {
-                setLoading(false);
+                poopUp?.showPopup("faild", "something went wrong, please try again")
             }
         };
 
@@ -100,14 +98,8 @@ function GroupHeader({ id }: { id: string }) {
         try {
             const data = await GetGroupMembers(id);
             setGroupMembers(data);
-            console.log(data, "members");
-
-
         } catch (err) {
-            console.error("Failed to fetch group info", err);
-            setError("Failed to load group info");
-        } finally {
-            setLoading(false);
+            poopUp?.showPopup("faild", "something went wrong, please try again")
         }
     };
 
@@ -115,15 +107,10 @@ function GroupHeader({ id }: { id: string }) {
     const fetchFolowers = async () => {
         try {
             const data = await GetFolowers();
-            console.log(data, "folowers");
-
             setFollowers(data)
 
         } catch (err) {
-            console.error("Failed to fetch group info", err);
-            setError("Failed to load group info");
-        } finally {
-            setLoading(false);
+            poopUp?.showPopup("faild", "something went wrong, please try again")
         }
     };
 
@@ -158,12 +145,14 @@ function GroupHeader({ id }: { id: string }) {
                     <button
                         className="group-btn see-members"
                         onClick={async () => {
-                            await fetchMembers();
-                            setShowMembers((prev) => {
-                                if (!prev) setShowFolowers(false); // close followers if opening members
-                                return !prev;
-                            });
+                            if (!showMembers) {
+                                await fetchMembers();
+                                setShowFolowers(false);
+                                setInvited((prev) => [])
+                            }
+                            setShowMembers((prev) => !prev);
                         }}
+
                     >
                         {showMembers ? "Hide Members" : "See Members"}
                     </button>
@@ -171,12 +160,14 @@ function GroupHeader({ id }: { id: string }) {
                     <button
                         className="group-btn invite-users"
                         onClick={async () => {
-                            await fetchFolowers();
-                            setShowFolowers((prev) => {
-                                if (!prev) setShowMembers(false); // close members if opening followers
-                                return !prev;
-                            });
+                            if (!showFolowers) {
+                                setInvited((prev) => prev = [])
+                                await fetchFolowers(); // fetch only when opening
+                                setShowMembers(false); // close members if opening followers
+                            }
+                            setShowFolowers((prev) => !prev); // toggle state
                         }}
+
                     >
                         {showFolowers ? "Back" : "Invite Users"}
                     </button>

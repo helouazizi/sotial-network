@@ -95,42 +95,37 @@ function GroupHeader({ id }: { id: string }) {
         fetchGroup();
     }, [id]);
 
-    useEffect(() => {
-        const fetchMembers = async () => {
-            try {
-                const data = await GetGroupMembers(id);
-                setGroupMembers(data);
 
-            } catch (err) {
-                console.error("Failed to fetch group info", err);
-                setError("Failed to load group info");
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchMembers();
-    }, [id]);
-
-    useEffect(() => {
-        const fetchFolowers = async () => {
-            try {
-                const data = await GetFolowers();
-                console.log(data, "folowers");
-
-                setFollowers(data)
-
-            } catch (err) {
-                console.error("Failed to fetch group info", err);
-                setError("Failed to load group info");
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchFolowers();
-    }, []);
+    const fetchMembers = async () => {
+        try {
+            const data = await GetGroupMembers(id);
+            setGroupMembers(data);
+            console.log(data, "members");
 
 
+        } catch (err) {
+            console.error("Failed to fetch group info", err);
+            setError("Failed to load group info");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
+    const fetchFolowers = async () => {
+        try {
+            const data = await GetFolowers();
+            console.log(data, "folowers");
+
+            setFollowers(data)
+
+        } catch (err) {
+            console.error("Failed to fetch group info", err);
+            setError("Failed to load group info");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     if (!groupInfo) return null;
     return (
@@ -162,7 +157,8 @@ function GroupHeader({ id }: { id: string }) {
                 <div className="group-action-buttons">
                     <button
                         className="group-btn see-members"
-                        onClick={() => {
+                        onClick={async () => {
+                            await fetchMembers();
                             setShowMembers((prev) => {
                                 if (!prev) setShowFolowers(false); // close followers if opening members
                                 return !prev;
@@ -174,7 +170,8 @@ function GroupHeader({ id }: { id: string }) {
 
                     <button
                         className="group-btn invite-users"
-                        onClick={() => {
+                        onClick={async () => {
+                            await fetchFolowers();
                             setShowFolowers((prev) => {
                                 if (!prev) setShowMembers(false); // close members if opening followers
                                 return !prev;
@@ -202,22 +199,13 @@ function GroupHeader({ id }: { id: string }) {
                         )}
                     </div>
                 )}
-                {showFolowers && invited && invited.length > 0 &&  (
+                {showFolowers && invited && invited.length > 0 && (
                     <button
                         className="group-btn send-invetation"
-                    // onClick={() => {
-                    //     setShowFolowers((prev) => {
-                    //         if (!prev) setShowMembers(false); // close members if opening followers
-                    //         return !prev;
-                    //     });
-                    // }}
                     >
                         Send
-                        {/* {showFolowers ? "Back" : "Invite Users"} */}
                     </button>
                 )}
-
-
             </div>
         </div>
     );

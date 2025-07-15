@@ -63,8 +63,20 @@ func (s *GroupService) GetGroupEvents(UserId int, groupId string) ([]*models.Eve
 	return s.repo.GetGroupEvents(UserId, GroupId)
 }
 
+func (s *GroupService) GetGroupMembers(groupId string) (*models.GroupMembers, models.GroupError) {
+	GroupId, err := strconv.Atoi(groupId)
+	if err != nil {
+		return &models.GroupMembers{}, models.GroupError{
+			Message: "group id is required",
+			Code:    http.StatusBadRequest,
+		}
+	}
+
+	return s.repo.GetGroupMembers(GroupId)
+}
+
 func (s *GroupService) VoteOnEvent(ctx context.Context, vote models.EventVote) models.GroupError {
-	if vote.Vote != "going" && vote.Vote != "not going" {
+	if vote.Vote != "going" && vote.Vote != "not going" && vote.Vote != "remove" {
 		return models.GroupError{
 			Message: "Bad Request",
 			Code:    http.StatusBadRequest,

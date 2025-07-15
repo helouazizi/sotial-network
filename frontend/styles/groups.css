@@ -105,7 +105,7 @@
 .joinedGroups {
     display: flex;
     flex-direction: column;
-    overflow-y: scroll;
+    overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-bg);
     height: 100%;
@@ -283,4 +283,28 @@
         outline: none;
         padding: 12px 24px;
     }
+}
+
+.sugg-req{
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.sugg-req button{
+    background: none;
+    outline: none;
+    border: none;
+    cursor: pointer;
+}
+
+.sugg-req button svg{
+    color: var(--accent-color);
+    font-size: 2.5em;
+    transition: .1s;
+}
+
+.sugg-req button svg:hover{
+    color: var(--accent-hover);
 }

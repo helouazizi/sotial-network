@@ -1,10 +1,10 @@
 
 import { Follower } from "@/types/post";
 
-const API_URL = "http://localhost:8080/api/v1/posts"
+import { API_URL } from ".";
 
 export const getComments = async (post_id: number) => {
-    const res = await fetch(`${API_URL}/getComments`,
+    const res = await fetch(`${API_URL}api/v1/posts/getComments`,
         {
             method: "POST",
             credentials: "include",
@@ -13,7 +13,7 @@ export const getComments = async (post_id: number) => {
 
         }
     )
-    if (!res.ok) throw new Error(await res.text());
+    if (!res.ok) throw new Error(await res.text());    
     return await res.json()
 }
 
@@ -22,7 +22,7 @@ export const addComment = async (post_id: number, comment: string, img: File | n
     form.append("post_id", post_id.toString())
     form.append("comment", comment)
     if (img) form.append("image", img)
-    const res = await fetch(`${API_URL}/addComment`,
+    const res = await fetch(`${API_URL}api/v1/posts/addComment`,
         {
             method: "POST",
             credentials: "include",
@@ -40,7 +40,7 @@ export const addComment = async (post_id: number, comment: string, img: File | n
 
 
 export const votePost = async (post_id: number, action: "like" | "dislike" | "unlike" | "undislike") => {
-    const res = await fetch(`${API_URL}/vote`, {
+    const res = await fetch(`${API_URL}api/v1/posts/vote`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -58,7 +58,7 @@ export const votePost = async (post_id: number, action: "like" | "dislike" | "un
 
 
 export const GetFolowers = async (): Promise<Follower[]> => {
-    const res = await fetch(`http://localhost:8080/api/v1/relations/getFriends`, {
+    const res = await fetch(`${API_URL}api/v1/relations/getFriends`, {
         method: "GET",
         credentials: "include",
     });

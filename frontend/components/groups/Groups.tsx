@@ -10,6 +10,7 @@ import { usePathname } from 'next/navigation';
 import { PopupContext } from '@/context/PopupContext';
 import { IoIosSend } from "react-icons/io"; 
 import { SocketContext } from '@/context/socketContext';
+import { GroupNotifications } from '@/types/Request';
 
 function Groups() {
   const context = useContext(GroupsContext)
@@ -22,6 +23,7 @@ function Groups() {
       if ((pathname.startsWith("/groups/joined") && !context?.Groups) || pathname === "/groups/suggested") {
         let type: groupType = pathname.startsWith("/groups/joined") ? "getJoined" : "getSuggested"
         const data = await GetGroups(type)
+        console.log(data)
         if (data && data.error) {
           popup?.showPopup("faild", "Ooops, something wrong!!")
           return
@@ -40,13 +42,19 @@ function Groups() {
       return 
     }
 
-    const data = await SendJoinGroupRequest(parseInt(grpInfos.group_id), parseInt(grpInfos.user_id))
-
-    if (ws) {
-      ws.current?.send(JSON.stringify({
-        "type": "RelationSended"
-      }))
+    const body: GroupNotifications = {
+      group_id: parseInt(grpInfos.group_id),
+      requested_id: [parseInt(grpInfos.user_id)],
+      type: "demande"
     }
+    
+    const data = await SendJoinGroupRequest(body)
+
+    // if (ws) {
+    //   ws.current?.send(JSON.stringify({
+    //     "type": "RelationSended"
+    //   }))
+    // }
   }
  
   const displayGroups = () => {
@@ -55,9 +63,9 @@ function Groups() {
       let title = group.title.length > 25 ? group.title.slice(0, 25).trim() + "..." : group.title
       let path = pathname.startsWith("/groups/joined") ? "/groups/joined/" + group.id + "/posts" : ""
 
-      return (
+      return (  
         <li key={index}>
-          <Link href={path}><span><MdGroups /></span> <p>{title}</p></Link>
+          <Link href={path}>{!isSuggestedPath && <span><MdGroups /></span>} <p>{title}</p></Link>
           {isSuggestedPath && (
             <div className="sugg-req">
               <button data-user_id={`${group.user_id}`} data-group_id={`${group.id}`} className='send' onClick={handleClick}> <IoIosSend /></button>

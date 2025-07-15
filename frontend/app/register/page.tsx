@@ -4,6 +4,7 @@ import React from 'react'
 
 import { useRouter } from 'next/navigation';
 import Welcomingmessage from '../../components/Auth/welcomingMessage';
+import { API_URL } from '@/services';
 
 export default function Register() {
     const [lastname, setLastName] = useState<string>('');
@@ -52,7 +53,7 @@ export default function Register() {
         }
 
         try {
-            const res = await fetch('http://localhost:8080/api/v1/user/register', {
+            const res = await fetch(`${API_URL}api/v1/user/register`, {
                 method: 'POST',
                 body: formData,
                 credentials: 'include',

@@ -2,7 +2,6 @@ package repositories
 
 import (
 	"database/sql"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -75,15 +74,26 @@ func (r *GroupRepository) GetJoinedGroups(userID int) ([]*models.Group, error) {
 
 func (r *GroupRepository) GetSuggestedGroups(userID int) ([]*models.Group, error) {
 	query := `
-		SELECT g.* FROM groups g 
-		WHERE g.id NOT IN (
-			SELECT gm.group_id FROM group_members gm
-			WHERE gm.member_id = ?
-		)
-		ORDER BY g.id desc
+		SELECT 
+    g.*,
+    CASE 
+        WHEN gr.id IS NOT NULL THEN 1 
+        ELSE 0 
+    END AS isDemande
+	FROM groups g
+	LEFT JOIN group_requests gr
+		ON gr.group_id = g.id 
+		AND gr.sender_id = ? 
+		AND gr.type = 'demande'
+	WHERE g.id NOT IN (
+		SELECT gm.group_id 
+		FROM group_members gm
+		WHERE gm.member_id = ?
+	)
+	ORDER BY g.id DESC;
 	`
 
-	rows, err := r.db.Query(query, userID)
+	rows, err := r.db.Query(query, userID, userID)
 	if err != nil {
 		return nil, err
 	}
@@ -91,7 +101,7 @@ func (r *GroupRepository) GetSuggestedGroups(userID int) ([]*models.Group, error
 	var groups []*models.Group
 	for rows.Next() {
 		var group models.Group
-		err := rows.Scan(&group.ID, &group.UserID, &group.Title, &group.Description, &group.CreatedAt)
+		err := rows.Scan(&group.ID, &group.UserID, &group.Title, &group.Description, &group.CreatedAt, &group.IsDemande)
 		if err != nil {
 			return nil, err
 		}
@@ -103,7 +113,6 @@ func (r *GroupRepository) GetSuggestedGroups(userID int) ([]*models.Group, error
 }
 
 func (r *GroupRepository) GetGroup(groupID int) (models.GroupIfo, *models.GroupError) {
-	fmt.Println(groupID, "============================================")
 	query := `
 		SELECT 
 			g.id, g.title, g.description, g.created_at,
@@ -146,19 +155,35 @@ func (r *GroupRepository) SaveJoinGroupRequest(groupReq *models.GroupRequest) er
 	query := `
 		INSERT INTO group_requests (group_id, requested_id, sender_id, type) VALUES (?,?,?,?)
 	`
-	_, err := r.db.Exec(query, groupReq.GroupID, groupReq.RequestedID, groupReq.SenderID, "demande")
+
+	tx, err := r.db.Begin()
 	if err != nil {
 		return err
 	}
 
-	return nil
+	stmt, err := tx.Prepare(query)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	defer stmt.Close()
+
+	for _, requestedID := range groupReq.RequestedID {
+		_, err := stmt.Exec(groupReq.GroupID, requestedID, groupReq.SenderID, groupReq.Type)
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
+	}
+
+	return tx.Commit()
 }
 
 func (r *GroupRepository) GetDemandeGroupNotifs(requestedID int) ([]*models.GroupRequest, error) {
 	query := `
-		select u.id, u.first_name, u.last_name, u.avatar, rq.id, rq.group_id, rq.type, rq.sender_id from users u 
+		select u.id, u.first_name, u.last_name, u.avatar, rq.id,rq.group_id, rq.sender_id, rq.type  from users u 
 		inner join group_requests rq ON u.id = rq.sender_id 
-		where rq.type = 'demande' and rq.requested_id = ?
+		where rq.requested_id = ?
 		ORDER BY rq.id DESC;
 	`
 
@@ -169,11 +194,10 @@ func (r *GroupRepository) GetDemandeGroupNotifs(requestedID int) ([]*models.Grou
 
 	var groupNotifs []*models.GroupRequest
 	for rows.Next() {
-
 		var groupNotif models.GroupRequest
 		var user models.User
 		err = rows.Scan(&user.ID, &user.FirstName, &user.Lastname,
-			&user.Avatar, &groupNotif.ID, &groupNotif.GroupID, &groupNotif.Type, &groupNotif.SenderID)
+			&user.Avatar, &groupNotif.ID, &groupNotif.GroupID, &groupNotif.SenderID, &groupNotif.Type)
 		if err != nil {
 			return nil, err
 		}

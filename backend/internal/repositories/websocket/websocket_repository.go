@@ -161,8 +161,11 @@ func (reqRepo *WebsocketRepository) SaveMessagesGrpRepo(idGrp, senderId int, mes
 	return lastMessage, nil
 }
 
-func (r *WebsocketRepository) HandleGroupRequest(request *models.WS) error {
+func (r *WebsocketRepository) HandleGroupRequest(request *models.WS, userId int) error {
 	if request.Action == "accept" {
+		if request.RequestType == "invitation" {
+			request.ReceiverID = userId
+		}
 		insertQuery := `
 			INSERT INTO group_members (group_id, member_id) VALUES (?, ?)
 		`

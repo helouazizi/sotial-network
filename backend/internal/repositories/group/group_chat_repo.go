@@ -3,6 +3,7 @@ package repositories
 import (
 	"database/sql"
 	"strings"
+	"time"
 
 	"github.com/ismailsayen/social-network/internal/models"
 )
@@ -37,13 +38,35 @@ func (r *GroupRepository) GetInfoGroupeRepo(GrpID string, sessionID int) (*model
 	return &groupInfo, nil
 }
 
-func (r *GroupRepository) GetGroupMessagesRepo(GrpID string) error {
-	query := `SELECT g.id, g.sender_id, g.group_id, u.avatar, CONCAT(u.first_name," ",u.last_name) AS fullName
-	FROM group_messages g
-	INNER JOIN users u ON u.id=g.sender_id
-	WHERE g.group_id=?
-	GROUP BY g.group_id;
-	ORDER BY g.sent_at DESC
-	`
-	return nil
+func (r *GroupRepository) GetGroupMessagesRepo(GrpID string) ([]models.GroupMessages, error) {
+	query := `
+			SELECT 
+				g.id, 
+				g.sender_id, 
+				g.group_id, 
+				g.content,
+				g.sent_at,
+				u.avatar, 
+				u.first_name || ' ' || u.last_name AS fullName
+				
+			FROM 
+				group_messages g
+			INNER JOIN users u ON u.id = g.sender_id
+			WHERE g.group_id = ?
+			ORDER BY g.sent_at ASC;
+			`
+	rows, err := r.db.Query(query, GrpID)
+	if err != nil && err != sql.ErrNoRows {
+		return nil, err
+	}
+	defer rows.Close()
+	var messges []models.GroupMessages
+	for rows.Next() {
+		var messge models.GroupMessages
+		var sentAt time.Time
+		rows.Scan(&messge.ID, &messge.SenderID, &messge.GroupID, &messge.Message, &sentAt, &messge.Avatar, &messge.FullName)
+		messge.SentAt = sentAt.Format(time.DateTime)
+		messges = append(messges, messge)
+	}
+	return messges, nil
 }

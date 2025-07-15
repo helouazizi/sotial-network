@@ -6,6 +6,6 @@ func (s *GroupService) GetInfoGroupeService(grpId string, sessionID int) (*model
 	return s.repo.GetInfoGroupeRepo(grpId, sessionID)
 }
 
-func (s *GroupService) GetGroupMessagesService(grpId string) error {
+func (s *GroupService) GetGroupMessagesService(grpId string) ([]models.GroupMessages, error) {
 	return s.repo.GetGroupMessagesRepo(grpId)
 }

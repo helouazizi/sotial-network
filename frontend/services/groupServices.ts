@@ -136,11 +136,17 @@ export async function GetDemandeGroupNotifs() {
 
 export async function GetGroupMessages(id: number | undefined) {
     try {
-        const resp = fetch(`${API_URL}api/v1/groups/getMsgsGroup?group_id=${id}`, {
+        const res = await fetch(`${API_URL}api/v1/groups/getMsgsGroup?group_id=${id}`, {
             method: 'GET',
             credentials: 'include'
         })
-    } catch (error) {
+        if (res.ok) {
+            const data = await res.json()
+            return data.messages;
+
+        }
+    } catch (err) {
+        console.error(err);
 
     }
 }

@@ -149,13 +149,13 @@ func (reqRepo *WebsocketRepository) SaveMessagesGrpRepo(idGrp, senderId int, mes
 		return nil, err
 	}
 	lastMessage := map[string]any{
-		"id":       idMsg,
-		"groupID":  idGrp,
-		"senderID": senderId,
-		"message":  message,
-		"fullName": fullName,
-		"avatar":   avatar,
-		"sentAt":   sentAt.Format(time.DateTime),
+		"id":        idMsg,
+		"group_id":  idGrp,
+		"sender_id": senderId,
+		"message":   message,
+		"fullName":  fullName,
+		"avatar":    avatar,
+		"sent_at":   sentAt.Format(time.DateTime),
 	}
 
 	return lastMessage, nil

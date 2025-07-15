@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/ismailsayen/social-network/pkg/utils"
@@ -36,5 +35,15 @@ func (h *GroupHandler) GetGroupMessages(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 	groupId := r.URL.Query().Get("group_id")
-	err := h.service.GetGroupMessagesService(groupId)
+	messages, err := h.service.GetGroupMessagesService(groupId)
+	if err != nil {
+		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+			"message": "Error, please try again.",
+			"status":  http.StatusInternalServerError,
+		})
+		return
+	}
+	utils.ResponseJSON(w, http.StatusOK, map[string]any{
+		"messages": messages,
+	})
 }

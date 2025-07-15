@@ -1,6 +1,5 @@
 import { SocketContext } from '@/context/socketContext'
 import React, { useContext, useRef } from 'react'
-import Popup from '../Popup'
 import { PopupContext } from '@/context/PopupContext'
 import { GroupsContext } from '@/context/GroupsContext'
 
@@ -9,22 +8,8 @@ const GroupChatFooter = (props: { idGrp: number | undefined, members: string[] |
     const textarea = useRef<HTMLTextAreaElement>(null)
     const popup = useContext(PopupContext)
     const grpCtxt = useContext(GroupsContext)
-    let data = grpCtxt?.currentGrp
-    console.log("initiale value",grpCtxt?.msgGrp);
-    
-    if (ws?.current) {
-        ws.current.onmessage = (e: MessageEvent) => {
-            let res = JSON.parse(e.data);
-            let message = res.message;
-            if (message?.groupID == data?.id) {
-                grpCtxt?.setMsgGrp((prev) => {
-                    if (!prev) return [message]
-                    return [...prev, message]
-                })
-            }
-            console.log("after Adding",grpCtxt?.msgGrp);
-        };
-    }
+    let data = grpCtxt?.currentGrp;
+
 
     const handleSendMessageGroup = () => {
         let message = textarea.current?.value.trim()
@@ -41,6 +26,9 @@ const GroupChatFooter = (props: { idGrp: number | undefined, members: string[] |
             avatar: user?.avatar,
             type: "saveMessageGroup"
         }))
+        if (textarea.current) {
+            textarea.current.value = ""
+        }
     }
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
         if (e.key === "Enter" && !e.shiftKey) {

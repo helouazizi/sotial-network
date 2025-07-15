@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
 	"strings"
 	"time"
@@ -242,7 +241,6 @@ func (h *WebsocketHandler) WebsocketHandler(w http.ResponseWriter, r *http.Reque
 					}
 				}
 			}
-			fmt.Println(lastMsg)
 		case "handleGroupReq":
 			err := h.service.HandleGroupRequest(&ws)
 			if err != nil {

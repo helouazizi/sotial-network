@@ -9,11 +9,10 @@ export interface Group {
 }
 export interface GrpMesage {
     id: number
-    senderID: number
-    groupID: number
-    sentAt: string
+    sender_id: number
+    group_id: number
     avatar: string
     fullName: string
     message: string
-    sent_at:string
+    sent_at: string
 }

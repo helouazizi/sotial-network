@@ -2,11 +2,14 @@ import { SocketContext } from '@/context/socketContext'
 import React, { useContext, useRef } from 'react'
 import Popup from '../Popup'
 import { PopupContext } from '@/context/PopupContext'
+import { GroupsContext } from '@/context/GroupsContext'
 
 const GroupChatFooter = (props: { idGrp: number | undefined, members: string[] | undefined }) => {
     const { ws } = useContext(SocketContext) ?? {}
     const textarea = useRef<HTMLTextAreaElement>(null)
     const popup = useContext(PopupContext)
+    const grpCtxt = useContext(GroupsContext)
+    let data = grpCtxt?.currentGrp
     const handleSendMessageGroup = () => {
 
         let message = textarea.current?.value.trim()
@@ -14,14 +17,13 @@ const GroupChatFooter = (props: { idGrp: number | undefined, members: string[] |
             popup?.showPopup("faild", "You can send empty message!")
             return
         }
-        const inTArray = props.members?.map(Number)
-        console.log("=>>>",message);
-        console.log("État de la socket :", ws?.current?.readyState);
+        const inTArray = data?.members?.map(Number)
+
         ws?.current?.send(JSON.stringify({
-            id: props.idGrp,
+            id: data?.id,
             message: message,
             members: inTArray,
-            type: "messageGroup"
+            type: "saveMessageGroup"
         }))
     }
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {

@@ -1,4 +1,5 @@
 "use client"
+import { GroupsProvider } from "@/context/GroupsContext";
 import { PopupContext } from "@/context/PopupContext";
 import { GetGroups, groupType } from "@/services/groupServices";
 import { Group } from "@/types/groups";
@@ -30,7 +31,9 @@ export default function GroupsChat() {
 
       return (
         <li key={index}>
-          <Link href={path}><span><MdGroups /></span> <p>{title}</p></Link>
+         
+            <Link href={path}><span><MdGroups /></span> <p>{title}</p></Link>
+      
         </li>
       )
     })

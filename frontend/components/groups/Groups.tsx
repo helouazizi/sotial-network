@@ -42,21 +42,16 @@ function Groups() {
 
     const data = await SendJoinGroupRequest(parseInt(grpInfos.group_id), parseInt(grpInfos.user_id))
 
-    console.log(data)
-
     if (ws) {
-      // ws.current?.send(JSON.stringify({
-      //   "id": parseInt(e.currentTarget.id),
-      //   "type": "joinGroupReq"
-      // }))
+      ws.current?.send(JSON.stringify({
+        "type": "RelationSended"
+      }))
     }
   }
  
   const displayGroups = () => {
     let isSuggestedPath = pathname.startsWith("/groups/suggested")
     return context?.Groups?.map((group, index) => {
-      
-      // group
       let title = group.title.length > 25 ? group.title.slice(0, 25).trim() + "..." : group.title
       let path = pathname.startsWith("/groups/joined") ? "/groups/joined/" + group.id + "/posts" : ""
 

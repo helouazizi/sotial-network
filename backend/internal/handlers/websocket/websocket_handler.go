@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 	"time"
@@ -221,6 +222,24 @@ func (h *WebsocketHandler) WebsocketHandler(w http.ResponseWriter, r *http.Reque
 						})
 					}
 				}
+			}
+		case "saveMessageGroup":
+			ws.SentAt = time.Now()
+			lastMessage, err := h.service.SaveMessagesGrp(ws.ID, ws.SenderID, ws.Message, &ws.SentAt)
+			if err != nil {
+				conn.WriteJSON(map[string]any{
+					"error": err.Error(),
+				})
+				continue
+			}
+			fmt.Println(lastMessage)
+		case "handleGroupReq":
+			err := h.service.HandleGroupRequest(&ws)
+			if err != nil {
+				conn.WriteJSON(map[string]any{
+					"error": err.Error(),
+				})
+				continue
 			}
 		}
 	}

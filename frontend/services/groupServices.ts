@@ -111,3 +111,22 @@ export async function SendJoinGroupRequest(groupID: number, requestedID: number)
         return
     }
 }
+
+export async function GetDemandeGroupNotifs() {
+    try {
+        const res = await fetch(API_URL+"api/v1/groups/getDemandeGroupNotifs", {
+            credentials: "include"
+        })
+
+        const data = await res.json()
+
+        if (!res.ok) {
+            console.error(data.error)
+            return null
+        }
+
+        return data.data
+    } catch (err) {
+        console.error(err);
+    }
+}

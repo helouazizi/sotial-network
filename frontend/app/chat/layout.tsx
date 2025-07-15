@@ -6,6 +6,7 @@ import { SocketContext } from "../../context/socketContext";
 import Friends from "../../components/chat/friends";
 import { usePathname } from "next/navigation";
 import GroupsChat from "@/components/groups/GroupsChat";
+import { GroupsProvider } from "@/context/GroupsContext";
 
 export default function ChatLayout({ children }: { children: ReactNode }) {
   const { user } = useContext(SocketContext) ?? {}
@@ -13,6 +14,7 @@ export default function ChatLayout({ children }: { children: ReactNode }) {
   let isPrivateChat = pathName.startsWith("/chat/privateChat")
 
   return (
+     <GroupsProvider>
     <main className="container chatPage">
       <section className="sidebar">
         <div className="myName">
@@ -24,7 +26,10 @@ export default function ChatLayout({ children }: { children: ReactNode }) {
           <ChatNav />
           <div className="friends-list">
 
-            <ul>{isPrivateChat ? <Friends /> : <GroupsChat />}</ul>
+            <ul>{isPrivateChat ? <Friends /> :
+             
+                <GroupsChat />
+            }</ul>
 
           </div>
         </div>
@@ -34,5 +39,6 @@ export default function ChatLayout({ children }: { children: ReactNode }) {
         {children}
       </section>
     </main>
+    </GroupsProvider>
   );
 }

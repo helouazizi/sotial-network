@@ -1,5 +1,6 @@
 import { ParamValue } from "next/dist/server/request/params"
 import { API_URL } from "."
+import { GroupNotifications } from "@/types/Request"
 
 export type groupType = "getJoined" | "getSuggested"
 
@@ -49,7 +50,7 @@ export async function GetGroups(type: groupType) {
     }
 }
 
-export async function GetGroup(id: string) {
+export async function GetGroup(id: number) {
     try {
         const res = await fetch(API_URL+"api/v1/groups/joined/"+id, {
             credentials: "include"
@@ -85,7 +86,7 @@ export async function GetInfoGrp(idGrp: ParamValue) {
     }
 }
 
-export async function SendJoinGroupRequest(groupID: number, requestedID: number) {
+export async function SendJoinGroupRequest(body : GroupNotifications) {
     try {
         const res = await fetch(API_URL+"api/v1/groups/joinGroupRequest", {
             method: "POST",
@@ -93,10 +94,7 @@ export async function SendJoinGroupRequest(groupID: number, requestedID: number)
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({
-                "group_id": groupID,
-                "requested_id": requestedID
-            })
+            body: JSON.stringify(body)
         })
 
         const data = await res.json()

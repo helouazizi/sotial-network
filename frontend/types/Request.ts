@@ -7,10 +7,10 @@ export interface NumOfREquests {
 }
 
 export interface GroupNotifications {
-    id: number
+    id?: number
     group_id: number
-    sender_id: number
+    sender_id?: number
     requested_id: number
     type: string
-    user: User
+    user?: User
 }

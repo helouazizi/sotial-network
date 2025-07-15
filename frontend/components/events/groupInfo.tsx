@@ -1,7 +1,7 @@
 'use client'
 
 import { MdGroups, MdVerifiedUser } from "react-icons/md";
-import { GetGroup } from "@/services/groupServices";
+import { GetGroup, SendJoinGroupRequest } from "@/services/groupServices";
 import { useContext, useEffect, useState } from "react";
 import { GroupInfo, GroupMembers } from "@/types/events";
 import FormatDate from "@/utils/date";
@@ -10,8 +10,9 @@ import PostHeader from "../post/postHeader";
 import { Follower } from "@/types/post";
 import { GetFolowers } from "@/services/postsServices";
 import { PopupContext } from "@/context/PopupContext";
+import { GroupNotifications } from "@/types/Request";
 
-function GroupHeader({ id }: { id: string }) {
+function GroupHeader({ id }: { id: number }) {
     const [groupInfo, setGroupInfo] = useState<GroupInfo | null>(null);
     const poopUp = useContext(PopupContext)
     const [groupMembers, setGroupMembers] = useState<GroupMembers | null>(null);
@@ -19,12 +20,17 @@ function GroupHeader({ id }: { id: string }) {
     const [showFolowers, setShowFolowers] = useState(false);
     const [followers, setFollowers] = useState<Follower[]>([]);
     const [invited, setInvited] = useState<number[]>([]);
+    const [isSending, setIsSending] = useState(false);
 
     const handleToggleFollower = (id: number, checked: boolean) => {
         setInvited((prev) =>
             checked ? [...prev, id] : prev.filter((uid) => uid !== id)
         );
+        console.log(invited, "ids");
+
     };
+
+
 
     const displayMembers = () => {
         return (
@@ -104,7 +110,7 @@ function GroupHeader({ id }: { id: string }) {
     };
 
 
-    
+
     const fetchFolowers = async () => {
         try {
             const data = await GetFolowers();
@@ -114,6 +120,27 @@ function GroupHeader({ id }: { id: string }) {
             poopUp?.showPopup("faild", "something went wrong, please try again")
         }
     };
+
+    const sendGroupRequests = async () => {
+        if (isSending) return; // optional extra guard
+        setIsSending(true);
+        const body: GroupNotifications = {
+            group_id: id,
+            requested_id: invited[0],
+            type: "invitation",
+
+        }
+        try {
+            const data = await SendJoinGroupRequest(body);
+            console.log(data, "requests");
+            poopUp?.showPopup("success", data.message)
+
+        } catch (err) {
+            poopUp?.showPopup("faild", "something went wrong, please try again")
+        } finally {
+            setIsSending(true)
+        }
+    }
 
     if (!groupInfo) return null;
     return (
@@ -150,6 +177,7 @@ function GroupHeader({ id }: { id: string }) {
                                 await fetchMembers();
                                 setShowFolowers(false);
                                 setInvited((prev) => [])
+                                setIsSending(false)
                             }
                             setShowMembers((prev) => !prev);
                         }}
@@ -167,6 +195,7 @@ function GroupHeader({ id }: { id: string }) {
                                 setShowMembers(false); // close members if opening followers
                             }
                             setShowFolowers((prev) => !prev); // toggle state
+                            setIsSending(false)
                         }}
 
                     >
@@ -194,8 +223,11 @@ function GroupHeader({ id }: { id: string }) {
                 {showFolowers && invited && invited.length > 0 && (
                     <button
                         className="group-btn send-invetation"
+                        onClick={async () => {
+                            await sendGroupRequests()
+                        }}
                     >
-                        Send
+                        {isSending ? "Request Sent" : "Send"}
                     </button>
                 )}
             </div>

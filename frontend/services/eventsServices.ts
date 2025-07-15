@@ -16,7 +16,7 @@ export const GetEvents = async (group_id: number):Promise<Event[]> => {
     return  events.data
 }
 
-export const GetGroupMembers = async (group_id: string):Promise<GroupMembers> => {
+export const GetGroupMembers = async (group_id: number):Promise<GroupMembers> => {
     const res = await fetch(`${API_URL}api/v1/groups/joined/${group_id}/members`,
         {
             method: "GET",

@@ -133,6 +133,7 @@ export async function GetDemandeGroupNotifs() {
 export async function CancelGroupRequest(reqID: number) {
     try {
         const res = await fetch(API_URL+"api/v1/groups/cancelGroupRequest", {
+            method: "POST",
             credentials: "include",
             headers: {
                 "Content-Type": "application/json"
@@ -141,6 +142,15 @@ export async function CancelGroupRequest(reqID: number) {
                 id: reqID
             })
         })
+
+        const data = await res.json()
+
+        if (!res.ok) {
+            console.log(data.error)
+            return null
+        }
+
+        return data
     } catch (err) {
         console.error(err)
     }

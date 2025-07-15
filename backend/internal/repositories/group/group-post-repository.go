@@ -154,7 +154,7 @@ func (r *GroupRepository) AddGroupComment(comments models.Comment, img *models.I
 	VAlUES (?, ?, ?, ?, ?)
 
 	`
-	fileName, ImageErr := utils.HandleImage(img, "pkg/db/images/groupeComment")
+	fileName, ImageErr := utils.HandleImage(img, "pkg/db/images/comments")
 	if ImageErr.Code != http.StatusOK {
 		return ImageErr
 	}

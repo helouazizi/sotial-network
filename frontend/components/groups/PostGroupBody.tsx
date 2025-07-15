@@ -1,3 +1,5 @@
+import { API_URL } from "@/services";
+
 export default function PostGroupBody({
   title,
   content,
@@ -11,8 +13,8 @@ export default function PostGroupBody({
 }) {
   let baseMediaPath =
     body_type == "post"
-      ? "http://localhost:8080/images/posts/"
-      : "http://localhost:8080/images/groupeComment/";
+      ? `${API_URL}images/posts/`
+      : `${API_URL}images/comments/`;
 
   return (
     <div className="post-body">

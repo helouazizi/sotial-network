@@ -11,7 +11,7 @@ export default function PostGroupBody({
 }) {
   let baseMediaPath =
     body_type == "post"
-      ? "http://localhost:8080/images/groupePost/"
+      ? "http://localhost:8080/images/posts/"
       : "http://localhost:8080/images/groupeComment/";
 
   return (

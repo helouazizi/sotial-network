@@ -33,7 +33,7 @@ func (r *GroupRepository) SaveGroupPostRepo(ctx context.Context, group *models.G
 	 Insert INTO group_posts (group_id,member_id, title, content, media, created_at)
 	 VAlUES (?, ?, ?, ?, ?, ?)
 	 `
-	fileName, ImageErr := utils.HandleImage(img, "pkg/db/images/groupePost")
+	fileName, ImageErr := utils.HandleImage(img, "pkg/db/images/posts")
 	if ImageErr.Code != http.StatusOK {
 		return models.Post{}, ImageErr
 	}

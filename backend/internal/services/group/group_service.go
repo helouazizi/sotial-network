@@ -82,3 +82,7 @@ func (s *GroupService) GetInfoGroupeService(grpId string, sessionID int) (*model
 func (s *GroupService) GetDemandeGroupNotifs(requestedID int) ([]*models.GroupRequest, error) {
 	return s.repo.GetDemandeGroupNotifs(requestedID)
 }
+
+func (s *GroupService) CancelGroupRequest(id int) error {
+	return s.repo.CancelGroupRequest(id)
+}

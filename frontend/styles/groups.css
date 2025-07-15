@@ -297,12 +297,14 @@
     outline: none;
     border: none;
     cursor: pointer;
+    color: var(--accent-color);
 }
 
 .sugg-req button svg{
     color: var(--accent-color);
     font-size: 2.5em;
     transition: .1s;
+    margin-left: 5px;
 }
 
 .sugg-req button svg:hover{

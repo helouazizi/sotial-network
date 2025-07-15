@@ -179,6 +179,6 @@ func (r *WebsocketRepository) HandleGroupRequest(request *models.WS) error {
 	if err != nil {
 		return err
 	}
-
+ 
 	return nil
 }

@@ -11,6 +11,7 @@ import { PopupContext } from '@/context/PopupContext';
 import { IoIosSend } from "react-icons/io"; 
 import { SocketContext } from '@/context/socketContext';
 import { GroupNotifications } from '@/types/Request';
+import { IoMdClose } from "react-icons/io";
 
 function Groups() {
   const context = useContext(GroupsContext)
@@ -35,16 +36,16 @@ function Groups() {
     fetchGroups()
   }, [pathname])
 
-  const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    let grpInfos = e.currentTarget.dataset
-
-    if (!grpInfos.group_id || !grpInfos.user_id) {
+  const handleClick = async (userID: number, groupID: number, requestID: number) => {
+    if (!groupID || !userID) {
       return 
     }
 
+    console.log(requestID)
+
     const body: GroupNotifications = {
-      group_id: parseInt(grpInfos.group_id),
-      requested_id: [parseInt(grpInfos.user_id)],
+      group_id: groupID,
+      requested_id: [userID],
       type: "demande"
     }
     
@@ -68,7 +69,9 @@ function Groups() {
           <Link href={path}>{!isSuggestedPath && <span><MdGroups /></span>} <p>{title}</p></Link>
           {isSuggestedPath && (
             <div className="sugg-req">
-              <button data-user_id={`${group.user_id}`} data-group_id={`${group.id}`} className='send' onClick={handleClick}> <IoIosSend /></button>
+              <button className='send' onClick={() => handleClick(group.user_id, group.id, group.request_id || 0)}> {
+              !group.request_id ? (<><IoIosSend /></>) : (<><IoMdClose /></>)
+              }</button>
             </div>
           )}
         </li>

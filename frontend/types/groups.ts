@@ -6,4 +6,5 @@ export interface Group {
     created_at: string
     count_members: number
     members: string[]
+    request_id?: number | null
 }

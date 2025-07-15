@@ -79,9 +79,9 @@ func (r *GroupRepository) GetSuggestedGroups(userID int) ([]*models.Group, error
 		SELECT 
     g.*,
     CASE 
-        WHEN gr.id IS NOT NULL THEN 1 
-        ELSE 0 
-    END AS isDemande
+        WHEN gr.id IS NOT NULL THEN gr.id
+        ELSE 0
+    END AS request_id
 	FROM groups g
 	LEFT JOIN group_requests gr
 		ON gr.group_id = g.id 
@@ -103,7 +103,7 @@ func (r *GroupRepository) GetSuggestedGroups(userID int) ([]*models.Group, error
 	var groups []*models.Group
 	for rows.Next() {
 		var group models.Group
-		err := rows.Scan(&group.ID, &group.UserID, &group.Title, &group.Description, &group.CreatedAt, &group.IsDemande)
+		err := rows.Scan(&group.ID, &group.UserID, &group.Title, &group.Description, &group.CreatedAt, &group.RequestID)
 		if err != nil {
 			return nil, err
 		}
@@ -242,4 +242,17 @@ func (r *GroupRepository) GetDemandeGroupNotifs(requestedID int) ([]*models.Grou
 	}
 
 	return groupNotifs, nil
+}
+
+func (r *GroupRepository) CancelGroupRequest(id int) error {
+	query := `
+		DELETE FROM group_requests WHERE id = ?; 
+	`
+
+	_, err := r.db.Exec(query, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

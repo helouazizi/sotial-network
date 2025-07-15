@@ -280,3 +280,45 @@
   text-decoration: none;
   display: flex;
 }
+
+.card-msg-grp {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.card-msg-grp .user-msg-avatar {
+  width: 35px;
+  height: 35px;
+  font-size: 8px;
+}
+
+.card-msg-grp .info-user-msg {
+  background-color: var(--btn-bg);
+  border-radius: 8px;
+  flex-direction: column;
+  gap: 5px;
+  padding: 10px 20px;
+  display: flex;
+  font-size: .9em;
+  width: 50%;
+word-break: break-all;
+  h4 {
+    font-weight: bold;
+  }
+
+  .date-msg {
+    color: var(--text-secondary);
+    font-size: 10px;
+  }
+}
+
+.my-msg {
+  justify-content: end;
+  flex-direction: row-reverse;
+
+  .info-user-msg {
+    background-color: var(--bg-color);
+  }
+}

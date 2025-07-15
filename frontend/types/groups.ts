@@ -8,3 +8,13 @@ export interface Group {
     members: string[]
     request_id?: number | null
 }
+
+export interface GrpMesage {
+    id: number
+    sender_id: number
+    group_id: number
+    avatar: string
+    fullName: string
+    message: string
+    sent_at: string
+}

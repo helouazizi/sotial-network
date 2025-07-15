@@ -8,11 +8,13 @@ type WS struct {
 	SenderID    int       `json:"sender_id"`
 	ReceiverID  int       `json:"receiver_id"`
 	Type        string    `json:"type"`
-	RequestType string    `json:"request_type"`
 	SentAt      time.Time `json:"sent_at"`
+	RequestType string    `json:"request_type"`
 	SentAtStr   string    `json:"sent_at_str"`
 	LastId      int       `json:"last_id"`
 	Action      string    `json:"action"`
 	GroupID     int       `json:"group_id"`
 	Members     []int     `json:"members"`
+	FullName    string    `json:"fullName"`
+	Avatar      string    `json:"avatar"`
 }

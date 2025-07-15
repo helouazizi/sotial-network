@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -191,28 +190,6 @@ func (h *GroupHandler) CancelGroupRequestHandler(w http.ResponseWriter, r *http.
 
 	utils.ResponseJSON(w, http.StatusOK, map[string]any{
 		"message": "Request Cancled succesfully!",
-	})
-}
-
-func (h *GroupHandler) GetInfoGroupe(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
-		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
-			"error": "Method not allowed",
-		})
-		return
-	}
-	groupId := r.URL.Query().Get("group_id")
-	sessionID := r.Context().Value("userID").(int)
-	infoGrp, err := h.service.GetInfoGroupeService(groupId, sessionID)
-	if err != nil {
-		fmt.Println("=>", err)
-		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
-			"error": err.Error(),
-		})
-		return
-	}
-	utils.ResponseJSON(w, http.StatusOK, map[string]any{
-		"data": infoGrp,
 	})
 }
 

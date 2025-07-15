@@ -51,7 +51,7 @@ export async function GetGroups(type: groupType) {
 
 export async function GetGroup(id: string) {
     try {
-        const res = await fetch(API_URL+"api/v1/groups/joined/"+id, {
+        const res = await fetch(API_URL + "api/v1/groups/joined/" + id, {
             credentials: "include"
         })
 
@@ -60,8 +60,8 @@ export async function GetGroup(id: string) {
             console.error(data.error)
             return data
         }
-        console.log(data , "GROUP INFO");
-        
+        console.log(data, "GROUP INFO");
+
 
         return data.data
 
@@ -90,7 +90,7 @@ export async function GetInfoGrp(idGrp: ParamValue) {
 
 export async function SendJoinGroupRequest(groupID: number, requestedID: number) {
     try {
-        const res = await fetch(API_URL+"api/v1/groups/joinGroupRequest", {
+        const res = await fetch(API_URL + "api/v1/groups/joinGroupRequest", {
             method: "POST",
             credentials: "include",
             headers: {
@@ -117,7 +117,7 @@ export async function SendJoinGroupRequest(groupID: number, requestedID: number)
 
 export async function GetDemandeGroupNotifs() {
     try {
-        const res = await fetch(API_URL+"api/v1/groups/getDemandeGroupNotifs", {
+        const res = await fetch(API_URL + "api/v1/groups/getDemandeGroupNotifs", {
             credentials: "include"
         })
 
@@ -131,5 +131,16 @@ export async function GetDemandeGroupNotifs() {
         return data.data
     } catch (err) {
         console.error(err);
+    }
+}
+
+export async function GetGroupMessages(id: number | undefined) {
+    try {
+        const resp = fetch(`${API_URL}api/v1/groups/getMsgsGroup?group_id=${id}`, {
+            method: 'GET',
+            credentials: 'include'
+        })
+    } catch (error) {
+
     }
 }

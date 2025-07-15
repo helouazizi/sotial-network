@@ -5,24 +5,40 @@ import { PopupContext } from '@/context/PopupContext'
 import { GroupsContext } from '@/context/GroupsContext'
 
 const GroupChatFooter = (props: { idGrp: number | undefined, members: string[] | undefined }) => {
-    const { ws } = useContext(SocketContext) ?? {}
+    const { ws, user } = useContext(SocketContext) ?? {}
     const textarea = useRef<HTMLTextAreaElement>(null)
     const popup = useContext(PopupContext)
     const grpCtxt = useContext(GroupsContext)
     let data = grpCtxt?.currentGrp
-    const handleSendMessageGroup = () => {
+    console.log("initiale value",grpCtxt?.msgGrp);
+    
+    if (ws?.current) {
+        ws.current.onmessage = (e: MessageEvent) => {
+            let res = JSON.parse(e.data);
+            let message = res.message;
+            if (message?.groupID == data?.id) {
+                grpCtxt?.setMsgGrp((prev) => {
+                    if (!prev) return [message]
+                    return [...prev, message]
+                })
+            }
+            console.log("after Adding",grpCtxt?.msgGrp);
+        };
+    }
 
+    const handleSendMessageGroup = () => {
         let message = textarea.current?.value.trim()
         if (!message) {
             popup?.showPopup("faild", "You can send empty message!")
             return
         }
         const inTArray = data?.members?.map(Number)
-
         ws?.current?.send(JSON.stringify({
             id: data?.id,
             message: message,
             members: inTArray,
+            fullName: `${user?.firstname} ${user?.lastname}`,
+            avatar: user?.avatar,
             type: "saveMessageGroup"
         }))
     }

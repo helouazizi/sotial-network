@@ -7,3 +7,13 @@ export interface Group {
     count_members: number
     members: string[]
 }
+export interface GrpMesage {
+    id: number
+    senderID: number
+    groupID: number
+    sentAt: string
+    avatar: string
+    fullName: string
+    message: string
+    sent_at:string
+}

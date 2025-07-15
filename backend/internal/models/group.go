@@ -58,3 +58,12 @@ type GroupRequest struct {
 	Type        string `json:"type,omitempty"`
 	UserInfos   *User  `json:"user"`
 }
+type GroupMessages struct {
+	ID       int    `json:"id,omitempty"`
+	GroupID  int    `json:"group_id,omitempty"`
+	SenderID int    `json:"sender_id,omitempty"`
+	Message  string `json:"message,omitempty"`
+	Avatar   string `json:"avatar,omitempty"`
+	FullName string `json:"fullName,omitempty"`
+	SentAt   string `json:"sent_at,omitempty"`
+}

@@ -225,14 +225,24 @@ func (h *WebsocketHandler) WebsocketHandler(w http.ResponseWriter, r *http.Reque
 			}
 		case "saveMessageGroup":
 			ws.SentAt = time.Now()
-			lastMessage, err := h.service.SaveMessagesGrp(ws.ID, ws.SenderID, ws.Message, &ws.SentAt)
+			lastMsg, err := h.service.SaveMessagesGrp(ws.ID, ws.SenderID, ws.Message, ws.Avatar, ws.FullName, &ws.SentAt)
 			if err != nil {
 				conn.WriteJSON(map[string]any{
 					"error": err.Error(),
 				})
 				continue
 			}
-			fmt.Println(lastMessage)
+			for _, id := range ws.Members {
+				if senderConns, ok := h.service.GetClient(id); ok {
+					for _, c := range senderConns {
+						c.WriteJSON(map[string]any{
+							"message": lastMsg,
+							"type":    "NewMsgGrp",
+						})
+					}
+				}
+			}
+			fmt.Println(lastMsg)
 		case "handleGroupReq":
 			err := h.service.HandleGroupRequest(&ws)
 			if err != nil {
@@ -241,6 +251,7 @@ func (h *WebsocketHandler) WebsocketHandler(w http.ResponseWriter, r *http.Reque
 				})
 				continue
 			}
+
 		}
 	}
 }

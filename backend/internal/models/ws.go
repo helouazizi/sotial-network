@@ -14,4 +14,6 @@ type WS struct {
 	Action     string    `json:"action"`
 	GroupID    int       `json:"group_id"`
 	Members    []int     `json:"members"`
+	FullName   string    `json:"fullName"`
+	Avatar     string    `json:"avatar"`
 }

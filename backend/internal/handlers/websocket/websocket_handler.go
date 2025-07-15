@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"fmt"
-	"fmt"
 	"net/http"
 	"strings"
 	"time"
@@ -49,7 +48,7 @@ func (h *WebsocketHandler) WebsocketHandler(w http.ResponseWriter, r *http.Reque
 	for {
 		var ws models.WS
 		err := conn.ReadJSON(&ws)
-		
+
 		if err != nil && !strings.Contains(err.Error(), "close") {
 			conn.WriteJSON(map[string]any{
 				"error": "Error reading message: " + err.Error(),
@@ -249,7 +248,7 @@ func (h *WebsocketHandler) WebsocketHandler(w http.ResponseWriter, r *http.Reque
 				fmt.Println(err)
 				continue
 			}
-	
+
 			for _, id := range ids {
 				if id == &ws.ReceiverID {
 					continue

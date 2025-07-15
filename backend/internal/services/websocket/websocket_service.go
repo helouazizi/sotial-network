@@ -108,6 +108,6 @@ func (reqSer *WebsocketService) SaveMessagesGrp(idGrp, senderId int, message str
 	return reqSer.repo.SaveMessagesGrpRepo(idGrp, senderId, message, sentAt)
 }
 
-func (s *WebsocketService) HandleGroupRequest(request *models.WS) error {
-	return s.repo.HandleGroupRequest(request)
+func (s *WebsocketService) HandleGroupRequest(request *models.WS, userId int) error {
+	return s.repo.HandleGroupRequest(request,userId)
 }

@@ -2,7 +2,6 @@ package repositories
 
 import (
 	"database/sql"
-	"fmt"
 	"net/http"
 	"strings"
 	"time"
@@ -115,7 +114,6 @@ func (r *GroupRepository) GetSuggestedGroups(userID int) ([]*models.Group, error
 }
 
 func (r *GroupRepository) GetGroup(groupID int) (models.GroupIfo, *models.GroupError) {
-	fmt.Println(groupID, "============================================")
 	query := `
 		SELECT 
 			g.id, g.title, g.description, g.created_at,
@@ -214,9 +212,9 @@ func (r *GroupRepository) GetInfoGroupeRepo(GrpID string, sessionID int) (*model
 
 func (r *GroupRepository) GetDemandeGroupNotifs(requestedID int) ([]*models.GroupRequest, error) {
 	query := `
-		select u.id, u.first_name, u.last_name, u.avatar, rq.id, rq.group_id, rq.type, rq.sender_id from users u 
+		select u.id, u.first_name, u.last_name, u.avatar, rq.id,rq.group_id, rq.sender_id, rq.type  from users u 
 		inner join group_requests rq ON u.id = rq.sender_id 
-		where rq.type = 'demande' and rq.requested_id = ?
+		where rq.requested_id = ?
 		ORDER BY rq.id DESC;
 	`
 
@@ -227,11 +225,10 @@ func (r *GroupRepository) GetDemandeGroupNotifs(requestedID int) ([]*models.Grou
 
 	var groupNotifs []*models.GroupRequest
 	for rows.Next() {
-
 		var groupNotif models.GroupRequest
 		var user models.User
 		err = rows.Scan(&user.ID, &user.FirstName, &user.Lastname,
-			&user.Avatar, &groupNotif.ID, &groupNotif.GroupID, &groupNotif.Type, &groupNotif.SenderID)
+			&user.Avatar, &groupNotif.ID, &groupNotif.GroupID, &groupNotif.SenderID, &groupNotif.Type)
 		if err != nil {
 			return nil, err
 		}

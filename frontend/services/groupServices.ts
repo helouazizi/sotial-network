@@ -118,6 +118,7 @@ export async function GetDemandeGroupNotifs() {
 
         const data = await res.json()
 
+          console.log(data,"notifs sssssssssssssss");
         if (!res.ok) {
             console.error(data.error)
             return null

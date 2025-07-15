@@ -10,6 +10,7 @@ type Group struct {
 	CreatedAt     time.Time `json:"created_at"`
 	Count_Members int       `json:"count_members,omitempty"`
 	Members       []string  `json:"members,omitempty"`
+	IsDemande     bool      `json:"isDemande"`
 }
 type GroupPost struct {
 	GroupId int `json:"group_id"`

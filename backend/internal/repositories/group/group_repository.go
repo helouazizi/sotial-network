@@ -76,15 +76,26 @@ func (r *GroupRepository) GetJoinedGroups(userID int) ([]*models.Group, error) {
 
 func (r *GroupRepository) GetSuggestedGroups(userID int) ([]*models.Group, error) {
 	query := `
-		SELECT g.* FROM groups g 
-		WHERE g.id NOT IN (
-			SELECT gm.group_id FROM group_members gm
-			WHERE gm.member_id = ?
-		)
-		ORDER BY g.id desc
+		SELECT 
+    g.*,
+    CASE 
+        WHEN gr.id IS NOT NULL THEN 1 
+        ELSE 0 
+    END AS isDemande
+	FROM groups g
+	LEFT JOIN group_requests gr
+		ON gr.group_id = g.id 
+		AND gr.sender_id = ? 
+		AND gr.type = 'demande'
+	WHERE g.id NOT IN (
+		SELECT gm.group_id 
+		FROM group_members gm
+		WHERE gm.member_id = ?
+	)
+	ORDER BY g.id DESC;
 	`
 
-	rows, err := r.db.Query(query, userID)
+	rows, err := r.db.Query(query, userID, userID)
 	if err != nil {
 		return nil, err
 	}
@@ -92,7 +103,7 @@ func (r *GroupRepository) GetSuggestedGroups(userID int) ([]*models.Group, error
 	var groups []*models.Group
 	for rows.Next() {
 		var group models.Group
-		err := rows.Scan(&group.ID, &group.UserID, &group.Title, &group.Description, &group.CreatedAt)
+		err := rows.Scan(&group.ID, &group.UserID, &group.Title, &group.Description, &group.CreatedAt, &group.IsDemande)
 		if err != nil {
 			return nil, err
 		}

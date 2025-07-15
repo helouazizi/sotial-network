@@ -29,13 +29,19 @@ function GroupHeader({ id }: { id: string }) {
     const displayMembers = () => {
         return (
             <div className="share-with-users">
-                {groupMembers && groupMembers.members.map((member, indx) => (
-                    <div key={indx}>
-                        <PostHeader author={member.nickname} avatarUrl={member.avatar} firstname={member.firstname} lastname={member.lastname} createdAt="" />
+                <label className="share-with-label">
+                    Gorup members
+                </label>
+                <ul className="user-checkbox-list">
+                    {groupMembers && groupMembers.members.map((member, indx) => (
+                        <li key={indx} className="event-member-item">
+                            <PostHeader author={member.nickname} avatarUrl={member.avatar} firstname={member.firstname} lastname={member.lastname} createdAt="" />
 
-                    </div>
-                ))
-                }
+                        </li>
+                    ))
+                    }
+                </ul>
+
             </div>
         )
     }
@@ -110,8 +116,8 @@ function GroupHeader({ id }: { id: string }) {
         const fetchFolowers = async () => {
             try {
                 const data = await GetFolowers();
-                console.log(data,"folowers");
-                
+                console.log(data, "folowers");
+
                 setFollowers(data)
 
             } catch (err) {
@@ -126,8 +132,6 @@ function GroupHeader({ id }: { id: string }) {
 
 
 
-    if (loading) return <p className="group-loading">Loading group...</p>;
-    if (error) return <p className="group-error">{error}</p>;
     if (!groupInfo) return null;
     return (
         <div className="event-group-header">
@@ -197,6 +201,20 @@ function GroupHeader({ id }: { id: string }) {
                             displayFolowers()
                         )}
                     </div>
+                )}
+                {showFolowers && invited && invited.length > 0 &&  (
+                    <button
+                        className="group-btn send-invetation"
+                    // onClick={() => {
+                    //     setShowFolowers((prev) => {
+                    //         if (!prev) setShowMembers(false); // close members if opening followers
+                    //         return !prev;
+                    //     });
+                    // }}
+                    >
+                        Send
+                        {/* {showFolowers ? "Back" : "Invite Users"} */}
+                    </button>
                 )}
 
 

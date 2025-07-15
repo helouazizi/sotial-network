@@ -1,3 +1,4 @@
+import { Follower } from "@/types/post";
 import { API_URL } from "."
 import { Event, GroupMembers } from "@/types/events";
 
@@ -42,4 +43,21 @@ export const VoteEvent = async ({id, vote } : {id : number , vote : string|null}
   const response  = await res.json();
   
   return response;
+};
+
+
+
+
+export const GetUnrequestedFolowers = async (id : Number): Promise<Follower[]> => {
+    const res = await fetch(`${API_URL}api/v1/groups/joined/${id}/getUnrequestedFriends`, {
+        method: "GET",
+        credentials: "include",
+    });
+
+    if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(`Failed to fetch followers: ${errorText}`);
+    }
+    const folowers = await res.json();
+    return folowers.friends
 };

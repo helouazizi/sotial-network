@@ -2,6 +2,7 @@ package relations
 
 import (
 	"errors"
+	"strconv"
 
 	"github.com/ismailsayen/social-network/internal/models"
 	repositories "github.com/ismailsayen/social-network/internal/repositories/relations"
@@ -69,4 +70,12 @@ func (rs *RelationsServices) GetRealtionsServives(info *models.GetUsers) ([]mode
 
 func (rs *RelationsServices) GetFriendsService(sessionID int) ([]models.CommunInfoProfile, error) {
 	return rs.relationrepo.GetFriendsRepo(sessionID)
+}
+
+func (rs *RelationsServices) GetUnrequestedFriendsService(sessionID int, groupId string) ([]models.CommunInfoProfile, error) {
+	grpId, err := strconv.Atoi(groupId)
+	if err != nil {
+		return []models.CommunInfoProfile{}, errors.New("group id is required")
+	}
+	return rs.relationrepo.GetUnrequestedFriendsRepo(sessionID, grpId)
 }

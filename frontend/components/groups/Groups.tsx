@@ -10,6 +10,7 @@ import { usePathname } from 'next/navigation';
 import { PopupContext } from '@/context/PopupContext';
 import { IoIosSend } from "react-icons/io"; 
 import { SocketContext } from '@/context/socketContext';
+import { GroupNotifications } from '@/types/Request';
 
 function Groups() {
   const context = useContext(GroupsContext)
@@ -41,7 +42,13 @@ function Groups() {
       return 
     }
 
-    const data = await SendJoinGroupRequest(parseInt(grpInfos.group_id), parseInt(grpInfos.user_id))
+    const body: GroupNotifications = {
+      group_id: parseInt(grpInfos.group_id),
+      requested_id: [parseInt(grpInfos.user_id)],
+      type: "demande"
+    }
+    
+    const data = await SendJoinGroupRequest(body)
 
     // if (ws) {
     //   ws.current?.send(JSON.stringify({

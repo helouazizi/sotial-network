@@ -3,7 +3,6 @@
 import { SocketContext } from '@/context/socketContext'
 import { GetDemandeGroupNotifs } from '@/services/groupServices'
 import { GroupNotifications } from '@/types/Request'
-import { group } from 'console'
 import React, { useContext, useEffect, useState } from 'react'
 
 const GroupeRequest = () => {
@@ -39,9 +38,9 @@ const GroupeRequest = () => {
     return notifications?.map((req, index) => {
       return (
         <div key={index} className='request-card'>
-            <p>{req.user.firstname} {req.user.lastname}</p>
-            <button onClick={() => handleRequest(req.id,req.sender_id, req.group_id,"accept")}>Accept</button>
-            <button onClick={() => handleRequest(req.id,req.sender_id, req.group_id,"reject")}>Reject</button>
+            <p>{req.user?.firstname} {req.user?.lastname}</p>
+            <button onClick={() => handleRequest(req.id || 0,req.sender_id || 0, req.group_id,"accept")}>Accept</button>
+            <button onClick={() => handleRequest(req.id || 0,req.sender_id || 0, req.group_id,"reject")}>Reject</button>
             <hr />
         </div>
       )

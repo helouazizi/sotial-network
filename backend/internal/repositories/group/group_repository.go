@@ -147,7 +147,7 @@ func (r *GroupRepository) SaveJoinGroupRequest(groupReq *models.GroupRequest) er
 	query := `
 		INSERT INTO group_requests (group_id, requested_id, sender_id, type) VALUES (?,?,?,?)
 	`
-	_, err := r.db.Exec(query, groupReq.GroupID, groupReq.RequestedID, groupReq.SenderID, "demand")
+	_, err := r.db.Exec(query, groupReq.GroupID, groupReq.RequestedID, groupReq.SenderID, groupReq.Type)
 	if err != nil {
 		return err
 	}

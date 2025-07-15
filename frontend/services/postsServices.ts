@@ -13,7 +13,7 @@ export const getComments = async (post_id: number) => {
 
         }
     )
-    if (!res.ok) throw new Error(await res.text());
+    if (!res.ok) throw new Error(await res.text());    
     return await res.json()
 }
 

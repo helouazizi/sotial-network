@@ -6,72 +6,65 @@ import { LuMessageCircleMore } from "react-icons/lu";
 import { IoIosNotifications } from "react-icons/io";
 import { usePathname } from "next/navigation";
 import { IoIosLogOut } from "react-icons/io";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import { SocketContext, SocketContextType } from "@/context/socketContext";
 import { GenerateAvatar } from "../profile/ProfileHeader";
 import ToogleInitiale from "../request/ToogleInitiale";
 import NotifToast from "@/utils/NotifToast";
 export default function Header() {
-
-
   const router = useRouter();
   const pathname = usePathname();
-  const { ws, user, numsNotif, showNotif, setShowNotif } = useContext(SocketContext) as SocketContextType
+  const { ws, user, numsNotif, showNotif } = useContext(
+    SocketContext
+  ) as SocketContextType;
 
-  const [isLogged, setIsLogged] = useState<boolean>(false)
-  const [showToggle, setShowToggle] = useState(false)
+  const [isLogged, setIsLogged] = useState<boolean>(false);
+  const [showToggle, setShowToggle] = useState(false);
 
   useEffect(() => {
     if (["/login", "/register"].includes(pathname)) {
-      setIsLogged(false)
+      setIsLogged(false);
     } else {
-      setIsLogged(true)
+      setIsLogged(true);
     }
-  }, [pathname])
-  useEffect(() => {
-    let a = setInterval(() => {
-      setShowNotif(false)
-    }, 5000)
-    return () => (clearInterval(a))
-  }, [showNotif])
+  }, [pathname]);
+  
   const handleClickLogout = async () => {
     try {
       const res = await fetch("http://localhost:8080/api/v1/user/logout", {
-        method: 'GET',
-        credentials: 'include',
+        method: "GET",
+        credentials: "include",
       });
 
       if (res.ok) {
         if (ws.current) {
-          ws.current.close()
-          setShowToggle(false)
+          ws.current.close();
+          setShowToggle(false);
         }
-        router.push('/login')
+        router.push("/login");
       }
-
     } catch (error) {
       if (ws.current) {
-        ws.current.close()
+        ws.current.close();
       }
-      router.push('/login')
+      router.push("/login");
     }
-
-  }
+  };
   const HandleToggle = () => {
-    setShowToggle(!showToggle)
-  }
+    setShowToggle(!showToggle);
+  };
   useEffect(() => {
     const handleClick = () => {
       if (showToggle) {
         setShowToggle(false);
       }
     };
-    const main = document.querySelector('main');
-    main?.addEventListener('click', handleClick);
+    const main = document.querySelector("main");
+    main?.addEventListener("click", handleClick);
 
     return () => {
-      main?.removeEventListener('click', handleClick);
+      main?.removeEventListener("click", handleClick);
     };
   }, [showToggle]);
   return (
@@ -84,17 +77,37 @@ export default function Header() {
             </Link>
             <ul>
               <li>
-                <Link href={"/"}><TiHome className={pathname === "/" ? "active" : " "} /></Link>
+                <Link href={"/"}>
+                  <TiHome className={pathname === "/" ? "active" : " "} />
+                </Link>
               </li>
               <li>
-                <Link href={"/chat/privateChat"}><LuMessageCircleMore className={pathname.startsWith("/chat/") ? "active" : ""} /></Link>
+                <Link href={"/chat/privateChat"}>
+                  <LuMessageCircleMore
+                    className={pathname.startsWith("/chat/") ? "active" : ""}
+                  />
+                </Link>
               </li>
               <li>
-                <Link href={"/groups/joined"}><MdGroups2 className={pathname.startsWith("/groups/") ? "active groupIconHeader" : "groupIconHeader"} /></Link>
+                <Link href={"/groups/joined"}>
+                  <MdGroups2
+                    className={
+                      pathname.startsWith("/groups/")
+                        ? "active groupIconHeader"
+                        : "groupIconHeader"
+                    }
+                  />
+                </Link>
               </li>
             </ul>
             <div className="header-icons">
-              <button className={`notification ${showToggle ? "active-not" : ""}`} onClick={HandleToggle}><IoIosNotifications /> <span>{numsNotif ? +(numsNotif?.total) : 0}</span></button>
+              <button
+                className={`notification ${showToggle ? "active-not" : ""}`}
+                onClick={HandleToggle}
+              >
+                <IoIosNotifications />{" "}
+                <span>{numsNotif ? +numsNotif?.total : 0}</span>
+              </button>
               <Link href={`/profile/${user?.id}`}>
                 {user?.avatar ? (
                   <img
@@ -103,21 +116,21 @@ export default function Header() {
                     className="avatar-profile header-icon"
                   />
                 ) : (
-                  <div className="avatar-profile header-icon"><h2>{GenerateAvatar(user?.firstname, user?.lastname)}</h2></div>
+                  <div className="avatar-profile header-icon">
+                    <h2>{GenerateAvatar(user?.firstname, user?.lastname)}</h2>
+                  </div>
                 )}
               </Link>
 
-              <button className="user-logout" onClick={handleClickLogout} ><IoIosLogOut /></button>
-
+              <button className="user-logout" onClick={handleClickLogout}>
+                <IoIosLogOut />
+              </button>
             </div>
-
           </nav>
         </header>
       )}
       <ToogleInitiale showToggle={showToggle} setShowToggle={setShowToggle} />
       {showNotif && <NotifToast />}
-
     </>
-
   );
 }

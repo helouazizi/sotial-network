@@ -48,13 +48,14 @@ func (h *WebsocketHandler) WebsocketHandler(w http.ResponseWriter, r *http.Reque
 	for {
 		var ws models.WS
 		err := conn.ReadJSON(&ws)
+
 		if err != nil && !strings.Contains(err.Error(), "close") {
 			conn.WriteJSON(map[string]any{
 				"error": "Error reading message: " + err.Error(),
 			})
 			continue
 		}
-
+		fmt.Println(ws)
 		if err != nil {
 			conn.WriteJSON(map[string]any{
 				"error": err.Error(),
@@ -241,6 +242,29 @@ func (h *WebsocketHandler) WebsocketHandler(w http.ResponseWriter, r *http.Reque
 				})
 				continue
 			}
+		case "event":
+			ids, err := h.service.GreMembersIds(&ws)
+			if err != nil {
+				fmt.Println(err)
+				continue
+			}
+
+			for _, id := range ids {
+				if id == &ws.ReceiverID {
+					continue
+				}
+				if senderConns, ok := h.service.GetClient(*id); ok {
+					for _, c := range senderConns {
+						c.WriteJSON(map[string]any{
+							"data": ws.Message,
+							"type": "eventNotification",
+						})
+					}
+				}
+
+			}
+
 		}
+
 	}
 }

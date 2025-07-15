@@ -152,32 +152,36 @@ func (r *GroupRepository) GetGroup(groupID int) (models.GroupIfo, *models.GroupE
 	return groupInfo, nil
 }
 
-func (r *GroupRepository) SaveJoinGroupRequest(groupReq *models.GroupRequest) error {
+func (r *GroupRepository) SaveJoinGroupRequest(groupReq *models.GroupRequest) ([]int, error) {
 	query := `
-		INSERT INTO group_requests (group_id, requested_id, sender_id, type) VALUES (?,?,?,?)
+		INSERT INTO group_requests (group_id, requested_id, sender_id, type) VALUES (?,?,?,?) RETURNING id
 	`
 
 	tx, err := r.db.Begin()
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	stmt, err := tx.Prepare(query)
 	if err != nil {
 		tx.Rollback()
-		return err
+		return nil, err
 	}
 	defer stmt.Close()
 
+	ids := []int{}
 	for _, requestedID := range groupReq.RequestedID {
-		_, err := stmt.Exec(groupReq.GroupID, requestedID, groupReq.SenderID, groupReq.Type)
-		if err != nil {
+		var id int
+		err := stmt.QueryRow(groupReq.GroupID, requestedID, groupReq.SenderID, groupReq.Type).Scan(&id)
+		if err != nil && err != sql.ErrNoRows {
 			tx.Rollback()
-			return err
+			return nil, err
 		}
+
+		ids = append(ids, id)
 	}
 
-	return tx.Commit()
+	return ids, tx.Commit()
 }
 
 func (r *GroupRepository) GetInfoGroupeRepo(GrpID string, sessionID int) (*models.Group, error) {

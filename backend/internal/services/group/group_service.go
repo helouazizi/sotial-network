@@ -71,7 +71,7 @@ func (s *GroupService) GetGroup(GroupId string) (models.GroupIfo, *models.GroupE
 	return s.repo.GetGroup(id)
 }
 
-func (s *GroupService) SaveJoinGroupRequest(groupReq *models.GroupRequest) error {
+func (s *GroupService) SaveJoinGroupRequest(groupReq *models.GroupRequest) ([]int, error) {
 	return s.repo.SaveJoinGroupRequest(groupReq)
 }
 

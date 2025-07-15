@@ -152,7 +152,7 @@ func (h *GroupHandler) JoinGroupRequestHandler(w http.ResponseWriter, r *http.Re
 
 	groupRequest.SenderID = r.Context().Value("userID").(int)
 
-	err := h.service.SaveJoinGroupRequest(groupRequest)
+	reqID, err := h.service.SaveJoinGroupRequest(groupRequest)
 	if err != nil {
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
 			"error": err.Error(),
@@ -161,7 +161,8 @@ func (h *GroupHandler) JoinGroupRequestHandler(w http.ResponseWriter, r *http.Re
 	}
 
 	utils.ResponseJSON(w, http.StatusOK, map[string]any{
-		"message": "Request saved succesfully!",
+		"message": "Request sended succesfully!",
+		"request_id": reqID,
 	})
 }
 
@@ -189,7 +190,7 @@ func (h *GroupHandler) CancelGroupRequestHandler(w http.ResponseWriter, r *http.
 	}
 
 	utils.ResponseJSON(w, http.StatusOK, map[string]any{
-		"message": "Request deletting succesfully!",
+		"message": "Request Cancled succesfully!",
 	})
 }
 

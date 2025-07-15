@@ -126,17 +126,23 @@ function GroupHeader({ id }: { id: number }) {
         setIsSending(true);
         const body: GroupNotifications = {
             group_id: id,
-            requested_id: invited[0],
+            requested_id: invited,
             type: "invitation",
-
         }
         try {
             const data = await SendJoinGroupRequest(body);
-            console.log(data, "requests");
-            poopUp?.showPopup("success", data.message)
+            if (!data) {
+                setIsSending(true)
+            }
+            if (data.message) {
+                poopUp?.showPopup("success", data.message)
+            } else {
+                poopUp?.showPopup("faild", "something went wrong, please try again")
+            }
 
         } catch (err) {
             poopUp?.showPopup("faild", "something went wrong, please try again")
+
         } finally {
             setIsSending(true)
         }

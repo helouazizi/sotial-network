@@ -10,7 +10,7 @@ export interface GroupNotifications {
     id?: number
     group_id: number
     sender_id?: number
-    requested_id: number
+    requested_id: number[]
     type: string
     user?: User
 }

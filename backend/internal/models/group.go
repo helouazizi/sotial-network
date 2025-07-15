@@ -54,7 +54,7 @@ type GroupRequest struct {
 	ID          int    `json:"id,omitempty"`
 	GroupID     int    `json:"group_id,omitempty"`
 	SenderID    int    `json:"sender_id,omitempty"`
-	RequestedID int    `json:"requested_id,omitempty"`
+	RequestedID []int  `json:"requested_id,omitempty"`
 	Type        string `json:"type,omitempty"`
 	UserInfos   *User  `json:"user"`
 }

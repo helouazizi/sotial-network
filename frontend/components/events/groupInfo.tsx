@@ -104,6 +104,7 @@ function GroupHeader({ id }: { id: string }) {
     };
 
 
+    
     const fetchFolowers = async () => {
         try {
             const data = await GetFolowers();

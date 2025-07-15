@@ -147,7 +147,7 @@ func (r *GroupRepository) SaveJoinGroupRequest(groupReq *models.GroupRequest) er
 	query := `
 		INSERT INTO group_requests (group_id, requested_id, sender_id, type) VALUES (?,?,?,?)
 	`
-	_, err := r.db.Exec(query, groupReq.GroupID, groupReq.RequestedID, groupReq.SenderID, "demand")
+	_, err := r.db.Exec(query, groupReq.GroupID, groupReq.RequestedID, groupReq.SenderID, "demande")
 	if err != nil {
 		return err
 	}
@@ -163,7 +163,7 @@ func (r *GroupRepository) GetInfoGroupeRepo(GrpID string, sessionID int) (*model
 				(
 					SELECT GROUP_CONCAT(CAST(gm.member_id AS TEXT), ',')
 					FROM group_members gm
-					WHERE gm.group_id = $1 AND gm.member_id <> $2
+					WHERE gm.group_id = $1
 				) AS members
 			FROM groups g 
 			INNER JOIN group_members gr ON g.id = gr.group_id
@@ -172,11 +172,47 @@ func (r *GroupRepository) GetInfoGroupeRepo(GrpID string, sessionID int) (*model
 
 	`
 	var groupInfo models.Group
-	var ids string
-	err := r.db.QueryRow(query, GrpID, sessionID).Scan(&groupInfo.ID, &groupInfo.Title, &groupInfo.Count_Members, &ids)
+	var ids sql.NullString
+	err := r.db.QueryRow(query, GrpID).Scan(&groupInfo.ID, &groupInfo.Title, &groupInfo.Count_Members, &ids)
 	if err != nil && err != sql.ErrNoRows {
 		return nil, err
 	}
-	groupInfo.Members = strings.Split(ids, ",")
+	if ids.Valid {
+		groupInfo.Members = strings.Split(ids.String, ",")
+	} else {
+		groupInfo.Members = []string{}
+	}
 	return &groupInfo, nil
+}
+
+func (r *GroupRepository) GetDemandeGroupNotifs(requestedID int) ([]*models.GroupRequest, error) {
+	query := `
+		select u.id, u.first_name, u.last_name, u.avatar, rq.id, rq.group_id, rq.type, rq.sender_id from users u 
+		inner join group_requests rq ON u.id = rq.sender_id 
+		where rq.type = 'demande' and rq.requested_id = ?
+		ORDER BY rq.id DESC;
+	`
+
+	rows, err := r.db.Query(query, requestedID)
+	if err != nil {
+		return nil, err
+	}
+
+	var groupNotifs []*models.GroupRequest
+	for rows.Next() {
+
+		var groupNotif models.GroupRequest
+		var user models.User
+		err = rows.Scan(&user.ID, &user.FirstName, &user.Lastname,
+			&user.Avatar, &groupNotif.ID, &groupNotif.GroupID, &groupNotif.Type, &groupNotif.SenderID)
+		if err != nil {
+			return nil, err
+		}
+
+		groupNotif.UserInfos = &user
+
+		groupNotifs = append(groupNotifs, &groupNotif)
+	}
+
+	return groupNotifs, nil
 }

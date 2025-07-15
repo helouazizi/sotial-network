@@ -1,5 +1,5 @@
 import { API_URL } from "."
-import { Event } from "@/types/events";
+import { Event, GroupMembers } from "@/types/events";
 
 export const GetEvents = async (group_id: number):Promise<Event[]> => {
     const res = await fetch(`${API_URL}api/v1/groups/joined/${group_id}/events`,
@@ -9,7 +9,6 @@ export const GetEvents = async (group_id: number):Promise<Event[]> => {
         }
     )
 
-        console.log(res,"res");
     if (!res.ok) throw new Error(await res.text());
     const events = await res.json()
 
@@ -17,16 +16,28 @@ export const GetEvents = async (group_id: number):Promise<Event[]> => {
     return  events.data
 }
 
+export const GetGroupMembers = async (group_id: number):Promise<GroupMembers> => {
+    const res = await fetch(`${API_URL}api/v1/groups/joined/${group_id}/members`,
+        {
+            method: "GET",
+            credentials: "include",
+        }
+    )
+
+    if (!res.ok) throw new Error(await res.text());
+    const members = await res.json()    
+    return  members.data
+}
 
 
 
-export const VoteEvent = async ({id, vote } : {id : number , vote : string}) => {    
+
+export const VoteEvent = async ({id, vote } : {id : number , vote : string|null}) => {    
   const res = await fetch(`${API_URL}api/v1/groups/events/vote`, {
     method: "POST",
     credentials: "include",
     body: JSON.stringify({ id, vote }),
   });
-
 
   const response  = await res.json();
   

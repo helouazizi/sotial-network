@@ -158,12 +158,28 @@ func (r *GroupRepository) SaveJoinGroupRequest(groupReq *models.GroupRequest) er
 	query := `
 		INSERT INTO group_requests (group_id, requested_id, sender_id, type) VALUES (?,?,?,?)
 	`
-	_, err := r.db.Exec(query, groupReq.GroupID, groupReq.RequestedID, groupReq.SenderID, "demande")
+
+	tx, err := r.db.Begin()
 	if err != nil {
 		return err
 	}
 
-	return nil
+	stmt, err := tx.Prepare(query)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	defer stmt.Close()
+
+	for _, requestedID := range groupReq.RequestedID {
+		_, err := stmt.Exec(groupReq.GroupID, requestedID, groupReq.SenderID, groupReq.Type)
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
+	}
+
+	return tx.Commit()
 }
 
 func (r *GroupRepository) GetInfoGroupeRepo(GrpID string, sessionID int) (*models.Group, error) {

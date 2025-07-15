@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Welcomingmessage from "../../components/Auth/welcomingMessage";
+import { API_URL } from "@/services";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -14,7 +15,7 @@ export default function Login() {
     setMessage(""); // clear previous messages
 
     try {
-      const res = await fetch("http://localhost:8080/api/v1/user/login", {
+      const res = await fetch(`${API_URL}api/v1/user/login`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },

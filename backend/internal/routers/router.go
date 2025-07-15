@@ -44,7 +44,7 @@ func SetupRoutes(app *app.Application) *http.ServeMux {
 	mux.HandleFunc("/api/v1/groups/joined/{id}", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.GetGroupHandler), app.DB))
 	mux.HandleFunc("/api/v1/groups/getInfoGroup", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.GetInfoGroupe), app.DB))
 
-	// mux.HandleFunc("/api/v1/groups/joined/{id}", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.GetGroupHandler), app.DB))
+	mux.HandleFunc("/api/v1/groups/joined/{id}/members", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.GetGroupMembersHandler), app.DB))
 
 	mux.HandleFunc("/api/v1/groups/joinGroupRequest", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.JoinGroupRequestHandler), app.DB))
 	mux.HandleFunc("/api/v1/groups/getDemandeGroupNotifs", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.GetDemandeGroupNotifsHandler), app.DB))

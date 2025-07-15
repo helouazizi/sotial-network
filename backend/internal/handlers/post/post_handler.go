@@ -221,6 +221,7 @@ func (h *PostHandler) GetPostComment(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
+
 	utils.ResponseJSON(w, http.StatusOK, commnets)
 }
 

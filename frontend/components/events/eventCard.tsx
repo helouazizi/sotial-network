@@ -10,7 +10,7 @@ interface EventCardProps {
   event: Event;
 }
 
-type VoteType = 'going' | 'not going';
+type VoteType = 'going' | 'not going' | null;
 
 const EventCard = ({ event }: EventCardProps) => {
   const [vote, setVote] = useState<VoteType | null>(
@@ -18,35 +18,51 @@ const EventCard = ({ event }: EventCardProps) => {
   );
   const [totalGoing, setTotalGoing] = useState(event.total_going);
   const [totalNotGoing, setTotalNotGoing] = useState(event.total_not_going);
-  // const [loadingVote, setLoadingVote] = useState<VoteType | null>(null);
-
   const Popup = useContext(PopupContext);
 
-  const handleVote = async (event_id: number, type: VoteType) => {
-    // alredy voted on the same button
-    if (vote === type) {
-      return
-    }
+ const handleVote = async (event_id: number, type: VoteType) => {
+  // Case 1: Already voted with the same type — remove the vote
+  if (vote === type) {
     try {
-      const res = await VoteEvent({ id: event_id, vote: type });
-
+      const res = await VoteEvent({ id: event_id, vote: "remove" }); // or `vote: 'remove'` depending on API
       if (res.message) {
-        setVote(type);
+        setVote(null);
         if (type === 'going') {
-          setTotalGoing((prev) => prev + 1);
-          if (vote === 'not going') setTotalNotGoing((prev) => prev - 1);
+          setTotalGoing((prev) => prev - 1);
         } else {
-          setTotalNotGoing((prev) => prev + 1);
-          if (vote === 'going') setTotalGoing((prev) => prev - 1);
+          setTotalNotGoing((prev) => prev - 1);
         }
-        Popup?.showPopup('success', res.message);
+        Popup?.showPopup('success', 'Vote removed');
       } else {
         Popup?.showPopup('faild', res.error || 'Something went wrong');
       }
     } catch (err: any) {
       Popup?.showPopup('faild', err.message || 'Request failed');
     }
-  };
+    return;
+  }
+
+  // Case 2: New or changed vote
+  try {
+    const res = await VoteEvent({ id: event_id, vote: type });
+    if (res.message) {
+      setVote(type);
+      if (type === 'going') {
+        setTotalGoing((prev) => prev + 1);
+        if (vote === 'not going') setTotalNotGoing((prev) => prev - 1);
+      } else {
+        setTotalNotGoing((prev) => prev + 1);
+        if (vote === 'going') setTotalGoing((prev) => prev - 1);
+      }
+      Popup?.showPopup('success', res.message);
+    } else {
+      Popup?.showPopup('faild', res.error || 'Something went wrong');
+    }
+  } catch (err: any) {
+    Popup?.showPopup('faild', err.message || 'Request failed');
+  }
+};
+
 
   const totalVotes = totalGoing + totalNotGoing;
   const goingPercent = totalVotes > 0 ? (totalGoing / totalVotes) * 100 : 0;

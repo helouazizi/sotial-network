@@ -18,3 +18,7 @@ export interface GroupInfo {
     author : User
     total_members : number
 }
+
+export interface GroupMembers {
+   members : User[]
+}

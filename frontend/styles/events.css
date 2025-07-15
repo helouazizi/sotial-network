@@ -139,8 +139,22 @@
   flex-direction: column;
   gap: 16px;
   color: var(--text-primary);
-  max-width: 600px;
+  max-width: 800px;
   margin: 1rem auto;
+}
+
+.event-card .post-body h2 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+  overflow-wrap: break-word;
+}
+
+.event-card .post-body p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  overflow-wrap: break-word;
 }
 
 .event-date {
@@ -186,6 +200,7 @@
   gap: 16px;
   margin-top: 12px;
 }
+
 .vote-btn.going-btn.voted {
   background-color: var(--accent-color);
   color: var(--text-primary);
@@ -233,9 +248,12 @@
   box-shadow: 0 2px 8px var(--shadow-color);
 }
 
+
+
 .group-header-title {
   margin-bottom: 1rem;
 }
+
 .group-creation-date {
   font-size: small;
   color: var(--btn-text);
@@ -265,14 +283,17 @@
   color: var(--text-muted);
   line-height: 1.5;
 }
+
 .group-card-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
+
 .group-admin-card {
   border-radius: 12px;
 }
+
 .group-admin-icon {
   color: var(--info-color);
   font-size: 1.1rem;
@@ -316,8 +337,8 @@
 }
 
 .see-members {
-   background-color: var(--btn-bg);
-  color: var(--btn-text); 
+  background-color: var(--btn-bg);
+  color: var(--btn-text);
 }
 
 .see-members:hover {
@@ -334,6 +355,25 @@
   background-color: var(--accent-hover);
   color: var(--bg-color);
 }
+
+.send-invetation {
+  width: 100%;
+  margin-top: 1rem;
+  background-color: var(--info-color);
+}
+
+.send-invetation:hover {
+  background-color: var(--accent-hover);
+  color: var(--bg-color);
+}
+
+.event-member-item {
+  /* margin: 0.5rem; */
+  background-color: var(--bg-color);
+  padding: 0.5rem;
+  border-radius: 8px;
+}
+
 .group-loading,
 .group-error {
   text-align: center;

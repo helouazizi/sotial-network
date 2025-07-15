@@ -226,12 +226,14 @@
   font-size: 1.25rem;
   margin-bottom: 0.5rem;
   color: var(--text-primary);
+  overflow-wrap: break-word;
 }
 
 .post-card .post-body p {
   font-size: 1rem;
   line-height: 1.6;
   color: var(--text-secondary);
+   overflow-wrap: break-word;
 }
 
 .post-card .postImg {

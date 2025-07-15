@@ -1,3 +1,4 @@
+import { API_URL } from "@/services";
 import { GenerateAvatar } from "../profile/ProfileHeader";
 
 export default function PostHeader({ author, firstname, lastname, createdAt, avatarUrl }: { author: string; firstname: string, lastname: string, createdAt: string, avatarUrl: string | undefined }) {
@@ -6,7 +7,7 @@ export default function PostHeader({ author, firstname, lastname, createdAt, ava
     <div className="post-meta">
       {avatarUrl ? (
         <img
-          src={`http://localhost:8080/images/user/${avatarUrl}`}
+          src={`${API_URL}images/user/${avatarUrl}`}
           alt={`${avatarUrl}`}
           className="avatar-profile post-avatar"
         />

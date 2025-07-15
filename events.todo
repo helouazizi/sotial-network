@@ -2,4 +2,5 @@ add event route to midlware
 add the group header info with the members
 try to return a clear response in event vote
 dont forget to togle the vote 
+in grpup invite reauest need to prevent user fron sending rewuest to the same one if alrady
 

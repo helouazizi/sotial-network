@@ -176,7 +176,7 @@ func (h *GroupHandler) GetInfoGroupe(w http.ResponseWriter, r *http.Request) {
 	sessionID := r.Context().Value("userID").(int)
 	infoGrp, err := h.service.GetInfoGroupeService(groupId, sessionID)
 	if err != nil {
-		fmt.Println("=>",err)
+		fmt.Println("=>", err)
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
 			"error": err.Error(),
 		})

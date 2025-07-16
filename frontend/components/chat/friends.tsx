@@ -4,7 +4,7 @@ import { SocketContext } from "@/context/socketContext";
 import { User } from "@/types/user";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect } from "react";
-import { FaUser } from "react-icons/fa";
+import PostHeader from "../post/postHeader";
 
 
 export default function Friends() {
@@ -30,8 +30,12 @@ export default function Friends() {
     return (
         <>
             {friends?.map((friend: User) => {
-                return <li key={friend.id} id={`${friend.id}`} onClick={handleClickUser}><FaUser /> {friend.firstname} {friend.lastname}</li>
-            }) || <li>Loading friends...</li>}
+                return <li
+                 key={friend.id} id={`${friend.id}`}
+                 onClick={handleClickUser}>
+                 <PostHeader author={friend.nickname ? friend.nickname : friend.firstname + "-" + friend.lastname} firstname={friend.firstname} lastname={friend.lastname} createdAt='' avatarUrl={friend.avatar} />
+                 </li>
+            }) || <li>No friends Yet</li>}
         </>
     );
 }

@@ -3,6 +3,7 @@ package repositories
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/ismailsayen/social-network/internal/models"
@@ -54,27 +55,39 @@ func (r *WebsocketRepository) GetMessages(senderID, receiverID int, lastID int) 
 
 func (r *WebsocketRepository) GetFriends(userID int) ([]*models.User, error) {
 	query := `
-		SELECT id, nickname ,first_name, last_name
-		FROM users
-		WHERE id != ?
+	SELECT u.id, u.nickname, u.first_name, u.last_name, u.avatar
+	FROM users u
+	INNER JOIN followers f ON f.follower_id = u.id
+	WHERE f.followed_id = ?
+
+	UNION
+
+	SELECT u.id, u.nickname, u.first_name, u.last_name, u.avatar
+	FROM users u
+	INNER JOIN followers f ON f.followed_id = u.id
+	WHERE f.follower_id = ?;
+
 	`
 
-	rows, err := r.db.Query(query, userID)
+	rows, err := r.db.Query(query, userID, userID)
 	if err != nil {
+		fmt.Println(err, "errrrr")
 		return nil, err
 	}
 
 	var users []*models.User
 	for rows.Next() {
 		var user models.User
-		err = rows.Scan(&user.ID, &user.Nickname, &user.FirstName, &user.Lastname)
+		err = rows.Scan(&user.ID, &user.Nickname, &user.FirstName, &user.Lastname, &user.Avatar)
 		if err != nil {
+			fmt.Println(err, "11")
 			return nil, err
 		}
 
 		users = append(users, &user)
 	}
 
+	fmt.Println(users, "ussssr")
 	return users, nil
 }
 

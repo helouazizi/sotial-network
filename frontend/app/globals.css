@@ -88,7 +88,7 @@ svg {
   box-shadow: 0 5px 30px var(--btn-bg);
   font-size: 0.95rem;
   color: var(--text-primary);
-  z-index: 1000;
+  z-index: 100000;
   border-left: 4px solid;
   animation: popupFade 5s ease-in-out;
 }

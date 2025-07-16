@@ -310,3 +310,40 @@
 .sugg-req button svg:hover{
     color: var(--accent-hover);
 }
+
+.request-card{
+    padding: 10px 20px;
+    background-color: var(--bg-color);
+    width: 80%;
+    margin: 10px auto;
+    border-radius: 8px;
+}
+
+.request-card .request-card-header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.request-card .request-type{
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-size: 0.9em;
+}
+
+.request-card .group-request-btn {
+    background: none;
+    border:  none;
+    outline: none;
+    font-size: xx-large;
+    cursor: pointer;
+    color: var(--btn-text);
+}
+
+.request-card .reject:hover {
+    color: var(--danger-color);
+}
+
+.request-card .accept:hover {
+    color: var(--online-color);
+}

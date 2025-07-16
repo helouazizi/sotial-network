@@ -4,10 +4,12 @@ import { SocketContext } from '@/context/socketContext'
 import { GetDemandeGroupNotifs } from '@/services/groupServices'
 import { GroupNotifications } from '@/types/Request'
 import React, { useContext, useEffect, useState } from 'react'
+import { IoCheckmarkCircle, IoCloseCircle } from 'react-icons/io5'
+import PostHeader from '../post/postHeader'
 
 const GroupeRequest = () => {
   const [notifications, setNotifications] = useState<GroupNotifications[] | null>(null)
-  const {ws} = useContext(SocketContext) ?? {}
+  const { ws } = useContext(SocketContext) ?? {}
 
   useEffect(() => {
     const fetchDemandeGroupNotifs = async () => {
@@ -15,14 +17,13 @@ const GroupeRequest = () => {
       if (!data) {
         return
       }
-      
 
       setNotifications(data)
     }
     fetchDemandeGroupNotifs()
   }, [])
 
-  const handleRequest = (requestID: number, senderID: number, groupID: number ,action: string,type : string) => {
+  const handleRequest = (requestID: number, senderID: number, groupID: number, action: string, type: string) => {
     if (ws?.current) {
       ws.current.send(JSON.stringify({
         "id": requestID,
@@ -30,7 +31,7 @@ const GroupeRequest = () => {
         "receiver_id": senderID,
         "group_id": groupID,
         "type": "handleGroupReq",
-        "request_type":type
+        "request_type": type
       }))
     }
   }
@@ -39,10 +40,18 @@ const GroupeRequest = () => {
     return notifications?.map((req, index) => {
       return (
         <div key={index} className='request-card'>
-            <p>{req.user?.firstname} {req.user?.lastname}</p>
-            <button onClick={() => handleRequest(req.id || 0,req.sender_id || 0, req.group_id,"accept",req.type)}>Accept</button>
-            <button onClick={() => handleRequest(req.id || 0,req.sender_id || 0, req.group_id,"reject",req.type)}>Reject</button>
-            <hr />
+          <div className="request-card-header">
+            <PostHeader author={req.user?.firstname + " " + req.user?.lastname} avatarUrl={req.user?.avatar} createdAt='' firstname={req.user?.firstname || ''} lastname={req.user?.lastname || ''} />
+            <p className='request-type'>{req.type.charAt(0).toUpperCase() + req.type.slice(1,)}</p>
+          </div>
+          <div className='action-request'>
+
+          </div>
+          <div className='group-action-request'>
+            <button className='group-request-btn accept' onClick={() => handleRequest(req.id || 0, req.sender_id || 0, req.group_id, "accept", req.type)}><IoCheckmarkCircle /></button>
+            <button className='group-request-btn reject' onClick={() => handleRequest(req.id || 0, req.sender_id || 0, req.group_id, "reject", req.type)}><IoCloseCircle /></button>
+          </div>
+
         </div>
       )
     })

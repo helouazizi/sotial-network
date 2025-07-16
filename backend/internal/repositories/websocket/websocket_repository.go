@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"database/sql"
+	"errors"
 	"time"
 
 	"github.com/ismailsayen/social-network/internal/models"
@@ -162,6 +163,24 @@ func (reqRepo *WebsocketRepository) SaveMessagesGrpRepo(idGrp, senderId int, mes
 }
 
 func (r *WebsocketRepository) HandleGroupRequest(request *models.WS, userId int) error {
+	deleteQuery := `
+		DELETE FROM group_requests WHERE id = ?;
+	`
+
+	res, err := r.db.Exec(deleteQuery, request.ID)
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected == 0 {
+		return errors.New("The owner has been cancled this action.")
+	}
+
 	if request.Action == "accept" {
 		if request.RequestType == "invitation" {
 			request.ReceiverID = userId
@@ -176,14 +195,5 @@ func (r *WebsocketRepository) HandleGroupRequest(request *models.WS, userId int)
 		}
 	}
 
-	deleteQuery := `
-		DELETE FROM group_requests WHERE id = ?;
-	`
-
-	_, err := r.db.Exec(deleteQuery, request.ID)
-	if err != nil {
-		return err
-	}
- 
 	return nil
 }

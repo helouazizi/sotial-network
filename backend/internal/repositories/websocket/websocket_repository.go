@@ -141,7 +141,7 @@ func (reqRepo *WebsocketRepository) HandleReqFollowRepo(reqID, followedID, follo
 	return nil
 }
 
-func (reqRepo *WebsocketRepository) SaveMessagesGrpRepo(idGrp, senderId int, message string, sentAt *time.Time) (map[string]any, error) {
+func (reqRepo *WebsocketRepository) SaveMessagesGrpRepo(idGrp, senderId int, message, avatar, fullName string, sentAt *time.Time) (map[string]any, error) {
 	query := `INSERT INTO group_messages(sender_id, group_id, content, sent_at) VALUES (?, ?, ?, ?) RETURNING id`
 	var idMsg int
 	err := reqRepo.db.QueryRow(query, senderId, idGrp, message, sentAt).Scan(&idMsg)
@@ -149,18 +149,23 @@ func (reqRepo *WebsocketRepository) SaveMessagesGrpRepo(idGrp, senderId int, mes
 		return nil, err
 	}
 	lastMessage := map[string]any{
-		"id":       idMsg,
-		"groupID":  idGrp,
-		"senderID": senderId,
-		"message":  message,
-		"sentAt":   sentAt.Format(time.DateTime),
+		"id":        idMsg,
+		"group_id":  idGrp,
+		"sender_id": senderId,
+		"message":   message,
+		"fullName":  fullName,
+		"avatar":    avatar,
+		"sent_at":   sentAt.Format(time.DateTime),
 	}
 
 	return lastMessage, nil
 }
 
-func (r *WebsocketRepository) HandleGroupRequest(request *models.WS) error {
+func (r *WebsocketRepository) HandleGroupRequest(request *models.WS, userId int) error {
 	if request.Action == "accept" {
+		if request.RequestType == "invitation" {
+			request.ReceiverID = userId
+		}
 		insertQuery := `
 			INSERT INTO group_members (group_id, member_id) VALUES (?, ?)
 		`
@@ -179,6 +184,6 @@ func (r *WebsocketRepository) HandleGroupRequest(request *models.WS) error {
 	if err != nil {
 		return err
 	}
-
+ 
 	return nil
 }

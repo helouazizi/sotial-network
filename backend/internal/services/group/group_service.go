@@ -71,14 +71,14 @@ func (s *GroupService) GetGroup(GroupId string) (models.GroupIfo, *models.GroupE
 	return s.repo.GetGroup(id)
 }
 
-func (s *GroupService) SaveJoinGroupRequest(groupReq *models.GroupRequest) error {
+func (s *GroupService) SaveJoinGroupRequest(groupReq *models.GroupRequest) ([]int, error) {
 	return s.repo.SaveJoinGroupRequest(groupReq)
-}
-
-func (s *GroupService) GetInfoGroupeService(grpId string, sessionID int) (*models.Group, error) {
-	return s.repo.GetInfoGroupeRepo(grpId, sessionID)
 }
 
 func (s *GroupService) GetDemandeGroupNotifs(requestedID int) ([]*models.GroupRequest, error) {
 	return s.repo.GetDemandeGroupNotifs(requestedID)
+}
+
+func (s *GroupService) CancelGroupRequest(id int) error {
+	return s.repo.CancelGroupRequest(id)
 }

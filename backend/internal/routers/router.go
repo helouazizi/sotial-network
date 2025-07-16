@@ -33,6 +33,7 @@ func SetupRoutes(app *app.Application) *http.ServeMux {
 	mux.HandleFunc("/api/v1/relations/realtions", middleware.AuthMiddleware(http.HandlerFunc(app.Relationshandler.RelationHandler), app.DB))
 	mux.HandleFunc("/api/v1/relations/getRealtions", middleware.AuthMiddleware(http.HandlerFunc(app.Relationshandler.GetRelations), app.DB))
 	mux.HandleFunc("/api/v1/relations/getFriends", middleware.AuthMiddleware(http.HandlerFunc(app.Relationshandler.GetFriends), app.DB))
+	mux.HandleFunc("/api/v1/relations/getUnrequestedFriends", middleware.AuthMiddleware(http.HandlerFunc(app.Relationshandler.GetUnrequestedFriends), app.DB))
 	//================== chat routes =========================///
 	mux.HandleFunc("/ws", middleware.AuthMiddleware(http.HandlerFunc(app.WebsocketHandler.WebsocketHandler), app.DB))
 	//================ static ==============================//
@@ -44,10 +45,13 @@ func SetupRoutes(app *app.Application) *http.ServeMux {
 	mux.HandleFunc("/api/v1/groups/getSuggested", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.GetSuggestedGroupsHandler), app.DB))
 	mux.HandleFunc("/api/v1/groups/joined/{id}", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.GetGroupHandler), app.DB))
 	mux.HandleFunc("/api/v1/groups/getInfoGroup", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.GetInfoGroupe), app.DB))
+	mux.HandleFunc("/api/v1/groups/joined/{id}/getUnrequestedFriends", middleware.AuthMiddleware(http.HandlerFunc(app.Relationshandler.GetUnrequestedFriends), app.DB))
+	mux.HandleFunc("/api/v1/groups/getMsgsGroup", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.GetGroupMessages), app.DB))
 
 	mux.HandleFunc("/api/v1/groups/joined/{id}/members", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.GetGroupMembersHandler), app.DB))
 
 	mux.HandleFunc("/api/v1/groups/joinGroupRequest", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.JoinGroupRequestHandler), app.DB))
+	mux.HandleFunc("/api/v1/groups/cancelGroupRequest", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.CancelGroupRequestHandler), app.DB))
 	mux.HandleFunc("/api/v1/groups/getDemandeGroupNotifs", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.GetDemandeGroupNotifsHandler), app.DB))
 
 	//=============== group posts ==============================//

@@ -381,3 +381,9 @@
   padding: 1rem;
   color: var(--text-muted);
 }
+
+.no-data {
+  padding: 2rem;
+  margin: 1rem;
+  background-color: var(--bg-color);
+}

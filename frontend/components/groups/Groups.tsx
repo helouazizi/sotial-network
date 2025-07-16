@@ -1,6 +1,6 @@
 "use client"
 
-import { GetGroups, groupType, SendJoinGroupRequest } from '@/services/groupServices'
+import { CancelGroupRequest, GetGroups, groupType, SendJoinGroupRequest } from '@/services/groupServices'
 import Link from 'next/link';
 import React, { useContext, useEffect } from 'react'
 import { MdGroups } from "react-icons/md";
@@ -8,22 +8,23 @@ import SwitchButtons from './SwitchButtons';
 import { GroupsContext } from '@/context/GroupsContext';
 import { usePathname } from 'next/navigation';
 import { PopupContext } from '@/context/PopupContext';
-import { IoIosSend } from "react-icons/io"; 
+import { IoIosSend } from "react-icons/io";
 import { SocketContext } from '@/context/socketContext';
 import { GroupNotifications } from '@/types/Request';
+import { IoMdClose } from "react-icons/io";
+import { Group } from '@/types/groups';
 
 function Groups() {
   const context = useContext(GroupsContext)
   const pathname = usePathname()
   const popup = useContext(PopupContext)
-  const {ws} = useContext(SocketContext) ?? {}
+  const { ws } = useContext(SocketContext) ?? {}
 
   useEffect(() => {
     const fetchGroups = async () => {
       if ((pathname.startsWith("/groups/joined") && !context?.Groups) || pathname === "/groups/suggested") {
         let type: groupType = pathname.startsWith("/groups/joined") ? "getJoined" : "getSuggested"
         const data = await GetGroups(type)
-        console.log(data)
         if (data && data.error) {
           popup?.showPopup("faild", "Ooops, something wrong!!")
           return
@@ -35,28 +36,47 @@ function Groups() {
     fetchGroups()
   }, [pathname])
 
-  const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    let grpInfos = e.currentTarget.dataset
+  const handleClick = async (group: Group) => {
 
-    if (!grpInfos.group_id || !grpInfos.user_id) {
-      return 
+    if (!group.id || !group.user_id) {
+      return
     }
 
-    const body: GroupNotifications = {
-      group_id: parseInt(grpInfos.group_id),
-      requested_id: [parseInt(grpInfos.user_id)],
-      type: "demande"
-    }
-    
-    const data = await SendJoinGroupRequest(body)
 
-    // if (ws) {
-    //   ws.current?.send(JSON.stringify({
-    //     "type": "RelationSended"
-    //   }))
-    // }
+    if (group.request_id) {
+      const data = await CancelGroupRequest(group.request_id)
+      if (!data) {
+        popup?.showPopup("faild", "Oooops, something wrong!")
+        return
+      }
+
+      // group.request_id = 0
+      popup?.showPopup("success", data.message)
+    } else {
+      const body: GroupNotifications = {
+        group_id: group.id,
+        requested_id: [group.user_id],
+        type: "demande"
+      }
+
+      const data = await SendJoinGroupRequest(body)
+      // console.log(data)
+      if (!data) {
+        popup?.showPopup("faild", "Oooops, something wrong!")
+        return
+      }
+
+      group.request_id = data.request_id[0]
+      popup?.showPopup("success", data.message)
+
+      // if (ws) {
+      //   ws.current?.send(JSON.stringify({
+      //     "type": "RelationSended"
+      //   }))
+      // }
+    }
   }
- 
+
   const displayGroups = () => {
     let isSuggestedPath = pathname.startsWith("/groups/suggested")
     return context?.Groups?.map((group, index) => {
@@ -68,7 +88,9 @@ function Groups() {
           <Link href={path}>{!isSuggestedPath && <span><MdGroups /></span>} <p>{title}</p></Link>
           {isSuggestedPath && (
             <div className="sugg-req">
-              <button data-user_id={`${group.user_id}`} data-group_id={`${group.id}`} className='send' onClick={handleClick}> <IoIosSend /></button>
+              <button className='send' onClick={() => handleClick(group)}> {
+                !group.request_id ? (<><IoIosSend /></>) : (<><IoMdClose /></>)
+              }</button>
             </div>
           )}
         </li>

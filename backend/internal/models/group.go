@@ -10,7 +10,7 @@ type Group struct {
 	CreatedAt     time.Time `json:"created_at"`
 	Count_Members int       `json:"count_members,omitempty"`
 	Members       []string  `json:"members,omitempty"`
-	IsDemande     bool      `json:"isDemande"`
+	RequestID     int       `json:"request_id"`
 }
 type GroupPost struct {
 	GroupId int `json:"group_id"`
@@ -58,4 +58,13 @@ type GroupRequest struct {
 	RequestedID []int  `json:"requested_id,omitempty"`
 	Type        string `json:"type,omitempty"`
 	UserInfos   *User  `json:"user"`
+}
+type GroupMessages struct {
+	ID       int    `json:"id,omitempty"`
+	GroupID  int    `json:"group_id,omitempty"`
+	SenderID int    `json:"sender_id,omitempty"`
+	Message  string `json:"message,omitempty"`
+	Avatar   string `json:"avatar,omitempty"`
+	FullName string `json:"fullName,omitempty"`
+	SentAt   string `json:"sent_at,omitempty"`
 }

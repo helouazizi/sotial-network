@@ -12,24 +12,27 @@ const GroupeRequest = () => {
   useEffect(() => {
     const fetchDemandeGroupNotifs = async () => {
       const data = await GetDemandeGroupNotifs()
+        console.log(data,"notifs");
       if (!data) {
         return
       }
+      console.log(data,"notifs");
+      
 
       setNotifications(data)
     }
-
     fetchDemandeGroupNotifs()
   }, [])
 
-  const handleRequest = (requestID: number, senderID: number, groupID: number ,action: string) => {
+  const handleRequest = (requestID: number, senderID: number, groupID: number ,action: string,type : string) => {
     if (ws?.current) {
       ws.current.send(JSON.stringify({
         "id": requestID,
         "action": action,
         "receiver_id": senderID,
         "group_id": groupID,
-        "type": "handleGroupReq"
+        "type": "handleGroupReq",
+        "request_type":type
       }))
     }
   }
@@ -39,8 +42,8 @@ const GroupeRequest = () => {
       return (
         <div key={index} className='request-card'>
             <p>{req.user?.firstname} {req.user?.lastname}</p>
-            <button onClick={() => handleRequest(req.id || 0,req.sender_id || 0, req.group_id,"accept")}>Accept</button>
-            <button onClick={() => handleRequest(req.id || 0,req.sender_id || 0, req.group_id,"reject")}>Reject</button>
+            <button onClick={() => handleRequest(req.id || 0,req.sender_id || 0, req.group_id,"accept",req.type)}>Accept</button>
+            <button onClick={() => handleRequest(req.id || 0,req.sender_id || 0, req.group_id,"reject",req.type)}>Reject</button>
             <hr />
         </div>
       )

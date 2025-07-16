@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -152,7 +151,7 @@ func (h *GroupHandler) JoinGroupRequestHandler(w http.ResponseWriter, r *http.Re
 
 	groupRequest.SenderID = r.Context().Value("userID").(int)
 
-	err := h.service.SaveJoinGroupRequest(groupRequest)
+	reqID, err := h.service.SaveJoinGroupRequest(groupRequest)
 	if err != nil {
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
 			"error": err.Error(),
@@ -161,29 +160,36 @@ func (h *GroupHandler) JoinGroupRequestHandler(w http.ResponseWriter, r *http.Re
 	}
 
 	utils.ResponseJSON(w, http.StatusOK, map[string]any{
-		"message": "Request saved succesfully!",
+		"message": "Request sended succesfully!",
+		"request_id": reqID,
 	})
 }
 
-func (h *GroupHandler) GetInfoGroupe(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
+func (h *GroupHandler) CancelGroupRequestHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
 		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
 			"error": "Method not allowed",
 		})
 		return
 	}
-	groupId := r.URL.Query().Get("group_id")
-	sessionID := r.Context().Value("userID").(int)
-	infoGrp, err := h.service.GetInfoGroupeService(groupId, sessionID)
+
+	var groupRequest *models.GroupRequest
+	if err := json.NewDecoder(r.Body).Decode(&groupRequest); err != nil {
+		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+			"error": err.Error(),
+		})
+	}
+
+	err := h.service.CancelGroupRequest(groupRequest.ID)
 	if err != nil {
-		fmt.Println("=>", err)
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
 			"error": err.Error(),
 		})
 		return
 	}
+
 	utils.ResponseJSON(w, http.StatusOK, map[string]any{
-		"data": infoGrp,
+		"message": "Request Cancled succesfully!",
 	})
 }
 

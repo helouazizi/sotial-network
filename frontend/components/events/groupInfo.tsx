@@ -5,10 +5,9 @@ import { GetGroup, SendJoinGroupRequest } from "@/services/groupServices";
 import { useContext, useEffect, useState } from "react";
 import { GroupInfo, GroupMembers } from "@/types/events";
 import FormatDate from "@/utils/date";
-import { GetGroupMembers } from "@/services/eventsServices";
+import { GetGroupMembers, GetUnrequestedFolowers } from "@/services/eventsServices";
 import PostHeader from "../post/postHeader";
 import { Follower } from "@/types/post";
-import { GetFolowers } from "@/services/postsServices";
 import { PopupContext } from "@/context/PopupContext";
 import { GroupNotifications } from "@/types/Request";
 
@@ -53,6 +52,8 @@ function GroupHeader({ id }: { id: number }) {
     }
 
     const displayFolowers = () => {
+        console.log(followers, "fofofo");
+
         return (
             <div className="share-with-users">
                 <label className="share-with-label">
@@ -113,7 +114,7 @@ function GroupHeader({ id }: { id: number }) {
 
     const fetchFolowers = async () => {
         try {
-            const data = await GetFolowers();
+            const data = await GetUnrequestedFolowers(id);
             setFollowers(data)
 
         } catch (err) {
@@ -208,24 +209,28 @@ function GroupHeader({ id }: { id: number }) {
                         {showFolowers ? "Back" : "Invite Users"}
                     </button>
                 </div>
-                {showMembers && groupMembers && (
+                {showMembers && (
                     <div className="group-members-list">
-                        {groupMembers.members.length === 0 ? (
-                            <p>No members in this group.</p>
+                        {!groupMembers ? (
+                            <p className="no-data">Unable to fetch group members.</p>
+                        ) : groupMembers.members.length === 0 ? (
+                            <p  className="no-data">No members in this group.</p>
                         ) : (
                             displayMembers()
                         )}
                     </div>
                 )}
-                {showFolowers && followers && (
+
+                {showFolowers && (
                     <div className="group-members-list">
-                        {followers.length === 0 ? (
-                            <p>No Users To Invite.</p>
+                        {!followers || followers.length === 0 ? (
+                            <p  className="no-data">No followers available to invite.</p>
                         ) : (
                             displayFolowers()
                         )}
                     </div>
                 )}
+
                 {showFolowers && invited && invited.length > 0 && (
                     <button
                         className="group-btn send-invetation"

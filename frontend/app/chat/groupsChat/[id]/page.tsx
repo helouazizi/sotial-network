@@ -15,7 +15,6 @@ const page = () => {
     useEffect(() => {
         const fetcher = async () => {
             const data = await GetInfoGrp(id)
-            console.log(data);
             grpCtxt?.setCurrentGrp(data)
 
         }

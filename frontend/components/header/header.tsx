@@ -21,6 +21,7 @@ export default function Header() {
   ) as SocketContextType;
 
   const [isLogged, setIsLogged] = useState<boolean>(false);
+  
   const [showToggle, setShowToggle] = useState(false);
 
   useEffect(() => {

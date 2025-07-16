@@ -13,6 +13,7 @@ import { GenerateAvatar } from "../profile/ProfileHeader";
 import ToogleInitiale from "../request/ToogleInitiale";
 import NotifToast from "@/utils/NotifToast";
 import { SearchInput } from "../search/search";
+import { CgProfile } from "react-icons/cg";
 export default function Header() {
   const router = useRouter();
   const pathname = usePathname();
@@ -22,6 +23,7 @@ export default function Header() {
 
   const [isLogged, setIsLogged] = useState<boolean>(false);
   const [showToggle, setShowToggle] = useState(false);
+  const [clicked, setClicked] = useState<boolean>(false);
 
   useEffect(() => {
     if (["/login", "/register"].includes(pathname)) {
@@ -30,7 +32,7 @@ export default function Header() {
       setIsLogged(true);
     }
   }, [pathname]);
-  
+
   const handleClickLogout = async () => {
     try {
       const res = await fetch("http://localhost:8080/api/v1/user/logout", {
@@ -43,12 +45,14 @@ export default function Header() {
           ws.current.close();
           setShowToggle(false);
         }
+        setClicked(false);
         router.push("/login");
       }
     } catch (error) {
       if (ws.current) {
         ws.current.close();
       }
+      setClicked(false);
       router.push("/login");
     }
   };
@@ -70,7 +74,6 @@ export default function Header() {
   }, [showToggle]);
   return (
     <>
-     
       {isLogged && (
         <header>
           <nav>
@@ -103,7 +106,7 @@ export default function Header() {
               </li>
             </ul>
             <div className="header-icons">
-              <SearchInput/>
+              <SearchInput />
               <button
                 className={`notification ${showToggle ? "active-not" : ""}`}
                 onClick={HandleToggle}
@@ -111,7 +114,16 @@ export default function Header() {
                 <IoIosNotifications />{" "}
                 <span>{numsNotif ? +numsNotif?.total : 0}</span>
               </button>
-              <Link href={`/profile/${user?.id}`}>
+              <div
+                className="header-profile"
+                onClick={() => {
+                  if (clicked) {
+                    setClicked(false);
+                  } else {
+                    setClicked(true);
+                  }
+                }}
+              >
                 {user?.avatar ? (
                   <img
                     src={`http://localhost:8080/images/user/${user?.avatar}`}
@@ -123,19 +135,32 @@ export default function Header() {
                     <h2>{GenerateAvatar(user?.firstname, user?.lastname)}</h2>
                   </div>
                 )}
-              </Link>
-
-              <button className="user-logout" onClick={handleClickLogout}>
-                <IoIosLogOut />
-              </button>
+              </div>
+              {clicked && (
+                <div className="profile-dropdown">
+                  <Link
+                    href={`/profile/${user?.id}`}
+                    className="dropdown-item"
+                    onClick={() => {
+                      setClicked(false);
+                    }}
+                  >
+                    <CgProfile /> My Profile
+                  </Link>
+                  <button
+                    className="dropdown-item"
+                    onClick={handleClickLogout}
+                  >
+                    <IoIosLogOut /> Logout
+                  </button>
+                </div>
+              )}
             </div>
           </nav>
         </header>
       )}
       <ToogleInitiale showToggle={showToggle} setShowToggle={setShowToggle} />
-      {showNotif && <NotifToast />}  
-
-    
-      </>
+      {showNotif && <NotifToast />}
+    </>
   );
 }

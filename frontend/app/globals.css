@@ -11,6 +11,7 @@
 @import url("../styles/request.css");
 @import url("../styles/groups.css");
 @import url("../styles/events.css");
+@import url("../styles/search.css");
 
 :root {
   --bg-color: #12111a;
@@ -106,6 +107,16 @@ svg {
   color: var(--icon-color);
   flex-shrink: 0;
 }
+nav > div {
+    gap: 15px;
+    display: flex;
+
+    width: 46%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
 
 @keyframes popupFade {
   0% {

@@ -3,6 +3,7 @@ package services
 import (
 	"mime/multipart"
 	"os"
+	"strings"
 
 	"github.com/ismailsayen/social-network/internal/models"
 	repositories "github.com/ismailsayen/social-network/internal/repositories/profile"
@@ -33,4 +34,10 @@ func (s *ProfileService) UpdateProfile(fileHeader *multipart.FileHeader, nicknam
 	}
 
 	return s.repo.UpdateProfile(fileHeader, nickname, about, oldAvatar, sessionId)
+}
+
+func (s *ProfileService) SearchProfile(data string) ([]models.User, error) {
+	pattern := strings.ToLower(data) + "%"
+
+	return s.repo.SerchProfile(pattern)
 }

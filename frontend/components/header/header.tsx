@@ -12,6 +12,7 @@ import { SocketContext, SocketContextType } from "@/context/socketContext";
 import { GenerateAvatar } from "../profile/ProfileHeader";
 import ToogleInitiale from "../request/ToogleInitiale";
 import NotifToast from "@/utils/NotifToast";
+import { SearchInput } from "../search/search";
 export default function Header() {
   const router = useRouter();
   const pathname = usePathname();
@@ -69,6 +70,7 @@ export default function Header() {
   }, [showToggle]);
   return (
     <>
+     
       {isLogged && (
         <header>
           <nav>
@@ -101,6 +103,7 @@ export default function Header() {
               </li>
             </ul>
             <div className="header-icons">
+              <SearchInput/>
               <button
                 className={`notification ${showToggle ? "active-not" : ""}`}
                 onClick={HandleToggle}
@@ -130,7 +133,9 @@ export default function Header() {
         </header>
       )}
       <ToogleInitiale showToggle={showToggle} setShowToggle={setShowToggle} />
-      {showNotif && <NotifToast />}
-    </>
+      {showNotif && <NotifToast />}  
+
+    
+      </>
   );
 }

@@ -111,3 +111,7 @@ func (reqSer *WebsocketService) SaveMessagesGrp(idGrp, senderId int, message ,av
 func (s *WebsocketService) HandleGroupRequest(request *models.WS, userId int) error {
 	return s.repo.HandleGroupRequest(request,userId)
 }
+
+func (s *WebsocketService) GetGroupNotifs(requestedID int) ([]*models.GroupRequest, error) {
+	return s.repo.GetGroupNotifs(requestedID)
+}

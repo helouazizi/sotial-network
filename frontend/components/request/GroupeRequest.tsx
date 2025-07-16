@@ -8,8 +8,7 @@ import { IoCheckmarkCircle, IoCloseCircle } from 'react-icons/io5'
 import PostHeader from '../post/postHeader'
 
 const GroupeRequest = () => {
-  const [notifications, setNotifications] = useState<GroupNotifications[] | null>(null)
-  const { ws, numsNotif, setNumNotif } = useContext(SocketContext) ?? {}
+  const { ws, numsNotif, setNumNotif, notifications, setNotifications } = useContext(SocketContext) ?? {}
 
   useEffect(() => {
     const fetchDemandeGroupNotifs = async () => {
@@ -18,7 +17,7 @@ const GroupeRequest = () => {
         return
       }
 
-      setNotifications(data)
+      if (setNotifications) setNotifications(data)
     }
     fetchDemandeGroupNotifs()
   }, [])
@@ -34,17 +33,17 @@ const GroupeRequest = () => {
         "request_type": type
       }))
 
-      let newGroupNumberNotif = Number(numsNotif?.groupeReqCount)  - 1
-      const countotifs: NumOfREquests = {
-        followersCount: numsNotif?.followersCount || 0,
-        groupeReqCount: newGroupNumberNotif,
-        total: Number(numsNotif?.followersCount) + newGroupNumberNotif
-      };
+      // let newGroupNumberNotif = Number(numsNotif?.groupeReqCount)  - 1
+      // const countotifs: NumOfREquests = {
+      //   followersCount: numsNotif?.followersCount || 0,
+      //   groupeReqCount: newGroupNumberNotif,
+      //   total: Number(numsNotif?.followersCount) + newGroupNumberNotif
+      // };
 
-      if (setNumNotif) setNumNotif(countotifs);
+      // if (setNumNotif) setNumNotif(countotifs);
     }
 
-    setNotifications(prev => [...(prev?.filter(p => p.id != requestID) || [])])
+    if (setNotifications) setNotifications(prev => [...(prev?.filter(p => p.id != requestID) || [])])
   }
 
   const displayRequests = () => {

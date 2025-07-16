@@ -11,7 +11,7 @@ import React, {
 } from "react";
 import { Message } from "../types/chat";
 import { getUserInfos } from "@/services/user";
-import { NumOfREquests } from "@/types/Request";
+import { GroupNotifications, NumOfREquests } from "@/types/Request";
 import { ProfileInt } from "@/types/profiles";
 import { User } from "@/types/user";
 import { PopupContext } from "./PopupContext";
@@ -37,6 +37,8 @@ export interface SocketContextType {
   setMessageNotif: React.Dispatch<React.SetStateAction<string>>;
   typeNotif: string;
   settypeNotif: React.Dispatch<React.SetStateAction<string>>;
+  notifications: GroupNotifications[] | null
+  setNotifications: React.Dispatch<React.SetStateAction<GroupNotifications[] | null>>;
 }
 
 export const SocketContext = createContext<SocketContextType | null>(null);
@@ -50,6 +52,7 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
   const [sendMessage, setSendMessage] = useState<Message | undefined>(
     undefined
   );
+  const [notifications, setNotifications] = useState<GroupNotifications[] | null>(null)
   const [scrollHeight, setScrollHeight] = useState<boolean>(false);
   const [numsNotif, setNumNotif] = useState<NumOfREquests | undefined>(
     undefined
@@ -145,6 +148,10 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
           popup?.showPopup("faild", res.error)
         }
       }
+
+      if (res.type === "groupRequests") {
+        setNotifications(res.data)
+      }
     }
 
     ws.current.onclose = () => {
@@ -178,6 +185,8 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
         setShowNotif,
         typeNotif,
         settypeNotif,
+        notifications,
+        setNotifications,
       }}
     >
       {children}

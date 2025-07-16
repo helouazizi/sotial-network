@@ -188,6 +188,13 @@ func (h *WebsocketHandler) WebsocketHandler(w http.ResponseWriter, r *http.Reque
 				})
 				continue
 			}
+			groupRequests, err := h.service.GetGroupNotifs(ws.ReceiverID)
+			if err != nil {
+				conn.WriteJSON(map[string]any{
+					"error": err.Error(),
+				})
+				continue
+			}
 			groupeCount, followersCount, err := h.service.NumberNotifs(ws.ReceiverID)
 			if err != nil {
 				conn.WriteJSON(map[string]any{
@@ -209,6 +216,10 @@ func (h *WebsocketHandler) WebsocketHandler(w http.ResponseWriter, r *http.Reque
 					c.WriteJSON(map[string]any{
 						"data": CountNotis,
 						"type": "CountNotifs",
+					})
+					c.WriteJSON(map[string]any{
+						"data": groupRequests,
+						"type": "groupRequests",
 					})
 				}
 			}
@@ -246,7 +257,7 @@ func (h *WebsocketHandler) WebsocketHandler(w http.ResponseWriter, r *http.Reque
 			if err != nil {
 				conn.WriteJSON(map[string]any{
 					"error": err.Error(),
-					"type": "GroupRequestsError",
+					"type":  "GroupRequestsError",
 				})
 				continue
 			}

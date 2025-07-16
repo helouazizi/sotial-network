@@ -9,9 +9,11 @@ const ProfileStatique = () => {
   const { ws, user } = useContext(SocketContext) as SocketContextType
   const { dataProfile, setDataProfile } = useProfile()
   const Submit = useCallback(Debounce(async () => {
+    if (!user) return;
     const status = dataProfile?.subscription?.status
     const { ok, newStatus, haveAccess } = await HandleRelations(status, dataProfile?.User?.id, setDataProfile)
     if (ok && newStatus == "pending" && !haveAccess) {
+
       ws.current?.send(JSON.stringify({
         type: "RelationSended",
         receiver_id: dataProfile?.User?.id,

@@ -65,14 +65,14 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
     if (!shouldConnect) {
       return;
     }
-
+    (async () => {
+      const userRes = await getUserInfos();
+      setUser(userRes);
+    })();
+    console.log("web socket open");
     ws.current = new WebSocket("ws://localhost:8080/ws");
 
-    ws.current.onopen = async () => {
-      console.log("web socket open");
-      const userRes = await getUserInfos();
-
-      setUser(userRes);
+    ws.current.onopen = () => {
       ws.current?.send(
         JSON.stringify({
           type: "GetNumNotif",

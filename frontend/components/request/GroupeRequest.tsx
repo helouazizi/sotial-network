@@ -34,6 +34,8 @@ const GroupeRequest = () => {
         "request_type": type
       }))
     }
+
+    setNotifications(prev => [...(prev?.filter(p => p.id != requestID) || [])])
   }
 
   const displayRequests = () => {
@@ -45,7 +47,7 @@ const GroupeRequest = () => {
             <p className='request-type'>{req.type.charAt(0).toUpperCase() + req.type.slice(1,)}</p>
           </div>
           <div className='action-request'>
-
+          <p>{req.group?.title}</p>
           </div>
           <div className='group-action-request'>
             <button className='group-request-btn accept' onClick={() => handleRequest(req.id || 0, req.sender_id || 0, req.group_id, "accept", req.type)}><IoCheckmarkCircle /></button>

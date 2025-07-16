@@ -185,8 +185,9 @@ func (r *GroupRepository) SaveJoinGroupRequest(groupReq *models.GroupRequest) ([
 
 func (r *GroupRepository) GetGroupNotifs(requestedID int) ([]*models.GroupRequest, error) {
 	query := `
-		select u.id, u.first_name, u.last_name, u.avatar, rq.id,rq.group_id, rq.sender_id, rq.type  from users u 
+		select u.id, u.first_name, u.last_name, u.avatar, rq.id,rq.group_id, rq.sender_id, rq.type, g.title from users u 
 		inner join group_requests rq ON u.id = rq.sender_id 
+		INNER JOIN groups g ON rq.group_id = g.id
 		where rq.requested_id = ?
 		ORDER BY rq.id DESC;
 	`
@@ -200,13 +201,15 @@ func (r *GroupRepository) GetGroupNotifs(requestedID int) ([]*models.GroupReques
 	for rows.Next() {
 		var groupNotif models.GroupRequest
 		var user models.User
+		var group models.Group
 		err = rows.Scan(&user.ID, &user.FirstName, &user.Lastname,
-			&user.Avatar, &groupNotif.ID, &groupNotif.GroupID, &groupNotif.SenderID, &groupNotif.Type)
+			&user.Avatar, &groupNotif.ID, &groupNotif.GroupID, &groupNotif.SenderID, &groupNotif.Type, &group.Title)
 		if err != nil {
 			return nil, err
 		}
 
 		groupNotif.UserInfos = &user
+		groupNotif.GroupInfos = &group
 
 		groupNotifs = append(groupNotifs, &groupNotif)
 	}

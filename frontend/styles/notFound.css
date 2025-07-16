@@ -1,0 +1,26 @@
+.center-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  width: 100%;
+  background-color: var(--bg-color);
+}
+
+.content {
+  text-align: center;
+  max-width: 500px;
+  padding: 2rem;
+}
+
+.title {
+  font-size: 1.875rem; /* 30px */
+  font-weight: bold;
+  color: var(--text-primary);
+}
+
+.subtitle {
+  color: var(--text-muted);
+  margin-top: 0.5rem;
+  font-size: 1rem;
+}

@@ -2,11 +2,9 @@
 
 export default function NotFound() {
   return (
-  <div className="center-container">
-  <div className="content">
-    <h1 className="title"> 404</h1>
-    <p className="subtitle">Page Not Found.</p>
-  </div>
+<div className="center-container">
+<img src="/404 Error-amico.png" alt="404 Illustration" className="center-image" />
+
 </div>
   );
 }

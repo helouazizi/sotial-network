@@ -23,8 +23,6 @@ export interface SocketContextType {
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
   friends: User[] | null;
   setFriends: React.Dispatch<React.SetStateAction<User[] | null>>;
-  sendMessage: Message | undefined;
-  setSendMessage: React.Dispatch<React.SetStateAction<Message | undefined>>;
   scrollHeight: boolean;
   setScrollHeight: React.Dispatch<React.SetStateAction<boolean>>;
   numsNotif: NumOfREquests | undefined;
@@ -39,6 +37,8 @@ export interface SocketContextType {
   settypeNotif: React.Dispatch<React.SetStateAction<string>>;
   notifications: GroupNotifications[] | null
   setNotifications: React.Dispatch<React.SetStateAction<GroupNotifications[] | null>>;
+  scrollToBottom: boolean
+  setScrollToBottom: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const SocketContext = createContext<SocketContextType | null>(null);
@@ -49,11 +49,9 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const [user, setUser] = useState<User | null>(null);
   const [friends, setFriends] = useState<User[] | null>(null);
-  const [sendMessage, setSendMessage] = useState<Message | undefined>(
-    undefined
-  );
   const [notifications, setNotifications] = useState<GroupNotifications[] | null>(null)
   const [scrollHeight, setScrollHeight] = useState<boolean>(false);
+  const [scrollToBottom, setScrollToBottom] = useState<boolean>(false)
   const [numsNotif, setNumNotif] = useState<NumOfREquests | undefined>(
     undefined
   );
@@ -121,7 +119,8 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
       }
 
       if (res.type === "saveMessage") {
-        setSendMessage(res.message);
+        setMessages(prev => [...prev ?? [], res.message])
+        setScrollToBottom(prev => !prev)
       }
       if (res.type === "ResponseRequestsFollowers") {
         setNumNotif((prev) => {
@@ -171,8 +170,6 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
         setUser,
         friends,
         setFriends,
-        sendMessage,
-        setSendMessage,
         scrollHeight,
         setScrollHeight,
         numsNotif,
@@ -187,6 +184,8 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
         settypeNotif,
         notifications,
         setNotifications,
+        scrollToBottom,
+        setScrollToBottom,
       }}
     >
       {children}

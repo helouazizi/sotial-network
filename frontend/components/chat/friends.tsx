@@ -33,7 +33,7 @@ export default function Friends() {
                 return <li
                  key={friend.id} id={`${friend.id}`}
                  onClick={handleClickUser}>
-                 <PostHeader author={friend.nickname ? friend.nickname : friend.firstname + "-" + friend.lastname} firstname={friend.firstname} lastname={friend.lastname} createdAt='' avatarUrl={friend.avatar} />
+                 <PostHeader author={friend.firstname + " " + friend.lastname} firstname={friend.firstname} lastname={friend.lastname} createdAt='' avatarUrl={friend.avatar} />
                  </li>
             }) || <li>No friends Yet</li>}
         </>

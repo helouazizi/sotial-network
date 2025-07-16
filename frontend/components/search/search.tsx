@@ -47,45 +47,53 @@ export  const SearchInput = ()=>{
   useEffect(()=>{
      if (data !== '') {
       searchHandling();
-    }
+    } 
+
+    
   }, [data])
-  return (
-    <>
-       <div className="Searching">
-  <input
-    type="text"
-    placeholder="Search..."
-    onChange={handleTyping}
-  />
-  
-  {/* Wrap the results */}
-  {users && users.length > 0 && (
-    <div className="search-results">
-      {users.map((user, index) => (
-        <Link key={index} href={`/profile/${user?.id}`} className="block">
-          <div className="cursor-pointer">
-            {user?.avatar && (
-              <img
-                src={`http://localhost:8080/images/user/${user?.avatar}`}
-                alt={user?.nickname}
-                className="avatar-profile header-icon"
-              />
-            )}
-            <PostHeader
-              author={user.nickname ? user.nickname : user.firstname + "-" + user.lastname}
-              firstname={user.firstname}
-              lastname={user.lastname}
-              createdAt=""
-              avatarUrl={user.avatar}
-            />
-          </div>
-        </Link>
-      ))}
+ return (
+  <>
+    <div className="Searching">
+      <input
+        type="text"
+        placeholder="Search..."
+        onChange={handleTyping}
+      />
+
+      {/* Wrap the results */}
+      {users && users.length > 0 && (
+        <div className="search-results">
+          {users.map((user, index) => {
+            if (!data) return null; 
+            return (
+              <Link key={index} href={`/profile/${user?.id}`} className="block">
+                <div className="cursor-pointer">
+                  {user?.avatar && (
+                    <img
+                      src={`http://localhost:8080/images/user/${user?.avatar}`}
+                      alt={user?.nickname}
+                      className="avatar-profile header-icon"
+                    />
+                  )}
+                  <PostHeader
+                    author={
+                      user.nickname
+                        ? user.nickname
+                        : `${user.firstname}-${user.lastname}`
+                    }
+                    firstname={user.firstname}
+                    lastname={user.lastname}
+                    createdAt=""
+                    avatarUrl={user.avatar}
+                  />
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      )}
     </div>
-  )}
-</div>
-    </>
-  
-   
-  );
+  </>
+);
+
 }

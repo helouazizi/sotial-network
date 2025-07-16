@@ -242,13 +242,26 @@ func (h *WebsocketHandler) WebsocketHandler(w http.ResponseWriter, r *http.Reque
 				}
 			}
 		case "handleGroupReq":
-			err := h.service.HandleGroupRequest(&ws, userID)
+			members, err := h.service.HandleGroupRequest(&ws, userID)
 			if err != nil {
 				conn.WriteJSON(map[string]any{
 					"error": err.Error(),
-					"type": "GroupRequestsError",
+					"type":  "GroupRequestsError",
 				})
 				continue
+			}
+			if members != nil {
+				for _, id := range members {
+					if senderConns, ok := h.service.GetClient(id); ok {
+						for _, c := range senderConns {
+							c.WriteJSON(map[string]any{
+								"newMember": ws.ReceiverID,
+								"grp_id":    ws.GroupID,
+								"type":      "NewMemberJoined",
+							})
+						}
+					}
+				}
 			}
 		case "event":
 			ids, err := h.service.GreMembersIds(&ws)

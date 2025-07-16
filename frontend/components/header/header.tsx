@@ -13,6 +13,7 @@ import { GenerateAvatar } from "../profile/ProfileHeader";
 import ToogleInitiale from "../request/ToogleInitiale";
 import NotifToast from "@/utils/NotifToast";
 import { SearchInput } from "../search/search";
+import { CgProfile } from "react-icons/cg";
 export default function Header() {
   const router = useRouter();
   const pathname = usePathname();
@@ -22,6 +23,7 @@ export default function Header() {
 
   const [isLogged, setIsLogged] = useState<boolean>(false);
   const [showToggle, setShowToggle] = useState(false);
+  const [clicked, setClicked] = useState<boolean>(false);
 
   useEffect(() => {
     if (["/login", "/register"].includes(pathname)) {
@@ -30,7 +32,7 @@ export default function Header() {
       setIsLogged(true);
     }
   }, [pathname]);
-  
+
   const handleClickLogout = async () => {
     try {
       const res = await fetch("http://localhost:8080/api/v1/user/logout", {
@@ -43,12 +45,14 @@ export default function Header() {
           ws.current.close();
           setShowToggle(false);
         }
+        setClicked(false);
         router.push("/login");
       }
     } catch (error) {
       if (ws.current) {
         ws.current.close();
       }
+      setClicked(false);
       router.push("/login");
     }
   };
@@ -68,54 +72,64 @@ export default function Header() {
       main?.removeEventListener("click", handleClick);
     };
   }, [showToggle]);
-  return (
-    <>
-     
-      {isLogged && (
-        <header>
-          <nav>
-            <Link href={"/"} className="logo">
-              Social <span>Net</span>work
-            </Link>
-            <ul>
-              <li>
-                <Link href={"/"}>
-                  <TiHome className={pathname === "/" ? "active" : " "} />
-                </Link>
-              </li>
-              <li>
-                <Link href={"/chat/privateChat"}>
-                  <LuMessageCircleMore
-                    className={pathname.startsWith("/chat/") ? "active" : ""}
-                  />
-                </Link>
-              </li>
-              <li>
-                <Link href={"/groups/joined"}>
-                  <MdGroups2
-                    className={
-                      pathname.startsWith("/groups/")
-                        ? "active groupIconHeader"
-                        : "groupIconHeader"
-                    }
-                  />
-                </Link>
-              </li>
-            </ul>
-            <div className="header-icons">
-              <SearchInput/>
-              <button
-                className={`notification ${showToggle ? "active-not" : ""}`}
-                onClick={HandleToggle}
+ return (
+  <>
+    {isLogged && (
+      <header>
+        <nav>
+          <Link href={"/"} className="logo">
+            Social <span>Net</span>work
+          </Link>
+
+          <ul>
+            <li>
+              <Link href={"/"}>
+                <TiHome className={pathname === "/" ? "active" : ""} />
+              </Link>
+            </li>
+            <li>
+              <Link href={"/chat/privateChat"}>
+                <LuMessageCircleMore
+                  className={pathname.startsWith("/chat/") ? "active" : ""}
+                />
+              </Link>
+            </li>
+            <li>
+              <Link href={"/groups/joined"}>
+                <MdGroups2
+                  className={
+                    pathname.startsWith("/groups/")
+                      ? "active groupIconHeader"
+                      : "groupIconHeader"
+                  }
+                />
+              </Link>
+            </li>
+          </ul>
+
+          <div className="header-icons">
+            <SearchInput />
+            <button
+              className={`notification ${showToggle ? "active-not" : ""}`}
+              onClick={HandleToggle}
+              aria-label="Notifications"
+            >
+              <IoIosNotifications />
+              <span>{numsNotif ? +numsNotif?.total : 0}</span>
+            </button>
+
+            <div className="profile-wrapper">
+              <div
+                className="header-profile"
+                onClick={() => setClicked((prev) => !prev)}
+                role="button"
+                tabIndex={0}
+                aria-label="User profile"
               >
-                <IoIosNotifications />{" "}
-                <span>{numsNotif ? +numsNotif?.total : 0}</span>
-              </button>
-              <Link href={`/profile/${user?.id}`}>
                 {user?.avatar ? (
                   <img
                     src={`http://localhost:8080/images/user/${user?.avatar}`}
-                    alt={`${user?.avatar}`}
+                    alt={`${user?.firstname} ${user?.lastname}`}
                     className="avatar-profile header-icon"
                   />
                 ) : (
@@ -123,19 +137,33 @@ export default function Header() {
                     <h2>{GenerateAvatar(user?.firstname, user?.lastname)}</h2>
                   </div>
                 )}
-              </Link>
+              </div>
 
-              <button className="user-logout" onClick={handleClickLogout}>
-                <IoIosLogOut />
-              </button>
+              {clicked && (
+                <div className="profile-dropdown">
+                  <Link
+                    href={`/profile/${user?.id}`}
+                    className="dropdown-item"
+                    onClick={() => setClicked(false)}
+                  >
+                    <CgProfile /> My Profile
+                  </Link>
+                  <button
+                    className="dropdown-item"
+                    onClick={handleClickLogout}
+                  >
+                    <IoIosLogOut /> Logout
+                  </button>
+                </div>
+              )}
             </div>
-          </nav>
-        </header>
-      )}
-      <ToogleInitiale showToggle={showToggle} setShowToggle={setShowToggle} />
-      {showNotif && <NotifToast />}  
+          </div>
+        </nav>
+      </header>
+    )}
 
-    
-      </>
-  );
+    <ToogleInitiale showToggle={showToggle} setShowToggle={setShowToggle} />
+    {showNotif && <NotifToast />}
+  </>
+);
 }

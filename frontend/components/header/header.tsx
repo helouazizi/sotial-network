@@ -72,62 +72,64 @@ export default function Header() {
       main?.removeEventListener("click", handleClick);
     };
   }, [showToggle]);
-  return (
-    <>
-      {isLogged && (
-        <header>
-          <nav>
-            <Link href={"/"} className="logo">
-              Social <span>Net</span>work
-            </Link>
-            <ul>
-              <li>
-                <Link href={"/"}>
-                  <TiHome className={pathname === "/" ? "active" : " "} />
-                </Link>
-              </li>
-              <li>
-                <Link href={"/chat/privateChat"}>
-                  <LuMessageCircleMore
-                    className={pathname.startsWith("/chat/") ? "active" : ""}
-                  />
-                </Link>
-              </li>
-              <li>
-                <Link href={"/groups/joined"}>
-                  <MdGroups2
-                    className={
-                      pathname.startsWith("/groups/")
-                        ? "active groupIconHeader"
-                        : "groupIconHeader"
-                    }
-                  />
-                </Link>
-              </li>
-            </ul>
-            <div className="header-icons">
-              <SearchInput />
-              <button
-                className={`notification ${showToggle ? "active-not" : ""}`}
-                onClick={HandleToggle}
-              >
-                <IoIosNotifications />{" "}
-                <span>{numsNotif ? +numsNotif?.total : 0}</span>
-              </button>
+ return (
+  <>
+    {isLogged && (
+      <header>
+        <nav>
+          <Link href={"/"} className="logo">
+            Social <span>Net</span>work
+          </Link>
+
+          <ul>
+            <li>
+              <Link href={"/"}>
+                <TiHome className={pathname === "/" ? "active" : ""} />
+              </Link>
+            </li>
+            <li>
+              <Link href={"/chat/privateChat"}>
+                <LuMessageCircleMore
+                  className={pathname.startsWith("/chat/") ? "active" : ""}
+                />
+              </Link>
+            </li>
+            <li>
+              <Link href={"/groups/joined"}>
+                <MdGroups2
+                  className={
+                    pathname.startsWith("/groups/")
+                      ? "active groupIconHeader"
+                      : "groupIconHeader"
+                  }
+                />
+              </Link>
+            </li>
+          </ul>
+
+          <div className="header-icons">
+            <SearchInput />
+            <button
+              className={`notification ${showToggle ? "active-not" : ""}`}
+              onClick={HandleToggle}
+              aria-label="Notifications"
+            >
+              <IoIosNotifications />
+              <span>{numsNotif ? +numsNotif?.total : 0}</span>
+            </button>
+
+            <div className="profile-wrapper">
               <div
                 className="header-profile"
-                onClick={() => {
-                  if (clicked) {
-                    setClicked(false);
-                  } else {
-                    setClicked(true);
-                  }
-                }}
+                onClick={() => setClicked((prev) => !prev)}
+                role="button"
+                tabIndex={0}
+                aria-label="User profile"
               >
                 {user?.avatar ? (
                   <img
                     src={`http://localhost:8080/images/user/${user?.avatar}`}
-                    alt={`${user?.avatar}`}
+                    alt={`${user?.firstname} ${user?.lastname}`}
                     className="avatar-profile header-icon"
                   />
                 ) : (
@@ -136,14 +138,13 @@ export default function Header() {
                   </div>
                 )}
               </div>
+
               {clicked && (
                 <div className="profile-dropdown">
                   <Link
                     href={`/profile/${user?.id}`}
                     className="dropdown-item"
-                    onClick={() => {
-                      setClicked(false);
-                    }}
+                    onClick={() => setClicked(false)}
                   >
                     <CgProfile /> My Profile
                   </Link>
@@ -156,11 +157,13 @@ export default function Header() {
                 </div>
               )}
             </div>
-          </nav>
-        </header>
-      )}
-      <ToogleInitiale showToggle={showToggle} setShowToggle={setShowToggle} />
-      {showNotif && <NotifToast />}
-    </>
-  );
+          </div>
+        </nav>
+      </header>
+    )}
+
+    <ToogleInitiale showToggle={showToggle} setShowToggle={setShowToggle} />
+    {showNotif && <NotifToast />}
+  </>
+);
 }

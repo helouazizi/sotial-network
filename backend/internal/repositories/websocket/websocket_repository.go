@@ -3,7 +3,6 @@ package repositories
 import (
 	"database/sql"
 	"errors"
-	"fmt"
 	"time"
 
 	"github.com/ismailsayen/social-network/internal/models"
@@ -71,7 +70,6 @@ func (r *WebsocketRepository) GetFriends(userID int) ([]*models.User, error) {
 
 	rows, err := r.db.Query(query, userID, userID)
 	if err != nil {
-		fmt.Println(err, "errrrr")
 		return nil, err
 	}
 
@@ -80,14 +78,12 @@ func (r *WebsocketRepository) GetFriends(userID int) ([]*models.User, error) {
 		var user models.User
 		err = rows.Scan(&user.ID, &user.Nickname, &user.FirstName, &user.Lastname, &user.Avatar)
 		if err != nil {
-			fmt.Println(err, "11")
 			return nil, err
 		}
 
 		users = append(users, &user)
 	}
 
-	fmt.Println(users, "ussssr")
 	return users, nil
 }
 

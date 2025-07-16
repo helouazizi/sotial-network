@@ -1,3 +1,4 @@
+import { Group } from "./groups"
 import { User } from "./user"
 
 export interface NumOfREquests {
@@ -13,4 +14,5 @@ export interface GroupNotifications {
     requested_id: number[]
     type: string
     user?: User
+    group?: Group
 }

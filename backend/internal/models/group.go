@@ -3,14 +3,14 @@ package models
 import "time"
 
 type Group struct {
-	ID            int       `json:"id"`
-	UserID        int       `json:"user_id"`
-	Title         string    `json:"title"`
-	Description   string    `json:"description"`
-	CreatedAt     time.Time `json:"created_at"`
+	ID            int       `json:"id,omitempty"`
+	UserID        int       `json:"user_id,omitempty"`
+	Title         string    `json:"title,omitempty"`
+	Description   string    `json:"description,omitempty"`
+	CreatedAt     time.Time `json:"created_at,omitempty"`
 	Count_Members int       `json:"count_members,omitempty"`
 	Members       []string  `json:"members,omitempty"`
-	RequestID     int       `json:"request_id"`
+	RequestID     int       `json:"request_id,omitempty"`
 }
 type GroupPost struct {
 	GroupId int `json:"group_id"`
@@ -58,6 +58,7 @@ type GroupRequest struct {
 	RequestedID []int  `json:"requested_id,omitempty"`
 	Type        string `json:"type,omitempty"`
 	UserInfos   *User  `json:"user"`
+	GroupInfos  *Group `json:"group"`
 }
 type GroupMessages struct {
 	ID       int    `json:"id,omitempty"`

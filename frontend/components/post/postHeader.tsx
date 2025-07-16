@@ -2,6 +2,7 @@ import { API_URL } from "@/services";
 import { GenerateAvatar } from "../profile/ProfileHeader";
 
 export default function PostHeader({ author, firstname, lastname, createdAt, avatarUrl }: { author: string; firstname: string, lastname: string, createdAt: string, avatarUrl: string | undefined }) {
+  
   return (
     <div className="post-meta">
       {avatarUrl ? (

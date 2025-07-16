@@ -25,7 +25,6 @@ function GroupHeader({ id }: { id: number }) {
         setInvited((prev) =>
             checked ? [...prev, id] : prev.filter((uid) => uid !== id)
         );
-        console.log(invited, "ids");
 
     };
 
@@ -52,7 +51,6 @@ function GroupHeader({ id }: { id: number }) {
     }
 
     const displayFolowers = () => {
-        console.log(followers, "fofofo");
 
         return (
             <div className="share-with-users">

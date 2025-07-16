@@ -7,7 +7,6 @@ interface CommentListProps {
 }
 
 export default function CommentList({ comments }: CommentListProps) {
-    console.log(comments,'commonts');
     
     return (
         <div className="comments-list">

@@ -3,15 +3,17 @@ import { useProfile } from '@/context/ProfileContext'
 import { FetchUsersRl, obj } from '@/services/ProfileServices'
 import { ProfileInt } from '@/types/profiles'
 import Link from 'next/link'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { GenerateAvatar } from '../profile/ProfileHeader'
 import { IoIosArrowForward } from 'react-icons/io'
 import { Throttle } from '@/utils/Throttle'
 import { FaSearchMinus } from 'react-icons/fa'
+import { PopupContext } from '@/context/PopupContext'
 
 const UsersRl = (props: { type: string }) => {
     const { dataProfile } = useProfile()
     const [data, setData] = useState<ProfileInt[]>([])
+    const popup = useContext(PopupContext)
     const { type } = props
 
 
@@ -20,7 +22,7 @@ const UsersRl = (props: { type: string }) => {
             if (dataProfile?.User?.id) {
                 obj.Ofsset = 0
                 obj.Limit = 20
-                let result = await FetchUsersRl(dataProfile.User?.id, type)
+                let result = await FetchUsersRl(dataProfile.User?.id, type,popup)
                 setData(result)
             }
         }
@@ -29,7 +31,7 @@ const UsersRl = (props: { type: string }) => {
 
     const ScrollUser = useCallback(
         Throttle(async () => {
-            let result = await FetchUsersRl(dataProfile?.User?.id, type)
+            let result = await FetchUsersRl(dataProfile?.User?.id, type,popup)
             if (result) {
                 setData((prev) => [...prev, ...result])
             }

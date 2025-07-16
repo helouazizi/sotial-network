@@ -2,6 +2,8 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { ProfileInt } from "../types/profiles";
+import { useRouter } from "next/navigation";
+import { PopupContext } from "./PopupContext";
 
 interface ProfileContextType {
     dataProfile: ProfileInt | null;
@@ -18,6 +20,8 @@ export const ProfileProvider = ({
     children: React.ReactNode;
     profileId: string;
 }) => {
+    const router = useRouter()
+    const popup = useContext(PopupContext)
     const [dataProfile, setDataProfile] = useState<ProfileInt | null>(null);
     const [loading, setLoading] = useState(true);
 
@@ -32,10 +36,17 @@ export const ProfileProvider = ({
                         credentials: "include",
                     }
                 );
-                const data: ProfileInt = await res.json();
-                setDataProfile(data);
+                if (res.ok) {
+                    const data: ProfileInt = await res.json();
+                    setDataProfile(data);
+                } else {
+                    router.push("/")
+                    popup?.showPopup("faild", "No user found 404.")
+                }
             } catch (err) {
                 console.error("Failed to fetch profile:", err);
+                popup?.showPopup("faild", "Server error 500. Try later.")
+
             } finally {
                 setLoading(false);
             }

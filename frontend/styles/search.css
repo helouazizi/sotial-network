@@ -76,6 +76,7 @@
 
 .Searching .block:hover {
   background-color: var(--btn-bg);
+  cursor: pointer;
 }
 
 /* Avatar in search results */

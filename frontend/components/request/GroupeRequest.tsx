@@ -2,14 +2,14 @@
 
 import { SocketContext } from '@/context/socketContext'
 import { GetDemandeGroupNotifs } from '@/services/groupServices'
-import { GroupNotifications } from '@/types/Request'
+import { GroupNotifications, NumOfREquests } from '@/types/Request'
 import React, { useContext, useEffect, useState } from 'react'
 import { IoCheckmarkCircle, IoCloseCircle } from 'react-icons/io5'
 import PostHeader from '../post/postHeader'
 
 const GroupeRequest = () => {
   const [notifications, setNotifications] = useState<GroupNotifications[] | null>(null)
-  const { ws } = useContext(SocketContext) ?? {}
+  const { ws, numsNotif, setNumNotif } = useContext(SocketContext) ?? {}
 
   useEffect(() => {
     const fetchDemandeGroupNotifs = async () => {
@@ -33,7 +33,18 @@ const GroupeRequest = () => {
         "type": "handleGroupReq",
         "request_type": type
       }))
+
+      let newGroupNumberNotif = Number(numsNotif?.groupeReqCount)  - 1
+      const countotifs: NumOfREquests = {
+        followersCount: numsNotif?.followersCount || 0,
+        groupeReqCount: newGroupNumberNotif,
+        total: Number(numsNotif?.followersCount) + newGroupNumberNotif
+      };
+
+      if (setNumNotif) setNumNotif(countotifs);
     }
+
+    setNotifications(prev => [...(prev?.filter(p => p.id != requestID) || [])])
   }
 
   const displayRequests = () => {
@@ -45,7 +56,7 @@ const GroupeRequest = () => {
             <p className='request-type'>{req.type.charAt(0).toUpperCase() + req.type.slice(1,)}</p>
           </div>
           <div className='action-request'>
-
+            <p>{req.group?.title}</p>
           </div>
           <div className='group-action-request'>
             <button className='group-request-btn accept' onClick={() => handleRequest(req.id || 0, req.sender_id || 0, req.group_id, "accept", req.type)}><IoCheckmarkCircle /></button>

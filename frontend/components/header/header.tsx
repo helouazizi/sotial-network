@@ -70,17 +70,17 @@ export default function Header() {
   }, [showToggle]);
   return (
     <>
-     
       {isLogged && (
         <header>
           <nav>
             <Link href={"/"} className="logo">
               Social <span>Net</span>work
             </Link>
+
             <ul>
               <li>
                 <Link href={"/"}>
-                  <TiHome className={pathname === "/" ? "active" : " "} />
+                  <TiHome className={pathname === "/" ? "active" : ""} />
                 </Link>
               </li>
               <li>
@@ -102,40 +102,69 @@ export default function Header() {
                 </Link>
               </li>
             </ul>
+
             <div className="header-icons">
-              <SearchInput/>
+              <SearchInput />
               <button
                 className={`notification ${showToggle ? "active-not" : ""}`}
                 onClick={HandleToggle}
+                aria-label="Notifications"
               >
-                <IoIosNotifications />{" "}
+                <IoIosNotifications />
                 <span>{numsNotif ? +numsNotif?.total : 0}</span>
               </button>
-              <Link href={`/profile/${user?.id}`}>
-                {user?.avatar ? (
-                  <img
-                    src={`http://localhost:8080/images/user/${user?.avatar}`}
-                    alt={`${user?.avatar}`}
-                    className="avatar-profile header-icon"
-                  />
-                ) : (
-                  <div className="avatar-profile header-icon">
-                    <h2>{GenerateAvatar(user?.firstname, user?.lastname)}</h2>
+
+              <div className="profile-wrapper">
+                <div
+                  className="header-profile"
+                  role="button"
+                  tabIndex={0}
+                  onBlur={() => setTimeout(() => setClicked(false), 100)}
+                  onFocus={() => setClicked(true)}
+                  aria-label="User profile"
+                >
+                  {user?.avatar ? (
+                    <img
+                      src={`http://localhost:8080/images/user/${user?.avatar}`}
+                      alt={`${user?.firstname} ${user?.lastname}`}
+                      className="avatar-profile header-icon"
+                    />
+                  ) : (
+                    <div className="avatar-profile header-icon">
+                      <h2>{GenerateAvatar(user?.firstname, user?.lastname)}</h2>
+                    </div>
+                  )}
+                </div>
+
+                {clicked && (
+                  <div className="profile-dropdown">
+                    <div
+                      className="dropdown-item"
+                      onMouseDown={() => {
+                        setClicked(false);
+                        router.push(`/profile/${user?.id}`);
+                      }}
+                      role="button"
+                      tabIndex={0}
+                    >
+                      <CgProfile /> My Profile
+                    </div>
+                    <button
+                      className="dropdown-item"
+                      onMouseDown={handleClickLogout}
+                    >
+                      <IoIosLogOut /> Logout
+                    </button>
                   </div>
                 )}
-              </Link>
-
-              <button className="user-logout" onClick={handleClickLogout}>
-                <IoIosLogOut />
-              </button>
+              </div>
             </div>
           </nav>
         </header>
       )}
-      <ToogleInitiale showToggle={showToggle} setShowToggle={setShowToggle} />
-      {showNotif && <NotifToast />}  
 
-    
-      </>
+      <ToogleInitiale showToggle={showToggle} setShowToggle={setShowToggle} />
+      {showNotif && <NotifToast />}
+    </>
   );
 }

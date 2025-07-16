@@ -269,6 +269,7 @@
   margin: 0.5rem 0;
   font-size: 1rem;
   color: var(--accent-hover);
+  overflow-wrap: break-word;
 }
 
 
@@ -282,6 +283,7 @@
   font-size: 0.95rem;
   color: var(--text-muted);
   line-height: 1.5;
+   overflow-wrap: break-word;
 }
 
 .group-card-header {

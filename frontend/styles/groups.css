@@ -313,16 +313,28 @@
 
 .request-card{
     padding: 10px 20px;
-    background-color: var(--bg-color);
     width: 80%;
     margin: 10px auto;
     border-radius: 8px;
+}
+
+.request-card:hover{
+    background-color: var(--bg-color);
+    transition: .3s;
 }
 
 .request-card .request-card-header{
     display: flex;
     align-items: center;
     justify-content: space-between;
+}
+
+.group-action-request{
+    display: flex;
+    align-items: center;
+    /* justify-content: end; */
+    gap: 5px;
+    margin-top: 5px;
 }
 
 .request-card .request-type{

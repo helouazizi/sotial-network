@@ -1,15 +1,14 @@
+"use client";
 import { PopupContext } from "@/context/PopupContext";
 import { API_URL } from "@/services";
 import { useContext, useEffect, useRef, useState } from "react";
 import { User } from "@/types/user";
 import PostHeader from "../post/postHeader";
-
-
+import { useRouter } from "next/navigation";
 
 export const SearchInput = () => {
   const popup = useContext(PopupContext);
-  
-
+  const router = useRouter();
   const [users, setUsers] = useState<User[]>([]);
   const [showResults, setShowResults] = useState(false);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -59,7 +58,14 @@ export const SearchInput = () => {
 
   return (
     <div className="Searching">
-      <input type="text" placeholder="Search..." onChange={handleTyping} />
+      <input
+        type="text"
+        placeholder="Search For Specific User..."
+        onChange={handleTyping}
+        tabIndex={0}
+        onBlur={() => setTimeout(() => setShowResults(false), 100)}
+        onFocus={() => setShowResults(true)}
+      />
 
       {users && showResults && users.length > 0 && (
         <div className="search-results">
@@ -67,20 +73,12 @@ export const SearchInput = () => {
             <div
               key={user.id}
               className="block cursor-pointer"
-              onClick={() => {
-                setShowResults(false);
-                setTimeout(() => {
-                  window.location.href = `/profile/${user.id}`;
-                }, 50); // Optional short delay
+              onMouseDown={() => {
+                router.push(`/profile/${user.id}`);
+                   setShowResults(false)
               }}
+
             >
-              {user.avatar && (
-                <img
-                  src={`${API_URL}images/user/${user.avatar}`}
-                  alt={user.nickname}
-                  className="avatar-profile header-icon"
-                />
-              )}
               <PostHeader
                 author={user.nickname || `${user.firstname}-${user.lastname}`}
                 firstname={user.firstname}

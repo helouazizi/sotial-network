@@ -4,11 +4,8 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { User } from "@/types/user";
 import PostHeader from "../post/postHeader";
 
-
-
 export const SearchInput = () => {
   const popup = useContext(PopupContext);
-  
 
   const [users, setUsers] = useState<User[]>([]);
   const [showResults, setShowResults] = useState(false);
@@ -59,7 +56,14 @@ export const SearchInput = () => {
 
   return (
     <div className="Searching">
-      <input type="text" placeholder="Search..." onChange={handleTyping} />
+      <input
+        type="text"
+        placeholder="Search For Specific User..."
+        onChange={handleTyping}
+        tabIndex={0}
+        onBlur={() => setTimeout(() => setShowResults(false), 100)}
+        onFocus={() => setShowResults(true)}
+      />
 
       {users && showResults && users.length > 0 && (
         <div className="search-results">

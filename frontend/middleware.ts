@@ -1,37 +1,56 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server';
 
 export default async function middleware(request: NextRequest) {
+  const pathname = request.nextUrl.pathname;
+
+  // ✅ Allow internal system routes
+  if (
+    pathname.startsWith("/_next") ||
+    pathname.startsWith("/api") ||
+    pathname === "/favicon.ico" ||
+    pathname.includes("not-found")
+  ) {
+    return NextResponse.next();
+  }
+
   try {
-    let response = await fetch('http://localhost:8080/api/v1/user/Auth', {
+    const response = await fetch('http://localhost:8080/api/v1/user/Auth', {
       headers: {
         Cookie: request.headers.get('cookie') || ""
       }
-    })
+    });
 
-    if (!response.ok) {
-      if (request.nextUrl.pathname === "/login" || request.nextUrl.pathname === "/register") {
-        return NextResponse.next()
+    const isAuth = response.ok;
+
+    if (!isAuth) {
+      if (pathname === "/login" || pathname === "/register") {
+        return NextResponse.next();
       }
-
-     return NextResponse.redirect(new URL("/login", request.nextUrl))
+      return NextResponse.redirect(new URL("/login", request.url));
     }
 
-    if (request.nextUrl.pathname === "/login" || request.nextUrl.pathname === "/register") {
-      return NextResponse.redirect(new URL("/", request.nextUrl))
+    if (pathname === "/login" || pathname === "/register") {
+      return NextResponse.redirect(new URL("/", request.url));
     }
 
-    return NextResponse.next()
+    return NextResponse.next();
   } catch (err) {
-    console.error("Error :", err)
-    if (request.nextUrl.pathname === "/login" || request.nextUrl.pathname === "/register") {
-      return NextResponse.next()
+    console.error("Middleware Error:", err);
+    if (pathname === "/login" || pathname === "/register") {
+      return NextResponse.next();
     }
-    
-    return NextResponse.redirect(new URL("/login", request.nextUrl))
+    return NextResponse.redirect(new URL("/login", request.url));
   }
-
 }
 
 export const config = {
-  matcher: ['/', "/login", "/register", "/chat/:path*", "/chat","/profile/:path*", "/groups/:path*"],
-}
+  matcher: [
+    '/',
+    '/login',
+    '/register',
+    '/chat/:path*',
+    '/chat',
+    '/profile/:path*',
+    '/groups/:path*',
+  ],
+};

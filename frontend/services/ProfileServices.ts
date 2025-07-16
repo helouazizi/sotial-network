@@ -6,32 +6,40 @@ export const obj = {
     Ofsset: 0,
     Limit: 20
 }
-export async function ChangeVisbiltiy(newVisibility: number, setDataProfile: (callback: (prev: any) => any) => void) {
-    const req = await fetch(
-        `${API_URL}api/v1/ChangeVisibilityProfile`,
-        {
-            method: "PUT",
-            credentials: "include",
-            body: JSON.stringify({
-                to: newVisibility,
-            }),
-        }
-    );
+export async function ChangeVisbiltiy(newVisibility: number, setDataProfile: (callback: (prev: any) => any) => void, popup: any) {
 
-    if (req.ok) {
-        setDataProfile((prev) => {
-            if (!prev) return prev;
-            return {
-                ...prev,
-                is_private: newVisibility,
-            };
-        });
-    } else {
-        throw new Error(await req.text())
+    try {
+
+        const req = await fetch(
+            `${API_URL}api/v1/ChangeVisibilityProfile`,
+            {
+                method: "PUT",
+                credentials: "include",
+                body: JSON.stringify({
+                    to: newVisibility,
+                }),
+            }
+        );
+
+        if (req.ok) {
+            setDataProfile((prev) => {
+                if (!prev) return prev;
+                return {
+                    ...prev,
+                    is_private: newVisibility,
+                };
+            });
+            popup?.showPopup("success", "Visibility was successfully changed.")
+        } else {
+            popup?.showPopup("faild", "Error.")
+        }
+    } catch (error) {
+        console.error(error)
+        popup?.showPopup("faild", "Error.")
     }
 }
 
-export async function UpdateProfile(file: File | undefined, nickname: string | undefined, about: string | undefined, oldAvatar: string | undefined, setDataProfile: (callback: (prev: any) => any) => void) {
+export async function UpdateProfile(file: File | undefined, nickname: string | undefined, about: string | undefined, oldAvatar: string | undefined, setDataProfile: (callback: (prev: any) => any) => void, popup: any) {
 
     const formData = new FormData();
 
@@ -47,57 +55,62 @@ export async function UpdateProfile(file: File | undefined, nickname: string | u
     if (oldAvatar) {
         formData.append("oldAvatar", oldAvatar)
     }
-    const req = await fetch(`${API_URL}api/v1/UpdateProfile`, {
-        method: "PUT",
-        credentials: "include",
-        body: formData
-    })
-    if (req.ok) {
-        const resp = await req.json()
+    try {
+        const req = await fetch(`${API_URL}api/v1/UpdateProfile`, {
+            method: "PUT",
+            credentials: "include",
+            body: formData
+        })
+        if (req.ok) {
+            const resp = await req.json()
+            if (file) {
+                setDataProfile((prev) => {
+                    if (!prev) return prev;
+                    return {
+                        ...prev,
+                        User: {
+                            ...prev.User,
+                            avatar: resp.newPath,
+                        }
+                    };
+                })
+            }
+            if (nickname) {
+                setDataProfile((prev) => {
+                    if (!prev) return prev
+                    return {
+                        ...prev,
+                        User: {
+                            ...prev.User,
+                            nickname: nickname,
+                        }
 
+                    }
+                })
+            }
+            if (about) {
+                setDataProfile((prev) => {
+                    if (!prev) return prev
+                    return {
+                        ...prev,
+                        User: {
+                            ...prev.User,
+                            about_me: about,
+                        }
+                    }
+                })
+            }
+            popup?.showPopup("success", "Profile Updated successfully.")
+        }
 
-        if (file) {
-            setDataProfile((prev) => {
-                if (!prev) return prev;
-                return {
-                    ...prev,
-                    User: {
-                        ...prev.User,
-                        avatar: resp.newPath,
-                    }
-                };
-            })
-        }
-        if (nickname) {
-            setDataProfile((prev) => {
-                if (!prev) return prev
-                return {
-                    ...prev,
-                    User: {
-                        ...prev.User,
-                        nickname: nickname,
-                    }
-
-                }
-            })
-        }
-        if (about) {
-            setDataProfile((prev) => {
-                if (!prev) return prev
-                return {
-                    ...prev,
-                    User: {
-                        ...prev.User,
-                        about_me: about,
-                    }
-                }
-            })
-        }
+    } catch (error) {
+        console.error(error)
+        popup?.showPopup("faild", "Error.")
     }
 
 }
 
-export async function HandleRelations(status: string | undefined, profileUser: number | undefined, setDataProfile: (callback: (prev: any) => any) => void): Promise<{ ok: boolean; newStatus: string; haveAccess: boolean }> {
+export async function HandleRelations(status: string | undefined, profileUser: number | undefined, setDataProfile: (callback: (prev: any) => any) => void, popup: any): Promise<{ ok: boolean; newStatus: string; haveAccess: boolean }> {
     try {
         const resp = await fetch(`${API_URL}api/v1/relations/realtions`, {
             method: "POST",
@@ -112,6 +125,7 @@ export async function HandleRelations(status: string | undefined, profileUser: n
             const newStatus = data.NewRelation.newStatus
             const haveAccess = data.NewRelation.haveAccess
             if (newStatus == "accepted" && haveAccess) {
+                popup?.showPopup("success", "Request Sending Successfully.")
                 setDataProfile((prev) => {
                     if (!prev) return prev
                     return {
@@ -123,6 +137,7 @@ export async function HandleRelations(status: string | undefined, profileUser: n
                             status: newStatus,
                         }
                     }
+
                 })
             } else if (newStatus == "follow") {
                 setDataProfile((prev) => {
@@ -149,6 +164,7 @@ export async function HandleRelations(status: string | undefined, profileUser: n
                         }
                     }
                 })
+                popup?.showPopup("success", "Request Sending Successfully.")
             }
             return { ok: true, newStatus, haveAccess }
         } else {
@@ -156,11 +172,12 @@ export async function HandleRelations(status: string | undefined, profileUser: n
         }
     } catch (err) {
         console.error("Erreur dans HandleRelations :", err);
+        popup?.showPopup("faild", "Error.")
         return { ok: true, newStatus: "", haveAccess: false }
     }
 }
 
-export async function FetchUsersRl(id: number | undefined, type: string,) {
+export async function FetchUsersRl(id: number | undefined, type: string, popup: any) {
     try {
         const resp = await fetch(`${API_URL}api/v1/relations/getRealtions`, {
             method: "POST",
@@ -183,6 +200,7 @@ export async function FetchUsersRl(id: number | undefined, type: string,) {
 
     } catch (err) {
         console.error(err)
+        popup?.showPopup("faild", "Error.")
         return []
     }
 

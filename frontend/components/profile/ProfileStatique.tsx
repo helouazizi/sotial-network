@@ -1,4 +1,5 @@
 "use client"
+import { PopupContext } from '@/context/PopupContext'
 import { useProfile } from '@/context/ProfileContext'
 import { SocketContext, SocketContextType } from '@/context/socketContext'
 import { HandleRelations } from '@/services/ProfileServices'
@@ -8,10 +9,12 @@ import React, { useCallback, useContext } from 'react'
 const ProfileStatique = () => {
   const { ws, user } = useContext(SocketContext) as SocketContextType
   const { dataProfile, setDataProfile } = useProfile()
+  const popup = useContext(PopupContext)
+
   const Submit = useCallback(Debounce(async () => {
     if (!user) return;
     const status = dataProfile?.subscription?.status
-    const { ok, newStatus, haveAccess } = await HandleRelations(status, dataProfile?.User?.id, setDataProfile)
+    const { ok, newStatus, haveAccess } = await HandleRelations(status, dataProfile?.User?.id, setDataProfile,popup)
     if (ok && newStatus == "pending" && !haveAccess) {
 
       ws.current?.send(JSON.stringify({

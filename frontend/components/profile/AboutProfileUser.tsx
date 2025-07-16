@@ -1,10 +1,11 @@
 "use client"
 import { useProfile } from '@/context/ProfileContext'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { GenerateAvatar } from './ProfileHeader';
 import Toast from '../toast/Toast';
 import { Debounce } from '@/utils/Debounce';
 import { UpdateProfile } from '@/services/ProfileServices';
+import { PopupContext } from '@/context/PopupContext';
 
 const AboutProfileUser = () => {
     const { dataProfile, setDataProfile } = useProfile()
@@ -13,7 +14,7 @@ const AboutProfileUser = () => {
     const [about, setAbout] = useState<string | undefined>(undefined)
     const [showError, setShowError] = useState(false)
     const [selectedFile, setSelectedFile] = useState<File | undefined>(undefined)
-
+    const popup = useContext(PopupContext)
     useEffect(() => {
         if (dataProfile?.User?.avatar) setAvatar(`http://localhost:8080/images/user/${dataProfile?.User?.avatar}`)
         if (dataProfile?.User?.nickname) setNickname(dataProfile?.User?.nickname)
@@ -58,7 +59,7 @@ const AboutProfileUser = () => {
                 return
             }
 
-            await UpdateProfile(selectedFile, nickname, about, dataProfile?.User?.avatar, setDataProfile)
+            await UpdateProfile(selectedFile, nickname, about, dataProfile?.User?.avatar, setDataProfile, popup)
             setShowError(false)
 
 

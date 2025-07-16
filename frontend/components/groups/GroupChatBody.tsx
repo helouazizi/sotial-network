@@ -41,7 +41,6 @@ const GroupChatBody = () => {
           let name = ele.fullName.split(" ")
           let me = ele.sender_id == user?.id
 
-          console.log(me);
 
           return (
             <div className={`card-msg-grp ${me ? "my-msg" : ""}`} key={ind}>

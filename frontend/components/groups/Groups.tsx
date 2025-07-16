@@ -60,7 +60,6 @@ function Groups() {
       }
 
       const data = await SendJoinGroupRequest(body)
-      // console.log(data)
       if (!data) {
         popup?.showPopup("faild", "Oooops, something wrong!")
         return

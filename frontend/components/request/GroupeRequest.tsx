@@ -12,11 +12,9 @@ const GroupeRequest = () => {
   useEffect(() => {
     const fetchDemandeGroupNotifs = async () => {
       const data = await GetDemandeGroupNotifs()
-        console.log(data,"notifs");
       if (!data) {
         return
       }
-      console.log(data,"notifs");
       
 
       setNotifications(data)

@@ -72,98 +72,106 @@ export default function Header() {
       main?.removeEventListener("click", handleClick);
     };
   }, [showToggle]);
- return (
-  <>
-    {isLogged && (
-      <header>
-        <nav>
-          <Link href={"/"} className="logo">
-            Social <span>Net</span>work
-          </Link>
+  return (
+    <>
+      {isLogged && (
+        <header>
+          <nav>
+            <Link href={"/"} className="logo">
+              Social <span>Net</span>work
+            </Link>
 
-          <ul>
-            <li>
-              <Link href={"/"}>
-                <TiHome className={pathname === "/" ? "active" : ""} />
-              </Link>
-            </li>
-            <li>
-              <Link href={"/chat/privateChat"}>
-                <LuMessageCircleMore
-                  className={pathname.startsWith("/chat/") ? "active" : ""}
-                />
-              </Link>
-            </li>
-            <li>
-              <Link href={"/groups/joined"}>
-                <MdGroups2
-                  className={
-                    pathname.startsWith("/groups/")
-                      ? "active groupIconHeader"
-                      : "groupIconHeader"
-                  }
-                />
-              </Link>
-            </li>
-          </ul>
-
-          <div className="header-icons">
-            <SearchInput />
-            <button
-              className={`notification ${showToggle ? "active-not" : ""}`}
-              onClick={HandleToggle}
-              aria-label="Notifications"
-            >
-              <IoIosNotifications />
-              <span>{numsNotif ? +numsNotif?.total : 0}</span>
-            </button>
-
-            <div className="profile-wrapper">
-              <div
-                className="header-profile"
-                onClick={() => setClicked((prev) => !prev)}
-                role="button"
-                tabIndex={0}
-                aria-label="User profile"
-              >
-                {user?.avatar ? (
-                  <img
-                    src={`http://localhost:8080/images/user/${user?.avatar}`}
-                    alt={`${user?.firstname} ${user?.lastname}`}
-                    className="avatar-profile header-icon"
+            <ul>
+              <li>
+                <Link href={"/"}>
+                  <TiHome className={pathname === "/" ? "active" : ""} />
+                </Link>
+              </li>
+              <li>
+                <Link href={"/chat/privateChat"}>
+                  <LuMessageCircleMore
+                    className={pathname.startsWith("/chat/") ? "active" : ""}
                   />
-                ) : (
-                  <div className="avatar-profile header-icon">
-                    <h2>{GenerateAvatar(user?.firstname, user?.lastname)}</h2>
+                </Link>
+              </li>
+              <li>
+                <Link href={"/groups/joined"}>
+                  <MdGroups2
+                    className={
+                      pathname.startsWith("/groups/")
+                        ? "active groupIconHeader"
+                        : "groupIconHeader"
+                    }
+                  />
+                </Link>
+              </li>
+            </ul>
+
+            <div className="header-icons">
+              <SearchInput />
+              <button
+                className={`notification ${showToggle ? "active-not" : ""}`}
+                onClick={HandleToggle}
+                aria-label="Notifications"
+              >
+                <IoIosNotifications />
+                <span>{numsNotif ? +numsNotif?.total : 0}</span>
+              </button>
+
+              <div className="profile-wrapper">
+                <div
+                  className="header-profile"
+                  onClick={() => {
+                    if (clicked){
+                      setClicked(false)
+                    }else {
+                      setClicked(true)
+                    }
+                  }}
+                  role="button"
+                  tabIndex={0}
+                  onBlur={() => setTimeout(() => setClicked(false), 100)}
+                  onFocus={() => setClicked(true)}
+                  aria-label="User profile"
+                >
+                  {user?.avatar ? (
+                    <img
+                      src={`http://localhost:8080/images/user/${user?.avatar}`}
+                      alt={`${user?.firstname} ${user?.lastname}`}
+                      className="avatar-profile header-icon"
+                    />
+                  ) : (
+                    <div className="avatar-profile header-icon">
+                      <h2>{GenerateAvatar(user?.firstname, user?.lastname)}</h2>
+                    </div>
+                  )}
+                </div>
+
+                {clicked && (
+                  <div className="profile-dropdown">
+                    <Link
+                      href={`/profile/${user?.id}`}
+                      className="dropdown-item"
+                      onClick={() => setClicked(false)}
+                    >
+                      <CgProfile /> My Profile
+                    </Link>
+                    <button
+                      className="dropdown-item"
+                      onClick={handleClickLogout}
+                    >
+                      <IoIosLogOut /> Logout
+                    </button>
                   </div>
                 )}
               </div>
-
-              {clicked && (
-                <div className="profile-dropdown">
-                  <Link
-                    href={`/profile/${user?.id}`}
-                    className="dropdown-item"
-                    onClick={() => setClicked(false)}
-                  >
-                    <CgProfile /> My Profile
-                  </Link>
-                  <button
-                    className="dropdown-item"
-                    onClick={handleClickLogout}
-                  >
-                    <IoIosLogOut /> Logout
-                  </button>
-                </div>
-              )}
             </div>
-          </div>
-        </nav>
-      </header>
-    )}
+          </nav>
+        </header>
+      )}
 
-    <ToogleInitiale showToggle={showToggle} setShowToggle={setShowToggle} />
-    {showNotif && <NotifToast />}
-  </>
-);
+      <ToogleInitiale showToggle={showToggle} setShowToggle={setShowToggle} />
+      {showNotif && <NotifToast />}
+    </>
+  );
 }

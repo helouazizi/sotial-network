@@ -2,7 +2,6 @@ package relations
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/ismailsayen/social-network/internal/models"
@@ -138,7 +137,6 @@ func (h *RelationsHandler) GetUnrequestedFriends(w http.ResponseWriter, r *http.
 	}
 	groupId, err := utils.GetGroupId(r, "events")
 	if err != nil {
-		fmt.Println(err, "====11=============")
 		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
 			"error":  err,
 			"status": http.StatusBadRequest,
@@ -148,7 +146,6 @@ func (h *RelationsHandler) GetUnrequestedFriends(w http.ResponseWriter, r *http.
 	sessionID := r.Context().Value("userID").(int)
 	friends, err := h.RelationsServices.GetUnrequestedFriendsService(sessionID, groupId)
 	if err != nil {
-		fmt.Println(err, "=================")
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
 			"message": "Error, please try again.",
 			"status":  http.StatusInternalServerError,

@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
 	"strings"
 	"time"
@@ -55,7 +54,6 @@ func (h *WebsocketHandler) WebsocketHandler(w http.ResponseWriter, r *http.Reque
 			})
 			continue
 		}
-		fmt.Println(ws)
 		if err != nil {
 			conn.WriteJSON(map[string]any{
 				"error": err.Error(),
@@ -248,13 +246,13 @@ func (h *WebsocketHandler) WebsocketHandler(w http.ResponseWriter, r *http.Reque
 			if err != nil {
 				conn.WriteJSON(map[string]any{
 					"error": err.Error(),
+					"type": "GroupRequestsError",
 				})
 				continue
 			}
 		case "event":
 			ids, err := h.service.GreMembersIds(&ws)
 			if err != nil {
-				fmt.Println(err)
 				continue
 			}
 

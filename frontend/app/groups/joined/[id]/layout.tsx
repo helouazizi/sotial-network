@@ -11,7 +11,6 @@ import { GetGroupMembers } from '@/services/eventsServices';
 function GroupPageLayout({ children }: { children: ReactNode }) {
   const url = usePathname()
   const { id } = useParams<{ id: string }>()
-  console.log(url, id, "path");
 
   return (
     <div className='group-page'>

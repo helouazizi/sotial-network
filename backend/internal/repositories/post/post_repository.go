@@ -218,7 +218,7 @@ func (r *PostRepository) GetPostComments(c models.ComentPaginationRequest) ([]mo
 	for rows.Next() {
 		var cm models.Comment
 		var media sql.NullString
-	
+
 		err := rows.Scan(
 			&cm.ID, &cm.PostID, &cm.Author.ID, &cm.Comment, &media, &cm.CreatedAt,
 			&cm.Author.Nickname, &cm.Author.FirstName, &cm.Author.Lastname, &cm.Author.Avatar,
@@ -241,7 +241,6 @@ func (r *PostRepository) GetPostComments(c models.ComentPaginationRequest) ([]mo
 	if err := rows.Err(); err != nil {
 		return nil, err
 	}
-	fmt.Println("comments services", comments)
 
 	return comments, nil
 }

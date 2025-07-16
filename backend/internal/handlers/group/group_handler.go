@@ -193,7 +193,7 @@ func (h *GroupHandler) CancelGroupRequestHandler(w http.ResponseWriter, r *http.
 	})
 }
 
-func (h *GroupHandler) GetDemandeGroupNotifsHandler(w http.ResponseWriter, r *http.Request) {
+func (h *GroupHandler) GetGroupNotifsHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
 			"error": "Method not allowed",
@@ -203,7 +203,7 @@ func (h *GroupHandler) GetDemandeGroupNotifsHandler(w http.ResponseWriter, r *ht
 
 	requestedID := r.Context().Value("userID").(int)
 
-	groupNotifs, err := h.service.GetDemandeGroupNotifs(requestedID)
+	groupNotifs, err := h.service.GetGroupNotifs(requestedID)
 	if err != nil {
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
 			"error": err.Error(),

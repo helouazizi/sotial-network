@@ -37,11 +37,9 @@ function Groups() {
   }, [pathname])
 
   const handleClick = async (group: Group) => {
-
     if (!group.id || !group.user_id) {
       return
     }
-
 
     if (group.request_id) {
       const data = await CancelGroupRequest(group.request_id)
@@ -50,8 +48,11 @@ function Groups() {
         return
       }
 
-      // group.request_id = 0
+      group.request_id = 0
       popup?.showPopup("success", data.message)
+
+
+
     } else {
       const body: GroupNotifications = {
         group_id: group.id,
@@ -60,7 +61,6 @@ function Groups() {
       }
 
       const data = await SendJoinGroupRequest(body)
-      // console.log(data)
       if (!data) {
         popup?.showPopup("faild", "Oooops, something wrong!")
         return
@@ -69,11 +69,12 @@ function Groups() {
       group.request_id = data.request_id[0]
       popup?.showPopup("success", data.message)
 
-      // if (ws) {
-      //   ws.current?.send(JSON.stringify({
-      //     "type": "RelationSended"
-      //   }))
-      // }
+      if (ws) {
+        ws.current?.send(JSON.stringify({
+          "type": "RelationSended",
+          "receiver_id": group.user_id
+        }))
+      }
     }
   }
 
@@ -83,7 +84,7 @@ function Groups() {
       let title = group.title.length > 25 ? group.title.slice(0, 25).trim() + "..." : group.title
       let path = pathname.startsWith("/groups/joined") ? "/groups/joined/" + group.id + "/posts" : ""
 
-      return (  
+      return (
         <li key={index}>
           <Link href={path}>{!isSuggestedPath && <span><MdGroups /></span>} <p>{title}</p></Link>
           {isSuggestedPath && (

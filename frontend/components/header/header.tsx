@@ -121,13 +121,6 @@ export default function Header() {
               <div className="profile-wrapper">
                 <div
                   className="header-profile"
-                  onClick={() => {
-                    if (clicked){
-                      setClicked(false)
-                    }else {
-                      setClicked(true)
-                    }
-                  }}
                   role="button"
                   tabIndex={0}
                   onBlur={() => setTimeout(() => setClicked(false), 100)}
@@ -149,16 +142,20 @@ export default function Header() {
 
                 {clicked && (
                   <div className="profile-dropdown">
-                    <Link
-                      href={`/profile/${user?.id}`}
+                    <div
                       className="dropdown-item"
-                      onClick={() => setClicked(false)}
+                      onMouseDown={() => {
+                        setClicked(false);
+                        router.push(`/profile/${user?.id}`);
+                      }}
+                      role="button"
+                      tabIndex={0}
                     >
                       <CgProfile /> My Profile
-                    </Link>
+                    </div>
                     <button
                       className="dropdown-item"
-                      onClick={handleClickLogout}
+                      onMouseDown={handleClickLogout}
                     >
                       <IoIosLogOut /> Logout
                     </button>

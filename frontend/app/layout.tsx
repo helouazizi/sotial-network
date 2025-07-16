@@ -14,12 +14,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body>
-        <SocketProvider>
-          <PopupProvider >
+        <PopupProvider >
+          <SocketProvider>
             <Header />
             {children}
-          </PopupProvider>
-        </SocketProvider>
+          </SocketProvider>
+        </PopupProvider>
       </body>
     </html>
   );

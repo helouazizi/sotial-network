@@ -183,7 +183,7 @@ func (r *GroupRepository) SaveJoinGroupRequest(groupReq *models.GroupRequest) ([
 	return ids, tx.Commit()
 }
 
-func (r *GroupRepository) GetDemandeGroupNotifs(requestedID int) ([]*models.GroupRequest, error) {
+func (r *GroupRepository) GetGroupNotifs(requestedID int) ([]*models.GroupRequest, error) {
 	query := `
 		select u.id, u.first_name, u.last_name, u.avatar, rq.id,rq.group_id, rq.sender_id, rq.type  from users u 
 		inner join group_requests rq ON u.id = rq.sender_id 

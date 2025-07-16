@@ -248,6 +248,7 @@ func (h *WebsocketHandler) WebsocketHandler(w http.ResponseWriter, r *http.Reque
 			if err != nil {
 				conn.WriteJSON(map[string]any{
 					"error": err.Error(),
+					"type": "GroupRequestsError",
 				})
 				continue
 			}

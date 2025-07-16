@@ -69,12 +69,13 @@ function Groups() {
       group.request_id = data.request_id[0]
       popup?.showPopup("success", data.message)
 
-      if (ws) {
-        ws.current?.send(JSON.stringify({
-          "type": "RelationSended",
-          "receiver_id": group.user_id
-        }))
-      }
+    }
+
+    if (ws) {
+      ws.current?.send(JSON.stringify({
+        "type": "RelationSended",
+        "receiver_id": group.user_id
+      }))
     }
   }
 

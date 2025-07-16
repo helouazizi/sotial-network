@@ -53,14 +53,14 @@ export default function EventForm({ group_id, onCreate }: EventFromProps) {
       );
       return;
     }
-
-    if (!form.datetime || new Date(form.datetime) <= new Date()) {
+    if ( !form.datetime || isNaN(new Date(form.datetime).getTime()) || new Date(form.datetime) <= new Date()) {
       Popup?.showPopup(
         "faild",
-        "Please select a future date and time for the event."
+        "Please select a valid future date and time for the event."
       );
       return;
     }
+
 
     const body = {
       group_id: group_id,
@@ -105,9 +105,8 @@ export default function EventForm({ group_id, onCreate }: EventFromProps) {
           ws.current.send(
             JSON.stringify({
               id: group_id,
-              message: `${
-                user?.nickname || `${user?.firstname} ${user?.lastname}` || ""
-              } created an event`,
+              message: `${user?.nickname || `${user?.firstname} ${user?.lastname}` || ""
+                } created an event`,
               sender_id: user?.id,
               type: "event",
             })
@@ -118,6 +117,7 @@ export default function EventForm({ group_id, onCreate }: EventFromProps) {
         return;
       } else {
         Popup?.showPopup("faild", data.error);
+        return
       }
     } catch (err) {
       Popup?.showPopup("faild", "Something went wrong. Try again.");

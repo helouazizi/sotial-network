@@ -10,6 +10,7 @@ import PostHeader from "../post/postHeader";
 import { Follower } from "@/types/post";
 import { PopupContext } from "@/context/PopupContext";
 import { GroupNotifications } from "@/types/Request";
+import { SocketContext } from "@/context/socketContext";
 
 function GroupHeader({ id }: { id: number }) {
     const [groupInfo, setGroupInfo] = useState<GroupInfo | null>(null);
@@ -20,6 +21,7 @@ function GroupHeader({ id }: { id: number }) {
     const [followers, setFollowers] = useState<Follower[]>([]);
     const [invited, setInvited] = useState<number[]>([]);
     const [isSending, setIsSending] = useState(false);
+    const {ws} = useContext(SocketContext) ?? {}
 
     const handleToggleFollower = (id: number, checked: boolean) => {
         setInvited((prev) =>
@@ -135,6 +137,15 @@ function GroupHeader({ id }: { id: number }) {
             }
             if (data.message) {
                 poopUp?.showPopup("success", data.message)
+
+                if (ws) {
+                    invited.forEach(i => {
+                        ws.current?.send(JSON.stringify({
+                            "type": "RelationSended",
+                            "receiver_id": i
+                        }))
+                    })
+                }
             } else {
                 poopUp?.showPopup("faild", "something went wrong, please try again")
             }
@@ -212,7 +223,7 @@ function GroupHeader({ id }: { id: number }) {
                         {!groupMembers ? (
                             <p className="no-data">Unable to fetch group members.</p>
                         ) : groupMembers.members.length === 0 ? (
-                            <p  className="no-data">No members in this group.</p>
+                            <p className="no-data">No members in this group.</p>
                         ) : (
                             displayMembers()
                         )}
@@ -222,7 +233,7 @@ function GroupHeader({ id }: { id: number }) {
                 {showFolowers && (
                     <div className="group-members-list">
                         {!followers || followers.length === 0 ? (
-                            <p  className="no-data">No followers available to invite.</p>
+                            <p className="no-data">No followers available to invite.</p>
                         ) : (
                             displayFolowers()
                         )}

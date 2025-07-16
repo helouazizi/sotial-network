@@ -16,6 +16,7 @@ func SetupRoutes(app *app.Application) *http.ServeMux {
 	mux.HandleFunc("/api/v1/user/login", app.AuthHundler.Login)
 	mux.HandleFunc("/api/v1/user/Auth", middleware.AuthMiddleware(http.HandlerFunc(app.AuthHundler.CheckAuth), app.DB))
 	mux.HandleFunc("/api/v1/user/infos", middleware.AuthMiddleware(http.HandlerFunc(app.AuthHundler.GetUserHandler), app.DB))
+	mux.HandleFunc("/api/v1/user/friends", middleware.AuthMiddleware(http.HandlerFunc(app.AuthHundler.GetFriendsHandler), app.DB))
 
 	//================== Profile routes =======================///
 	mux.HandleFunc("/api/v1/profile", middleware.AuthMiddleware(http.HandlerFunc(app.ProfileHandler.ProfileHandler), app.DB))

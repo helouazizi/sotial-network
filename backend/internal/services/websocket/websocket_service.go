@@ -70,10 +70,6 @@ func (s *WebsocketService) RemoveClient(userID int, closedConn *websocket.Conn) 
 	}
 }
 
-func (s *WebsocketService) GetFriends(userID int) ([]*models.User, error) {
-	return s.repo.GetFriends(userID)
-}
-
 func (s *WebsocketService) GetClient(id int) ([]*websocket.Conn, bool) {
 	defer s.mu.Unlock()
 	s.mu.Lock()

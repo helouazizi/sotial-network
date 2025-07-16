@@ -14,31 +14,31 @@ export default function ChatLayout({ children }: { children: ReactNode }) {
   let isPrivateChat = pathName.startsWith("/chat/privateChat")
 
   return (
-     <GroupsProvider>
-    <main className="container chatPage">
-      <section className="sidebar">
-        <div className="myName">
-          <p>
-            <FaUser /> {user?.firstname} {user?.lastname || `Loading my name...`}
-          </p>
-        </div>
-        <div className="friends">
-          <ChatNav />
-          <div className="friends-list">
-
-            <ul>{isPrivateChat ? <Friends /> :
-             
-                <GroupsChat />
-            }</ul>
-
+    <GroupsProvider>
+      <main className="container chatPage">
+        <section className="sidebar">
+          <div className="myName">
+            <p>
+              <FaUser /> {user?.firstname} {user?.lastname || `Loading my name...`}
+            </p>
           </div>
-        </div>
+          <div className="friends">
+            <ChatNav />
+            <div className="friends-list">
 
-      </section>
-      <section className="chatMessages">
-        {children}
-      </section>
-    </main>
+              <ul>{isPrivateChat ? <Friends /> :
+
+                <GroupsChat />
+              }</ul>
+
+            </div>
+          </div>
+
+        </section>
+        <section className="chatMessages">
+          {children}
+        </section>
+      </main>
     </GroupsProvider>
   );
 }

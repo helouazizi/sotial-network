@@ -19,6 +19,7 @@ export default function PrivateChat() {
     const [showScrollButton, setShowScrollButton] = useState<boolean>(false)
 
     const getMessages = (lastID: number) => {
+        
         if (ws?.current && friend) {
             ws.current.send(JSON.stringify({
                 "type": "getMessages",

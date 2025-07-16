@@ -156,6 +156,31 @@ func (h *UserHandler) GetUserHandler(w http.ResponseWriter, r *http.Request) {
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
 			"error": err.Error(),
 		})
+		return
 	}
+
 	utils.ResponseJSON(w, http.StatusOK, user)
+}
+
+func (h *UserHandler) GetFriendsHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
+			"error": "Method not allowed",
+		})
+		return
+	}
+
+	userId := r.Context().Value("userID").(int)
+
+	friends, err := h.service.GetFriends(userId)
+	if err != nil {
+		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	utils.ResponseJSON(w, http.StatusOK, map[string]any{
+		"data": friends,
+	})
 }

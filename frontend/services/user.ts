@@ -11,3 +11,19 @@ export async function getUserInfos() {
         return {}
     }
 }
+
+export async function GetFriends() {
+    try {
+        const res = await fetch(API_URL+"api/v1/user/friends", {
+            credentials: "include"
+        })
+
+        const data = await res.json()
+
+        if (res.ok) {
+            return data.data
+        }
+    } catch (err) {
+        console.error(err)
+    }
+}

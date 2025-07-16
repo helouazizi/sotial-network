@@ -117,7 +117,6 @@ func (rlrepo *RelationsRepository) GetUnrequestedFriendsRepo(sessionID, grpID in
 
 	rows, err := rlrepo.db.Query(query, sessionID, sessionID, grpID, grpID)
 	if err != nil && err != sql.ErrNoRows {
-		fmt.Printf(err.Error(), "hhhhhh")
 		return nil, err
 	}
 	defer rows.Close()
@@ -126,7 +125,6 @@ func (rlrepo *RelationsRepository) GetUnrequestedFriendsRepo(sessionID, grpID in
 	for rows.Next() {
 		var user models.CommunInfoProfile
 		if err := rows.Scan(&user.User.ID, &user.User.Avatar, &user.User.Lastname, &user.User.FirstName, &user.User.Nickname); err != nil {
-			fmt.Printf(err.Error(), "hhhhhh2222222")
 			return nil, err
 		}
 		friends = append(friends, user)

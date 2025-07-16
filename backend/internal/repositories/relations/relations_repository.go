@@ -95,18 +95,27 @@ func (rlrepo *RelationsRepository) GetFriendsRepo(sessionID int) ([]models.Commu
 
 func (rlrepo *RelationsRepository) GetUnrequestedFriendsRepo(sessionID, grpID int) ([]models.CommunInfoProfile, error) {
 	query := `
-	SELECT u.id, u.avatar, u.last_name, u.first_name, u.nickname 
-	FROM users u 
-	INNER JOIN followers f ON f.follower_id = u.id 
-	WHERE f.followed_id = ?
-	AND u.id NOT IN (
-		SELECT requested_id 
-		FROM group_requests 
-		WHERE sender_id = ? AND group_id = ?
-	);
+		SELECT 
+			u.id, u.avatar, u.last_name, u.first_name, u.nickname 
+		FROM 
+			users u 
+		INNER JOIN 
+			followers f ON f.follower_id = u.id 
+		WHERE 
+			f.followed_id = ?
+			AND u.id NOT IN (
+				SELECT requested_id 
+				FROM group_requests 
+				WHERE sender_id = ? AND group_id = ?
+			)
+			AND u.id NOT IN (
+				SELECT member_id
+				FROM group_members
+				WHERE group_id = ?
+			);
 	`
 
-	rows, err := rlrepo.db.Query(query, sessionID, sessionID, grpID)
+	rows, err := rlrepo.db.Query(query, sessionID, sessionID, grpID, grpID)
 	if err != nil && err != sql.ErrNoRows {
 		return nil, err
 	}

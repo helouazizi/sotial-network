@@ -72,7 +72,7 @@ export  const SearchInput = ()=>{
               />
             )}
             <PostHeader
-              author={user.nickname}
+              author={user.nickname ? user.nickname : user.firstname + "-" + user.lastname}
               firstname={user.firstname}
               lastname={user.lastname}
               createdAt=""

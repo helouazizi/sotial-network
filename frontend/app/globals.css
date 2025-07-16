@@ -107,6 +107,16 @@ svg {
   color: var(--icon-color);
   flex-shrink: 0;
 }
+nav > div {
+    gap: 15px;
+    display: flex;
+
+    width: 46%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
 
 @keyframes popupFade {
   0% {

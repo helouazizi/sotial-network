@@ -1,0 +1,86 @@
+/* Profile Button (Avatar or Initials) */
+.header-profile {
+  border: none;
+  outline: none;
+  cursor: pointer;
+  background: none;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+}
+
+.header-profile:hover {
+  background-color: var(--btn-bg);
+}
+
+
+.profile-dropdown {
+  position: absolute;
+  top: 93px;
+  right: 100px;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  min-width: 200px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  overflow: hidden;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+/* Dropdown Item (shared with search results) */
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  color: var(--text-primary);
+  text-decoration: none;
+  font-size: 14px;
+  transition: background-color 0.2s ease;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.dropdown-item:hover{
+ background-color: var(--bg-color);
+}
+
+.dropdown-item svg {
+  font-size: 1.1em;
+  color: var(--icon-color);
+  min-width: 20px;
+}
+.profile-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.profile-dropdown {
+  position: absolute;
+  top: calc(100% + 8px); /* below the avatar */
+  right: 0; /* align right edge */
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  min-width: 200px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  overflow: hidden;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

@@ -2,7 +2,6 @@ package repositories
 
 import (
 	"database/sql"
-	"fmt"
 	"net/http"
 	"strings"
 	"time"
@@ -62,7 +61,6 @@ func (r *AuthRepository) SaveUser(user *models.User) models.Error {
 	)
 
 	if errExec != nil {
-		fmt.Println(errExec)
 		return models.Error{
 			Code:    http.StatusInternalServerError,
 			Message: "Internal Server Error while saving user",

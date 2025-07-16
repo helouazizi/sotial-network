@@ -65,14 +65,14 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
     if (!shouldConnect) {
       return;
     }
-
+    (async () => {
+      const userRes = await getUserInfos();
+      setUser(userRes);
+    })();
+    console.log("web socket open");
     ws.current = new WebSocket("ws://localhost:8080/ws");
 
-    ws.current.onopen = async () => {
-      const userRes = await getUserInfos();
-
-      setUser(userRes);
-      console.log("web socket open");
+    ws.current.onopen = () => {
       ws.current?.send(
         JSON.stringify({
           type: "GetNumNotif",
@@ -83,7 +83,6 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
 
     ws.current.onmessage = (event: MessageEvent) => {
       let res = JSON.parse(event.data);
-
       if (res.type === "CountNotifs") {
         const countotifs: NumOfREquests = {
           followersCount: res.data.followersCount,

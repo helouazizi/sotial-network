@@ -8,9 +8,7 @@ const NotifToast = () => {
   ) as SocketContextType;
   useEffect(() => {
     setTimeout(() => {
-      console.log("a", showNotif);
       setShowNotif(false);
-      console.log("b", showNotif);
     }, 5000);
   }, [showNotif]);
 

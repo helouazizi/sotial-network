@@ -61,7 +61,7 @@ export const SearchInput = () => {
     <div className="Searching">
       <input type="text" placeholder="Search..." onChange={handleTyping} />
 
-      {showResults && users.length > 0 && (
+      {users && showResults && users.length > 0 && (
         <div className="search-results">
           {users.map((user) => (
             <div

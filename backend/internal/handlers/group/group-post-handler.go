@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -40,7 +39,6 @@ func (h *GroupHandler) AddGroupPost(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
-	fmt.Println("merge")
 	groupId, err := strconv.Atoi(groupIdstr)
 	if err != nil || groupId <= 0 {
 		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
@@ -134,8 +132,6 @@ func (h *GroupHandler) AddGroupComment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	
-
 	postIdStr := r.FormValue("post_id")
 	postId, err := strconv.Atoi(postIdStr)
 	if err != nil {
@@ -146,12 +142,12 @@ func (h *GroupHandler) AddGroupComment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	groupcomments := models.Comment{
-			Comment:   r.FormValue("comment"),
-			PostID:    postId,
-			CreatedAt: time.Now().Format(time.RFC3339),
-			Author:    models.User{ID: r.Context().Value("userID").(int)},
-		}
-	
+		Comment:   r.FormValue("comment"),
+		PostID:    postId,
+		CreatedAt: time.Now().Format(time.RFC3339),
+		Author:    models.User{ID: r.Context().Value("userID").(int)},
+	}
+
 	file, header, err := r.FormFile("image")
 
 	var img *models.Image // nil unless file is provided

@@ -101,7 +101,6 @@ export default function EventForm({ group_id, onCreate }: EventFromProps) {
         setForm({ title: "", description: "", datetime: "" });
 
         if (ws?.current) {
-          console.log(ws?.current);
 
           ws.current.send(
             JSON.stringify({

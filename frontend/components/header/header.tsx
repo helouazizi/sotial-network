@@ -13,6 +13,7 @@ import { GenerateAvatar } from "../profile/ProfileHeader";
 import ToogleInitiale from "../request/ToogleInitiale";
 import NotifToast from "@/utils/NotifToast";
 import { SearchInput } from "../search/search";
+import { CgProfile } from "react-icons/cg";
 export default function Header() {
   const router = useRouter();
   const pathname = usePathname();
@@ -21,8 +22,8 @@ export default function Header() {
   ) as SocketContextType;
 
   const [isLogged, setIsLogged] = useState<boolean>(false);
-  
   const [showToggle, setShowToggle] = useState(false);
+  const [clicked, setClicked] = useState<boolean>(false);
 
   useEffect(() => {
     if (["/login", "/register"].includes(pathname)) {
@@ -31,7 +32,7 @@ export default function Header() {
       setIsLogged(true);
     }
   }, [pathname]);
-  
+
   const handleClickLogout = async () => {
     try {
       const res = await fetch("http://localhost:8080/api/v1/user/logout", {
@@ -44,12 +45,14 @@ export default function Header() {
           ws.current.close();
           setShowToggle(false);
         }
+        setClicked(false);
         router.push("/login");
       }
     } catch (error) {
       if (ws.current) {
         ws.current.close();
       }
+      setClicked(false);
       router.push("/login");
     }
   };

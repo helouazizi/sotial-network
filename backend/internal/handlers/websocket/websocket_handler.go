@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
 	"strings"
 	"time"
@@ -249,14 +248,13 @@ func (h *WebsocketHandler) WebsocketHandler(w http.ResponseWriter, r *http.Reque
 				})
 				continue
 			}
-			fmt.Println("sdscwxcwxcwxxw")
 			for _, id := range members {
 				if senderConns, ok := h.service.GetClient(id); ok {
 					for _, c := range senderConns {
 						c.WriteJSON(map[string]any{
-							"newMember": ws.ReceiverID,
-							"grp_id":    ws.GroupID,
-							"type":      "NewMemberJoined",
+							"newMembers": members,
+							"grp_id":     ws.GroupID,
+							"type":       "NewMemberJoined",
 						})
 					}
 				}

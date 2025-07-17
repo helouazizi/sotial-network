@@ -37,7 +37,21 @@ const GroupChatBody = () => {
         }
       };
       if (res.type == "NewMemberJoined") {
-        console.log(res.newMember, "==>", res.grp_id);
+        if (data?.id == res.grp_id) {
+          const stringifiedMembers = res.newMembers.map(String);
+          console.log("old Members", grpCtxt?.currentGrp?.members);
+          grpCtxt?.setCurrentGrp((prev) => {
+            if (!prev) return null
+            return {
+              ...prev,
+              members: stringifiedMembers,
+              count_members: prev.count_members + 1
+
+            }
+          })
+          console.log("Members After==>", grpCtxt?.currentGrp?.members);
+
+        }
       }
     }
   }

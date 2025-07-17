@@ -3,6 +3,7 @@ package repositories
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/ismailsayen/social-network/internal/models"
@@ -167,17 +168,14 @@ func (r *WebsocketRepository) HandleGroupRequest(request *models.WS, userId int)
 		if err != nil {
 			return nil, err
 		}
-		query := `SELECT member_id
-				FROM group_members
-				WHERE group_id=?
-				GROUP BY group_id;
-			`
-		rows, err := r.db.Query("SELECT member_id FROM group_members WHERE group_id = ?", query, request.GroupID)
+
+		rows, err := r.db.Query("SELECT member_id FROM group_members WHERE group_id = ?", request.GroupID)
 		if err != nil && err != sql.ErrNoRows {
 			return nil, err
 		}
 		defer rows.Close()
 
+		fmt.Println("==>", request.GroupID)
 		var memberIDs []int
 		for rows.Next() {
 			var id int

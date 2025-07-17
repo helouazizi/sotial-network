@@ -181,13 +181,6 @@ func (h *GroupHandler) CancelGroupRequestHandler(w http.ResponseWriter, r *http.
 	}
 
 	err := h.service.CancelGroupRequest(groupRequest.ID)
-	if err.Error() == "The request has already been accepted." {
-		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
-			"error": err.Error(),
-		})
-		return
-	}
-
 	if err != nil {
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
 			"error": err.Error(),

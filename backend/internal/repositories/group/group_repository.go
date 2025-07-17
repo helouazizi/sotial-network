@@ -2,7 +2,6 @@ package repositories
 
 import (
 	"database/sql"
-	"errors"
 	"net/http"
 	"time"
 
@@ -223,18 +222,9 @@ func (r *GroupRepository) CancelGroupRequest(id int) error {
 		DELETE FROM group_requests WHERE id = ?; 
 	`
 
-	res, err := r.db.Exec(query, id)
+	_, err := r.db.Exec(query, id)
 	if err != nil {
 		return err
-	}
-
-	rowsAffected, err := res.RowsAffected()
-	if err != nil {
-		return err
-	}
-
-	if rowsAffected == 0 {
-		return errors.New("The request has already been accepted.")
 	}
 
 	return nil

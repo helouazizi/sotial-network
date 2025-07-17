@@ -15,7 +15,7 @@ export default function ChatNav() {
       </Link>
       <Link
         href="/chat/groupsChat"
-        className={pathname === "/chat/groupsChat" ? "active" : ""}
+        className={pathname.startsWith("/chat/groupsChat") ? "active" : ""}
       >
         Groups
       </Link>

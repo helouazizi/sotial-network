@@ -146,9 +146,6 @@ export async function CancelGroupRequest(reqID: number) {
 
         if (!res.ok) {
             console.error(data.error)
-            if (res.status === 400) {
-                return data
-            }
             return null
         }
 

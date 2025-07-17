@@ -33,17 +33,17 @@ func (h *GroupHandler) AddGroupPost(w http.ResponseWriter, r *http.Request) {
 	}
 	groupIdstr, groupErr := utils.GetGroupId(r, "post")
 	if groupErr != nil {
-		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
+		utils.ResponseJSON(w, http.StatusNotFound, map[string]any{
 			"message": "Invalid URL",
-			"status":  http.StatusBadRequest,
+			"status":  http.StatusNotFound,
 		})
 		return
 	}
 	groupId, err := strconv.Atoi(groupIdstr)
 	if err != nil || groupId <= 0 {
-		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
+		utils.ResponseJSON(w, http.StatusNotFound, map[string]any{
 			"message": "Invalid URL",
-			"status":  http.StatusBadRequest,
+			"status":  http.StatusNotFound,
 		})
 		return
 	}
@@ -99,9 +99,9 @@ func (h *GroupHandler) GetGroupPosts(w http.ResponseWriter, r *http.Request) {
 	}
 	groupIdstr, groupErr := utils.GetGroupId(r, "post")
 	if groupErr != nil {
-		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
+		utils.ResponseJSON(w, http.StatusNotFound, map[string]any{
 			"message": "Invalid URL",
-			"status":  http.StatusBadRequest,
+			"status":  http.StatusNotFound,
 		})
 		return
 	}

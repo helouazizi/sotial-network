@@ -49,7 +49,7 @@ func (h *GroupHandler) GetGroupEventHandler(w http.ResponseWriter, r *http.Reque
 
 	groupIDStr, errId := utils.GetGroupId(r, "events")
 	if errId != nil {
-		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
+		utils.ResponseJSON(w, http.StatusNotFound, map[string]any{
 			"error": errId,
 		})
 		return
@@ -78,7 +78,7 @@ func (h *GroupHandler) GetGroupMembersHandler(w http.ResponseWriter, r *http.Req
 
 	groupIDStr, errId := utils.GetGroupId(r, "events")
 	if errId != nil {
-		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
+		utils.ResponseJSON(w, http.StatusNotFound, map[string]any{
 			"error": errId,
 		})
 		return

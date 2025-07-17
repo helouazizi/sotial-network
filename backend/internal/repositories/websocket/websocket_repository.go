@@ -52,41 +52,6 @@ func (r *WebsocketRepository) GetMessages(senderID, receiverID int, lastID int) 
 	return messages, nil
 }
 
-func (r *WebsocketRepository) GetFriends(userID int) ([]*models.User, error) {
-	query := `
-	SELECT u.id, u.nickname, u.first_name, u.last_name, u.avatar
-	FROM users u
-	INNER JOIN followers f ON f.follower_id = u.id
-	WHERE f.followed_id = ?
-
-	UNION
-
-	SELECT u.id, u.nickname, u.first_name, u.last_name, u.avatar
-	FROM users u
-	INNER JOIN followers f ON f.followed_id = u.id
-	WHERE f.follower_id = ?;
-
-	`
-
-	rows, err := r.db.Query(query, userID, userID)
-	if err != nil {
-		return nil, err
-	}
-
-	var users []*models.User
-	for rows.Next() {
-		var user models.User
-		err = rows.Scan(&user.ID, &user.Nickname, &user.FirstName, &user.Lastname, &user.Avatar)
-		if err != nil {
-			return nil, err
-		}
-
-		users = append(users, &user)
-	}
-
-	return users, nil
-}
-
 func (r *WebsocketRepository) GetLastMessageID() (int, error) {
 	query := `
 		SELECT id FROM chat_message
@@ -225,4 +190,38 @@ func (r *WebsocketRepository) HandleGroupRequest(request *models.WS, userId int)
 	}
 
 	return nil, nil
+}
+
+func (r *WebsocketRepository) GetGroupNotifs(requestedID int) ([]*models.GroupRequest, error) {
+	query := `
+		select u.id, u.first_name, u.last_name, u.avatar, rq.id,rq.group_id, rq.sender_id, rq.type, g.title from users u 
+		inner join group_requests rq ON u.id = rq.sender_id 
+		INNER JOIN groups g ON rq.group_id = g.id
+		where rq.requested_id = ?
+		ORDER BY rq.id DESC;
+	`
+
+	rows, err := r.db.Query(query, requestedID)
+	if err != nil {
+		return nil, err
+	}
+
+	var groupNotifs []*models.GroupRequest
+	for rows.Next() {
+		var groupNotif models.GroupRequest
+		var user models.User
+		var group models.Group
+		err = rows.Scan(&user.ID, &user.FirstName, &user.Lastname,
+			&user.Avatar, &groupNotif.ID, &groupNotif.GroupID, &groupNotif.SenderID, &groupNotif.Type, &group.Title)
+		if err != nil {
+			return nil, err
+		}
+
+		groupNotif.UserInfos = &user
+		groupNotif.GroupInfos = &group
+
+		groupNotifs = append(groupNotifs, &groupNotif)
+	}
+
+	return groupNotifs, nil
 }

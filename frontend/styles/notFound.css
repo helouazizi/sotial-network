@@ -1,0 +1,14 @@
+.center-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.center-image {
+  max-width: 80%;     /* Adjust as needed */
+  max-height: 80vh;   /* Ensures it fits within the viewport */
+  width: auto;
+  height: auto;
+}

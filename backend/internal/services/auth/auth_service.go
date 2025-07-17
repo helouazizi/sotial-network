@@ -192,3 +192,7 @@ func (s *AuthService) HundleAvatar(user *models.User) (models.User, models.Error
 func (s *AuthService) GetUser(userID int) (*models.User, error) {
 	return s.repo.GetUser(userID)
 }
+
+func (s *AuthService) GetFriends(userID int) ([]*models.User, error) {
+	return s.repo.GetFriends(userID)
+}

@@ -359,3 +359,9 @@
 .request-card .accept:hover {
     color: var(--online-color);
 }
+
+.request-card-group-title{
+    font-size: .9em;
+    margin-top: 5px;
+    color: var(--text-primary);
+}

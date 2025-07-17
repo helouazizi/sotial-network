@@ -123,19 +123,6 @@ func (h *WebsocketHandler) WebsocketHandler(w http.ResponseWriter, r *http.Reque
 				"data": messages,
 				"type": "getMessages",
 			})
-		case "getFriends":
-			users, err := h.service.GetFriends(userID)
-			if err != nil {
-				conn.WriteJSON(map[string]any{
-					"error": err.Error(),
-				})
-				continue
-			}
-
-			conn.WriteJSON(map[string]any{
-				"data": users,
-				"type": "getFriends",
-			})
 		case "GetNumNotif":
 			groupeCount, followersCount, err := h.service.NumberNotifs(ws.SenderID)
 			if err != nil {
@@ -189,6 +176,13 @@ func (h *WebsocketHandler) WebsocketHandler(w http.ResponseWriter, r *http.Reque
 				})
 				continue
 			}
+			groupRequests, err := h.service.GetGroupNotifs(ws.ReceiverID)
+			if err != nil {
+				conn.WriteJSON(map[string]any{
+					"error": err.Error(),
+				})
+				continue
+			}
 			groupeCount, followersCount, err := h.service.NumberNotifs(ws.ReceiverID)
 			if err != nil {
 				conn.WriteJSON(map[string]any{
@@ -210,6 +204,10 @@ func (h *WebsocketHandler) WebsocketHandler(w http.ResponseWriter, r *http.Reque
 					c.WriteJSON(map[string]any{
 						"data": CountNotis,
 						"type": "CountNotifs",
+					})
+					c.WriteJSON(map[string]any{
+						"data": groupRequests,
+						"type": "groupRequests",
 					})
 				}
 			}

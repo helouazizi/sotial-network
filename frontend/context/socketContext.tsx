@@ -11,7 +11,7 @@ import React, {
 } from "react";
 import { Message } from "../types/chat";
 import { getUserInfos } from "@/services/user";
-import { NumOfREquests } from "@/types/Request";
+import { GroupNotifications, NumOfREquests } from "@/types/Request";
 import { ProfileInt } from "@/types/profiles";
 import { User } from "@/types/user";
 import { PopupContext } from "./PopupContext";
@@ -23,8 +23,6 @@ export interface SocketContextType {
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
   friends: User[] | null;
   setFriends: React.Dispatch<React.SetStateAction<User[] | null>>;
-  sendMessage: Message | undefined;
-  setSendMessage: React.Dispatch<React.SetStateAction<Message | undefined>>;
   scrollHeight: boolean;
   setScrollHeight: React.Dispatch<React.SetStateAction<boolean>>;
   numsNotif: NumOfREquests | undefined;
@@ -37,6 +35,10 @@ export interface SocketContextType {
   setMessageNotif: React.Dispatch<React.SetStateAction<string>>;
   typeNotif: string;
   settypeNotif: React.Dispatch<React.SetStateAction<string>>;
+  notifications: GroupNotifications[] | null
+  setNotifications: React.Dispatch<React.SetStateAction<GroupNotifications[] | null>>;
+  scrollToBottom: boolean
+  setScrollToBottom: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const SocketContext = createContext<SocketContextType | null>(null);
@@ -47,10 +49,9 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const [user, setUser] = useState<User | null>(null);
   const [friends, setFriends] = useState<User[] | null>(null);
-  const [sendMessage, setSendMessage] = useState<Message | undefined>(
-    undefined
-  );
+  const [notifications, setNotifications] = useState<GroupNotifications[] | null>(null)
   const [scrollHeight, setScrollHeight] = useState<boolean>(false);
+  const [scrollToBottom, setScrollToBottom] = useState<boolean>(false)
   const [numsNotif, setNumNotif] = useState<NumOfREquests | undefined>(
     undefined
   );
@@ -83,6 +84,9 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
 
     ws.current.onmessage = (event: MessageEvent) => {
       let res = JSON.parse(event.data);
+
+      // console.log(res)
+
       if (res.type === "CountNotifs") {
         const countotifs: NumOfREquests = {
           followersCount: res.data.followersCount,
@@ -102,9 +106,6 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
         settypeNotif("Follow");
         setShowNotif(true);
       }
-      if (res.type === "getFriends") {
-        setFriends(res.data);
-      }
 
       if (res.type === "getMessages") {
         if (res.data) {
@@ -118,7 +119,8 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
       }
 
       if (res.type === "saveMessage") {
-        setSendMessage(res.message);
+        setMessages(prev => [...prev ?? [], res.message])
+        setScrollToBottom(prev => !prev)
       }
       if (res.type === "ResponseRequestsFollowers") {
         setNumNotif((prev) => {
@@ -145,6 +147,10 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
           popup?.showPopup("faild", res.error)
         }
       }
+
+      if (res.type === "groupRequests") {
+        setNotifications(res.data)
+      }
     }
 
     ws.current.onclose = () => {
@@ -164,8 +170,6 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
         setUser,
         friends,
         setFriends,
-        sendMessage,
-        setSendMessage,
         scrollHeight,
         setScrollHeight,
         numsNotif,
@@ -178,6 +182,10 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
         setShowNotif,
         typeNotif,
         settypeNotif,
+        notifications,
+        setNotifications,
+        scrollToBottom,
+        setScrollToBottom,
       }}
     >
       {children}

@@ -34,7 +34,7 @@
     padding: 20px 10px;
     transition: .5s ease-in-out;
 
-    box-shadow: var(--shadow-color) 0px 1px 3px, var(--shadow-color) 0px 1px 2px;
+    /* box-shadow: var(--shadow-color) 0px 1px 3px, var(--shadow-color) 0px 1px 2px; */
 }
 
 .hide {

@@ -70,10 +70,6 @@ func (s *WebsocketService) RemoveClient(userID int, closedConn *websocket.Conn) 
 	}
 }
 
-func (s *WebsocketService) GetFriends(userID int) ([]*models.User, error) {
-	return s.repo.GetFriends(userID)
-}
-
 func (s *WebsocketService) GetClient(id int) ([]*websocket.Conn, bool) {
 	defer s.mu.Unlock()
 	s.mu.Lock()
@@ -110,4 +106,8 @@ func (reqSer *WebsocketService) SaveMessagesGrp(idGrp, senderId int, message, av
 
 func (s *WebsocketService) HandleGroupRequest(request *models.WS, userId int) ([]int, error) {
 	return s.repo.HandleGroupRequest(request, userId)
+}
+
+func (s *WebsocketService) GetGroupNotifs(requestedID int) ([]*models.GroupRequest, error) {
+	return s.repo.GetGroupNotifs(requestedID)
 }

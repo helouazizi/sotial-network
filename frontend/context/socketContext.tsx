@@ -147,7 +147,10 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
         settypeNotif("Event");
         setShowNotif(true);
       }
+      if (res.type === "showNotifMsg") {
+        popup?.showPopup("success", `New message from ${res.message}`)
 
+      }
       if (res.type === "GroupRequestsError") {
         if (res.error) {
           popup?.showPopup("faild", res.error)

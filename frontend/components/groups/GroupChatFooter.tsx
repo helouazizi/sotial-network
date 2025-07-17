@@ -17,6 +17,7 @@ const GroupChatFooter = () => {
         const inTArray = currentGrp?.members?.map(Number)
         ws?.current?.send(JSON.stringify({
             id: currentGrp?.id,
+            action:  currentGrp?.title.slice(0, 25).trim() + "...",
             message: message,
             members: inTArray,
             fullName: `${user?.firstname} ${user?.lastname}`,

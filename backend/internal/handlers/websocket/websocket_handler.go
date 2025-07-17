@@ -95,6 +95,10 @@ func (h *WebsocketHandler) WebsocketHandler(w http.ResponseWriter, r *http.Reque
 						"message": messageData,
 						"type":    "saveMessage",
 					})
+					c.WriteJSON(map[string]any{
+						"message": ws.FullName,
+						"type":    "showNotifMsg",
+					})
 				}
 			}
 
@@ -235,6 +239,12 @@ func (h *WebsocketHandler) WebsocketHandler(w http.ResponseWriter, r *http.Reque
 							"message": lastMsg,
 							"type":    "NewMsgGrp",
 						})
+						if id != ws.SenderID {
+							c.WriteJSON(map[string]any{
+								"message": ws.Action,
+								"type":    "showNotifMsg",
+							})
+						}
 					}
 				}
 			}

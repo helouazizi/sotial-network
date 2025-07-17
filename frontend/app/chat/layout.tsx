@@ -15,7 +15,6 @@ export default function ChatLayout({ children }: { children: ReactNode }) {
   let isPrivateChat = pathName.startsWith("/chat/privateChat")
 
   return (
-    <GroupsProvider>
       <main className="container chatPage">
         <section className="sidebar">
           <div className="myName">

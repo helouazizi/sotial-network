@@ -41,7 +41,7 @@ function GroupHeader({ id }: { id: number }) {
                 <ul className="user-checkbox-list">
                     {groupMembers && groupMembers.members.map((member, indx) => (
                         <li key={indx} className="event-member-item">
-                            <PostHeader author={member.nickname} avatarUrl={member.avatar} firstname={member.firstname} lastname={member.lastname} createdAt="" />
+                            <PostHeader author={member.nickname ||member.firstname+" "+member.lastname } avatarUrl={member.avatar} firstname={member.firstname} lastname={member.lastname} createdAt="" />
 
                         </li>
                     ))

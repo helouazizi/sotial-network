@@ -13,9 +13,19 @@ import PostHeader from "../post/postHeader";
 import { Follower } from "@/types/post";
 import { PopupContext } from "@/context/PopupContext";
 import { GroupNotifications } from "@/types/Request";
+import { SocketContext } from "@/context/socketContext";
 import { useRouter } from "next/navigation";
 
 function GroupHeader({ id }: { id: number }) {
+    const [groupInfo, setGroupInfo] = useState<GroupInfo | null>(null);
+    const poopUp = useContext(PopupContext)
+    const [groupMembers, setGroupMembers] = useState<GroupMembers | null>(null);
+    const [showMembers, setShowMembers] = useState(false);
+    const [showFolowers, setShowFolowers] = useState(false);
+    const [followers, setFollowers] = useState<Follower[]>([]);
+    const [invited, setInvited] = useState<number[]>([]);
+    const [isSending, setIsSending] = useState(false);
+    const {ws} = useContext(SocketContext) ?? {}
   const [groupInfo, setGroupInfo] = useState<GroupInfo | null>(null);
   const poopUp = useContext(PopupContext);
   const [groupMembers, setGroupMembers] = useState<GroupMembers | null>(null);
@@ -127,6 +137,40 @@ function GroupHeader({ id }: { id: number }) {
     }
   };
 
+    const sendGroupRequests = async () => {
+        if (isSending) return; // optional extra guard
+        setIsSending(true);
+        const body: GroupNotifications = {
+            group_id: id,
+            requested_id: invited,
+            type: "invitation",
+        }
+        try {
+            const data = await SendJoinGroupRequest(body);
+            if (!data) {
+                setIsSending(true)
+            }
+            if (data.message) {
+                poopUp?.showPopup("success", data.message)
+
+                if (ws) {
+                    invited.forEach(i => {
+                        ws.current?.send(JSON.stringify({
+                            "type": "RelationSended",
+                            "receiver_id": i
+                        }))
+                    })
+                }
+            } else {
+                poopUp?.showPopup("faild", "something went wrong, please try again")
+            }
+
+        } catch (err) {
+            poopUp?.showPopup("faild", "something went wrong, please try again")
+
+        } finally {
+            setIsSending(true)
+        }
   const sendGroupRequests = async () => {
     if (isSending) return; // optional extra guard
     setIsSending(true);
@@ -206,6 +250,33 @@ function GroupHeader({ id }: { id: number }) {
             {showMembers ? "Hide Members" : "See Members"}
           </button>
 
+                    <button
+                        className="group-btn invite-users"
+                        onClick={async () => {
+                            if (!showFolowers) {
+                                setInvited((prev) => prev = [])
+                                await fetchFolowers(); // fetch only when opening
+                                setShowMembers(false); // close members if opening followers
+                            }
+                            setShowFolowers((prev) => !prev); // toggle state
+                            setIsSending(false)
+                        }}
+
+                    >
+                        {showFolowers ? "Back" : "Invite Users"}
+                    </button>
+                </div>
+                {showMembers && (
+                    <div className="group-members-list">
+                        {!groupMembers ? (
+                            <p className="no-data">Unable to fetch group members.</p>
+                        ) : groupMembers.members.length === 0 ? (
+                            <p className="no-data">No members in this group.</p>
+                        ) : (
+                            displayMembers()
+                        )}
+                    </div>
+                )}
           <button
             className="group-btn invite-users"
             onClick={async () => {
@@ -233,6 +304,15 @@ function GroupHeader({ id }: { id: number }) {
           </div>
         )}
 
+                {showFolowers && (
+                    <div className="group-members-list">
+                        {!followers || followers.length === 0 ? (
+                            <p className="no-data">No followers available to invite.</p>
+                        ) : (
+                            displayFolowers()
+                        )}
+                    </div>
+                )}
         {showFolowers && (
           <div className="group-members-list">
             {!followers || followers.length === 0 ? (

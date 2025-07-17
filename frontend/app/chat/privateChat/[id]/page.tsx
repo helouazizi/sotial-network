@@ -9,17 +9,18 @@ import { FaUser } from "react-icons/fa";
 import { FaArrowAltCircleDown } from "react-icons/fa";
 import Chat from "../page";
 import { User } from "@/types/user";
+import PostHeader from "@/components/post/postHeader";
 
 export default function PrivateChat() {
     const { id } = useParams()
-    const { ws, friends, messages, setMessages, sendMessage, setSendMessage, scrollHeight } = useContext(SocketContext) ?? {}
+    const { ws, friends, messages, setMessages, scrollHeight, scrollToBottom } = useContext(SocketContext) ?? {}
     let [friend, setFriend] = useState<User | undefined>(undefined)
     const chatBodyRef = useRef<HTMLDivElement>(null)
     const previousScrollHeight = useRef<number>(0)
-    const [scrollToBottom, setScrollToBottom] = useState<boolean>(false)
     const [showScrollButton, setShowScrollButton] = useState<boolean>(false)
 
     const getMessages = (lastID: number) => {
+        
         if (ws?.current && friend) {
             ws.current.send(JSON.stringify({
                 "type": "getMessages",
@@ -32,7 +33,7 @@ export default function PrivateChat() {
     useEffect(() => {
         getMessages(-1)
         return () => {
-            if (setSendMessage) setSendMessage(undefined)
+            if (setMessages) setMessages([])
         }
     }, [friend])
 
@@ -47,13 +48,6 @@ export default function PrivateChat() {
             if (setMessages) setMessages([])
         }
     }, [friends])
-
-    useEffect(() => {
-        if (!sendMessage) return;
-        if (setMessages) setMessages(prev => [...prev ?? [], sendMessage])
-        setScrollToBottom(prev => !prev)
-        if (setSendMessage) setSendMessage(undefined)
-    }, [sendMessage])
 
     useEffect(() => {
         if (chatBodyRef.current) {
@@ -128,15 +122,10 @@ export default function PrivateChat() {
             ) : (
                 <>
                     <div className="chatHeader">
-                        <p className="userName">
-                            <FaUser />
-                            <span id={`${friend?.id}`}>
-                                {friend?.firstname} {friend?.lastname}
-                            </span>
-                        </p>
-                        <p className="online">
-                            <span></span> online
-                        </p>
+                        <div className="userName">
+                            <PostHeader author={friend.firstname + " " + friend.lastname} firstname={friend.firstname} lastname={friend.lastname} createdAt='' avatarUrl={friend.avatar} />
+                        </div>
+   
                     </div>
                     <div ref={chatBodyRef} onScroll={handleScroll} className="chatBody">
                         {displayMessages()}

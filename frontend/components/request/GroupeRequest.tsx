@@ -33,14 +33,14 @@ const GroupeRequest = () => {
         "request_type": type
       }))
 
-      // let newGroupNumberNotif = Number(numsNotif?.groupeReqCount)  - 1
-      // const countotifs: NumOfREquests = {
-      //   followersCount: numsNotif?.followersCount || 0,
-      //   groupeReqCount: newGroupNumberNotif,
-      //   total: Number(numsNotif?.followersCount) + newGroupNumberNotif
-      // };
+      let newGroupNumberNotif = Number(numsNotif?.groupeReqCount)  - 1
+      const countotifs: NumOfREquests = {
+        followersCount: numsNotif?.followersCount || 0,
+        groupeReqCount: newGroupNumberNotif,
+        total: Number(numsNotif?.followersCount) + newGroupNumberNotif
+      };
 
-      // if (setNumNotif) setNumNotif(countotifs);
+      if (setNumNotif) setNumNotif(countotifs);
     }
 
     if (setNotifications) setNotifications(prev => [...(prev?.filter(p => p.id != requestID) || [])])
@@ -48,6 +48,10 @@ const GroupeRequest = () => {
 
   const displayRequests = () => {
     return notifications?.map((req, index) => {
+      let title: string = ""
+      if (req.group?.title) {
+        title = req.group?.title.length > 30 ? req.group?.title.slice(0, 30).trim() + "..." : req.group?.title
+      }
       return (
         <div key={index} className='request-card'>
           <div className="request-card-header">
@@ -55,7 +59,7 @@ const GroupeRequest = () => {
             <p className='request-type'>{req.type.charAt(0).toUpperCase() + req.type.slice(1,)}</p>
           </div>
           <div className='action-request'>
-            <p>{req.group?.title}</p>
+            <p className='request-card-group-title'>{title}</p>
           </div>
           <div className='group-action-request'>
             <button className='group-request-btn accept' onClick={() => handleRequest(req.id || 0, req.sender_id || 0, req.group_id, "accept", req.type)}><IoCheckmarkCircle /></button>

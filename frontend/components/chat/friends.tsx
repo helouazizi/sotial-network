@@ -5,6 +5,7 @@ import { User } from "@/types/user";
 import { usePathname, useRouter } from "next/navigation";
 import { useContext, useEffect } from "react";
 import PostHeader from "../post/postHeader";
+import { GetFriends } from "@/services/user";
 
 
 export default function Friends() {
@@ -12,17 +13,18 @@ export default function Friends() {
     const router = useRouter()
 
     useEffect(() => {
-        if (ws?.current) {
-            ws.current.send(JSON.stringify({
-                type: "getFriends"
-            }));
+        const fetchFriends = async () => {
+            const data = await GetFriends()
+            if (setFriends) setFriends(data)
         }
+
+        fetchFriends()
 
         return () => {
             if (setFriends) setFriends(null)
         }
-    }, [ws?.current])
-    
+    }, [])
+
     const handleClickUser = (e: React.MouseEvent<HTMLElement>) => {
         router.push("/chat/privateChat/" + e.currentTarget.id)
     }
@@ -33,7 +35,7 @@ export default function Friends() {
                 return <li
                  key={friend.id} id={`${friend.id}`}
                  onClick={handleClickUser}>
-                 <PostHeader author={friend.nickname ? friend.nickname : friend.firstname + "-" + friend.lastname} firstname={friend.firstname} lastname={friend.lastname} createdAt='' avatarUrl={friend.avatar} />
+                 <PostHeader author={friend.firstname + " " + friend.lastname} firstname={friend.firstname} lastname={friend.lastname} createdAt='' avatarUrl={friend.avatar} />
                  </li>
             }) || <li>No friends Yet</li>}
         </>

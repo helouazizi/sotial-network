@@ -24,7 +24,6 @@ export const addGroupComment = async (post_id: number, comment: string, img: Fil
             method: "POST",
             credentials: "include",
             body: form
-
         }
     )
     if (res.status === 401) {

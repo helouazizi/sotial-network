@@ -160,7 +160,7 @@ export async function CancelGroupRequest(reqID: number) {
         const data = await res.json()
 
         if (!res.ok) {
-            console.log(data.error)
+            console.error(data.error)
             return null
         }
 
@@ -179,7 +179,6 @@ export async function GetGroupMessages(id: number | undefined) {
         if (res.ok) {
             const data = await res.json()
             return data.messages;
-
         }
     } catch (err) {
         console.error(err);

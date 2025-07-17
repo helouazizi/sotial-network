@@ -5,6 +5,7 @@ import Visibility from './Visibility';
 import { FaLockOpen } from 'react-icons/fa';
 import { FaLock } from 'react-icons/fa6';
 import ProfileStatique from './ProfileStatique';
+import { API_URL } from '@/services';
 
 export const GenerateAvatar = (firstName?: string, lastName?: string) => {
   const firstInitial = firstName?.charAt(0).toUpperCase() || '';
@@ -20,7 +21,7 @@ const ProfileHeader = () => {
       <div className="left-sec">
         {dataProfile?.User?.avatar ? (
           <img
-            src={`http://localhost:8080/images/user/${dataProfile?.User?.avatar}`}
+            src={`${API_URL}images/user/${dataProfile?.User?.avatar}`}
             alt={`${dataProfile?.User?.avatar}`}
             className="avatar-profile"
           />

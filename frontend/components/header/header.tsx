@@ -14,6 +14,7 @@ import ToogleInitiale from "../request/ToogleInitiale";
 import NotifToast from "@/utils/NotifToast";
 import { SearchInput } from "../search/search";
 import { CgProfile } from "react-icons/cg";
+import { API_URL } from "@/services";
 export default function Header() {
   const router = useRouter();
   const pathname = usePathname();
@@ -35,7 +36,7 @@ export default function Header() {
 
   const handleClickLogout = async () => {
     try {
-      const res = await fetch("http://localhost:8080/api/v1/user/logout", {
+      const res = await fetch(`${API_URL}api/v1/user/logout`, {
         method: "GET",
         credentials: "include",
       });
@@ -129,7 +130,7 @@ export default function Header() {
                 >
                   {user?.avatar ? (
                     <img
-                      src={`http://localhost:8080/images/user/${user?.avatar}`}
+                      src={`${API_URL}images/user/${user?.avatar}`}
                       alt={`${user?.firstname} ${user?.lastname}`}
                       className="avatar-profile header-icon"
                     />

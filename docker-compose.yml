@@ -1,0 +1,33 @@
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile  
+    ports:
+      - 8080:8080
+    environment:
+      - GO111MODULE=on
+      - CGO_ENABLED=1
+    networks:
+      - backend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+   
+       NEXT_PUBLIC_API_URL: http://localhost:8080/
+    ports:
+      - 3000:3000
+    environment:
+       - NEXT_PUBLIC_API_URL=http://localhost:8080/
+       - INTERNAL_API_URL=http://backend:8080/   
+
+    
+    networks:
+      - backend
+
+
+networks:
+  backend:

@@ -6,6 +6,7 @@ import Toast from '../toast/Toast';
 import { Debounce } from '@/utils/Debounce';
 import { UpdateProfile } from '@/services/ProfileServices';
 import { PopupContext } from '@/context/PopupContext';
+import { API_URL } from '@/services';
 
 const AboutProfileUser = () => {
     const { dataProfile, setDataProfile } = useProfile()
@@ -16,7 +17,7 @@ const AboutProfileUser = () => {
     const [selectedFile, setSelectedFile] = useState<File | undefined>(undefined)
     const popup = useContext(PopupContext)
     useEffect(() => {
-        if (dataProfile?.User?.avatar) setAvatar(`http://localhost:8080/images/user/${dataProfile?.User?.avatar}`)
+        if (dataProfile?.User?.avatar) setAvatar(`${API_URL}images/user/${dataProfile?.User?.avatar}`)
         if (dataProfile?.User?.nickname) setNickname(dataProfile?.User?.nickname)
         if (dataProfile?.User?.aboutme) setAbout(dataProfile?.User?.aboutme)
     }, [dataProfile?.User?.avatar, dataProfile?.User?.aboutme, dataProfile?.User?.nickname])
@@ -35,7 +36,7 @@ const AboutProfileUser = () => {
     const removeUpdatedImage = (e: React.FormEvent) => {
         e.preventDefault()
         if (dataProfile?.User?.avatar) {
-            setAvatar(`http://localhost:8080/images/user/${dataProfile?.User?.avatar}`)
+            setAvatar(`${API_URL}images/user/${dataProfile?.User?.avatar}`)
         } else {
             setAvatar(undefined)
         }
@@ -51,7 +52,7 @@ const AboutProfileUser = () => {
     const debouncedSubmit = useCallback(
         Debounce(async () => {
             if (
-                (avatar === `http://localhost:8080/images/user/${dataProfile?.User?.avatar}` || !avatar) &&
+                (avatar === `${API_URL}images/user/${dataProfile?.User?.avatar}` || !avatar) &&
                 (about === dataProfile?.User?.aboutme || !about) &&
                 (nickname === dataProfile?.User?.nickname || !nickname)
             ) {
@@ -90,7 +91,7 @@ const AboutProfileUser = () => {
                         dataProfile?.myAccount ?
                             <div>
                                 <label htmlFor="updateImage">Update Avatar</label>
-                                <button disabled={avatar === `http://localhost:8080/images/user/${dataProfile?.User?.avatar}` ? true : false} onClick={removeUpdatedImage}>Annuler</button>
+                                <button disabled={avatar === `${API_URL}images/user/${dataProfile?.User?.avatar}` ? true : false} onClick={removeUpdatedImage}>Annuler</button>
                                 <button className='submit' type='submit'>Submit Changes</button>
                                 {showError ? <Toast type='fail' message='Do some changes before submitting.' /> : ""}
                                 <input type="file" name="updateImage" id="updateImage" accept='image/jpeg, image/png, image/jpg' onChange={updateAvatar} />

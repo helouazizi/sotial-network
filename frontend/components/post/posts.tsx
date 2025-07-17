@@ -7,6 +7,7 @@ import PostCard from "./postCrad";
 import NoPostsYet from "./noPostsYet";
 import { FaPenToSquare } from "react-icons/fa6";
 import NoMorePosts from "./noMorePosts";
+import { API_URL } from "@/services";
 
 const LIMIT = 10;
 
@@ -36,7 +37,7 @@ export default function Posts() {
     setIsLoading(true);
 
     try {
-      const res = await fetch("http://localhost:8080/api/v1/posts", {
+      const res = await fetch(`${API_URL}api/v1/posts`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },

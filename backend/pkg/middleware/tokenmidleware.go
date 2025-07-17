@@ -3,6 +3,7 @@ package middleware
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"net/http"
 
 	"github.com/ismailsayen/social-network/internal/models"
@@ -14,6 +15,7 @@ import (
 const userIDKey string = "userID"
 
 func AuthMiddleware(next http.Handler, db *sql.DB) http.HandlerFunc {
+	fmt.Println("i am inside  the midleware")
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		token, err := token.GetToken(r, "Token")
 		if err.Code != http.StatusOK {

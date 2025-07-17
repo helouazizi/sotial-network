@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { API_URL } from './services';
 
 export default async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
+  const API = process.env.INTERNAL_API_URL || "http://backend:8080/";
 
   // ✅ Allow internal system routes
   if (
@@ -14,7 +16,7 @@ export default async function middleware(request: NextRequest) {
   }
 
   try {
-    const response = await fetch('http://localhost:8080/api/v1/user/Auth', {
+    const response = await fetch(`${API}api/v1/user/Auth`, {
       headers: {
         Cookie: request.headers.get('cookie') || ""
       }

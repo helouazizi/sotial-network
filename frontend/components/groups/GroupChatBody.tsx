@@ -3,6 +3,7 @@ import { GetGroupMessages } from '@/services/groupServices'
 import React, { useContext, useEffect, useRef } from 'react'
 import { GenerateAvatar } from '../profile/ProfileHeader'
 import { SocketContext } from '@/context/socketContext'
+import { API_URL } from '@/services'
 
 const GroupChatBody = () => {
   const { user, currentGrp, msgGrp, setMsgGrp } = useContext(SocketContext) ?? {}
@@ -37,7 +38,7 @@ const GroupChatBody = () => {
             <div className={`card-msg-grp ${me ? "my-msg" : ""}`} key={ind}>
               {ele.avatar ? (
                 <img
-                  src={`http://localhost:8080/images/user/${ele.avatar}`}
+                  src={`${API_URL}images/user/${ele.avatar}`}
                   alt={`${ele.avatar}`}
                   className="avatar-profile user-msg-avatar"
                 />

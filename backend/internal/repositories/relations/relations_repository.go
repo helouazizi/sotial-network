@@ -32,7 +32,6 @@ func (rlrepo *RelationsRepository) UpdateRelation(newStatus string, profileID, s
 		}
 		return nil
 	}
-
 	query = `UPDATE followers SET status=? WHERE id=?`
 	_, err = rlrepo.db.Exec(query, newStatus, idRelation)
 	if err != nil {

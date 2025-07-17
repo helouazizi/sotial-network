@@ -3,6 +3,7 @@ package repositories
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/ismailsayen/social-network/internal/models"
@@ -136,23 +137,23 @@ func (reqRepo *WebsocketRepository) SaveMessagesGrpRepo(idGrp, senderId int, mes
 	return lastMessage, nil
 }
 
-func (r *WebsocketRepository) HandleGroupRequest(request *models.WS, userId int) error {
+func (r *WebsocketRepository) HandleGroupRequest(request *models.WS, userId int) ([]int, error) {
 	deleteQuery := `
 		DELETE FROM group_requests WHERE id = ?;
 	`
 
 	res, err := r.db.Exec(deleteQuery, request.ID)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	rowsAffected, err := res.RowsAffected()
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if rowsAffected == 0 {
-		return errors.New("The owner has been cancled this action.")
+		return nil, errors.New("The owner has been cancled this action.")
 	}
 
 	if request.Action == "accept" {
@@ -165,11 +166,28 @@ func (r *WebsocketRepository) HandleGroupRequest(request *models.WS, userId int)
 
 		_, err := r.db.Exec(insertQuery, request.GroupID, request.ReceiverID)
 		if err != nil {
-			return err
+			return nil, err
 		}
+
+		rows, err := r.db.Query("SELECT member_id FROM group_members WHERE group_id = ?", request.GroupID)
+		if err != nil && err != sql.ErrNoRows {
+			return nil, err
+		}
+		defer rows.Close()
+
+		fmt.Println("==>", request.GroupID)
+		var memberIDs []int
+		for rows.Next() {
+			var id int
+			if err := rows.Scan(&id); err != nil {
+				return nil, err
+			}
+			memberIDs = append(memberIDs, id)
+		}
+		return memberIDs, nil
 	}
 
-	return nil
+	return nil, nil
 }
 
 func (r *WebsocketRepository) GetGroupNotifs(requestedID int) ([]*models.GroupRequest, error) {

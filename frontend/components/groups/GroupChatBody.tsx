@@ -28,7 +28,6 @@ const GroupChatBody = () => {
     ws.current.onmessage = (e: MessageEvent) => {
       let res = JSON.parse(e.data);
       if (res.type == "NewMsgGrp") {
-
         let message = res.message;
         if (message?.group_id == data?.id) {
           grpCtxt?.setMsgGrp((prev) => {
@@ -36,8 +35,24 @@ const GroupChatBody = () => {
             return [...prev, message]
           })
         }
-
       };
+      if (res.type == "NewMemberJoined") {
+        if (data?.id == res.grp_id) {
+          const stringifiedMembers = res.newMembers.map(String);
+          console.log("old Members", grpCtxt?.currentGrp?.members);
+          grpCtxt?.setCurrentGrp((prev) => {
+            if (!prev) return null
+            return {
+              ...prev,
+              members: stringifiedMembers,
+              count_members: prev.count_members + 1
+
+            }
+          })
+          console.log("Members After==>", grpCtxt?.currentGrp?.members);
+
+        }
+      }
     }
   }
   return (

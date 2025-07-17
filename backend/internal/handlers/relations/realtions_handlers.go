@@ -38,7 +38,7 @@ func (h *RelationsHandler) RelationHandler(w http.ResponseWriter, r *http.Reques
 	if sessionID == data.ProfileID {
 		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
 			"message": "Invalid Request Data.",
-			"status":  http.StatusInternalServerError,
+			"status":  http.StatusBadRequest,
 		})
 		return
 	}

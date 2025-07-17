@@ -160,7 +160,7 @@ func (h *GroupHandler) JoinGroupRequestHandler(w http.ResponseWriter, r *http.Re
 	}
 
 	utils.ResponseJSON(w, http.StatusOK, map[string]any{
-		"message": "Request sended succesfully!",
+		"message":    "Request sended succesfully!",
 		"request_id": reqID,
 	})
 }
@@ -181,6 +181,13 @@ func (h *GroupHandler) CancelGroupRequestHandler(w http.ResponseWriter, r *http.
 	}
 
 	err := h.service.CancelGroupRequest(groupRequest.ID)
+	if err.Error() == "The request has already been accepted." {
+		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
+			"error": err.Error(),
+		})
+		return
+	}
+
 	if err != nil {
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
 			"error": err.Error(),

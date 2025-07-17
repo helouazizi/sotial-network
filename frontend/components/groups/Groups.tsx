@@ -48,11 +48,13 @@ function Groups() {
         return
       }
 
+      if (data.error) {
+        popup?.showPopup("faild", data.error)
+        return
+      }
+
       group.request_id = 0
       popup?.showPopup("success", data.message)
-
-
-
     } else {
       const body: GroupNotifications = {
         group_id: group.id,

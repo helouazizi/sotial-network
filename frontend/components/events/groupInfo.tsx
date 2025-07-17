@@ -92,6 +92,8 @@ function GroupHeader({ id }: { id: number }) {
 
   useEffect(() => {
     const fetchGroup = async () => {
+      console.log("fetch groupe");
+      
       try {
         const data = await GetGroup(id);
         if (data.error === "not-found") {

@@ -16,7 +16,7 @@ export const GetEvents = async (group_id: number):Promise<Event[]> => {
         console.log(res.status, 'status event');
         
          if (res.status == 404) {
-          router.push("/groups/joined/")
+         window.location.href = "/groups/joined/"
           
         }
         throw new Error(await res.text());}

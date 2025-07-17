@@ -9,6 +9,7 @@ import { FaUser } from "react-icons/fa";
 import { FaArrowAltCircleDown } from "react-icons/fa";
 import Chat from "../page";
 import { User } from "@/types/user";
+import PostHeader from "@/components/post/postHeader";
 
 export default function PrivateChat() {
     const { id } = useParams()
@@ -121,15 +122,10 @@ export default function PrivateChat() {
             ) : (
                 <>
                     <div className="chatHeader">
-                        <p className="userName">
-                            <FaUser />
-                            <span id={`${friend?.id}`}>
-                                {friend?.firstname} {friend?.lastname}
-                            </span>
-                        </p>
-                        <p className="online">
-                            <span></span> online
-                        </p>
+                        <div className="userName">
+                            <PostHeader author={friend.firstname + " " + friend.lastname} firstname={friend.firstname} lastname={friend.lastname} createdAt='' avatarUrl={friend.avatar} />
+                        </div>
+   
                     </div>
                     <div ref={chatBodyRef} onScroll={handleScroll} className="chatBody">
                         {displayMessages()}

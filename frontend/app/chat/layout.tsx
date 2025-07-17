@@ -7,6 +7,7 @@ import Friends from "../../components/chat/friends";
 import { usePathname } from "next/navigation";
 import GroupsChat from "@/components/groups/GroupsChat";
 import { GroupsProvider } from "@/context/GroupsContext";
+import PostHeader from "@/components/post/postHeader";
 
 export default function ChatLayout({ children }: { children: ReactNode }) {
   const { user } = useContext(SocketContext) ?? {}
@@ -18,9 +19,9 @@ export default function ChatLayout({ children }: { children: ReactNode }) {
       <main className="container chatPage">
         <section className="sidebar">
           <div className="myName">
-            <p>
-              <FaUser /> {user?.firstname} {user?.lastname || `Loading my name...`}
-            </p>
+            <div>
+              <PostHeader author={user?.firstname + " " + user?.lastname} firstname={user?.firstname || ''} lastname={user?.lastname || ''} createdAt='' avatarUrl={user?.avatar} />
+            </div>
           </div>
           <div className="friends">
             <ChatNav />

@@ -22,6 +22,9 @@ export async function GetFriends() {
 
         if (res.ok) {
             return data.data
+        } else {
+            console.error(data.error)
+            return null
         }
     } catch (err) {
         console.error(err)

@@ -71,7 +71,7 @@ const EventCard = ({ event }: EventCardProps) => {
   return (
     <div className="event-card">
       <PostHeader
-        author={event.author.nickname}
+        author={event.author.nickname  || event.author.firstname+"_"+event.author.lastname}
         firstname={event.author.firstname}
         lastname={event.author.lastname}
         createdAt={event.created_at}

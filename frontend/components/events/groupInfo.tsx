@@ -26,14 +26,7 @@ function GroupHeader({ id }: { id: number }) {
     const [invited, setInvited] = useState<number[]>([]);
     const [isSending, setIsSending] = useState(false);
     const {ws} = useContext(SocketContext) ?? {}
-  const [groupInfo, setGroupInfo] = useState<GroupInfo | null>(null);
-  const poopUp = useContext(PopupContext);
-  const [groupMembers, setGroupMembers] = useState<GroupMembers | null>(null);
-  const [showMembers, setShowMembers] = useState(false);
-  const [showFolowers, setShowFolowers] = useState(false);
-  const [followers, setFollowers] = useState<Follower[]>([]);
-  const [invited, setInvited] = useState<number[]>([]);
-  const [isSending, setIsSending] = useState(false);
+
   const  router = useRouter()
 
   const handleToggleFollower = (id: number, checked: boolean) => {
@@ -137,7 +130,7 @@ function GroupHeader({ id }: { id: number }) {
     }
   };
 
-    const sendGroupRequests = async () => {
+  const sendGroupRequests = async () => {
         if (isSending) return; // optional extra guard
         setIsSending(true);
         const body: GroupNotifications = {
@@ -171,84 +164,52 @@ function GroupHeader({ id }: { id: number }) {
         } finally {
             setIsSending(true)
         }
-  const sendGroupRequests = async () => {
-    if (isSending) return; // optional extra guard
-    setIsSending(true);
-    const body: GroupNotifications = {
-      group_id: id,
-      requested_id: invited,
-      type: "invitation",
-    };
-    try {
-      const data = await SendJoinGroupRequest(body);
-      if (!data) {
-        setIsSending(true);
-      }
-      if (data.message) {
-        poopUp?.showPopup("success", data.message);
-      } else {
-        poopUp?.showPopup("faild", "something went wrong, please try again");
-      }
-    } catch (err) {
-      poopUp?.showPopup("faild", "something went wrong, please try again");
-    } finally {
-      setIsSending(true);
-    }
-  };
+  }
+ 
 
   if (!groupInfo) return null;
-  return (
-    <div className="event-group-header">
-      <div className="group-info-card">
-        <div className="group-card-header">
-          <div className="group-header-title">
-            <MdGroups className="group-icon" />
-            <span className="group-creation-date">
-              {FormatDate(groupInfo.group.created_at)}
-            </span>
-            <div className="total-members">
-              Members: {groupInfo.total_members}
-            </div>
-          </div>
+   return (
+        <div className="event-group-header">
+            <div className="group-info-card">
+                <div className="group-card-header">
+                    <div className="group-header-title">
+                        <MdGroups className="group-icon" />
+                        <span className="group-creation-date">{FormatDate(groupInfo.group.created_at)}</span>
+                        <div className="total-members">Members: {groupInfo.total_members}</div>
+                    </div>
 
-          <div className="group-admin-card">
-            <p className="admin-name">
-              {groupInfo.author.firstname} {groupInfo.author.lastname}
-            </p>
-            {groupInfo.author.nickname && (
-              <p className="admin-nickname">
-                <MdVerifiedUser
-                  className="group-admin-icon"
-                  title="Group Admin"
-                />
-                @{groupInfo.author.nickname}
-              </p>
-            )}
-          </div>
-        </div>
+                    <div className="group-admin-card">
+                        <p className="admin-name">{groupInfo.author.firstname} {groupInfo.author.lastname}</p>
+                        {groupInfo.author.nickname && (
+                            <p className="admin-nickname">
+                                <MdVerifiedUser className="group-admin-icon" title="Group Admin" />
+                                @{groupInfo.author.nickname}
+                            </p>
+                        )}
+                    </div>
+                </div>
 
-        <div className="group-details">
-          <p> {groupInfo.group.title}</p>
-          <div className="event-group-description">
-            {groupInfo.group.description}
-          </div>
-        </div>
+                <div className="group-details">
+                    <p> {groupInfo.group.title}</p>
+                    <div className="event-group-description">{groupInfo.group.description}</div>
+                </div>
 
-        <div className="group-action-buttons">
-          <button
-            className="group-btn see-members"
-            onClick={async () => {
-              if (!showMembers) {
-                await fetchMembers();
-                setShowFolowers(false);
-                setInvited((prev) => []);
-                setIsSending(false);
-              }
-              setShowMembers((prev) => !prev);
-            }}
-          >
-            {showMembers ? "Hide Members" : "See Members"}
-          </button>
+                <div className="group-action-buttons">
+                    <button
+                        className="group-btn see-members"
+                        onClick={async () => {
+                            if (!showMembers) {
+                                await fetchMembers();
+                                setShowFolowers(false);
+                                setInvited((prev) => [])
+                                setIsSending(false)
+                            }
+                            setShowMembers((prev) => !prev);
+                        }}
+
+                    >
+                        {showMembers ? "Hide Members" : "See Members"}
+                    </button>
 
                     <button
                         className="group-btn invite-users"
@@ -277,32 +238,6 @@ function GroupHeader({ id }: { id: number }) {
                         )}
                     </div>
                 )}
-          <button
-            className="group-btn invite-users"
-            onClick={async () => {
-              if (!showFolowers) {
-                setInvited((prev) => (prev = []));
-                await fetchFolowers(); // fetch only when opening
-                setShowMembers(false); // close members if opening followers
-              }
-              setShowFolowers((prev) => !prev); // toggle state
-              setIsSending(false);
-            }}
-          >
-            {showFolowers ? "Back" : "Invite Users"}
-          </button>
-        </div>
-        {showMembers && (
-          <div className="group-members-list">
-            {!groupMembers ? (
-              <p className="no-data">Unable to fetch group members.</p>
-            ) : groupMembers.members.length === 0 ? (
-              <p className="no-data">No members in this group.</p>
-            ) : (
-              displayMembers()
-            )}
-          </div>
-        )}
 
                 {showFolowers && (
                     <div className="group-members-list">
@@ -313,29 +248,20 @@ function GroupHeader({ id }: { id: number }) {
                         )}
                     </div>
                 )}
-        {showFolowers && (
-          <div className="group-members-list">
-            {!followers || followers.length === 0 ? (
-              <p className="no-data">No followers available to invite.</p>
-            ) : (
-              displayFolowers()
-            )}
-          </div>
-        )}
 
-        {showFolowers && invited && invited.length > 0 && (
-          <button
-            className="group-btn send-invetation"
-            onClick={async () => {
-              await sendGroupRequests();
-            }}
-          >
-            {isSending ? "Request Sent" : "Send"}
-          </button>
-        )}
-      </div>
-    </div>
-  );
+                {showFolowers && invited && invited.length > 0 && (
+                    <button
+                        className="group-btn send-invetation"
+                        onClick={async () => {
+                            await sendGroupRequests()
+                        }}
+                    >
+                        {isSending ? "Request Sent" : "Send"}
+                    </button>
+                )}
+            </div>
+        </div>
+    );
 }
 
 export default GroupHeader;

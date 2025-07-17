@@ -37,6 +37,10 @@ export default function CreatPost({ onPostCreated }: Props) {
         }
       );
       if (!res.ok) {
+        if (res.status == 404) {
+          router.push("/groups/joined/")
+          return;
+        }
         popup?.showPopup("faild", "Sommething went wrong");
         return;
       }

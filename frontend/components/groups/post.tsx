@@ -8,7 +8,7 @@ import NoPostsYet from "../post/noPostsYet";
 import CreatPost from "./FormCreatpost";
 
 import { API_URL } from "@/services";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { PopupContext } from "@/context/PopupContext";
 
 import PostGroupCard from "./groupPostCard";

@@ -22,9 +22,9 @@ function throttle<T extends (...args: any[]) => void>(fn: T, delay = 500): T {
   };
 }
 
-export default function Posts() {  
+export default function Posts() {
   const [posts, setPosts] = useState<Post[]>([]);
-  const [showForm, setShowForm] = useState(false);
+  const [showForm, setShowForm] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [loadedOnce, setLoadedOnce] = useState(false);
@@ -34,7 +34,7 @@ export default function Posts() {
   const fetchPosts = useCallback(async () => {
     if (isLoading || !hasMore) return;
     setIsLoading(true);
-    
+
     try {
       const res = await fetch("http://localhost:8080/api/v1/posts", {
         method: "POST",
@@ -49,7 +49,7 @@ export default function Posts() {
       if (!res.ok) throw new Error(`HTTP error ${res.status}`);
 
       const data = await res.json();
-      
+
 
       if (Array.isArray(data)) {
         setPosts((prev) =>
@@ -75,12 +75,12 @@ export default function Posts() {
     }
   }, [isLoading, hasMore]);
 
-  
+
   useEffect(() => {
     fetchPosts();
   }, []);
 
-  
+
   useEffect(() => {
     const handleScroll = throttle(() => {
       const scrollBottom = window.innerHeight + window.scrollY;
@@ -97,29 +97,27 @@ export default function Posts() {
 
 
 
-  const addPost = (newPost: Post ) => {
+  const addPost = (newPost: Post) => {
     setPosts((prev) => [newPost, ...prev]);
     setShowForm(false);
   };
 
   const toggleForm = () => {
-    setShowForm((prev) => !prev); 
+    setShowForm((prev) => !prev);
   };
 
   return (
-    <>
+    <>  
       <section className="create-post">
-        <div className="add-post-holder">
-          <button className="addPostBtn" onClick={toggleForm}>
-            <FaPenToSquare className="addPostIcon" /> Add-Post
-          </button>
-        </div>
-        {showForm && <CreatePostForm onCreated={addPost}  />}
+        <button className="addPostBtn" onClick={toggleForm}>
+          <FaPenToSquare className="addPostIcon" /> Add-Post
+        </button>
+        {showForm && <CreatePostForm onCreated={addPost} />}
       </section>
 
       <section className="posts-list ">
         {posts.map((post) => (
-          <PostCard key={post.id} post={post}  />
+          <PostCard key={post.id} post={post} />
         ))}
         {!isLoading && loadedOnce && posts.length === 0 && <NoPostsYet />}
         {!isLoading && !hasMore && posts.length > 0 && <NoMorePosts />}

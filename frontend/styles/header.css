@@ -55,6 +55,7 @@ li {
 nav ul li a {
   text-decoration-line: none;
   color: var(--text-primary);
+  position: relative;
 }
 
 nav ul li svg {
@@ -68,6 +69,31 @@ nav ul li svg {
 
 nav ul li svg:hover {
   color: var(--accent-color);
+}
+
+
+nav ul li a::after {
+  position: absolute;
+  left: -60%;
+  bottom: -40px;
+  background-color: var(--btn-bg);
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: .7em;
+  transition: .2s;
+}
+
+nav ul li .homeIcon:hover:after {
+  content: 'Home';
+
+}
+
+nav ul li .chatIcon:hover::after {
+  content: 'Chat';
+}
+
+nav ul li .groupIcon:hover::after {
+  content: 'Groups';
 }
 
 .logo {

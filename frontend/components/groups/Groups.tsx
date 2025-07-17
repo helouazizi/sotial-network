@@ -50,9 +50,6 @@ function Groups() {
 
       group.request_id = 0
       popup?.showPopup("success", data.message)
-
-
-
     } else {
       const body: GroupNotifications = {
         group_id: group.id,

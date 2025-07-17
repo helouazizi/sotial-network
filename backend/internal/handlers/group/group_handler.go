@@ -160,7 +160,7 @@ func (h *GroupHandler) JoinGroupRequestHandler(w http.ResponseWriter, r *http.Re
 	}
 
 	utils.ResponseJSON(w, http.StatusOK, map[string]any{
-		"message": "Request sended succesfully!",
+		"message":    "Request sended succesfully!",
 		"request_id": reqID,
 	})
 }

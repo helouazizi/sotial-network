@@ -28,7 +28,6 @@ const GroupChatBody = () => {
     ws.current.onmessage = (e: MessageEvent) => {
       let res = JSON.parse(e.data);
       if (res.type == "NewMsgGrp") {
-
         let message = res.message;
         if (message?.group_id == data?.id) {
           grpCtxt?.setMsgGrp((prev) => {
@@ -36,8 +35,10 @@ const GroupChatBody = () => {
             return [...prev, message]
           })
         }
-
       };
+      if (res.type == "NewMemberJoined") {
+        console.log(res.newMember, "==>", res.grp_id);
+      }
     }
   }
   return (

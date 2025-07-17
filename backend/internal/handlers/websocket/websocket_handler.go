@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 	"time"
@@ -250,19 +251,19 @@ func (h *WebsocketHandler) WebsocketHandler(w http.ResponseWriter, r *http.Reque
 				})
 				continue
 			}
-			if members != nil {
-				for _, id := range members {
-					if senderConns, ok := h.service.GetClient(id); ok {
-						for _, c := range senderConns {
-							c.WriteJSON(map[string]any{
-								"newMember": ws.ReceiverID,
-								"grp_id":    ws.GroupID,
-								"type":      "NewMemberJoined",
-							})
-						}
+			fmt.Println("sdscwxcwxcwxxw")
+			for _, id := range members {
+				if senderConns, ok := h.service.GetClient(id); ok {
+					for _, c := range senderConns {
+						c.WriteJSON(map[string]any{
+							"newMember": ws.ReceiverID,
+							"grp_id":    ws.GroupID,
+							"type":      "NewMemberJoined",
+						})
 					}
 				}
 			}
+
 		case "event":
 			ids, err := h.service.GreMembersIds(&ws)
 			if err != nil {

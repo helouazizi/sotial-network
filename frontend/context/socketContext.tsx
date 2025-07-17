@@ -1,5 +1,5 @@
 "use client";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import React, {
   createContext,
   useEffect,
@@ -69,6 +69,7 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
   const excludedPaths = ["/login", "/register"];
   const shouldConnect = !excludedPaths.includes(pathname);
   const popup = useContext(PopupContext);
+  const router = useRouter();
   useEffect(() => {
     if (!shouldConnect) {
       return;
@@ -111,6 +112,11 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
         setMessageNotif(res.message);
         settypeNotif("Follow");
         setShowNotif(true);
+      }
+
+      if (res.type == "NotMemberInGrp") {
+        popup?.showPopup('faild', res.text)
+        router.push("/chat/groupsChat")
       }
 
       if (res.type === "getMessages") {

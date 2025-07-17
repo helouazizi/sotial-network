@@ -224,6 +224,10 @@ func (r *WebsocketRepository) GetGroupNotifs(requestedID int) ([]*models.GroupRe
 }
 
 func (r *WebsocketRepository) GetInfoGroupeRepo(GrpID int, sessionID int) (*models.Group, error) {
+	err := r.IsMember(GrpID, sessionID)
+	if err != nil {
+		return nil, err
+	}
 	query := `SELECT 
 				g.id, 
 				g.title, 
@@ -241,7 +245,7 @@ func (r *WebsocketRepository) GetInfoGroupeRepo(GrpID int, sessionID int) (*mode
 	`
 	var groupInfo models.Group
 	var ids sql.NullString
-	err := r.db.QueryRow(query, GrpID).Scan(&groupInfo.ID, &groupInfo.Title, &groupInfo.Count_Members, &ids)
+	err = r.db.QueryRow(query, GrpID).Scan(&groupInfo.ID, &groupInfo.Title, &groupInfo.Count_Members, &ids)
 	if err != nil && err != sql.ErrNoRows {
 		return nil, err
 	}
@@ -251,4 +255,24 @@ func (r *WebsocketRepository) GetInfoGroupeRepo(GrpID int, sessionID int) (*mode
 		groupInfo.Members = []string{}
 	}
 	return &groupInfo, nil
+}
+
+func (r *WebsocketRepository) IsMember(GrpID int, sessionID int) error {
+	var id int
+	query := `
+		SELECT EXISTS(
+    		SELECT 1
+    		FROM group_members
+    		WHERE group_id = ? AND member_id = ?
+		);
+
+	`
+	err := r.db.QueryRow(query, GrpID, sessionID).Scan(&id)
+	if err != nil {
+		return err
+	}
+	if id == 0 {
+		return errors.New("Want to join? Send a request to the admin!")
+	}
+	return nil
 }

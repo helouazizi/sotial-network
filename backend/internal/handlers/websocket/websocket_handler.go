@@ -293,6 +293,13 @@ func (h *WebsocketHandler) WebsocketHandler(w http.ResponseWriter, r *http.Reque
 		case "groupChatInfo":
 			groupInfo, err := h.service.GetInfoGroupeService(ws.GroupID, ws.SenderID)
 			if err != nil {
+				if err.Error() == "Want to join? Send a request to the admin!" {
+					conn.WriteJSON(map[string]any{
+						"text": err.Error(),
+						"type": "NotMemberInGrp",
+					})
+					continue
+				}
 				conn.WriteJSON(map[string]any{
 					"error": err.Error(),
 				})

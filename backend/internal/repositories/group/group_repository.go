@@ -141,6 +141,12 @@ func (r *GroupRepository) GetGroup(groupID int) (models.GroupIfo, *models.GroupE
 		&groupInfo.TotalMembers,
 	)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return models.GroupIfo{}, &models.GroupError{
+				Message: "Invalid URL",
+				Code:    http.StatusNotFound,
+			}
+		}
 		return models.GroupIfo{}, &models.GroupError{
 			Message: "Internal Server Error",
 			Code:    http.StatusInternalServerError,

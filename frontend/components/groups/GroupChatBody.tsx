@@ -10,17 +10,14 @@ const GroupChatBody = () => {
   const ChatBody = useRef<HTMLDivElement>(null)
   useEffect(() => {
     const fetcher = async () => {
-      const message = await GetGroupMessages(currentGrp?.id)
-      
-      setMsgGrp?.((prev) => {
-        if (!prev) return []
-        return message
-      })
+      if (!currentGrp?.id || !setMsgGrp) return;
+      const message = await GetGroupMessages(currentGrp.id)
+      setMsgGrp(message)
     }
-    if (currentGrp?.id) {
-      fetcher()
-    }
+
+    fetcher()
   }, [currentGrp?.id])
+
   useEffect(() => {
     if (ChatBody.current) {
       ChatBody.current.scrollTop = ChatBody.current.scrollHeight

@@ -1,15 +1,12 @@
 import { SocketContext } from '@/context/socketContext'
 import React, { useContext, useRef } from 'react'
 import { PopupContext } from '@/context/PopupContext'
-import { GroupsContext } from '@/context/GroupsContext'
 
-const GroupChatFooter = (props: { idGrp: number | undefined, members: string[] | undefined }) => {
-    const { ws, user } = useContext(SocketContext) ?? {}
+
+const GroupChatFooter = () => {
+    const { ws, user, currentGrp } = useContext(SocketContext) ?? {}
     const textarea = useRef<HTMLTextAreaElement>(null)
     const popup = useContext(PopupContext)
-    const grpCtxt = useContext(GroupsContext)
-    let data = grpCtxt?.currentGrp;
-
 
     const handleSendMessageGroup = () => {
         let message = textarea.current?.value.trim()
@@ -17,9 +14,9 @@ const GroupChatFooter = (props: { idGrp: number | undefined, members: string[] |
             popup?.showPopup("faild", "You can send empty message!")
             return
         }
-        const inTArray = data?.members?.map(Number)
+        const inTArray = currentGrp?.members?.map(Number)
         ws?.current?.send(JSON.stringify({
-            id: data?.id,
+            id: currentGrp?.id,
             message: message,
             members: inTArray,
             fullName: `${user?.firstname} ${user?.lastname}`,

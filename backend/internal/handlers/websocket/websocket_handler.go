@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 	"time"
@@ -47,7 +48,7 @@ func (h *WebsocketHandler) WebsocketHandler(w http.ResponseWriter, r *http.Reque
 	for {
 		var ws models.WS
 		err := conn.ReadJSON(&ws)
-
+		fmt.Println(ws)
 		if err != nil && !strings.Contains(err.Error(), "close") {
 			conn.WriteJSON(map[string]any{
 				"error": "Error reading message: " + err.Error(),
@@ -281,6 +282,23 @@ func (h *WebsocketHandler) WebsocketHandler(w http.ResponseWriter, r *http.Reque
 
 			}
 
+		case "groupChatInfo":
+			groupInfo, err := h.service.GetInfoGroupeService(ws.GroupID, ws.SenderID)
+			if err != nil {
+				fmt.Println(err)
+				conn.WriteJSON(map[string]any{
+					"error": err.Error(),
+				})
+				continue
+			}
+			if senderConns, ok := h.service.GetClient(ws.SenderID); ok {
+				for _, c := range senderConns {
+					c.WriteJSON(map[string]any{
+						"data": groupInfo,
+						"type": "newGroupSelected",
+					})
+				}
+			}
 		}
 
 	}

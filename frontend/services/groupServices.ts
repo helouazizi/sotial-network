@@ -164,7 +164,6 @@ export async function GetGroupMessages(id: number | undefined) {
         if (res.ok) {
             const data = await res.json()
             return data.messages;
-
         }
     } catch (err) {
         console.error(err);

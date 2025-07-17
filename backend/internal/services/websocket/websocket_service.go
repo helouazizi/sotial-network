@@ -111,3 +111,8 @@ func (s *WebsocketService) HandleGroupRequest(request *models.WS, userId int) ([
 func (s *WebsocketService) GetGroupNotifs(requestedID int) ([]*models.GroupRequest, error) {
 	return s.repo.GetGroupNotifs(requestedID)
 }
+
+
+func (s *WebsocketService) GetInfoGroupeService(grpId int, sessionID int) (*models.Group, error) {
+	return s.repo.GetInfoGroupeRepo(grpId, sessionID)
+}

@@ -3,7 +3,7 @@ package repositories
 import (
 	"database/sql"
 	"errors"
-	"fmt"
+	"strings"
 	"time"
 
 	"github.com/ismailsayen/social-network/internal/models"
@@ -175,7 +175,6 @@ func (r *WebsocketRepository) HandleGroupRequest(request *models.WS, userId int)
 		}
 		defer rows.Close()
 
-		fmt.Println("==>", request.GroupID)
 		var memberIDs []int
 		for rows.Next() {
 			var id int
@@ -222,4 +221,34 @@ func (r *WebsocketRepository) GetGroupNotifs(requestedID int) ([]*models.GroupRe
 	}
 
 	return groupNotifs, nil
+}
+
+func (r *WebsocketRepository) GetInfoGroupeRepo(GrpID int, sessionID int) (*models.Group, error) {
+	query := `SELECT 
+				g.id, 
+				g.title, 
+				COUNT(gr.member_id) AS count_members,
+				(
+					SELECT GROUP_CONCAT(CAST(gm.member_id AS TEXT), ',')
+					FROM group_members gm
+					WHERE gm.group_id = $1
+				) AS members
+			FROM groups g 
+			INNER JOIN group_members gr ON g.id = gr.group_id
+			WHERE gr.group_id = $1
+			GROUP BY g.id, g.title;
+
+	`
+	var groupInfo models.Group
+	var ids sql.NullString
+	err := r.db.QueryRow(query, GrpID).Scan(&groupInfo.ID, &groupInfo.Title, &groupInfo.Count_Members, &ids)
+	if err != nil && err != sql.ErrNoRows {
+		return nil, err
+	}
+	if ids.Valid {
+		groupInfo.Members = strings.Split(ids.String, ",")
+	} else {
+		groupInfo.Members = []string{}
+	}
+	return &groupInfo, nil
 }

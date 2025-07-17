@@ -5,60 +5,33 @@ import { GenerateAvatar } from '../profile/ProfileHeader'
 import { SocketContext } from '@/context/socketContext'
 
 const GroupChatBody = () => {
-  const { ws, user } = useContext(SocketContext) ?? {}
-  const grpCtxt = useContext(GroupsContext)
-  let data = grpCtxt?.currentGrp
+  const { user, currentGrp, msgGrp, setMsgGrp } = useContext(SocketContext) ?? {}
+
   const ChatBody = useRef<HTMLDivElement>(null)
   useEffect(() => {
     const fetcher = async () => {
-      const message = await GetGroupMessages(data?.id)
-      grpCtxt?.setMsgGrp(message)
+      const message = await GetGroupMessages(currentGrp?.id)
+      
+      setMsgGrp?.((prev) => {
+        if (!prev) return []
+        return message
+      })
     }
-    if (data?.id) {
+    if (currentGrp?.id) {
       fetcher()
     }
-  }, [data?.id])
+  }, [currentGrp?.id])
   useEffect(() => {
     if (ChatBody.current) {
       ChatBody.current.scrollTop = ChatBody.current.scrollHeight
     }
-  }, [grpCtxt?.msgGrp])
+  }, [msgGrp])
 
-  if (ws?.current) {
-    ws.current.onmessage = (e: MessageEvent) => {
-      let res = JSON.parse(e.data);
-      if (res.type == "NewMsgGrp") {
-        let message = res.message;
-        if (message?.group_id == data?.id) {
-          grpCtxt?.setMsgGrp((prev) => {
-            if (!prev) return [message]
-            return [...prev, message]
-          })
-        }
-      };
-      if (res.type == "NewMemberJoined") {
-        if (data?.id == res.grp_id) {
-          const stringifiedMembers = res.newMembers.map(String);
-          console.log("old Members", grpCtxt?.currentGrp?.members);
-          grpCtxt?.setCurrentGrp((prev) => {
-            if (!prev) return null
-            return {
-              ...prev,
-              members: stringifiedMembers,
-              count_members: prev.count_members + 1
 
-            }
-          })
-          console.log("Members After==>", grpCtxt?.currentGrp?.members);
-
-        }
-      }
-    }
-  }
   return (
     <div ref={ChatBody} className='chat-grp-body'>
       {
-        grpCtxt?.msgGrp?.map((ele, ind) => {
+        msgGrp?.map((ele, ind) => {
           let name = ele.fullName.split(" ")
           let me = ele.sender_id == user?.id
 

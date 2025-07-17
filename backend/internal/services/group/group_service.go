@@ -62,10 +62,10 @@ func (s *GroupService) GetSuggestedGroups(userID int) ([]*models.Group, error) {
 
 func (s *GroupService) GetGroup(GroupId string) (models.GroupIfo, *models.GroupError) {
 	id, err := strconv.Atoi(GroupId)
-	if err != nil {
+	if err != nil && id <= 0 {
 		return models.GroupIfo{}, &models.GroupError{
-			Message: "group id is required",
-			Code:    http.StatusBadRequest,
+			Message: "Not found",
+			Code:    http.StatusNotFound,
 		}
 	}
 	return s.repo.GetGroup(id)

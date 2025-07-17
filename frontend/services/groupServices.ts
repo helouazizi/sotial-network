@@ -1,6 +1,7 @@
 import { ParamValue } from "next/dist/server/request/params"
 import { API_URL } from "."
 import { GroupNotifications } from "@/types/Request"
+import Router, { useRouter } from "next/router"
 
 export type groupType = "getJoined" | "getSuggested"
 
@@ -21,7 +22,9 @@ export async function createGroup(title: string, description: string) {
         const data = await res.json()
 
         if (!res.ok) {
-            console.error(data.error)
+            console.log(res.status, "status");
+
+            // console.error(data.error)
             return data
         }
 

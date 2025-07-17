@@ -1,8 +1,10 @@
 import { Follower } from "@/types/post";
 import { API_URL } from "."
 import { Event, GroupMembers } from "@/types/events";
+import { useRouter } from "next/router";
 
 export const GetEvents = async (group_id: number):Promise<Event[]> => {
+    
     const res = await fetch(`${API_URL}api/v1/groups/joined/${group_id}/events`,
         {
             method: "GET",
@@ -10,7 +12,14 @@ export const GetEvents = async (group_id: number):Promise<Event[]> => {
         }
     )
 
-    if (!res.ok) throw new Error(await res.text());
+    if (!res.ok) {
+        console.log(res.status, 'status event');
+        
+         if (res.status == 404) {
+         window.location.href = "/groups/joined/"
+          
+        }
+        throw new Error(await res.text());}
     const events = await res.json()
 
     

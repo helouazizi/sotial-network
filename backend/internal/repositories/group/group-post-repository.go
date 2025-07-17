@@ -104,6 +104,13 @@ func (r *GroupRepository) GetGroupPosts(reg models.PaginationRequest, groupid in
 
 	rows, rowsErr := r.db.Query(GetQuery, groupid, reg.Limit, reg.Offset)
 	if rowsErr != nil {
+		if rowsErr == sql.ErrNoRows {
+			return []models.Post{}, models.GroupError{
+				Code:    http.StatusNotFound,
+				Message: rowsErr.Error(),
+			}
+		}
+
 		return []models.Post{}, models.GroupError{
 			Code:    http.StatusInternalServerError,
 			Message: rowsErr.Error(),

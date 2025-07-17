@@ -4,7 +4,7 @@ import React, { useContext, useEffect, useRef } from "react"
 import { SocketContext } from "../../context/socketContext"
 
 export default function ChatFooter({ receiverId }: { receiverId: number }) {
-    const { ws } = useContext(SocketContext) ?? {}
+    const { ws, user } = useContext(SocketContext) ?? {}
     const textarea = useRef<HTMLTextAreaElement>(null)
 
     const sendMessage = () => {
@@ -17,6 +17,7 @@ export default function ChatFooter({ receiverId }: { receiverId: number }) {
             ws.current.send(JSON.stringify({
                 "message": message,
                 "receiver_id": receiverId,
+                "fullName": `${user?.firstname} ${user?.lastname}`,
                 "type": "saveMessage",
             }))
         }
@@ -30,7 +31,7 @@ export default function ChatFooter({ receiverId }: { receiverId: number }) {
         if (textarea) {
             textarea.current?.focus()
         }
-    }) 
+    })
 
     const handleClick = () => {
         sendMessage()

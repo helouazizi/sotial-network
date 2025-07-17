@@ -1,6 +1,7 @@
 import { ParamValue } from "next/dist/server/request/params"
 import { API_URL } from "."
 import { GroupNotifications } from "@/types/Request"
+import Router, { useRouter } from "next/router"
 
 export type groupType = "getJoined" | "getSuggested"
 
@@ -21,7 +22,9 @@ export async function createGroup(title: string, description: string) {
         const data = await res.json()
 
         if (!res.ok) {
-            console.error(data.error)
+            console.log(res.status, "status");
+
+            // console.error(data.error)
             return data
         }
 
@@ -39,6 +42,7 @@ export async function GetGroups(type: groupType) {
 
         const data = await res.json()
         if (!res.ok) {
+            
             console.error(data.error)
             return data
         }
@@ -51,22 +55,33 @@ export async function GetGroups(type: groupType) {
 }
 
 export async function GetGroup(id: number) {
-    try {
-        const res = await fetch(API_URL + "api/v1/groups/joined/" + id, {
-            credentials: "include"
-        })
+  try {
+    const res = await fetch(API_URL + "api/v1/groups/joined/" + id, {
+      credentials: "include",
+    });
 
-        const data = await res.json()
-        if (!res.ok) {
-            console.error(data.error)
-            return data
-        }
-        return data.data
+    if (!res.ok) {
+        console.log(res, "res-----------------------");
+        
+      if (res.status === 404) {
+        return { error: "not-found" };
+      }
 
-    } catch (err) {
-        console.error(err)
+      const data = await res.json();
+      console.error(data.error);
+      return { error: data.error };
     }
+
+    const data = await res.json();
+    console.log(data, "groupData");
+    
+    return { data: data.data };
+  } catch (err) {
+    console.error(err);
+    return { error: "unexpected-error" };
+  }
 }
+
 
 
 
@@ -86,7 +101,7 @@ export async function GetInfoGrp(idGrp: ParamValue) {
     }
 }
 
-export async function SendJoinGroupRequest(body : GroupNotifications) {
+export async function SendJoinGroupRequest(body: GroupNotifications) {
     try {
         const res = await fetch(API_URL + "api/v1/groups/joinGroupRequest", {
             method: "POST",
@@ -131,7 +146,7 @@ export async function GetDemandeGroupNotifs() {
 
 export async function CancelGroupRequest(reqID: number) {
     try {
-        const res = await fetch(API_URL+"api/v1/groups/cancelGroupRequest", {
+        const res = await fetch(API_URL + "api/v1/groups/cancelGroupRequest", {
             method: "POST",
             credentials: "include",
             headers: {

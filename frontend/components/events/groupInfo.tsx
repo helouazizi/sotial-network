@@ -1,16 +1,20 @@
-'use client'
+"use client";
 
 import { MdGroups, MdVerifiedUser } from "react-icons/md";
 import { GetGroup, SendJoinGroupRequest } from "@/services/groupServices";
 import { useContext, useEffect, useState } from "react";
 import { GroupInfo, GroupMembers } from "@/types/events";
 import FormatDate from "@/utils/date";
-import { GetGroupMembers, GetUnrequestedFolowers } from "@/services/eventsServices";
+import {
+  GetGroupMembers,
+  GetUnrequestedFolowers,
+} from "@/services/eventsServices";
 import PostHeader from "../post/postHeader";
 import { Follower } from "@/types/post";
 import { PopupContext } from "@/context/PopupContext";
 import { GroupNotifications } from "@/types/Request";
 import { SocketContext } from "@/context/socketContext";
+import { useRouter } from "next/navigation";
 
 function GroupHeader({ id }: { id: number }) {
     const [groupInfo, setGroupInfo] = useState<GroupInfo | null>(null);
@@ -23,106 +27,110 @@ function GroupHeader({ id }: { id: number }) {
     const [isSending, setIsSending] = useState(false);
     const {ws} = useContext(SocketContext) ?? {}
 
-    const handleToggleFollower = (id: number, checked: boolean) => {
-        setInvited((prev) =>
-            checked ? [...prev, id] : prev.filter((uid) => uid !== id)
-        );
+  const  router = useRouter()
 
-    };
+  const handleToggleFollower = (id: number, checked: boolean) => {
+    setInvited((prev) =>
+      checked ? [...prev, id] : prev.filter((uid) => uid !== id)
+    );
+  };
 
+  const displayMembers = () => {
+    return (
+      <div className="share-with-users">
+        <label className="share-with-label">Gorup members</label>
+        <ul className="user-checkbox-list">
+          {groupMembers &&
+            groupMembers.members.map((member, indx) => (
+              <li key={indx} className="event-member-item">
+                <PostHeader
+                  author={member.nickname}
+                  avatarUrl={member.avatar}
+                  firstname={member.firstname}
+                  lastname={member.lastname}
+                  createdAt=""
+                />
+              </li>
+            ))}
+        </ul>
+      </div>
+    );
+  };
 
+  const displayFolowers = () => {
 
-    const displayMembers = () => {
-        return (
-            <div className="share-with-users">
-                <label className="share-with-label">
-                    Gorup members
-                </label>
-                <ul className="user-checkbox-list">
-                    {groupMembers && groupMembers.members.map((member, indx) => (
-                        <li key={indx} className="event-member-item">
-                            <PostHeader author={member.nickname ||member.firstname+" "+member.lastname } avatarUrl={member.avatar} firstname={member.firstname} lastname={member.lastname} createdAt="" />
-
-                        </li>
-                    ))
+    return (
+      <div className="share-with-users">
+        <label className="share-with-label">Invite specific followers</label>
+        <ul className="user-checkbox-list">
+          {followers &&
+            followers.length > 0 &&
+            followers.map((f, index) => (
+              <li key={index} className="user-checkbox-item">
+                <label id="follower-checkbox-label">
+                  <PostHeader
+                    author={`${f.User?.firstname} ${f.User?.lastname}`}
+                    firstname={f.User?.firstname}
+                    lastname={f.User?.lastname}
+                    createdAt=""
+                    avatarUrl={f.User?.avatar}
+                  />
+                  <input
+                    type="checkbox"
+                    checked={invited.includes(f.User?.id)}
+                    onChange={(e) =>
+                      handleToggleFollower(f.User?.id, e.target.checked)
                     }
-                </ul>
-
-            </div>
-        )
-    }
-
-    const displayFolowers = () => {
-
-        return (
-            <div className="share-with-users">
-                <label className="share-with-label">
-                    Invite specific followers
+                    title={`Invite ${f.User?.firstname} ${f.User?.lastname}`}
+                    placeholder={`Select follower ${f.User?.firstname} ${f.User?.lastname}`}
+                    aria-label={`Invite ${f.User?.firstname} ${f.User?.lastname}`}
+                  />
                 </label>
-                <ul className="user-checkbox-list">
-                    {followers && followers.length > 0 && followers.map((f, index) => (
-                        <li key={index} className="user-checkbox-item">
-                            <label id="follower-checkbox-label">
-                                <PostHeader
-                                    author={`${f.User?.firstname} ${f.User?.lastname}`}
-                                    firstname={f.User?.firstname} lastname={f.User?.lastname}
-                                    createdAt="" avatarUrl={f.User?.avatar}
-                                />
-                                <input
-                                    type="checkbox"
-                                    checked={invited.includes(f.User?.id)}
-                                    onChange={(e) =>
-                                        handleToggleFollower(f.User?.id, e.target.checked)
-                                    }
-                                    title={`Invite ${f.User?.firstname} ${f.User?.lastname}`}
-                                    placeholder={`Select follower ${f.User?.firstname} ${f.User?.lastname}`}
-                                    aria-label={`Invite ${f.User?.firstname} ${f.User?.lastname}`}
-                                />
-                            </label>
-                        </li>
+              </li>
+            ))}
+        </ul>
+      </div>
+    );
+  };
 
-                    ))}
-                </ul>
-            </div>
-        )
+  useEffect(() => {
+    const fetchGroup = async () => {
+      console.log("fetch groupe");
+      
+      try {
+        const data = await GetGroup(id);
+        if (data.error === "not-found") {
+          router.push("/groups/joined/");
+          return;
+        }
+        setGroupInfo(data.data);
+      } catch (err) {
+        poopUp?.showPopup("faild", "something went wrong, please try again");
+      }
+    };
+
+    fetchGroup();
+  }, [id]);
+
+  const fetchMembers = async () => {
+    try {
+      const data = await GetGroupMembers(id);
+      setGroupMembers(data);
+    } catch (err) {
+      poopUp?.showPopup("faild", "something went wrong, please try again");
     }
+  };
 
-    useEffect(() => {
-        const fetchGroup = async () => {
-            try {
-                const data = await GetGroup(id);
-                setGroupInfo(data);
-            } catch (err) {
-                poopUp?.showPopup("faild", "something went wrong, please try again")
-            }
-        };
+  const fetchFolowers = async () => {
+    try {
+      const data = await GetUnrequestedFolowers(id);
+      setFollowers(data);
+    } catch (err) {
+      poopUp?.showPopup("faild", "something went wrong, please try again");
+    }
+  };
 
-        fetchGroup();
-    }, [id]);
-
-
-    const fetchMembers = async () => {
-        try {
-            const data = await GetGroupMembers(id);
-            setGroupMembers(data);
-        } catch (err) {
-            poopUp?.showPopup("faild", "something went wrong, please try again")
-        }
-    };
-
-
-
-    const fetchFolowers = async () => {
-        try {
-            const data = await GetUnrequestedFolowers(id);
-            setFollowers(data)
-
-        } catch (err) {
-            poopUp?.showPopup("faild", "something went wrong, please try again")
-        }
-    };
-
-    const sendGroupRequests = async () => {
+  const sendGroupRequests = async () => {
         if (isSending) return; // optional extra guard
         setIsSending(true);
         const body: GroupNotifications = {
@@ -156,10 +164,11 @@ function GroupHeader({ id }: { id: number }) {
         } finally {
             setIsSending(true)
         }
-    }
+  }
+ 
 
-    if (!groupInfo) return null;
-    return (
+  if (!groupInfo) return null;
+   return (
         <div className="event-group-header">
             <div className="group-info-card">
                 <div className="group-card-header">

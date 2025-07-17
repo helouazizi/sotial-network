@@ -43,8 +43,8 @@ func (s *GroupService) GetGroupsPost(reg models.PaginationRequest, groupIdstr st
 	groupId, err := strconv.Atoi(groupIdstr)
 	if err != nil || groupId <= 0 {
 		return []models.Post{}, models.GroupError{
-			Code:    http.StatusBadRequest,
-			Message: "Limit must be greater than 0 and offset cannot be negative",
+			Code:    http.StatusNotFound,
+			Message: "Invalid URL",
 		}
 	}
 	return s.repo.GetGroupPosts(reg, groupId)

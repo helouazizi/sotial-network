@@ -8,7 +8,7 @@ import NoPostsYet from "../post/noPostsYet";
 import CreatPost from "./FormCreatpost";
 
 import { API_URL } from "@/services";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { PopupContext } from "@/context/PopupContext";
 
 import PostGroupCard from "./groupPostCard";
@@ -33,9 +33,11 @@ export default function Posts() {
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [loadedOnce, setLoadedOnce] = useState(false);
+
   const page = useRef(0);
   const params = useParams();
   const context = useContext(PopupContext);
+  const router = useRouter()
 
   const fetchPosts = useCallback(async () => {
     if (isLoading || !hasMore) return;
@@ -56,11 +58,14 @@ export default function Posts() {
       );
 
       if (!res.ok) {
+        if (res.status == 404) {
+          router.push("/groups/joined/")
+          return;
+        }
         context?.showPopup("faild", res.statusText);
       }
 
       const data = await res.json();
-
 
       if (Array.isArray(data)) {
         setPosts((prev) =>

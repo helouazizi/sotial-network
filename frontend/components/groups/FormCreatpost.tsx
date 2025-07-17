@@ -1,10 +1,11 @@
 "use client";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useContext, useState } from "react";
 
 import { PopupContext } from "@/context/PopupContext";
 import { Post } from "@/types/post";
 import { API_URL } from "@/services";
+import NotFound from "@/app/not-found";
 
 type Props = {
   onPostCreated: (post: Post) => void;
@@ -15,6 +16,7 @@ export default function CreatPost({ onPostCreated }: Props) {
   const [File, SetFile] = useState<File | null>(null);
   const params = useParams();
   const popup = useContext(PopupContext);
+  const router = useRouter()
   const CreatPostHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formdata = new FormData();
@@ -35,6 +37,10 @@ export default function CreatPost({ onPostCreated }: Props) {
         }
       );
       if (!res.ok) {
+        if (res.status == 404) {
+          router.push("/groups/joined/")
+          return;
+        }
         popup?.showPopup("faild", "Sommething went wrong");
         return;
       }

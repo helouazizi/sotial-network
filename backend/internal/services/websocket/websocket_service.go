@@ -100,14 +100,19 @@ func (reqSer *WebsocketService) HandleFollowReq(reqID, followedID, followerID in
 	return reqSer.repo.HandleReqFollowRepo(reqID, followedID, followerID, newStatus)
 }
 
-func (reqSer *WebsocketService) SaveMessagesGrp(idGrp, senderId int, message ,avatar, fullName string, sentAt *time.Time) (map[string]any, error) {
-	return reqSer.repo.SaveMessagesGrpRepo(idGrp, senderId, message,avatar, fullName ,sentAt)
+func (reqSer *WebsocketService) SaveMessagesGrp(idGrp, senderId int, message, avatar, fullName string, sentAt *time.Time) (map[string]any, error) {
+	return reqSer.repo.SaveMessagesGrpRepo(idGrp, senderId, message, avatar, fullName, sentAt)
 }
 
-func (s *WebsocketService) HandleGroupRequest(request *models.WS, userId int) error {
-	return s.repo.HandleGroupRequest(request,userId)
+func (s *WebsocketService) HandleGroupRequest(request *models.WS, userId int) ([]int, error) {
+	return s.repo.HandleGroupRequest(request, userId)
 }
 
 func (s *WebsocketService) GetGroupNotifs(requestedID int) ([]*models.GroupRequest, error) {
 	return s.repo.GetGroupNotifs(requestedID)
+}
+
+
+func (s *WebsocketService) GetInfoGroupeService(grpId int, sessionID int) (*models.Group, error) {
+	return s.repo.GetInfoGroupeRepo(grpId, sessionID)
 }

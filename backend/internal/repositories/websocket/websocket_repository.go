@@ -3,6 +3,7 @@ package repositories
 import (
 	"database/sql"
 	"errors"
+	"strings"
 	"time"
 
 	"github.com/ismailsayen/social-network/internal/models"
@@ -136,23 +137,23 @@ func (reqRepo *WebsocketRepository) SaveMessagesGrpRepo(idGrp, senderId int, mes
 	return lastMessage, nil
 }
 
-func (r *WebsocketRepository) HandleGroupRequest(request *models.WS, userId int) error {
+func (r *WebsocketRepository) HandleGroupRequest(request *models.WS, userId int) ([]int, error) {
 	deleteQuery := `
 		DELETE FROM group_requests WHERE id = ?;
 	`
 
 	res, err := r.db.Exec(deleteQuery, request.ID)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	rowsAffected, err := res.RowsAffected()
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if rowsAffected == 0 {
-		return errors.New("The owner has been cancled this action.")
+		return nil, errors.New("The owner has been cancled this action.")
 	}
 
 	if request.Action == "accept" {
@@ -165,11 +166,27 @@ func (r *WebsocketRepository) HandleGroupRequest(request *models.WS, userId int)
 
 		_, err := r.db.Exec(insertQuery, request.GroupID, request.ReceiverID)
 		if err != nil {
-			return err
+			return nil, err
 		}
+
+		rows, err := r.db.Query("SELECT member_id FROM group_members WHERE group_id = ?", request.GroupID)
+		if err != nil && err != sql.ErrNoRows {
+			return nil, err
+		}
+		defer rows.Close()
+
+		var memberIDs []int
+		for rows.Next() {
+			var id int
+			if err := rows.Scan(&id); err != nil {
+				return nil, err
+			}
+			memberIDs = append(memberIDs, id)
+		}
+		return memberIDs, nil
 	}
 
-	return nil
+	return nil, nil
 }
 
 func (r *WebsocketRepository) GetGroupNotifs(requestedID int) ([]*models.GroupRequest, error) {
@@ -204,4 +221,34 @@ func (r *WebsocketRepository) GetGroupNotifs(requestedID int) ([]*models.GroupRe
 	}
 
 	return groupNotifs, nil
+}
+
+func (r *WebsocketRepository) GetInfoGroupeRepo(GrpID int, sessionID int) (*models.Group, error) {
+	query := `SELECT 
+				g.id, 
+				g.title, 
+				COUNT(gr.member_id) AS count_members,
+				(
+					SELECT GROUP_CONCAT(CAST(gm.member_id AS TEXT), ',')
+					FROM group_members gm
+					WHERE gm.group_id = $1
+				) AS members
+			FROM groups g 
+			INNER JOIN group_members gr ON g.id = gr.group_id
+			WHERE gr.group_id = $1
+			GROUP BY g.id, g.title;
+
+	`
+	var groupInfo models.Group
+	var ids sql.NullString
+	err := r.db.QueryRow(query, GrpID).Scan(&groupInfo.ID, &groupInfo.Title, &groupInfo.Count_Members, &ids)
+	if err != nil && err != sql.ErrNoRows {
+		return nil, err
+	}
+	if ids.Valid {
+		groupInfo.Members = strings.Split(ids.String, ",")
+	} else {
+		groupInfo.Members = []string{}
+	}
+	return &groupInfo, nil
 }

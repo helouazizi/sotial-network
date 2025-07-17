@@ -4,7 +4,7 @@ import { Event, GroupMembers } from "@/types/events";
 import { useRouter } from "next/router";
 
 export const GetEvents = async (group_id: number):Promise<Event[]> => {
-    const router = useRouter()
+    
     const res = await fetch(`${API_URL}api/v1/groups/joined/${group_id}/events`,
         {
             method: "GET",

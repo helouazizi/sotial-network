@@ -44,6 +44,7 @@ export interface SocketContextType {
   setCurrentGrp: React.Dispatch<React.SetStateAction<Group | null>>
   msgGrp: GrpMesage[] | null
   setMsgGrp: React.Dispatch<React.SetStateAction<GrpMesage[] | null>>
+  currentGrpRef: React.RefObject<Group | null>
 }
 
 export const SocketContext = createContext<SocketContextType | null>(null);
@@ -64,6 +65,7 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
   const [typeNotif, settypeNotif] = useState("");
   const [currentGrp, setCurrentGrp] = useState<Group | null>(null)
   const [msgGrp, setMsgGrp] = useState<GrpMesage[] | null>(null)
+  const currentGrpRef = useRef<Group | null>(null)
   const excludedPaths = ["/login", "/register"];
   const shouldConnect = !excludedPaths.includes(pathname);
   const popup = useContext(PopupContext);
@@ -156,16 +158,14 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
         setNotifications(res.data)
       }
       if (res.type == "newGroupSelected") {
-        setCurrentGrp(res.data);
-        
-        console.log(currentGrp);
+        const selectedGroup: Group = res.data;
+        setCurrentGrp(selectedGroup);
+        currentGrpRef.current = selectedGroup
       }
+
       if (res.type == "NewMsgGrp") {
-
         let message = res.message;
-
-        console.log("new msg :=>", message, "currentGrp", currentGrp);
-        if (message?.group_id == currentGrp?.id) {
+        if (message?.group_id == currentGrpRef?.current?.id) {
           setMsgGrp((prev) => {
             if (!prev) return [message]
             return [...prev, message]
@@ -174,7 +174,7 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
       };
 
       if (res.type == "NewMemberJoined") {
-        if (currentGrp?.id == res.grp_id) {
+        if (currentGrpRef?.current?.id == res.grp_id) {
           const stringifiedMembers = res.newMembers.map(String);
           setCurrentGrp((prev) => {
             if (!prev) return null
@@ -225,7 +225,8 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
         currentGrp,
         setCurrentGrp,
         msgGrp,
-        setMsgGrp
+        setMsgGrp,
+        currentGrpRef
       }}
     >
       {children}

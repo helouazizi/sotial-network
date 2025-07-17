@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"database/sql"
+	"errors"
 	"net/http"
 	"time"
 
@@ -112,7 +113,14 @@ func (r *GroupRepository) GetSuggestedGroups(userID int) ([]*models.Group, error
 	return groups, nil
 }
 
-func (r *GroupRepository) GetGroup(groupID int) (models.GroupIfo, *models.GroupError) {
+func (r *GroupRepository) GetGroup(groupID, userID int) (models.GroupIfo, *models.GroupError) {
+	errr := r.IsMember(groupID, userID)
+	if errr != nil {
+		return models.GroupIfo{}, &models.GroupError{
+			Message: "Invalid URL",
+			Code:    http.StatusNotFound,
+		}
+	}
 	query := `
 		SELECT 
 			g.id, g.title, g.description, g.created_at,
@@ -127,7 +135,7 @@ func (r *GroupRepository) GetGroup(groupID int) (models.GroupIfo, *models.GroupE
 
 	groupInfo := models.GroupIfo{}
 	var nickname sql.NullString
-
+	//
 	err := r.db.QueryRow(query, groupID).Scan(
 		&groupInfo.Group.ID,
 		&groupInfo.Group.Title,
@@ -233,5 +241,25 @@ func (r *GroupRepository) CancelGroupRequest(id int) error {
 		return err
 	}
 
+	return nil
+}
+
+func (r *GroupRepository) IsMember(GrpID int, sessionID int) error {
+	var id int
+	query := `
+		SELECT EXISTS(
+    		SELECT 1
+    		FROM group_members
+    		WHERE group_id = ? AND member_id = ?
+		);
+
+	`
+	err := r.db.QueryRow(query, GrpID, sessionID).Scan(&id)
+	if err != nil {
+		return err
+	}
+	if id == 0 {
+		return errors.New("Want to join? Send a request to the admin!")
+	}
 	return nil
 }

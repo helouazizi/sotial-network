@@ -5,45 +5,30 @@ import { GenerateAvatar } from '../profile/ProfileHeader'
 import { SocketContext } from '@/context/socketContext'
 
 const GroupChatBody = () => {
-  const { ws, user } = useContext(SocketContext) ?? {}
-  const grpCtxt = useContext(GroupsContext)
-  let data = grpCtxt?.currentGrp
+  const { user, currentGrp, msgGrp, setMsgGrp } = useContext(SocketContext) ?? {}
+
   const ChatBody = useRef<HTMLDivElement>(null)
   useEffect(() => {
     const fetcher = async () => {
-      const message = await GetGroupMessages(data?.id)
-      grpCtxt?.setMsgGrp(message)
+      if (!currentGrp?.id || !setMsgGrp) return;
+      const message = await GetGroupMessages(currentGrp.id)
+      setMsgGrp(message)
     }
-    if (data?.id) {
-      fetcher()
-    }
-  }, [data?.id])
+
+    fetcher()
+  }, [currentGrp?.id])
+
   useEffect(() => {
     if (ChatBody.current) {
       ChatBody.current.scrollTop = ChatBody.current.scrollHeight
     }
-  }, [grpCtxt?.msgGrp])
+  }, [msgGrp])
 
-  if (ws?.current) {
-    ws.current.onmessage = (e: MessageEvent) => {
-      let res = JSON.parse(e.data);
-      if (res.type == "NewMsgGrp") {
 
-        let message = res.message;
-        if (message?.group_id == data?.id) {
-          grpCtxt?.setMsgGrp((prev) => {
-            if (!prev) return [message]
-            return [...prev, message]
-          })
-        }
-
-      };
-    }
-  }
   return (
     <div ref={ChatBody} className='chat-grp-body'>
       {
-        grpCtxt?.msgGrp?.map((ele, ind) => {
+        msgGrp?.map((ele, ind) => {
           let name = ele.fullName.split(" ")
           let me = ele.sender_id == user?.id
 

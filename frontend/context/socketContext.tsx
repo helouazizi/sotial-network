@@ -1,5 +1,5 @@
 "use client";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import React, {
   createContext,
   useEffect,
@@ -15,6 +15,7 @@ import { GroupNotifications, NumOfREquests } from "@/types/Request";
 import { ProfileInt } from "@/types/profiles";
 import { User } from "@/types/user";
 import { PopupContext } from "./PopupContext";
+import { Group, GrpMesage } from "@/types/groups";
 export interface SocketContextType {
   ws: RefObject<WebSocket | null>;
   messages: Message[];
@@ -39,6 +40,11 @@ export interface SocketContextType {
   setNotifications: React.Dispatch<React.SetStateAction<GroupNotifications[] | null>>;
   scrollToBottom: boolean
   setScrollToBottom: React.Dispatch<React.SetStateAction<boolean>>;
+  currentGrp: Group | null
+  setCurrentGrp: React.Dispatch<React.SetStateAction<Group | null>>
+  msgGrp: GrpMesage[] | null
+  setMsgGrp: React.Dispatch<React.SetStateAction<GrpMesage[] | null>>
+  currentGrpRef: React.RefObject<Group | null>
 }
 
 export const SocketContext = createContext<SocketContextType | null>(null);
@@ -52,16 +58,18 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
   const [notifications, setNotifications] = useState<GroupNotifications[] | null>(null)
   const [scrollHeight, setScrollHeight] = useState<boolean>(false);
   const [scrollToBottom, setScrollToBottom] = useState<boolean>(false)
-  const [numsNotif, setNumNotif] = useState<NumOfREquests | undefined>(
-    undefined
-  );
+  const [numsNotif, setNumNotif] = useState<NumOfREquests | undefined>(undefined);
   const [reqFollowers, setReqFollowers] = useState<ProfileInt[] | []>([]);
   const [showNotif, setShowNotif] = useState(false);
   const [messageNotif, setMessageNotif] = useState("");
   const [typeNotif, settypeNotif] = useState("");
+  const [currentGrp, setCurrentGrp] = useState<Group | null>(null)
+  const [msgGrp, setMsgGrp] = useState<GrpMesage[] | null>(null)
+  const currentGrpRef = useRef<Group | null>(null)
   const excludedPaths = ["/login", "/register"];
   const shouldConnect = !excludedPaths.includes(pathname);
   const popup = useContext(PopupContext);
+  const router = useRouter();
   useEffect(() => {
     if (!shouldConnect) {
       return;
@@ -85,7 +93,6 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
     ws.current.onmessage = (event: MessageEvent) => {
       let res = JSON.parse(event.data);
 
-      // console.log(res)
 
       if (res.type === "CountNotifs") {
         const countotifs: NumOfREquests = {
@@ -105,6 +112,11 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
         setMessageNotif(res.message);
         settypeNotif("Follow");
         setShowNotif(true);
+      }
+
+      if (res.type == "NotMemberInGrp") {
+        popup?.showPopup('faild', res.text)
+        router.push("/chat/groupsChat")
       }
 
       if (res.type === "getMessages") {
@@ -149,7 +161,10 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
         settypeNotif("Event");
         setShowNotif(true);
       }
+      if (res.type === "showNotifMsg") {
+        popup?.showPopup("success", `New message from ${res.message}`)
 
+      }
       if (res.type === "GroupRequestsError") {
         if (res.error) {
           popup?.showPopup("faild", res.error)
@@ -158,6 +173,36 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
 
       if (res.type === "groupRequests") {
         setNotifications(res.data)
+      }
+      if (res.type == "newGroupSelected") {
+        const selectedGroup: Group = res.data;
+        setCurrentGrp(selectedGroup);
+        currentGrpRef.current = selectedGroup
+      }
+
+      if (res.type == "NewMsgGrp") {
+        let message = res.message;
+        if (message?.group_id == currentGrpRef?.current?.id) {
+          setMsgGrp((prev) => {
+            if (!prev) return [message]
+            return [...prev, message]
+          })
+        }
+      };
+
+      if (res.type == "NewMemberJoined") {
+        if (currentGrpRef?.current?.id == res.grp_id) {
+          const stringifiedMembers = res.newMembers.map(String);
+          setCurrentGrp((prev) => {
+            if (!prev) return null
+            return {
+              ...prev,
+              members: stringifiedMembers,
+              count_members: prev.count_members + 1
+
+            }
+          })
+        }
       }
     }
 
@@ -194,6 +239,11 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
         setNotifications,
         scrollToBottom,
         setScrollToBottom,
+        currentGrp,
+        setCurrentGrp,
+        msgGrp,
+        setMsgGrp,
+        currentGrpRef
       }}
     >
       {children}

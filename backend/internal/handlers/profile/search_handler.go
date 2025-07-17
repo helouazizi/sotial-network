@@ -1,7 +1,6 @@
 package profile
 
 import (
-	"fmt"
 	"net/http"
 	"strings"
 
@@ -26,7 +25,6 @@ func (h *ProfileHandler) SearchProfileHandler(w http.ResponseWriter, r *http.Req
 	}
 	users, err := h.service.SearchProfile(query)
 	if err != nil {
-		fmt.Println(err)
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
 			"message": "Internal Server Error",
 			"status":  http.StatusInternalServerError,

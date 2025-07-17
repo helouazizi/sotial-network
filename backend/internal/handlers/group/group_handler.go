@@ -114,8 +114,8 @@ func (h *GroupHandler) GetGroupHandler(w http.ResponseWriter, r *http.Request) {
 
 	GroupID, err := utils.GetGroupId(r, "events")
 	if err != nil {
-		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
-			"error": "Bad Request",
+		utils.ResponseJSON(w, http.StatusNotFound, map[string]any{
+			"error": "Invalid Url",
 		})
 		return
 	}

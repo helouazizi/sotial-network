@@ -28,6 +28,8 @@ func (r *GroupRepository) SaveEvent(c context.Context, event *models.Event) (mod
 
 	res, err := tx.Exec(query, event.GroupId, event.UserID, event.Title, event.Description, event.EventDate, time.Now(), 0, 0)
 	if err != nil {
+		
+		
 		return models.Event{}, &models.GroupError{
 			Message: err.Error(),
 			Code:    http.StatusInternalServerError,

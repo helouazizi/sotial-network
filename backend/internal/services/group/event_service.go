@@ -53,10 +53,10 @@ func (s *GroupService) SaveEvent(c context.Context, event *models.Event) (models
 
 func (s *GroupService) GetGroupEvents(UserId int, groupId string) ([]*models.Event, models.GroupError) {
 	GroupId, err := strconv.Atoi(groupId)
-	if err != nil {
+	if err != nil && GroupId <=0 {
 		return []*models.Event{}, models.GroupError{
 			Message: "group id is required",
-			Code:    http.StatusBadRequest,
+			Code:    http.StatusNotFound,
 		}
 	}
 
@@ -65,10 +65,10 @@ func (s *GroupService) GetGroupEvents(UserId int, groupId string) ([]*models.Eve
 
 func (s *GroupService) GetGroupMembers(groupId string) (*models.GroupMembers, models.GroupError) {
 	GroupId, err := strconv.Atoi(groupId)
-	if err != nil {
+	if err != nil &&  GroupId <= 0{
 		return &models.GroupMembers{}, models.GroupError{
 			Message: "group id is required",
-			Code:    http.StatusBadRequest,
+			Code:    http.StatusNotFound,
 		}
 	}
 

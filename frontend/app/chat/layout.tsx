@@ -15,7 +15,6 @@ export default function ChatLayout({ children }: { children: ReactNode }) {
   let isPrivateChat = pathName.startsWith("/chat/privateChat")
 
   return (
-    <GroupsProvider>
       <main className="container chatPage">
         <section className="sidebar">
           <div className="myName">
@@ -27,19 +26,18 @@ export default function ChatLayout({ children }: { children: ReactNode }) {
             <ChatNav />
             <div className="friends-list">
 
-              <ul>{isPrivateChat ? <Friends /> :
+            <ul>{isPrivateChat ? <Friends /> :
 
-                <GroupsChat />
-              }</ul>
+              <GroupsChat />
+            }</ul>
 
-            </div>
           </div>
+        </div>
 
-        </section>
-        <section className="chatMessages">
-          {children}
-        </section>
-      </main>
-    </GroupsProvider>
+      </section>
+      <section className="chatMessages">
+        {children}
+      </section>
+    </main>
   );
 }

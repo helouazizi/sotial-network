@@ -47,7 +47,6 @@ func (h *WebsocketHandler) WebsocketHandler(w http.ResponseWriter, r *http.Reque
 	for {
 		var ws models.WS
 		err := conn.ReadJSON(&ws)
-
 		if err != nil && !strings.Contains(err.Error(), "close") {
 			conn.WriteJSON(map[string]any{
 				"error": "Error reading message: " + err.Error(),
@@ -95,6 +94,10 @@ func (h *WebsocketHandler) WebsocketHandler(w http.ResponseWriter, r *http.Reque
 					c.WriteJSON(map[string]any{
 						"message": messageData,
 						"type":    "saveMessage",
+					})
+					c.WriteJSON(map[string]any{
+						"message": ws.FullName,
+						"type":    "showNotifMsg",
 					})
 				}
 			}
@@ -236,11 +239,17 @@ func (h *WebsocketHandler) WebsocketHandler(w http.ResponseWriter, r *http.Reque
 							"message": lastMsg,
 							"type":    "NewMsgGrp",
 						})
+						if id != ws.SenderID {
+							c.WriteJSON(map[string]any{
+								"message": ws.Action,
+								"type":    "showNotifMsg",
+							})
+						}
 					}
 				}
 			}
 		case "handleGroupReq":
-			err := h.service.HandleGroupRequest(&ws, userID)
+			members, err := h.service.HandleGroupRequest(&ws, userID)
 			if err != nil {
 				conn.WriteJSON(map[string]any{
 					"error": err.Error(),
@@ -248,6 +257,18 @@ func (h *WebsocketHandler) WebsocketHandler(w http.ResponseWriter, r *http.Reque
 				})
 				continue
 			}
+			for _, id := range members {
+				if senderConns, ok := h.service.GetClient(id); ok {
+					for _, c := range senderConns {
+						c.WriteJSON(map[string]any{
+							"newMembers": members,
+							"grp_id":     ws.GroupID,
+							"type":       "NewMemberJoined",
+						})
+					}
+				}
+			}
+
 		case "event":
 			ids, err := h.service.GreMembersIds(&ws)
 			if err != nil {
@@ -269,6 +290,29 @@ func (h *WebsocketHandler) WebsocketHandler(w http.ResponseWriter, r *http.Reque
 
 			}
 
+		case "groupChatInfo":
+			groupInfo, err := h.service.GetInfoGroupeService(ws.GroupID, ws.SenderID)
+			if err != nil {
+				if err.Error() == "Want to join? Send a request to the admin!" {
+					conn.WriteJSON(map[string]any{
+						"text": err.Error(),
+						"type": "NotMemberInGrp",
+					})
+					continue
+				}
+				conn.WriteJSON(map[string]any{
+					"error": err.Error(),
+				})
+				continue
+			}
+			if senderConns, ok := h.service.GetClient(ws.SenderID); ok {
+				for _, c := range senderConns {
+					c.WriteJSON(map[string]any{
+						"data": groupInfo,
+						"type": "newGroupSelected",
+					})
+				}
+			}
 		}
 
 	}

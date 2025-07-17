@@ -62,7 +62,7 @@ func (s *GroupService) GetSuggestedGroups(userID int) ([]*models.Group, error) {
 
 func (s *GroupService) GetGroup(GroupId string) (models.GroupIfo, *models.GroupError) {
 	id, err := strconv.Atoi(GroupId)
-	if err != nil && id <= 0 {
+	if err != nil || id <= 0 {
 		return models.GroupIfo{}, &models.GroupError{
 			Message: "Not found",
 			Code:    http.StatusNotFound,

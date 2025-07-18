@@ -162,6 +162,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  position: relative;
 }
 
 .chatFooter textarea {
@@ -321,4 +322,36 @@ word-break: break-all;
   .info-user-msg {
     background-color: var(--bg-color);
   }
+}
+
+.emoji-list {
+  background-color: var(--card-bg);
+  position: absolute;
+  right: 20px;
+  bottom: 93px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: 0 4px 8px var(--shadow-color);
+  max-width: 300px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+.emoji-list span {
+  font-size: 20px;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 5px;
+  transition: background 0.2s ease;
+  user-select: none;
+}
+
+.emoji-list span:hover {
+  background-color: var(--btn-bg);
+  color: var(--accent-color);
 }

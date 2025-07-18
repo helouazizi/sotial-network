@@ -36,17 +36,11 @@ export default function PrivateChat() {
     }, [friend])
 
     useEffect(() => {
-        // console.log(friends)
-        
         let friend: User | undefined = friends?.find((f: User) => {
             return f.id === Number(id)
         })
 
         setFriend(friend)
-
-        // return () => {
-        //     if (setMessages) setMessages([])
-        // }
     }, [friends])
 
     useEffect(() => {

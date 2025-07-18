@@ -7,13 +7,15 @@ import { IoIosNotifications } from "react-icons/io";
 import { usePathname } from "next/navigation";
 import { IoIosLogOut } from "react-icons/io";
 import { useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { SocketContext, SocketContextType } from "@/context/socketContext";
 import { GenerateAvatar } from "../profile/ProfileHeader";
 import ToogleInitiale from "../request/ToogleInitiale";
 import NotifToast from "@/utils/NotifToast";
 import { SearchInput } from "../search/search";
 import { CgProfile } from "react-icons/cg";
+import { IoIosMenu } from "react-icons/io";
+
 export default function Header() {
   const router = useRouter();
   const pathname = usePathname();
@@ -24,6 +26,7 @@ export default function Header() {
   const [isLogged, setIsLogged] = useState<boolean>(false);
   const [showToggle, setShowToggle] = useState(false);
   const [clicked, setClicked] = useState<boolean>(false);
+  const headerPage = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     if (["/login", "/register"].includes(pathname)) {
@@ -81,87 +84,98 @@ export default function Header() {
               Social <span>Net</span>work
             </Link>
 
-            <ul>
-              <li>
-                <Link className="homeIcon" href={"/"}>
-                  <TiHome className={pathname === "/" ? "active" : ""} />
-                </Link>
-              </li>
-              <li>
-                <Link className="chatIcon" href={"/chat/privateChat"}>
-                  <LuMessageCircleMore
-                    className={pathname.startsWith("/chat/") ? "active" : ""}
-                  />
-                </Link>
-              </li>
-              <li>
-                <Link className="groupIcon" href={"/groups/joined"}>
-                  <MdGroups2
-                    className={
-                      pathname.startsWith("/groups/")
-                        ? "active groupIconHeader"
-                        : "groupIconHeader"
-                    }
-                  />
-                </Link>
-              </li>
-            </ul>
+            <div ref={headerPage} className="header-pages">
 
-            <div className="header-icons">
-              <SearchInput />
-              <button
-                className={`notification ${showToggle ? "active-not" : ""}`}
-                onClick={HandleToggle}
-                aria-label="Notifications"
-              >
-                <IoIosNotifications />
-                <span>{numsNotif ? +numsNotif?.total : 0}</span>
-              </button>
-
-              <div className="profile-wrapper">
-                <div
-                  className="header-profile"
-                  role="button"
-                  tabIndex={0}
-                  onBlur={() => setTimeout(() => setClicked(false), 100)}
-                  onFocus={() => setClicked(true)}
-                  aria-label="User profile"
-                >
-                  {user?.avatar ? (
-                    <img
-                      src={`http://localhost:8080/images/user/${user?.avatar}`}
-                      alt={`${user?.firstname} ${user?.lastname}`}
-                      className="avatar-profile header-icon"
+              <ul>
+                <li>
+                  <Link className="homeIcon" href={"/"}>
+                    <TiHome className={pathname === "/" ? "active" : ""} />
+                  </Link>
+                </li>
+                <li>
+                  <Link className="chatIcon" href={"/chat/privateChat"}>
+                    <LuMessageCircleMore
+                      className={pathname.startsWith("/chat/") ? "active" : ""}
                     />
-                  ) : (
-                    <div className="avatar-profile header-icon">
-                      <h2>{GenerateAvatar(user?.firstname, user?.lastname)}</h2>
-                    </div>
-                  )}
-                </div>
+                  </Link>
+                </li>
+                <li>
+                  <Link className="groupIcon" href={"/groups/joined"}>
+                    <MdGroups2
+                      className={
+                        pathname.startsWith("/groups/")
+                          ? "active groupIconHeader"
+                          : "groupIconHeader"
+                      }
+                    />
+                  </Link>
+                </li>
+              </ul>
 
-                {clicked && (
-                  <div className="profile-dropdown">
+              <div className="header-icons">
+                <SearchInput />
+                <div className="profile-notif">
+                  <button
+                    className={`notification ${showToggle ? "active-not" : ""}`}
+                    onClick={HandleToggle}
+                    aria-label="Notifications"
+                  >
+                    <IoIosNotifications />
+                    <span>{numsNotif ? +numsNotif?.total : 0}</span>
+                  </button>
+
+                  <div className="profile-wrapper">
                     <div
-                      className="dropdown-item"
-                      onMouseDown={() => {
-                        setClicked(false);
-                        router.push(`/profile/${user?.id}`);
-                      }}
+                      className="header-profile"
                       role="button"
                       tabIndex={0}
+                      onBlur={() => setTimeout(() => setClicked(false), 100)}
+                      onFocus={() => setClicked(true)}
+                      aria-label="User profile"
                     >
-                      <CgProfile /> My Profile
+                      {user?.avatar ? (
+                        <img
+                          src={`http://localhost:8080/images/user/${user?.avatar}`}
+                          alt={`${user?.firstname} ${user?.lastname}`}
+                          className="avatar-profile header-icon"
+                        />
+                      ) : (
+                        <div className="avatar-profile header-icon">
+                          <h2>{GenerateAvatar(user?.firstname, user?.lastname)}</h2>
+                        </div>
+                      )}
                     </div>
-                    <button
-                      className="dropdown-item"
-                      onMouseDown={handleClickLogout}
-                    >
-                      <IoIosLogOut /> Logout
-                    </button>
+
+                    {clicked && (
+                      <div className="profile-dropdown">
+                        <div
+                          className="dropdown-item"
+                          onMouseDown={() => {
+                            setClicked(false);
+                            router.push(`/profile/${user?.id}`);
+                          }}
+                          role="button"
+                          tabIndex={0}
+                        >
+                          <CgProfile /> My Profile
+                        </div>
+                        <button
+                          className="dropdown-item"
+                          onMouseDown={handleClickLogout}
+                        >
+                          <IoIosLogOut /> Logout
+                        </button>
+                      </div>
+                    )}
                   </div>
-                )}
+                </div>
               </div>
+            </div>
+
+            <div className="header-list">
+              <button onClick={() => {
+                headerPage.current?.classList.toggle('show-header-pages')
+              }}><IoIosMenu /></button>
             </div>
           </nav>
         </header>

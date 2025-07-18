@@ -360,3 +360,9 @@ header nav .header-icon {
     padding: 20px 40px;
   }
 }
+
+@media only screen and (max-width: 350px) {
+  .logo{
+    font-size: 1.2em;
+  }
+}

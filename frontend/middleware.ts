@@ -3,7 +3,7 @@ import { API_URL } from './services';
 
 export default async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
-  const API = process.env.INTERNAL_API_URL || "http://backend:8080/";
+  const API = process.env.INTERNAL_API_URL || "http://localhost:8080/";
 
   // ✅ Allow internal system routes
   if (

@@ -109,13 +109,14 @@ svg {
   color: var(--icon-color);
   flex-shrink: 0;
 }
-nav > div {
-    gap: 15px;
-    display: flex;
 
-    width: 46%;
-    justify-content: space-between;
-    align-items: center;
+nav>div {
+  gap: 15px;
+  display: flex;
+
+  width: 46%;
+  justify-content: space-between;
+  align-items: center;
 }
 
 
@@ -125,14 +126,17 @@ nav > div {
     transform: translateY(20px);
     opacity: 0;
   }
+
   10% {
     transform: translateY(0);
     opacity: 1;
   }
+
   90% {
     transform: translateY(0);
     opacity: 1;
   }
+
   100% {
     transform: translateY(20px);
     opacity: 0;
@@ -141,7 +145,11 @@ nav > div {
 
 
 /* Responsive container */
-@media (min-width: 576px) {
+@media (max-width: 650px) {
+  main {
+    padding: 60px 0 0;
+
+  }
   .container {
     width: 100%;
   }

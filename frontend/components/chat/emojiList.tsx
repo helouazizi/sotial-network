@@ -3,10 +3,16 @@ import { MdOutlineEmojiEmotions } from "react-icons/md";
 
 
 function EmojiList({ textarea }: { textarea: HTMLTextAreaElement | null }) {
-    const [showEmojiList, setShowEmojiList] = useState<boolean>(true)
+    const [showEmojiList, setShowEmojiList] = useState<boolean>(false)
     const wrapperRef = useRef<HTMLDivElement>(null)
 
-    const emojiList = ["😀", "😂", "😍", "🥲", "👍", "❤️", "🔥", "😎", "😭", "🙏"]
+    const emojiList = [
+        "😀", "😂", "😍", "🥲", "👍", "❤️", "🔥", "😎", "😭", "🙏",
+        "😊", "😉", "😅", "😢", "😡", "🤯", "🤔", "😴", "🤗", "🥰",
+        "😇", "🙈", "🙉", "🙊", "💔", "💯", "🎉", "🥳", "🤩", "👀",
+        "🫶", "💀", "🤡", "🫠", "😬", "🤤", "🤮", "🤓", "🧐", "🤪",
+        "🫥", "😶", "😵‍💫", "😵", "🥵", "🥶", "😷", "🤕", "🤒", "👻"
+    ];
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -46,7 +52,7 @@ function EmojiList({ textarea }: { textarea: HTMLTextAreaElement | null }) {
     return (
         <div ref={wrapperRef} className="emoji-wrapper">
             <button
-                className={`emoji-toggle ${showEmojiList ? "active" : ""}`}
+                className={`emoji-toggle`}
                 onClick={() => setShowEmojiList(prev => !prev)}
             >
                 <MdOutlineEmojiEmotions />

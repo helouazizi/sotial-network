@@ -1,7 +1,8 @@
 "use client"
 
-import React, { useContext, useEffect, useRef } from "react"
+import React, { useContext, useEffect, useRef, useState } from "react"
 import { SocketContext } from "../../context/socketContext"
+import EmojiList from "./emojiList"
 
 export default function ChatFooter({ receiverId }: { receiverId: number }) {
     const { ws, user } = useContext(SocketContext) ?? {}
@@ -47,6 +48,7 @@ export default function ChatFooter({ receiverId }: { receiverId: number }) {
     return (
         <div className="chatFooter">
             <textarea maxLength={3000} ref={textarea} onKeyDown={handleKeyDown} placeholder="Type a message..." ></textarea>
+            <EmojiList textarea={textarea.current} />
             <button onClick={handleClick}>Send</button>
         </div>
     )

@@ -152,29 +152,46 @@ func (r *AuthRepository) GetUser(userID int) (*models.User, error) {
 
 func (r *AuthRepository) GetFriends(userID int) ([]*models.User, error) {
 	query := `
-	SELECT u.id, u.nickname, u.first_name, u.last_name, u.avatar
+	SELECT u.id, u.nickname, u.first_name, u.last_name, u.avatar, COALESCE(
+		(
+		SELECT MAX(m.sent_at)
+		FROM chat_message m 
+		WHERE (m.sender_id = ? AND m.receiver_id = u.id) OR (m.sender_id = u.id AND m.receiver_id = ?)
+	), '1970-01-01 00:00:00') AS last_message
 	FROM users u
 	INNER JOIN followers f ON f.follower_id = u.id
 	WHERE f.followed_id = ?
 
 	UNION
 
-	SELECT u.id, u.nickname, u.first_name, u.last_name, u.avatar
+	SELECT u.id, u.nickname, u.first_name, u.last_name, u.avatar, COALESCE(
+		(
+		SELECT MAX(m.sent_at)
+		FROM chat_message m 
+		WHERE (m.sender_id = ? AND m.receiver_id = u.id) OR (m.sender_id = u.id AND m.receiver_id = ?)
+	), '1970-01-01 00:00:00') AS last_message
 	FROM users u
 	INNER JOIN followers f ON f.followed_id = u.id
-	WHERE f.follower_id = ?;
-
+	WHERE f.follower_id = ?
+	ORDER BY last_message DESC;
 	`
 
-	rows, err := r.db.Query(query, userID, userID)
+	stmt, err := r.db.Prepare(query)
 	if err != nil {
 		return nil, err
 	}
+	defer stmt.Close()
+
+	rows, err := stmt.Query(userID, userID, userID, userID, userID, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
 
 	var users []*models.User
 	for rows.Next() {
 		var user models.User
-		err = rows.Scan(&user.ID, &user.Nickname, &user.FirstName, &user.Lastname, &user.Avatar)
+		err = rows.Scan(&user.ID, &user.Nickname, &user.FirstName, &user.Lastname, &user.Avatar, &user.SentAt)
 		if err != nil {
 			return nil, err
 		}

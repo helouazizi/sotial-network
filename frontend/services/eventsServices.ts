@@ -13,7 +13,6 @@ export const GetEvents = async (group_id: number):Promise<Event[]> => {
     )
 
     if (!res.ok) {
-        console.log(res.status, 'status event');
         
          if (res.status == 404) {
          window.location.href = "/groups/joined/"

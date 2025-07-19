@@ -32,7 +32,7 @@ export default function ChatFooter({ receiverId }: { receiverId: number }) {
         if (textarea) {
             textarea.current?.focus()
         }
-    })
+    }, [])
 
     const handleClick = () => {
         sendMessage()

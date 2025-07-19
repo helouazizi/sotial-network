@@ -22,7 +22,6 @@ export async function createGroup(title: string, description: string) {
         const data = await res.json()
 
         if (!res.ok) {
-            console.log(res.status, "status");
 
             // console.error(data.error)
             return data
@@ -61,7 +60,6 @@ export async function GetGroup(id: number) {
     });
 
     if (!res.ok) {
-        console.log(res, "res-----------------------");
         
       if (res.status === 404) {
         return { error: "not-found" };
@@ -73,7 +71,6 @@ export async function GetGroup(id: number) {
     }
 
     const data = await res.json();
-    console.log(data, "groupData");
     
     return { data: data.data };
   } catch (err) {

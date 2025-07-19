@@ -25,7 +25,7 @@
 }
 
 /* ======================================== CREATE POST FORM SECTION ============================*/
-.create-post{
+.create-post {
   width: 80%;
   margin: auto;
 }
@@ -274,7 +274,7 @@
 }
 
 .comment-input {
-  
+
   padding: 0.5rem 1rem;
   font-size: 1rem;
   border: 1px solid #ccc;
@@ -406,13 +406,49 @@
   color: var(--text-primary);
 }
 
-@media (min-width: 500px) {
+@media (max-width: 580px) {
+
+
+  .post-card {
+    padding: 1rem;
+  }
+
+  .comment-form {
+    flex-direction: column;
+  }
+
+  .input-row {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .vote-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+@media (max-width: 670px) {
+.create-post {
+    width: 100%;
+  }
+  .post-card {
+    padding: 1rem;
+    width: 100%;
+  }
+}
+@media (max-width: 500px) {
   .post-card .extra {
     display: none;
   }
 
   .post-card {
-    padding: 2rem;
+    padding: 1rem;
+    width: 100%;
+  }
+
+  .create-post {
+    width: 100%;
+    margin: auto;
   }
 }
 

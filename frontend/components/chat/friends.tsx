@@ -2,7 +2,7 @@
 
 import { SocketContext } from "@/context/socketContext";
 import { User } from "@/types/user";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useContext, useEffect } from "react";
 import PostHeader from "../post/postHeader";
 import { GetFriends } from "@/services/user";

@@ -1,6 +1,7 @@
 import { SocketContext } from '@/context/socketContext'
 import React, { useContext, useRef } from 'react'
 import { PopupContext } from '@/context/PopupContext'
+import EmojiList from '../chat/emojiList'
 
 
 const GroupChatFooter = () => {
@@ -37,6 +38,7 @@ const GroupChatFooter = () => {
     return (
         <div className='chat-grp-footer'>
             <textarea maxLength={3000} ref={textarea} onKeyDown={handleKeyDown} placeholder='Type a message...'></textarea>
+            <EmojiList textarea={textarea.current} />
             <button onClick={handleSendMessageGroup}>send</button>
         </div>
     )

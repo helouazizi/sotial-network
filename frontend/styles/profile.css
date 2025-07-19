@@ -523,6 +523,24 @@ input:checked+.slider:before {
     .profile-container {
         width: 80%;
     }
+
+    .relation-section {
+        padding: 20px 10px;
+
+        a {
+            padding: 5px;
+        }
+    }
+
+    .relation-section .relation-card .card {
+        width: 40px;
+        height: 40px;
+        font-size: 10px;
+    }
+
+    .relation-section .relation-card .relation-card-data .info h3 {
+        font-size: 13PX;
+    }
 }
 
 @media screen and (max-width:850px) {
@@ -531,7 +549,27 @@ input:checked+.slider:before {
     }
 }
 
+@media screen and (max-width:780px) {
+    .relation-section a {
+        width: calc(85%/2 + 5%);
+    }
+}
+
 @media screen and (max-width:650px) {
+
+    .data-profile .profile-info-form {
+        width: 100%;
+    }
+
+    .info-user .inputs div input {
+        padding: 4px;
+    }
+
+    .info-user .labels div,
+    .info-user .inputs div p,
+    .info-user .labels div .editabe {
+        font-size: 14px;
+    }
 
     .profile-header {
         flex-direction: column;
@@ -541,6 +579,16 @@ input:checked+.slider:before {
     .left-sec {
         flex-direction: column;
         align-items: center;
+    }
+
+    .navigation-profile {
+        a {
+            font-size: 14px;
+        }
+    }
+
+    .post-profile {
+        padding: 10px 5px;
     }
 
     .full-name-profile {
@@ -568,17 +616,17 @@ input:checked+.slider:before {
         }
     }
 
-    .navigation-profile li a {
-        padding: 15px;
-        font-size: 14px;
+    .info-user .labels div {
+        display: flex;
+        max-width: fit-content;
     }
-    .data-profile .profile-info-form{
-        width: 100%;
-        font-size: 14px;
+
+    .info-user .inputs {
+        width: fit-content;
     }
-    .avatar-profile{
-        width: 85px;
-        height: 85px;
+
+    .info-user {
+        justify-content: center;
     }
 }
 
@@ -588,17 +636,51 @@ input:checked+.slider:before {
         height: 80px;
     }
 
+    .info-user .labels div,
+    .info-user .inputs div p,
+    .info-user .labels div .editabe {
+        font-size: 12px;
+    }
+
+
+
+    .info-user .inputs div input[placeholder] {
+        font-size: 10px;
+    }
+
+    .info-user .inputs div textarea {
+        font-size: 12px;
+    }
+
+    .data-profile .profile-info-form {
+        width: 90%;
+    }
+
     .full-name-profile div h3 {
         font-size: 16px;
+    }
+
+    .navigation-profile {
+        a {
+            font-size: 12px;
+        }
     }
 
     .full-name-profile div p {
         font-size: 14px;
     }
 
-    .navigation-profile li a {
-        padding: 10px;
-        font-size: .6em;
+    
+}
+
+@media screen and (max-width:470px) {
+    .relation-section a {
+        width: 60%;
+    }
+
+    .info-user .inputs div input,
+    .info-user .inputs div textarea {
+        width: 120px;
     }
 }
 
@@ -607,5 +689,15 @@ input:checked+.slider:before {
         width: 90%;
     }
 
+    .info-user .labels div,
+    .info-user .labels div .editabe {
+        font-size: 12px;
+    }
+
+    .navigation-profile {
+        a {
+            font-size: 10px;
+        }
+    }
 
 }

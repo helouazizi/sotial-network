@@ -5,7 +5,6 @@ import { SocketContext } from "@/context/socketContext";
 import { Message } from "@/types/chat";
 import { useParams } from "next/navigation";
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { FaUser } from "react-icons/fa";
 import { FaArrowAltCircleDown } from "react-icons/fa";
 import Chat from "../page";
 import { User } from "@/types/user";
@@ -19,8 +18,7 @@ export default function PrivateChat() {
     const previousScrollHeight = useRef<number>(0)
     const [showScrollButton, setShowScrollButton] = useState<boolean>(false)
 
-    const getMessages = (lastID: number) => {
-        
+    const getMessages = (lastID: number) => {   
         if (ws?.current && friend) {
             ws.current.send(JSON.stringify({
                 "type": "getMessages",
@@ -43,10 +41,6 @@ export default function PrivateChat() {
         })
 
         setFriend(friend)
-
-        return () => {
-            if (setMessages) setMessages([])
-        }
     }, [friends])
 
     useEffect(() => {

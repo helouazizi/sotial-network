@@ -255,6 +255,7 @@
     gap: 10px;
     padding: 20px 40px;
     display: flex;
+    position: relative;
 
     textarea {
         resize: none;

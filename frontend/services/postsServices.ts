@@ -30,12 +30,14 @@ export const addComment = async (post_id: number, comment: string, img: File | n
 
         }
     )
+
+    const data = await res.json()
     if (res.status === 401) {
         window.location.href = "/login"
         return null
     }
-    if (!res.ok) throw new Error(await res.text());
-    return await res.json()
+    
+    return data
 }
 
 
@@ -46,14 +48,18 @@ export const votePost = async (post_id: number, action: "like" | "dislike" | "un
         credentials: "include",
         body: JSON.stringify({ post_id: post_id, action }),
     });
+
+    const data = await res.json()
     if (res.status === 401) {
         window.location.href = "/login";
         return null;
     }
+
     if (!res.ok) {
-        throw new Error("Vote action failed");
+        return data
     }
-    return res;
+
+    return data;
 };
 
 

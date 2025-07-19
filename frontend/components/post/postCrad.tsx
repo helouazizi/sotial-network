@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { BuildMediaLinkCAS } from '@/utils/posts';
 import { SocketContext } from "@/context/socketContext"; // Adjust path if different
 import { useContext } from 'react';
+import { PopupContext } from '@/context/PopupContext';
 
 type postProps = {
   post: Post
@@ -22,6 +23,7 @@ export default function PostCard({ post }: postProps) {
   const [dislikes, setDislikes] = useState(post.dislikes);
   const [total_comments, setTotal_comments] = useState(post.total_comments);
   const [userVote, setUserVote] = useState<"like" | "dislike" | null>(post.user_vote === "like" || post.user_vote === "dislike" ? post.user_vote : null);
+  const popup = useContext(PopupContext)
 
   const fetchComments = async () => {
     const res = await getComments(post.id);
@@ -29,7 +31,12 @@ export default function PostCard({ post }: postProps) {
   };
 
   const newComment = async (comment: string, img: File | null) => {
-    await addComment(post.id, comment, img);
+    const data = await addComment(post.id, comment, img);
+    if (data.error) {
+      popup?.showPopup("faild", data.error)
+      return
+    }
+
     const new_comment: Comment = {
       comment,
       author: {
@@ -53,16 +60,31 @@ export default function PostCard({ post }: postProps) {
     try {
       if (action === "like") {
         if (userVote === "like") {
-          await votePost(post.id, "unlike");
+          const data = await votePost(post.id, "unlike");
+
+          if (data.error) {
+            popup?.showPopup("faild", data.error)
+            return
+          }
 
           setLikes(likes - 1);
           setUserVote(null);
         } else {
           if (userVote === "dislike") {
-            await votePost(post.id, "undislike");
+            const data = await votePost(post.id, "undislike");
+            if (data.error) {
+              popup?.showPopup("faild", data.error)
+              return
+            }
+
             setDislikes(dislikes - 1);
           }
-          await votePost(post.id, "like");
+          const data = await votePost(post.id, "like");
+          if (data.error) {
+            popup?.showPopup("faild", data.error)
+            return
+          }
+
           setLikes(likes + 1);
           setUserVote("like");
         }
@@ -70,15 +92,28 @@ export default function PostCard({ post }: postProps) {
 
       if (action === "dislike") {
         if (userVote === "dislike") {
-          await votePost(post.id, "undislike");
+          const data = await votePost(post.id, "undislike");
+          if (data.error) {
+            popup?.showPopup("faild", data.error)
+            return
+          }
+
           setDislikes(dislikes - 1);
           setUserVote(null);
         } else {
           if (userVote === "like") {
-            await votePost(post.id, "unlike");
+            const data = await votePost(post.id, "unlike");
+            if (data.error) {
+              popup?.showPopup("faild", data.error)
+              return
+            }
             setLikes(likes - 1);
           }
-          await votePost(post.id, "dislike");
+          const data = await votePost(post.id, "dislike");
+          if (data.error) {
+            popup?.showPopup("faild", data.error)
+            return
+          }
           setDislikes(dislikes + 1);
           setUserVote("dislike");
         }

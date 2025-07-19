@@ -12,8 +12,8 @@ func SetupRoutes(app *app.Application) *http.ServeMux {
 
 	//================== user routes =======================///
 	mux.HandleFunc("/api/v1/user/logout", app.AuthHundler.LogOut)
-	mux.HandleFunc("/api/v1/user/register", app.AuthHundler.Register)
-	mux.HandleFunc("/api/v1/user/login", app.AuthHundler.Login)
+	mux.HandleFunc("/api/v1/user/register", middleware.RateLimitMiddleware(http.HandlerFunc(app.AuthHundler.Register)))
+	mux.HandleFunc("/api/v1/user/login", middleware.RateLimitMiddleware(http.HandlerFunc(app.AuthHundler.Login)))
 	mux.HandleFunc("/api/v1/user/Auth", middleware.AuthMiddleware(http.HandlerFunc(app.AuthHundler.CheckAuth), app.DB))
 	mux.HandleFunc("/api/v1/user/infos", middleware.AuthMiddleware(http.HandlerFunc(app.AuthHundler.GetUserHandler), app.DB))
 	mux.HandleFunc("/api/v1/user/friends", middleware.AuthMiddleware(http.HandlerFunc(app.AuthHundler.GetFriendsHandler), app.DB))
@@ -25,9 +25,9 @@ func SetupRoutes(app *app.Application) *http.ServeMux {
 	mux.HandleFunc("/api/v1/SearchProfile", middleware.AuthMiddleware(http.HandlerFunc(app.ProfileHandler.SearchProfileHandler), app.DB))
 	//================== posts routes =========================///
 	mux.Handle("/api/v1/posts", middleware.AuthMiddleware(http.HandlerFunc(app.PostHandler.GetPosts), app.DB))
-	mux.Handle("/api/v1/posts/create", middleware.AuthMiddleware(http.HandlerFunc(app.PostHandler.CreatePost), app.DB))
-	mux.Handle("/api/v1/posts/vote", middleware.AuthMiddleware(http.HandlerFunc(app.PostHandler.HandlePostVote), app.DB))
-	mux.Handle("/api/v1/posts/addComment", middleware.AuthMiddleware(http.HandlerFunc(app.PostHandler.CreatePostComment), app.DB))
+	mux.Handle("/api/v1/posts/create", middleware.RateLimitMiddleware(middleware.AuthMiddleware(http.HandlerFunc(app.PostHandler.CreatePost), app.DB)))
+	mux.Handle("/api/v1/posts/vote", middleware.RateLimitMiddleware(middleware.AuthMiddleware(http.HandlerFunc(app.PostHandler.HandlePostVote), app.DB)))
+	mux.Handle("/api/v1/posts/addComment", middleware.RateLimitMiddleware(middleware.AuthMiddleware(http.HandlerFunc(app.PostHandler.CreatePostComment), app.DB)))
 	mux.Handle("/api/v1/posts/folowers", middleware.AuthMiddleware(http.HandlerFunc(app.PostHandler.GetFolowers), app.DB))
 	mux.HandleFunc("/api/v1/posts/getComments", (app.PostHandler.GetPostComment))
 	//================= relations route ======================///
@@ -41,7 +41,7 @@ func SetupRoutes(app *app.Application) *http.ServeMux {
 	mux.Handle("/images/", app.StaticHandler)
 
 	//================ Group ==============================//
-	mux.HandleFunc("/api/v1/groups/create", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.CreateGroupHandler), app.DB))
+	mux.HandleFunc("/api/v1/groups/create", middleware.RateLimitMiddleware(middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.CreateGroupHandler), app.DB)))
 	mux.HandleFunc("/api/v1/groups/getJoined", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.GetJoinedGroupsHandler), app.DB))
 	mux.HandleFunc("/api/v1/groups/getSuggested", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.GetSuggestedGroupsHandler), app.DB))
 	mux.HandleFunc("/api/v1/groups/joined/{id}", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.GetGroupHandler), app.DB))
@@ -51,20 +51,20 @@ func SetupRoutes(app *app.Application) *http.ServeMux {
 
 	mux.HandleFunc("/api/v1/groups/joined/{id}/members", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.GetGroupMembersHandler), app.DB))
 
-	mux.HandleFunc("/api/v1/groups/joinGroupRequest", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.JoinGroupRequestHandler), app.DB))
-	mux.HandleFunc("/api/v1/groups/cancelGroupRequest", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.CancelGroupRequestHandler), app.DB))
+	mux.HandleFunc("/api/v1/groups/joinGroupRequest", middleware.RateLimitMiddleware(middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.JoinGroupRequestHandler), app.DB)))
+	mux.HandleFunc("/api/v1/groups/cancelGroupRequest", middleware.RateLimitMiddleware(middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.CancelGroupRequestHandler), app.DB)))
 	mux.HandleFunc("/api/v1/groups/getDemandeGroupNotifs", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.GetGroupNotifsHandler), app.DB))
 
 	//=============== group posts ==============================//
-	mux.HandleFunc("/api/v1/groups/joined/{id}/post/addpost", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.AddGroupPost), app.DB))
+	mux.HandleFunc("/api/v1/groups/joined/{id}/post/addpost", middleware.RateLimitMiddleware(middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.AddGroupPost), app.DB)))
 	mux.HandleFunc("/api/v1/groups/joined/{id}/post/getposts", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.GetGroupPosts), app.DB))
-	mux.HandleFunc("/api/v1/groups/post/addcomment", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.AddGroupComment), app.DB))
+	mux.HandleFunc("/api/v1/groups/post/addcomment", middleware.RateLimitMiddleware(middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.AddGroupComment), app.DB)))
 	mux.HandleFunc("/api/v1/groups/post/getcomment", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.GetGRoupComment), app.DB))
 
 	// mux.HandleFunc("/api/v1/groups/getInfoGroup", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.GetInfoGroupe), app.DB))
 	//================ Event ==============================//
 	mux.HandleFunc("/api/v1/groups/joined/{id}/events", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.GetGroupEventHandler), app.DB))
-	mux.HandleFunc("/api/v1/groups/events/create", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.CreateEventHandler), app.DB))
-	mux.HandleFunc("/api/v1/groups/events/vote", middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.VoteEventHandler), app.DB))
+	mux.HandleFunc("/api/v1/groups/events/create", middleware.RateLimitMiddleware(middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.CreateEventHandler), app.DB)))
+	mux.HandleFunc("/api/v1/groups/events/vote", middleware.RateLimitMiddleware(middleware.AuthMiddleware(http.HandlerFunc(app.GroupHandler.VoteEventHandler), app.DB)))
 	return mux
 }

@@ -6,6 +6,7 @@ import PostHeader from "./postHeader";
 import { FaImage } from "react-icons/fa";
 import { SocketContext } from "@/context/socketContext"; // Adjust path if different
 import { useContext } from 'react';
+import { PopupContext } from "@/context/PopupContext";
 
 
 type Props = {
@@ -21,6 +22,7 @@ export default function CreatePostForm({ onCreated }: Props) {
   const [sharedWith, setSharedWith] = useState<number[]>([]);
   const [img, setImg] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const popup = useContext(PopupContext)
 
   const clearError = (field: keyof PostErrors) => {
     setErrors((prev) => ({ ...prev, [field]: "" }));
@@ -136,8 +138,13 @@ export default function CreatePostForm({ onCreated }: Props) {
       credentials: "include",
     });
 
+    const savedPost = await res.json();
+    if (savedPost.error) {
+      popup?.showPopup("faild", savedPost.error)
+      return
+    }
+
     if (res.ok) {
-      const savedPost = await res.json();
       if (!user) {
         alert("User information is missing. Cannot create post.");
         return;

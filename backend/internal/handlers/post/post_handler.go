@@ -134,11 +134,16 @@ func (h *PostHandler) HandlePostVote(w http.ResponseWriter, r *http.Request) {
 	vote.UserId = userId
 	err := h.service.PostVote(vote)
 	if err != nil {
-		http.Error(w, "Failed to vote", http.StatusInternalServerError)
+		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+			"error": "Failed to vote",
+		})
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
+	// w.WriteHeader(http.StatusOK)
+	utils.ResponseJSON(w, http.StatusOK, map[string]any{
+		"message": "vote added successfully!",
+	})
 }
 
 func (h *PostHandler) CreatePostComment(w http.ResponseWriter, r *http.Request) {

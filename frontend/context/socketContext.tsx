@@ -131,7 +131,6 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
       }
 
       if (res.type === "saveMessage") {
-        // console.log(res)
         setFriends(prev => {
           const found = prev?.find(f => f.id === res.message.sender_id || f.id === res.message.receiver_id);
           const others = prev?.filter(f => f.id !== res.message.sender_id && f.id !== res.message.receiver_id) || []

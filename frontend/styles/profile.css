@@ -567,6 +567,19 @@ input:checked+.slider:before {
             font-size: 25px;
         }
     }
+
+    .navigation-profile li a {
+        padding: 15px;
+        font-size: 14px;
+    }
+    .data-profile .profile-info-form{
+        width: 100%;
+        font-size: 14px;
+    }
+    .avatar-profile{
+        width: 85px;
+        height: 85px;
+    }
 }
 
 @media screen and (max-width:500px) {
@@ -583,7 +596,10 @@ input:checked+.slider:before {
         font-size: 14px;
     }
 
-
+    .navigation-profile li a {
+        padding: 10px;
+        font-size: .6em;
+    }
 }
 
 @media screen and (max-width:375px) {

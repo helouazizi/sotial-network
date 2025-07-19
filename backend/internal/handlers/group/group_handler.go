@@ -119,8 +119,9 @@ func (h *GroupHandler) GetGroupHandler(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
+	userId := r.Context().Value("userID").(int)
 
-	groupinfo, errr := h.service.GetGroup(GroupID)
+	groupinfo, errr := h.service.GetGroup(GroupID, userId)
 
 	if errr != nil {
 		utils.ResponseJSON(w, errr.Code, map[string]any{

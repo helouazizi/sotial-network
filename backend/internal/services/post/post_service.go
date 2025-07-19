@@ -70,18 +70,18 @@ func (s *PostService) PostVote(vote models.VoteRequest) error {
 	return s.repo.PostVote(vote)
 }
 
-func (s *PostService) CreatePostComment(comment models.Comment, img *models.Image) error {
+func (s *PostService) CreatePostComment(comment models.Comment, img *models.Image) (*models.Comment,error) {
 	if len(strings.Fields(comment.Comment)) == 0 && img.ImgHeader == nil {
-		return errors.New("comment must be at least 1 characters long")
+		return nil, errors.New("comment must be at least 1 characters long")
 	}
 	// Optional: Validate post ID and author ID
 	if comment.PostID <= 0 || comment.Author.ID <= 0 {
-		return errors.New("post ID and author ID must be provided")
+		return nil, errors.New("post ID and author ID must be provided")
 	}
 
 	err := checkImage(img)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	return s.repo.CreatePostComment(comment, img)

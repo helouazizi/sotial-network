@@ -245,7 +245,7 @@ func (r *PostRepository) GetPostComments(c models.ComentPaginationRequest) ([]mo
 	return comments, nil
 }
 
-func (r *PostRepository) CreatePostComment(coment models.Comment, img *models.Image) error {
+func (r *PostRepository) CreatePostComment(coment models.Comment, img *models.Image) (*models.Comment,error) {
 	const qry = `
 		INSERT INTO comments (post_id, user_id, comment,media, created_at)
 		VALUES (?, ?, ?, ?, ?)
@@ -261,7 +261,7 @@ func (r *PostRepository) CreatePostComment(coment models.Comment, img *models.Im
 		// Ensure directory exists
 		const dir = "pkg/db/images/comments"
 		if err := os.MkdirAll(dir, 0o755); err != nil {
-			return fmt.Errorf("ensure image dir: %w", err)
+			return nil, fmt.Errorf("ensure image dir: %w", err)
 		}
 
 		// Sanitize and generate unique filename
@@ -271,13 +271,13 @@ func (r *PostRepository) CreatePostComment(coment models.Comment, img *models.Im
 
 		dst, err := os.Create(path)
 		if err != nil {
-			return fmt.Errorf("create image file: %w", err)
+			return  nil,fmt.Errorf("create image file: %w", err)
 		}
 
 		_, err = io.Copy(dst, img.ImgContent)
 		dst.Close() // close file after copy
 		if err != nil {
-			return fmt.Errorf("write image: %w", err)
+			return  nil, fmt.Errorf("write image: %w", err)
 		}
 
 		fileName = sql.NullString{String: origName, Valid: true}
@@ -285,7 +285,7 @@ func (r *PostRepository) CreatePostComment(coment models.Comment, img *models.Im
 
 	stmt, err := r.db.Prepare(qry)
 	if err != nil {
-		return fmt.Errorf("prepare stmt: %w", err)
+		return   nil,fmt.Errorf("prepare stmt: %w", err)
 	}
 	defer stmt.Close()
 
@@ -293,7 +293,11 @@ func (r *PostRepository) CreatePostComment(coment models.Comment, img *models.Im
 		coment.PostID, coment.Author.ID, coment.Comment, fileName, coment.CreatedAt,
 	)
 
-	return err
+
+	return &models.Comment{
+		MediaLink: fileName.String,
+
+	}, err
 }
 
 func (r *PostRepository) GetFollowers(userID int) ([]models.PostFolower, error) {

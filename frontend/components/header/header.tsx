@@ -15,6 +15,7 @@ import NotifToast from "@/utils/NotifToast";
 import { SearchInput } from "../search/search";
 import { CgProfile } from "react-icons/cg";
 import { IoIosMenu } from "react-icons/io";
+import { API_URL } from "@/services";
 
 export default function Header() {
   const router = useRouter();

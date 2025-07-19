@@ -159,8 +159,16 @@ func (h *GroupHandler) AddGroupComment(w http.ResponseWriter, r *http.Request) {
 
 		defer file.Close()
 	}
-	SaveERR := h.service.SaveGroupeComment(groupcomments, img)
-	utils.ResponseJSON(w, SaveERR.Code, SaveERR)
+	comment, SaveERR := h.service.SaveGroupeComment(groupcomments, img)
+	if SaveERR.Code != http.StatusOK {
+		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
+			"message": "invalid multipart form",
+			"status":  http.StatusBadRequest,
+		})
+		return
+	}
+
+	utils.ResponseJSON(w, SaveERR.Code, comment)
 }
 
 func (h *GroupHandler) GetGRoupComment(w http.ResponseWriter, r *http.Request) {

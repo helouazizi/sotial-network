@@ -184,7 +184,7 @@ func (h *PostHandler) CreatePostComment(w http.ResponseWriter, r *http.Request) 
 		defer file.Close()
 	}
 
-	err = h.service.CreatePostComment(coment, img)
+	comment,err := h.service.CreatePostComment(coment, img)
 	if err != nil {
 		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
 			"message": "Bad request",
@@ -192,10 +192,7 @@ func (h *PostHandler) CreatePostComment(w http.ResponseWriter, r *http.Request) 
 		})
 		return
 	}
-	utils.ResponseJSON(w, http.StatusOK, map[string]any{
-		"message": "Successfully created comment",
-		"status":  http.StatusOK,
-	})
+		utils.ResponseJSON(w, http.StatusOK, comment)
 }
 
 func (h *PostHandler) GetPostComment(w http.ResponseWriter, r *http.Request) {

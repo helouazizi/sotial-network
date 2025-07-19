@@ -155,7 +155,7 @@ func (r *GroupRepository) GetGroupPosts(reg models.PaginationRequest, groupid in
 	}
 }
 
-func (r *GroupRepository) AddGroupComment(comments models.Comment, img *models.Image) models.GroupError {
+func (r *GroupRepository) AddGroupComment(comments models.Comment, img *models.Image)(*models.Comment, models.GroupError) {
 	query := `
 	INSERT INTO group_comments (group_post_id , member_id, content, media, created_at)
 	VAlUES (?, ?, ?, ?, ?)
@@ -163,11 +163,11 @@ func (r *GroupRepository) AddGroupComment(comments models.Comment, img *models.I
 	`
 	fileName, ImageErr := utils.HandleImage(img, "pkg/db/images/comments")
 	if ImageErr.Code != http.StatusOK {
-		return ImageErr
+		return nil, ImageErr
 	}
 	stmt, err := r.db.Prepare(query)
 	if err != nil {
-		return models.GroupError{
+		return nil, models.GroupError{
 			Code:    http.StatusInternalServerError,
 			Message: err.Error(),
 		}
@@ -176,12 +176,14 @@ func (r *GroupRepository) AddGroupComment(comments models.Comment, img *models.I
 
 	_, err = stmt.Exec(comments.PostID, comments.Author.ID, comments.Comment, fileName, time.Now())
 	if err != nil {
-		return models.GroupError{
+		return nil, models.GroupError{
 			Code:    http.StatusInternalServerError,
 			Message: err.Error(),
 		}
 	}
-	return models.GroupError{
+	return &models.Comment{
+		MediaLink: fileName.String,
+	}, models.GroupError{
 		Code:    http.StatusOK,
 		Message: "adding comment went smouthly ",
 	}

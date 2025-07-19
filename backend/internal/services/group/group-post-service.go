@@ -50,23 +50,23 @@ func (s *GroupService) GetGroupsPost(reg models.PaginationRequest, groupIdstr st
 	return s.repo.GetGroupPosts(reg, groupId)
 }
 
-func (s *GroupService) SaveGroupeComment(comments models.Comment, img *models.Image) models.GroupError {
+func (s *GroupService) SaveGroupeComment(comments models.Comment, img *models.Image) (*models.Comment, models.GroupError) {
 	if (len(strings.Fields(comments.Comment)) == 0 || len(strings.Fields(comments.Comment)) > 500) && img.ImgHeader == nil {
-		return models.GroupError{
+		return nil, models.GroupError{
 			Code:    http.StatusBadRequest,
 			Message: "Comment must be between 1 and 500 words or an image must be provided.",
 		}
 	}
 	// Optional: Validate post ID and author ID
 	if comments.PostID <= 0 || comments.Author.ID <= 0 {
-		return models.GroupError{
+		return nil, models.GroupError{
 			Code:    http.StatusBadRequest,
 			Message: "Invalid PostID or Author ID. Both must be greater than 0.",
 		}
 	}
 	ImgErr := utils.CheckImage(img)
 	if ImgErr.Code != http.StatusOK {
-		return ImgErr
+		return nil, ImgErr
 	}
 	return s.repo.AddGroupComment(comments, img)
 }

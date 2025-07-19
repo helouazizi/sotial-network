@@ -30,7 +30,8 @@ export default function PostGroupCard({ post }: postProps) {
   };
 
   const newComment = async (comment: string, img: File | null) => {
-    await addGroupComment(post.id, comment, img);
+   const data =  await addGroupComment(post.id, comment, img);
+   
     const new_comment: Comment = {
       comment,
       author: {
@@ -44,7 +45,7 @@ export default function PostGroupCard({ post }: postProps) {
         id: user?.id ?? 0
       },
       created_at: new Date().toISOString(),
-      media_link: img ? BuildMediaLinkCAS(img) : ""
+      media_link: data.media_link
     };
     setComments((prev) => [new_comment, ...(prev || [])]);
     setTotal_comments((prev) => prev + 1);

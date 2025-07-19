@@ -19,7 +19,7 @@ WORKDIR /root/
 RUN mkdir -p /pkg/db/sqlite
 COPY --from=stage1 /Backend/app .
 COPY --from=stage1 /Backend/pkg/db/migrations ./pkg/db/migrations
-COPY --from=stage1 /Backend/pkg/db/sqlite/social.db ./pkg/db/sqlite/social.db 
+COPY --from=stage1 /Backend/pkg/db/sqlite/ ./pkg/db/sqlite/
 EXPOSE 8080
 
 CMD ["./app"]

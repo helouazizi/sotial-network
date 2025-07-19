@@ -274,13 +274,14 @@
 }
 
 .comment-input {
-  flex-grow: 1;
+  
   padding: 0.5rem 1rem;
   font-size: 1rem;
   border: 1px solid #ccc;
   border-radius: 10px;
   outline: none;
   transition: border 0.2s ease;
+  width: 90%;
 }
 
 .comment-input:focus {

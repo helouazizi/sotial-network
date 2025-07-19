@@ -1,6 +1,8 @@
 package models
 
-import "mime/multipart"
+import (
+	"mime/multipart"
+)
 
 type User struct {
 	ID          int                   `json:"id,omitempty"`
@@ -16,6 +18,7 @@ type User struct {
 	Header      *multipart.FileHeader `json:"header,omitempty"`
 	FileErr     error                 `json:"file_err,omitempty"`
 	Token       string                `json:"token,omitempty"`
+	SentAt      string                `json:"sent_at"`
 }
 
 type UserError struct {

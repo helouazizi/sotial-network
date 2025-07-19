@@ -60,7 +60,7 @@ func (s *GroupService) GetSuggestedGroups(userID int) ([]*models.Group, error) {
 	return s.repo.GetSuggestedGroups(userID)
 }
 
-func (s *GroupService) GetGroup(GroupId string) (models.GroupIfo, *models.GroupError) {
+func (s *GroupService) GetGroup(GroupId string, userId int) (models.GroupIfo, *models.GroupError) {
 	id, err := strconv.Atoi(GroupId)
 	if err != nil || id <= 0 {
 		return models.GroupIfo{}, &models.GroupError{
@@ -68,7 +68,7 @@ func (s *GroupService) GetGroup(GroupId string) (models.GroupIfo, *models.GroupE
 			Code:    http.StatusNotFound,
 		}
 	}
-	return s.repo.GetGroup(id)
+	return s.repo.GetGroup(id, userId)
 }
 
 func (s *GroupService) SaveJoinGroupRequest(groupReq *models.GroupRequest) ([]int, error) {

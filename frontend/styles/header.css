@@ -39,6 +39,7 @@ nav {
   padding: 20px 100px;
   width: 100%;
   display: flex;
+  align-items: center;
 }
 
 nav .header-pages {
@@ -358,5 +359,11 @@ header nav .header-icon {
 
   nav{
     padding: 20px 40px;
+  }
+}
+
+@media only screen and (max-width: 350px) {
+  .logo{
+    font-size: 1.2em;
   }
 }

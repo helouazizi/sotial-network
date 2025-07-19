@@ -375,3 +375,19 @@
 .emoji-toggle:hover {
   background-color: rgba(255, 255, 255, 0.1);
 }
+
+@media only screen and (max-width: 992px) {
+  .chatPage{
+    gap: 10px;
+  }
+
+  .chatPage .sidebar{
+    flex: 3;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .chatPage{
+    flex-direction: column;
+  }
+}

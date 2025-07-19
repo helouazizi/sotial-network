@@ -1,5 +1,5 @@
 import { SocketContext } from '@/context/socketContext'
-import React, { useContext, useRef } from 'react'
+import React, { useContext, useEffect, useRef } from 'react'
 import { PopupContext } from '@/context/PopupContext'
 import EmojiList from '../chat/emojiList'
 
@@ -8,6 +8,12 @@ const GroupChatFooter = () => {
     const { ws, user, currentGrp } = useContext(SocketContext) ?? {}
     const textarea = useRef<HTMLTextAreaElement>(null)
     const popup = useContext(PopupContext)
+
+    useEffect(() => {
+        if (textarea) {
+            textarea.current?.focus()
+        }
+    }, [])
 
     const handleSendMessageGroup = () => {
         let message = textarea.current?.value.trim()
@@ -18,7 +24,7 @@ const GroupChatFooter = () => {
         const inTArray = currentGrp?.members?.map(Number)
         ws?.current?.send(JSON.stringify({
             id: currentGrp?.id,
-            action:  currentGrp?.title.slice(0, 25).trim() + "...",
+            action: currentGrp?.title.slice(0, 25).trim() + "...",
             message: message,
             members: inTArray,
             fullName: `${user?.firstname} ${user?.lastname}`,

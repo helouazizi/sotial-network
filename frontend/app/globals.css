@@ -147,9 +147,10 @@ nav>div {
 /* Responsive container */
 @media (max-width: 650px) {
   main {
-    padding: 60px 0 0;
+    padding: 100px 0 0;
 
   }
+
   .container {
     width: 100%;
   }

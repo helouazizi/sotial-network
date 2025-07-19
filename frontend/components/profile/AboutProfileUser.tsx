@@ -89,9 +89,9 @@ const AboutProfileUser = () => {
                     {
                         dataProfile?.myAccount ?
                             <div>
-                                <label htmlFor="updateImage">Update Avatar</label>
+                                <label htmlFor="updateImage">Update</label>
                                 <button disabled={avatar === `http://localhost:8080/images/user/${dataProfile?.User?.avatar}` ? true : false} onClick={removeUpdatedImage}>Annuler</button>
-                                <button className='submit' type='submit'>Submit Changes</button>
+                                <button className='submit' type='submit'>Submit</button>
                                 {showError ? <Toast type='fail' message='Do some changes before submitting.' /> : ""}
                                 <input type="file" name="updateImage" id="updateImage" accept='image/jpeg, image/png, image/jpg' onChange={updateAvatar} />
                             </div> :

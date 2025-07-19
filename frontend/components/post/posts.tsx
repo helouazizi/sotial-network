@@ -99,7 +99,7 @@ export default function Posts() {
 
   const addPost = (newPost: Post) => {
     setPosts((prev) => [newPost, ...prev]);
-    // setShowForm(false);
+    setShowForm(false);
   };
 
   const toggleForm = () => {

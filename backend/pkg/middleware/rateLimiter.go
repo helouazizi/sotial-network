@@ -1,3 +1,4 @@
+// backend/pkg/middleware/rateLimiter.go
 package middleware
 
 import (
@@ -16,8 +17,8 @@ type RateLimiter struct {
 
 var (
 	rateLimiters = make(map[string]*RateLimiter)
-	rateLimit    = 5
-	window       = time.Minute
+	rateLimit    = 10
+	window       = time.Second
 	mu           sync.Mutex
 )
 
